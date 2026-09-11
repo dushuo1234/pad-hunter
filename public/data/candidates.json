@@ -1,0 +1,247 @@
+{
+  "generated_at_utc": "2026-09-11T16:46:39.746220+00:00",
+  "goal": "NEW launchpad-PRODUCT projects (teams building a pad), not meme tokens on pump/pons",
+  "method": {
+    "api": "https://ai.6551.io",
+    "searches": [
+      "launchpad crypto (platform|built|building|launching|our)",
+      "发射台 上线|即将|平台",
+      "meme launchpad / bonding curve (Latest)",
+      "user enrichment + twitter_kol_followers"
+    ],
+    "scoring": "min(log10(foll)*12,50) + min(kol,15)*2.5 + builder_clarity + newness*1.4; -25 if foll>200k; -8 if foll>50k & newness<15",
+    "exclusions": "celeb_brand_handles.json + pump/pons token shills + reply/RT preferred filters"
+  },
+  "candidates": [
+    {
+      "rank": 1,
+      "handle": "minarafun",
+      "name": "Minara.Fun | Live on Testnet",
+      "followers": 7065,
+      "kol_followers": 13,
+      "bio": "Launch & trade tokens with USDC-native liquidity on @ARC.",
+      "why": "Bio explicitly BUILD launch+trade pad on Arc with USDC liquidity; testnet live; highest KOL density among mid-size Arc pads.",
+      "score": 146.7,
+      "tweet_url": "https://x.com/xiaofeilong99/status/2096055968190824684",
+      "chain": "Arc",
+      "notes": "Circle/Minara affiliation narrative in CN CT."
+    },
+    {
+      "rank": 2,
+      "handle": "LaunchOnSF",
+      "name": "Stonk",
+      "followers": 33232,
+      "kol_followers": 66,
+      "bio": "Launch coins paired with anything. Powered by $STONK",
+      "why": "StonkFun launchpad (pair with anything / stocks); massive KOL following; actively shipping Stonkspad narrative — product pad, not a random meme.",
+      "score": 134.7,
+      "tweet_url": "https://x.com/qianji8848/status/2098383859620761963",
+      "chain": "Solana",
+      "notes": "More established than Ember/AKA; still a launchpad PRODUCT team."
+    },
+    {
+      "rank": 3,
+      "handle": "embercurve",
+      "name": "Ember",
+      "followers": 5025,
+      "kol_followers": 7,
+      "bio": "Launch a Solana token on Meteora, paired with SOL, USDC or one of 163+ tokenized stocks.",
+      "why": "NEW Solana launchpad on Meteora DBC; CT buzz (~$171k fees early); bio clearly BUILD pad (not a pump token). Quality KOLs incl. jito/alliance-adjacent.",
+      "score": 130.7,
+      "tweet_url": "https://x.com/jinse4916/status/2098037076642164740",
+      "chain": "Solana/Meteora",
+      "notes": "Hot new pad; not pump/pons."
+    },
+    {
+      "rank": 4,
+      "handle": "akadotfun",
+      "name": "AKA",
+      "followers": 26180,
+      "kol_followers": 8,
+      "bio": "Crypto, aka FUN. MemeFi internet capital market backed by RWA. Built for Arc.",
+      "why": "Arc-native MemeFi/RWA launchpad product; CN CT calling it Circle/Arc 发射台; team shipping NFT waitlist + product.",
+      "score": 129.2,
+      "tweet_url": "https://x.com/xiaofeilong99/status/2096055968190824684",
+      "chain": "Arc",
+      "notes": "Strong Arc narrative pre-mainnet Sep 16."
+    },
+    {
+      "rank": 5,
+      "handle": "arcticdotfun",
+      "name": "ARCTIC.FUN",
+      "followers": 93372,
+      "kol_followers": 20,
+      "bio": "",
+      "why": "Self-describes USDC-native launchpad mechanics on Arc; exclusive drop / Arctic.Fun product site; large following + KOL set.",
+      "score": 128.3,
+      "tweet_url": "https://x.com/arcticdotfun/status/2097762421595099339",
+      "chain": "Arc",
+      "notes": "Large account; confirm not just marketing shell."
+    },
+    {
+      "rank": 6,
+      "handle": "Ignixbot",
+      "name": "Ignix",
+      "followers": 5922,
+      "kol_followers": 6,
+      "bio": "Ignix is a universal launchpad on X Layer. Launch anything. The world is tokenizing.",
+      "why": "Bio explicitly universal launchpad on X Layer; OKX/X Layer adjacency; recent CT coverage.",
+      "score": 122.7,
+      "tweet_url": "https://x.com/congge918/status/2098431103317241964",
+      "chain": "X Layer",
+      "notes": "Primary evidence: official bio + CN CT (congge918 X Layer / Ignix); exact status id may be adjacent thread."
+    },
+    {
+      "rank": 7,
+      "handle": "Cosm_fun_",
+      "name": "Cosm",
+      "followers": 11309,
+      "kol_followers": 0,
+      "bio": "Cosm is a community-owned launchpad specializing in offline/ground promotion. Fair Fair just Fair.",
+      "why": "Bio = community-owned launchpad; #COSM发射台 platform token live on BSC; clear BUILD claim.",
+      "score": 113.8,
+      "tweet_url": "https://x.com/SellerOfOptions/status/2096907317736530250",
+      "chain": "BSC",
+      "notes": "Heavy airdrop farming noise around platform coin."
+    },
+    {
+      "rank": 8,
+      "handle": "abcd_meme",
+      "name": "abcd.meme",
+      "followers": 3037,
+      "kol_followers": 0,
+      "bio": "BSC meme coin fair-launch platform, enabling one-click token creation and equitable...",
+      "why": "Bio = BSC fair-launch platform; CN CT: 新的发射台上线 @abcd_meme.",
+      "score": 109.8,
+      "tweet_url": "https://x.com/qijiueth/status/2098316095933579628",
+      "chain": "BSC",
+      "notes": "Fresh pad; limited KOL proof."
+    },
+    {
+      "rank": 9,
+      "handle": "ast_dotfun",
+      "name": "ast.fun",
+      "followers": 3490,
+      "kol_followers": 1,
+      "bio": "The tokenized perpetuals launchpad on @BNBCHAIN. Powered by @Aster_DEX",
+      "why": "Bio = tokenized perps launchpad on BNB; team teasing multi-day product updates.",
+      "score": 105.4,
+      "tweet_url": "https://x.com/AiWithliza/status/2098347971616391496",
+      "chain": "BNB",
+      "notes": "Niche perps-launchpad, not classic meme pad."
+    },
+    {
+      "rank": 10,
+      "handle": "trenches",
+      "name": "tren.ch",
+      "followers": 53413,
+      "kol_followers": 4,
+      "bio": "",
+      "why": "CN CT: Solana 创新发射台 @trenches; airdrop/Stars points; product pad narrative (not token-on-pump).",
+      "score": 99.6,
+      "tweet_url": "https://x.com/congge918/status/2086995900686327977",
+      "chain": "Solana",
+      "notes": "Sparse official bio; evidence mostly third-party CT."
+    },
+    {
+      "rank": 11,
+      "handle": "ForgeLaunchPad",
+      "name": "FORGE",
+      "followers": 1464,
+      "kol_followers": 1,
+      "bio": "Flexible token launchpad with custom curves, fees, burns, rewards, dividends, and charity tokens plus multi-pair support.",
+      "why": "Official account actively marketing Forge Launchpad product features (curves/fees/rewards).",
+      "score": 97.3,
+      "tweet_url": "https://x.com/ForgeLaunchPad/status/2098363909400936681",
+      "chain": "multi",
+      "notes": "Smaller audience."
+    },
+    {
+      "rank": 12,
+      "handle": "Lazymemesfun",
+      "name": "Lazymemes",
+      "followers": 42,
+      "kol_followers": 0,
+      "bio": "if it’s funny, it’s fundamental on @arc",
+      "why": "Brand-new Arc meme launchpad (bonding curves → locked LP); heavy waitlist spam today — product claim clear, traction tiny.",
+      "score": 90.6,
+      "tweet_url": "https://x.com/Lulz53c/status/2098452616732934480",
+      "chain": "Arc",
+      "notes": "Very early; possible farm spam."
+    },
+    {
+      "rank": 13,
+      "handle": "wolfsheadxyz",
+      "name": "Wolfshead",
+      "followers": 68,
+      "kol_followers": 0,
+      "bio": "Fair launches with a real floor. Capital that never sits idle. Building on @arc",
+      "why": "Building fair-launch / launchpad-style product on Arc; OG Pass whitelist; early stage.",
+      "score": 82.9,
+      "tweet_url": "https://x.com/crx_rollins/status/2098449962451562778",
+      "chain": "Arc",
+      "notes": "Early; third-party confirmation of 'token launchpad'."
+    },
+    {
+      "rank": 14,
+      "handle": "wudotfun",
+      "name": "悟",
+      "followers": 880,
+      "kol_followers": 0,
+      "bio": "悟",
+      "why": "Founder narrative (bazingahappy) of persistent 发射台 builds; CN CT attention — weak official bio.",
+      "score": 74.3,
+      "tweet_url": "https://x.com/bazingahappy/status/2097327784637202739",
+      "chain": "unknown",
+      "notes": "Low clarity from official account alone."
+    },
+    {
+      "rank": 15,
+      "handle": "vibevibefun",
+      "name": "vibe/vibe",
+      "followers": 837707,
+      "kol_followers": null,
+      "bio": "a launchpad, with default autobuyback and burns on all tokens. on Robinhood Chain. the testnet is live for 5% of the supply.",
+      "why": "Bio = building RH-chain launchpad w/ autobuyback/burns; testnet live — BUT follower count suggests old/repurposed large account, treat cautiously.",
+      "score": 71.0,
+      "tweet_url": "https://x.com/ebash_creator/status/2098449255308386305",
+      "chain": "Robinhood Chain",
+      "notes": "Skip if seeking greenfield teams only; not a celeb-brand list hit."
+    }
+  ],
+  "skipped": [
+    {
+      "handle": "ponsdotfamily",
+      "reason": "Existing pad (PONS) — out of scope (meme tokens on existing pads)"
+    },
+    {
+      "handle": "pumpfun",
+      "reason": "Celeb/existing pad brand"
+    },
+    {
+      "handle": "CastPad_",
+      "reason": "Meta tool that launches across existing pads, not a pad itself"
+    },
+    {
+      "handle": "steakfund",
+      "reason": "Powered by Pumpfun — adjacent to existing pad, not new pad product"
+    },
+    {
+      "handle": "CLAWDEXAI",
+      "reason": "Weak/spammy claim; trading app noise"
+    },
+    {
+      "handle": "AGNTSOCIAL",
+      "reason": "Agents/NFT primary; launchpad only aspirational"
+    },
+    {
+      "handle": "Fabledotfun",
+      "reason": "Token claiming 'first on launchpad', not the pad"
+    },
+    {
+      "handle": "longdotxyz",
+      "reason": "Mentioned as meme/stock pairs launchpad by third party; bio unclear — needs more proof"
+    }
+  ],
+  "notes": "No secrets in this file. Scores are rough relative ranks for hunt triage."
+}
