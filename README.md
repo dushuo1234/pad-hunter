@@ -20,6 +20,12 @@ npm run build
 npm run preview
 ```
 
+## 线上地址
+
+GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hunter/>
+
+合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
+
 ## 数据文件
 
 默认从 `public/data/candidates.json` 加载。当前文件是 Telegram「项目推送」的分类结果（来源字段 `telegram:项目推送`），每条包含：
