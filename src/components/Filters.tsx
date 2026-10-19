@@ -71,11 +71,13 @@ export function FiltersBar({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <label className="flex flex-col gap-1.5 lg:col-span-2">
+        <label className="flex flex-col gap-1.5 lg:col-span-2" htmlFor="filter-search">
           <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
             搜索
           </span>
           <input
+            id="filter-search"
+            name="search"
             type="search"
             placeholder="名称 / handle / 链 / 类型…"
             value={filters.search}
@@ -84,11 +86,13 @@ export function FiltersBar({
           />
         </label>
 
-        <label className="flex flex-col gap-1.5">
+        <label className="flex flex-col gap-1.5" htmlFor="filter-chain">
           <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
             链
           </span>
           <select
+            id="filter-chain"
+            name="chain"
             value={filters.chain}
             onChange={(e) => onChange({ chain: e.target.value })}
             className="h-10 rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]"
@@ -102,11 +106,13 @@ export function FiltersBar({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1.5">
+        <label className="flex flex-col gap-1.5" htmlFor="filter-min-followers">
           <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
             最低粉丝
           </span>
           <input
+            id="filter-min-followers"
+            name="minFollowers"
             type="number"
             min={0}
             step={100}
@@ -117,11 +123,13 @@ export function FiltersBar({
           />
         </label>
 
-        <label className="flex flex-col gap-1.5">
+        <label className="flex flex-col gap-1.5" htmlFor="filter-min-kol">
           <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
             最低 KOL
           </span>
           <input
+            id="filter-min-kol"
+            name="minKol"
             type="number"
             min={0}
             step={1}
