@@ -29,3 +29,11 @@ dist-ssr
 *.pem
 *token*
 .opentwitter_token
+
+# Telegram monitor — never commit credentials or Telethon sessions
+*.session
+*.session-journal
+scripts/telegram/.data/
+scripts/telegram/.venv/
+__pycache__/
+*.py[cod]

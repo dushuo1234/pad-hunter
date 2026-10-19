@@ -2,9 +2,10 @@ interface HeaderProps {
   theme: 'light' | 'dark'
   onToggleTheme: () => void
   onUpload: (file: File) => void
+  onRefresh: () => void
 }
 
-export function Header({ theme, onToggleTheme, onUpload }: HeaderProps) {
+export function Header({ theme, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-cream)_88%,transparent)] backdrop-blur-md dark:border-[var(--color-night-line)] dark:bg-[color-mix(in_srgb,var(--color-night)_88%,transparent)]">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -18,12 +19,19 @@ export function Header({ theme, onToggleTheme, onUpload }: HeaderProps) {
               / Pad Hunter
             </span>
           </div>
-          <span className="hidden rounded border border-[var(--color-line)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)] sm:inline">
-            Launchpad Product Radar
+          <span className="hidden rounded border border-[var(--color-line)] px-2 py-0.5 font-mono text-[10px] tracking-wider text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)] sm:inline">
+            项目推送
           </span>
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onRefresh}
+            className="rounded-lg border border-[var(--color-line)] bg-[var(--color-card)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-ink-soft)] transition hover:border-[var(--color-orange)] hover:text-[var(--color-orange-deep)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-soft)] dark:hover:border-[var(--color-orange)]"
+          >
+            刷新
+          </button>
           <label className="cursor-pointer rounded-lg border border-[var(--color-line)] bg-[var(--color-card)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-ink-soft)] transition hover:border-[var(--color-orange)] hover:text-[var(--color-orange-deep)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-soft)] dark:hover:border-[var(--color-orange)]">
             上传 JSON
             <input
