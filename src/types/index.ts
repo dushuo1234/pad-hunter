@@ -27,7 +27,6 @@ export interface CandidatesPayload {
 }
 
 export type SortKey = 'date' | 'score' | 'followers' | 'kol_followers'
-export type ViewMode = 'board' | 'feed'
 
 export interface Filters {
   search: string

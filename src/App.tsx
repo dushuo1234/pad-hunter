@@ -3,10 +3,9 @@ import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { FiltersBar } from './components/Filters'
 import { CandidateCard } from './components/CandidateCard'
-import { CategoryBoard } from './components/CategoryBoard'
 import { DetailDrawer } from './components/DetailDrawer'
 import { useTheme } from './hooks/useTheme'
-import type { Candidate, CandidatesPayload, Filters, ViewMode } from './types'
+import type { Candidate, CandidatesPayload, Filters } from './types'
 import { categoryOf, sortChains } from './utils/categories'
 
 const DEFAULT_FILTERS: Filters = {
@@ -71,7 +70,6 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  const [view, setView] = useState<ViewMode>('board')
   const [selected, setSelected] = useState<Candidate | null>(null)
   const [uploadNote, setUploadNote] = useState<string | null>(null)
 
@@ -208,9 +206,7 @@ export default function App() {
               categoryCounts={categoryCounts}
               resultCount={filtered.length}
               totalCount={facetedTotal}
-              view={view}
               onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
-              onViewChange={setView}
             />
 
             <div className="mt-6">
@@ -220,11 +216,7 @@ export default function App() {
                 </div>
               )}
 
-              {filtered.length > 0 && view === 'board' && (
-                <CategoryBoard candidates={filtered} onOpen={setSelected} />
-              )}
-
-              {filtered.length > 0 && view === 'feed' && (
+              {filtered.length > 0 && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   {filtered.map((candidate) => (
                     <CandidateCard
