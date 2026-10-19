@@ -3,40 +3,57 @@ import { formatNumber } from '../utils/format'
 
 interface HeroProps {
   projectCount: number
-  avgScore: number
+  categoryCount: number
   chainCount: number
   generatedAt?: string
+  source?: string
 }
 
-export function Hero({ projectCount, avgScore, chainCount, generatedAt }: HeroProps) {
+function sourceLabel(source?: string): string | undefined {
+  if (!source) return undefined
+  if (source.startsWith('telegram:')) return `Telegram「${source.slice('telegram:'.length)}」`
+  return source
+}
+
+export function Hero({ projectCount, categoryCount, chainCount, generatedAt, source }: HeroProps) {
+  const sourceText = sourceLabel(source)
   return (
     <section className="relative overflow-hidden border-b border-[var(--color-line)] dark:border-[var(--color-night-line)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(232,135,58,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(232,135,58,0.12),transparent_55%)]" />
 
       <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div>
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-orange)]">
-            Product Launchpad Hunter
+          <p className="mb-3 font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">
+            Telegram · 项目推送
           </p>
           <h1 className="text-3xl font-extrabold leading-[1.15] tracking-tight text-[var(--color-ink)] sm:text-4xl lg:text-[2.75rem] dark:text-[var(--color-night-ink)]">
-            在人群之前发现
+            按链、按类型
             <br />
-            <span className="text-[var(--color-orange)]">正在建造台子的团队</span>
+            <span className="text-[var(--color-orange)]">看清今天推送的项目</span>
           </h1>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-            台子雷达专注 Launchpad <strong className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">产品</strong>
-            ，不是 pump/pons 上的 meme 代币。扫描 X 上的 builder 信号、粉丝与 KOL 密度，帮你快速筛选值得跟进的垫子团队。
+            台子雷达读取 Telegram「项目推送」卡片，按
+            <strong className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]"> 链 </strong>
+            和
+            <strong className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]"> 类型 / 发射台 </strong>
+            排开。状态、开盘和风险写在卡片上。数据来自 JSON，按日刷新，不用登录。
           </p>
 
           <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-5">
             <Stat value={formatNumber(projectCount)} label="追踪项目" />
-            <Stat value={avgScore.toFixed(1)} label="平均评分" />
+            <Stat value={String(categoryCount)} label="类型" />
             <Stat value={String(chainCount)} label="覆盖链" />
           </div>
 
-          {generatedAt && (
+          {(generatedAt || source) && (
             <p className="mt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
-              数据生成 · {new Date(generatedAt).toLocaleString('zh-CN', { timeZone: 'UTC' })} UTC
+              {sourceText ? `来源 · ${sourceText}` : '数据'}
+              {generatedAt
+                ? ` · ${new Date(generatedAt).toLocaleString('zh-CN', {
+                    timeZone: 'Asia/Shanghai',
+                    hour12: false,
+                  })} 北京时间`
+                : ''}
             </p>
           )}
         </div>

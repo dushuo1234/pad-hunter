@@ -1,13 +1,20 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
-import { formatNumber, xProfileUrl } from '../utils/format'
+import { categoryOf } from '../utils/categories'
+import { formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
 
 interface CandidateCardProps {
   candidate: Candidate
   onOpen: (c: Candidate) => void
+  compact?: boolean
 }
 
-export function CandidateCard({ candidate: c, onOpen }: CandidateCardProps) {
+export function CandidateCard({ candidate: c, onOpen, compact = false }: CandidateCardProps) {
+  const profile = xProfileUrl(c.handle)
+  const link = c.tweet_url || profile
+  const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
+  const when = formatShanghai(c.date_iso)
+
   return (
     <article
       role="button"
@@ -19,19 +26,23 @@ export function CandidateCard({ candidate: c, onOpen }: CandidateCardProps) {
           onOpen(c)
         }
       }}
-      className="group cursor-pointer rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--color-orange)] hover:shadow-md dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:hover:border-[var(--color-orange)] sm:p-5"
+      className={`group cursor-pointer rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--color-orange)] hover:shadow-md dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:hover:border-[var(--color-orange)] ${
+        compact ? 'p-3.5' : 'p-4 sm:p-5'
+      }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-orange-soft)] font-mono text-sm font-bold text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
-            #{c.rank}
-          </div>
+          {!compact && (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-orange-soft)] font-mono text-sm font-bold text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
+              #{c.rank}
+            </div>
+          )}
           <div className="min-w-0">
             <h3 className="truncate text-[15px] font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-orange-deep)] dark:text-[var(--color-night-ink)] dark:group-hover:text-[var(--color-orange)]">
               {c.name}
             </h3>
             <a
-              href={xProfileUrl(c.handle)}
+              href={profile}
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
@@ -42,33 +53,59 @@ export function CandidateCard({ candidate: c, onOpen }: CandidateCardProps) {
           </div>
         </div>
 
-        <div className="shrink-0 text-right">
-          <div className="font-mono text-lg font-bold text-[var(--color-orange)]">{c.score}</div>
-          <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
-            Score
+        {compact ? (
+          <div className="shrink-0 text-right">
+            <div className="font-mono text-[10px] text-[var(--color-ink-muted)]">#{c.rank}</div>
+            {when && (
+              <time className="font-mono text-[10px] text-[var(--color-ink-muted)]" dateTime={c.date_iso}>
+                {when}
+              </time>
+            )}
           </div>
-        </div>
+        ) : (
+          <div className="shrink-0 text-right">
+            <div className="font-mono text-lg font-bold text-[var(--color-orange)]">{c.score}</div>
+            <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">
+              Score
+            </div>
+          </div>
+        )}
       </div>
 
-      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+      <p
+        className={`mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)] ${
+          compact ? 'line-clamp-3' : 'line-clamp-2'
+        }`}
+      >
         {c.why}
       </p>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <Chip tone="accent">{categoryOf(c)}</Chip>
         <Chip>{c.chain}</Chip>
-        <Chip mono>{formatNumber(c.followers)} 粉丝</Chip>
-        <Chip mono>{c.kol_followers} KOL</Chip>
-        {c.tweet_url && (
-          <a
-            href={c.tweet_url}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="ml-auto font-mono text-[11px] text-[var(--color-orange)] hover:underline"
-          >
-            查看推文 →
-          </a>
+        {c.status && <Chip>{c.status}</Chip>}
+        {c.listing && <Chip>{c.listing}</Chip>}
+        {c.risk && (
+          <Chip tone="warn" title={c.risk}>
+            风险
+          </Chip>
         )}
+        {c.followers > 0 && <Chip mono>{formatNumber(c.followers)} 粉丝</Chip>}
+        {c.kol_followers > 0 && <Chip mono>{c.kol_followers} KOL</Chip>}
+        {!compact && when && (
+          <time className="font-mono text-[11px] text-[var(--color-ink-muted)]" dateTime={c.date_iso}>
+            {when}
+          </time>
+        )}
+        <a
+          href={link}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="ml-auto font-mono text-[11px] text-[var(--color-orange)] hover:underline"
+        >
+          {isTweet ? '查看推文 →' : '打开 X →'}
+        </a>
       </div>
     </article>
   )
@@ -77,15 +114,25 @@ export function CandidateCard({ candidate: c, onOpen }: CandidateCardProps) {
 function Chip({
   children,
   mono,
+  tone = 'default',
+  title,
 }: {
   children: ReactNode
   mono?: boolean
+  tone?: 'default' | 'accent' | 'warn'
+  title?: string
 }) {
+  const toneClass =
+    tone === 'accent'
+      ? 'border-transparent bg-[var(--color-orange-soft)] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]'
+      : tone === 'warn'
+        ? 'border-transparent bg-[var(--color-orange-soft)] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.12)] dark:text-[var(--color-orange)]'
+        : 'border-[var(--color-line)] bg-[var(--color-cream-2)] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-soft)]'
+
   return (
     <span
-      className={`rounded-md border border-[var(--color-line)] bg-[var(--color-cream-2)] px-2 py-0.5 text-[11px] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-soft)] ${
-        mono ? 'font-mono' : 'font-medium'
-      }`}
+      title={title}
+      className={`rounded-md border px-2 py-0.5 text-[11px] ${toneClass} ${mono ? 'font-mono' : ''}`}
     >
       {children}
     </span>

@@ -3,17 +3,23 @@ import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { FiltersBar } from './components/Filters'
 import { CandidateCard } from './components/CandidateCard'
+import { CategoryBoard } from './components/CategoryBoard'
 import { DetailDrawer } from './components/DetailDrawer'
 import { useTheme } from './hooks/useTheme'
-import type { Candidate, CandidatesPayload, Filters } from './types'
+import type { Candidate, CandidatesPayload, Filters, ViewMode } from './types'
+import { categoryOf, sortChains } from './utils/categories'
 
 const DEFAULT_FILTERS: Filters = {
   search: '',
   chain: '',
+  category: '',
   minFollowers: 0,
   minKol: 0,
-  sort: 'score',
+  sort: 'date',
 }
+
+const DATA_URL = `${import.meta.env.BASE_URL}data/candidates.json`
+const EMPTY_CANDIDATES: Candidate[] = []
 
 function parsePayload(data: unknown): CandidatesPayload {
   if (!data || typeof data !== 'object') throw new Error('无效的 JSON')
@@ -27,8 +33,35 @@ function parsePayload(data: unknown): CandidatesPayload {
   return {
     generated_at_utc: typeof obj.generated_at_utc === 'string' ? obj.generated_at_utc : undefined,
     goal: typeof obj.goal === 'string' ? obj.goal : undefined,
+    source: typeof obj.source === 'string' ? obj.source : undefined,
     method: typeof obj.method === 'object' && obj.method ? (obj.method as Record<string, unknown>) : undefined,
     candidates: list as Candidate[],
+  }
+}
+
+function matches(candidate: Candidate, filters: Filters, ignoreCategory: boolean): boolean {
+  if (filters.chain && candidate.chain !== filters.chain) return false
+  if ((candidate.followers || 0) < filters.minFollowers) return false
+  if ((candidate.kol_followers || 0) < filters.minKol) return false
+  if (!ignoreCategory && filters.category && categoryOf(candidate) !== filters.category) return false
+  const q = filters.search.trim().toLowerCase()
+  if (q) {
+    const hay =
+      `${candidate.name} ${candidate.handle} ${candidate.why} ${candidate.bio} ${candidate.notes ?? ''} ${candidate.chain} ${categoryOf(candidate)} ${candidate.status ?? ''} ${candidate.listing ?? ''} ${candidate.risk ?? ''}`.toLowerCase()
+    if (!hay.includes(q)) return false
+  }
+  return true
+}
+
+function compareCandidates(sort: Filters['sort']) {
+  return (a: Candidate, b: Candidate) => {
+    if (sort === 'followers') return (b.followers || 0) - (a.followers || 0)
+    if (sort === 'kol_followers') return (b.kol_followers || 0) - (a.kol_followers || 0)
+    if (sort === 'score') return (b.score || 0) - (a.score || 0) || a.rank - b.rank
+    const ta = Date.parse(a.date_iso || '') || 0
+    const tb = Date.parse(b.date_iso || '') || 0
+    if (tb !== ta) return tb - ta
+    return a.rank - b.rank
   }
 }
 
@@ -38,17 +71,18 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
+  const [view, setView] = useState<ViewMode>('board')
   const [selected, setSelected] = useState<Candidate | null>(null)
   const [uploadNote, setUploadNote] = useState<string | null>(null)
 
   const loadDefault = useCallback(async () => {
-    setLoading(true)
-    setError(null)
     try {
-      const res = await fetch('/data/candidates.json')
+      const res = await fetch(DATA_URL, { cache: 'no-cache' })
       if (!res.ok) throw new Error(`加载失败 (${res.status})`)
       const json: unknown = await res.json()
       setPayload(parsePayload(json))
+      setUploadNote(null)
+      setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : '加载失败')
     } finally {
@@ -57,6 +91,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect -- state updates run after fetch resolves
     void loadDefault()
   }, [loadDefault])
 
@@ -83,48 +118,53 @@ export default function App() {
     }
   }
 
-  const candidates = payload?.candidates ?? []
+  const candidates = payload?.candidates ?? EMPTY_CANDIDATES
 
-  const chains = useMemo(() => {
-    const set = new Set(candidates.map((c) => c.chain).filter(Boolean))
-    return Array.from(set).sort((a, b) => a.localeCompare(b))
-  }, [candidates])
+  const chains = useMemo(
+    () => sortChains(new Set(candidates.map((c) => c.chain).filter(Boolean))),
+    [candidates],
+  )
 
-  const filtered = useMemo(() => {
-    const q = filters.search.trim().toLowerCase()
-    const list = candidates.filter((c) => {
-      if (filters.chain && c.chain !== filters.chain) return false
-      if (c.followers < filters.minFollowers) return false
-      if (c.kol_followers < filters.minKol) return false
-      if (q) {
-        const hay = `${c.name} ${c.handle} ${c.why} ${c.bio} ${c.notes ?? ''} ${c.chain}`.toLowerCase()
-        if (!hay.includes(q)) return false
-      }
-      return true
-    })
-
-    const sorted = [...list].sort((a, b) => {
-      if (filters.sort === 'followers') return b.followers - a.followers
-      if (filters.sort === 'kol_followers') return b.kol_followers - a.kol_followers
-      return b.score - a.score
-    })
-    return sorted
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const candidate of candidates) {
+      if (!matches(candidate, filters, true)) continue
+      const key = categoryOf(candidate)
+      counts.set(key, (counts.get(key) ?? 0) + 1)
+    }
+    return counts
   }, [candidates, filters])
 
-  const avgScore =
-    candidates.length === 0
-      ? 0
-      : candidates.reduce((s, c) => s + (c.score || 0), 0) / candidates.length
+  const categories = useMemo(() => {
+    const names = new Set(categoryCounts.keys())
+    if (filters.category) names.add(filters.category)
+    return [...names]
+  }, [categoryCounts, filters.category])
+
+  const filtered = useMemo(() => {
+    return candidates.filter((c) => matches(c, filters, false)).sort(compareCandidates(filters.sort))
+  }, [candidates, filters])
+
+  const categoryCount = useMemo(() => {
+    return new Set(candidates.map((c) => categoryOf(c))).size
+  }, [candidates])
+
+  const facetedTotal = useMemo(() => {
+    let n = 0
+    for (const count of categoryCounts.values()) n += count
+    return n
+  }, [categoryCounts])
 
   return (
     <div className="min-h-screen bg-[var(--color-cream)] text-[var(--color-ink)] dark:bg-[var(--color-night)] dark:text-[var(--color-night-ink)]">
-      <Header theme={theme} onToggleTheme={toggle} onUpload={handleUpload} />
+      <Header theme={theme} onToggleTheme={toggle} onUpload={handleUpload} onRefresh={() => void loadDefault()} />
 
       <Hero
         projectCount={candidates.length}
-        avgScore={avgScore}
+        categoryCount={categoryCount}
         chainCount={chains.length}
         generatedAt={payload?.generated_at_utc}
+        source={payload?.source}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -138,56 +178,71 @@ export default function App() {
           <p className="mb-4 font-mono text-xs text-[var(--color-ink-muted)]">{uploadNote}</p>
         )}
 
-        <FiltersBar
-          filters={filters}
-          chains={chains}
-          resultCount={filtered.length}
-          onChange={(next) => setFilters((f) => ({ ...f, ...next }))}
-        />
+        {error && payload && (
+          <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+            {error}
+          </p>
+        )}
 
-        <div className="mt-6">
-          {loading && (
-            <div className="rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-              加载候选数据…
-            </div>
-          )}
+        {loading && !payload && (
+          <div className="rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
+            加载项目推送…
+          </div>
+        )}
 
-          {!loading && error && (
-            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-6 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
-              {error}
-              <button
-                type="button"
-                onClick={() => void loadDefault()}
-                className="ml-3 underline"
-              >
-                重试
-              </button>
-            </div>
-          )}
+        {!loading && error && !payload && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-6 text-center text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+            {error}
+            <button type="button" onClick={() => void loadDefault()} className="ml-3 underline">
+              重试
+            </button>
+          </div>
+        )}
 
-          {!loading && !error && filtered.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-              没有匹配的项目，试试放宽筛选条件。
-            </div>
-          )}
+        {payload && (
+          <>
+            <FiltersBar
+              filters={filters}
+              chains={chains}
+              categories={categories}
+              categoryCounts={categoryCounts}
+              resultCount={filtered.length}
+              totalCount={facetedTotal}
+              view={view}
+              onChange={(next) => setFilters((current) => ({ ...current, ...next }))}
+              onViewChange={setView}
+            />
 
-          {!loading && !error && filtered.length > 0 && (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {filtered.map((c) => (
-                <CandidateCard
-                  key={`${c.rank}-${c.handle}`}
-                  candidate={c}
-                  onOpen={setSelected}
-                />
-              ))}
+            <div className="mt-6">
+              {filtered.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
+                  没有匹配的项目，试试放宽链或类型筛选。
+                </div>
+              )}
+
+              {filtered.length > 0 && view === 'board' && (
+                <CategoryBoard candidates={filtered} onOpen={setSelected} />
+              )}
+
+              {filtered.length > 0 && view === 'feed' && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {filtered.map((candidate) => (
+                    <CandidateCard
+                      key={`${candidate.message_id ?? candidate.rank}-${candidate.handle}`}
+                      candidate={candidate}
+                      onOpen={setSelected}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </main>
 
       <footer className="border-t border-[var(--color-line)] py-8 text-center dark:border-[var(--color-night-line)]">
         <p className="font-mono text-[11px] text-[var(--color-ink-muted)]">
-          台子雷达 · Pad Hunter — Launchpad 产品猎人，非 meme 代币扫描
+          台子雷达 · Pad Hunter — Telegram「项目推送」按链与类型分类
         </p>
       </footer>
 
