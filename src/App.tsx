@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react'
+import { CaAlertToasts } from './components/CaAlert'
 import { Header } from './components/Header'
+import { useCaAlertWatcher } from './hooks/useCaAlertWatcher'
 import { usePadData } from './hooks/usePadData'
 import { useTheme } from './hooks/useTheme'
 import { CaPage } from './pages/CaPage'
@@ -8,6 +10,7 @@ import { LaunchedPage } from './pages/LaunchedPage'
 import { MonitorPage } from './pages/MonitorPage'
 import { TodayPage } from './pages/TodayPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
+import { setBaseDocumentTitle } from './utils/caAlert'
 import { countUpcoming } from './utils/launch'
 import { appPath, useRoute } from './router'
 
@@ -15,6 +18,7 @@ export default function App() {
   const { theme, toggle } = useTheme()
   const route = useRoute()
   const data = usePadData()
+  useCaAlertWatcher()
   const todayCount = useMemo(
     () =>
       data.loading && data.candidates.length === 0
@@ -33,7 +37,7 @@ export default function App() {
       monitor: '监控详情 · 台子雷达',
       notfound: '未找到 · 台子雷达',
     }
-    document.title = titles[route.name]
+    setBaseDocumentTitle(titles[route.name])
   }, [route.name])
 
   return (
@@ -97,6 +101,8 @@ export default function App() {
           </a>
         </main>
       )}
+
+      <CaAlertToasts />
 
       <footer className="border-t border-[var(--color-line)] py-8 text-center dark:border-[var(--color-night-line)]">
         <p className="font-mono text-[11px] text-[var(--color-ink-muted)]">

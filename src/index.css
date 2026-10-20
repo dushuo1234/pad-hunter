@@ -92,6 +92,15 @@ html.dark body {
   box-shadow: inset 3px 0 0 var(--color-orange);
 }
 
+@keyframes ca-toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ca-toast-in {
+  animation: ca-toast-in 0.22s ease-out;
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
