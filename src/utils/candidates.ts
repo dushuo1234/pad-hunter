@@ -21,7 +21,7 @@ export function withSourceFallback(candidates: Candidate[], payloadSource?: stri
 }
 
 export function sortSources(names: Iterable<string>): string[] {
-  return [...names].sort((a, b) => {
+  return [...new Set(names)].sort((a, b) => {
     const ia = SOURCE_ORDER.indexOf(a)
     const ib = SOURCE_ORDER.indexOf(b)
     if (ia === -1 && ib === -1) return a.localeCompare(b, 'zh')
