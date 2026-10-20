@@ -297,6 +297,7 @@ function speakPhrase() {
 
 async function playAlert() {
   const el = getAudio()
+  playGeneration += 1
   el.muted = false
   el.volume = 1
   try {
