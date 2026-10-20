@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
+import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, formatShanghai, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
@@ -107,7 +108,9 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
           </Section>
         </div>
 
-        <div className="flex gap-2 border-t border-[var(--color-line)] px-5 py-4 dark:border-[var(--color-night-line)]">
+        <div className="space-y-2 border-t border-[var(--color-line)] px-5 py-4 dark:border-[var(--color-night-line)]">
+          <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
+          <div className="flex gap-2">
           <a
             href={monitorPath(c.handle)}
             className="flex-1 rounded-xl bg-[var(--color-orange)] py-2.5 text-center text-sm font-semibold text-white transition hover:bg-[var(--color-orange-deep)]"
@@ -132,6 +135,7 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
               相关推文
             </a>
           )}
+          </div>
         </div>
       </aside>
     </div>

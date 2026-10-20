@@ -14,7 +14,7 @@ interface HeaderProps {
 export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-cream)_88%,transparent)] backdrop-blur-md dark:border-[var(--color-night-line)] dark:bg-[color-mix(in_srgb,var(--color-night)_88%,transparent)]">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <a href={appPath()} className="flex shrink-0 items-center gap-2">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-[var(--color-orange)] shadow-[0_0_0_3px_rgba(232,135,58,0.25)]" />
@@ -32,6 +32,9 @@ export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRe
               {todayCount != null && todayCount > 0 && (
                 <span className="font-mono text-[10px] opacity-80">{todayCount}</span>
               )}
+            </NavLink>
+            <NavLink href={appPath('workbench')} active={route.name === 'workbench'}>
+              工作台
             </NavLink>
           </nav>
         </div>

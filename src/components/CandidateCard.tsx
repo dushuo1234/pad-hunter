@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
+import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
@@ -102,6 +103,7 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
           </time>
         )}
         <span className="ml-auto flex items-center gap-3">
+          <PinWorkbenchButton candidate={c} />
           <a
             href={monitorPath(c.handle)}
             onClick={(e) => e.stopPropagation()}

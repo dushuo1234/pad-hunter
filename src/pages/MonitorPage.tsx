@@ -1,4 +1,5 @@
 import { appPath } from '../router'
+import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { SourceBadge } from '../components/SourceBadge'
 import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from '../utils/candidates'
@@ -33,6 +34,9 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
         <SourceBadge source={candidate?.source} />
       </div>
       <p className="mt-1 font-mono text-sm text-[var(--color-ink-muted)]">@{handle.replace(/^@/, '')}</p>
+      <div className="mt-4">
+        <PinWorkbenchButton candidate={candidate} name={name} handle={handle} variant="button" />
+      </div>
 
       {!candidate && timeline.length === 0 && (
         <div className="mt-8 rounded-2xl border border-dashed border-[var(--color-line)] px-4 py-10 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
