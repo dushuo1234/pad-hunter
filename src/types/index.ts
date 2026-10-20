@@ -115,3 +115,29 @@ export interface MonitorDocument {
   note?: string
   files: string[]
 }
+
+/** Where a contract address was spotted. Canonical values match `ca_finds.json`. */
+export type CaFindSource = 'site' | 'js' | 'x' | 'tg' | 'on-chain'
+
+export type CaFindConfidence = 'high' | 'low'
+
+/**
+ * One detected contract address from `public/data/ca_finds.json`.
+ * `confidence: "low"` marks weak signals such as third-party token icons.
+ */
+export interface CaFind {
+  project: string
+  handle: string
+  chain: string
+  address: string
+  source: string
+  evidence_url: string
+  detected_at: string
+  confidence: CaFindConfidence | ''
+  note: string
+}
+
+export interface CaFindsPayload {
+  generated_at?: string
+  finds: CaFind[]
+}

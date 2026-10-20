@@ -87,6 +87,11 @@ html.dark body {
   animation: fade-in 0.2s ease-out;
 }
 
+.ca-row-new {
+  background: color-mix(in srgb, var(--color-orange) 14%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-orange);
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
