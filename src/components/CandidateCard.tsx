@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
+import { monitorPath } from '../router'
+import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
-import { formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
+import { followerCount, formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
 
 interface CandidateCardProps {
   candidate: Candidate
@@ -14,6 +16,7 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
   const link = c.tweet_url || profile
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
   const when = formatShanghai(c.date_iso)
+  const followers = followerCount(c.followers)
 
   return (
     <article
@@ -81,6 +84,7 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
       </p>
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        <SourceBadge source={c.source} />
         <Chip tone="accent">{categoryOf(c)}</Chip>
         <Chip>{c.chain}</Chip>
         {c.status && <Chip>{c.status}</Chip>}
@@ -90,22 +94,31 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
             风险
           </Chip>
         )}
-        {c.followers > 0 && <Chip mono>{formatNumber(c.followers)} 粉丝</Chip>}
+        {followers > 0 && <Chip mono>{formatNumber(followers)} 粉丝</Chip>}
         {c.kol_followers > 0 && <Chip mono>{c.kol_followers} KOL</Chip>}
         {!compact && when && (
           <time className="font-mono text-[11px] text-[var(--color-ink-muted)]" dateTime={c.date_iso}>
             {when}
           </time>
         )}
-        <a
-          href={link}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="ml-auto font-mono text-[11px] text-[var(--color-orange)] hover:underline"
-        >
-          {isTweet ? '查看推文 →' : '打开 X →'}
-        </a>
+        <span className="ml-auto flex items-center gap-3">
+          <a
+            href={monitorPath(c.handle)}
+            onClick={(e) => e.stopPropagation()}
+            className="font-mono text-[11px] font-medium text-[var(--color-orange)] hover:underline"
+          >
+            监控详情
+          </a>
+          <a
+            href={link}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="font-mono text-[11px] text-[var(--color-orange)] hover:underline"
+          >
+            {isTweet ? '查看推文 →' : '打开 X →'}
+          </a>
+        </span>
       </div>
     </article>
   )

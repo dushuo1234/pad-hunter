@@ -1,30 +1,42 @@
+import type { ReactNode } from 'react'
+import type { AppRoute } from '../router'
+import { appPath } from '../router'
+
 interface HeaderProps {
   theme: 'light' | 'dark'
+  route: AppRoute
+  todayCount: number | null
   onToggleTheme: () => void
   onUpload: (file: File) => void
   onRefresh: () => void
 }
 
-export function Header({ theme, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
+export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-cream)_88%,transparent)] backdrop-blur-md dark:border-[var(--color-night-line)] dark:bg-[color-mix(in_srgb,var(--color-night)_88%,transparent)]">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <a href={appPath()} className="flex shrink-0 items-center gap-2">
             <span className="inline-block h-2.5 w-2.5 rounded-full bg-[var(--color-orange)] shadow-[0_0_0_3px_rgba(232,135,58,0.25)]" />
             <span className="text-base font-bold tracking-tight text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
               台子雷达
             </span>
-            <span className="hidden text-sm font-medium text-[var(--color-ink-muted)] sm:inline">
-              / Pad Hunter
-            </span>
-          </div>
-          <span className="hidden rounded border border-[var(--color-line)] px-2 py-0.5 font-mono text-[10px] tracking-wider text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)] sm:inline">
-            项目推送
-          </span>
+            <span className="hidden text-sm font-medium text-[var(--color-ink-muted)] sm:inline">/ Pad Hunter</span>
+          </a>
+          <nav className="flex items-center gap-1" aria-label="主导航">
+            <NavLink href={appPath()} active={route.name === 'home'}>
+              项目
+            </NavLink>
+            <NavLink href={appPath('today')} active={route.name === 'today'}>
+              今日开盘
+              {todayCount != null && todayCount > 0 && (
+                <span className="font-mono text-[10px] opacity-80">{todayCount}</span>
+              )}
+            </NavLink>
+          </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={onRefresh}
@@ -66,5 +78,21 @@ export function Header({ theme, onToggleTheme, onUpload, onRefresh }: HeaderProp
         </div>
       </div>
     </header>
+  )
+}
+
+function NavLink({ href, active, children }: { href: string; active: boolean; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition ${
+        active
+          ? 'bg-[var(--color-orange)] text-white'
+          : 'text-[var(--color-ink-soft)] hover:bg-[var(--color-orange-soft)] hover:text-[var(--color-orange-deep)] dark:text-[var(--color-night-soft)] dark:hover:bg-[rgba(232,135,58,0.12)] dark:hover:text-[var(--color-orange)]'
+      }`}
+    >
+      {children}
+    </a>
   )
 }

@@ -57,7 +57,7 @@ python3 scripts/telegram/sync_site.py --limit 200
 
 1. 拉取最近 200 条消息并解析以 `🆕` 开头、带 `⛓ 链 · 类型` 的卡片
 2. 按 handle 去重，写入 `scripts/telegram/.data/projects.json`
-3. 转成台子雷达 schema，覆盖 `public/data/candidates.json`
+3. 转成台子雷达 schema，覆盖 `public/data/candidates.json`。每条带 `source`（默认 `telegram:项目推送`，也可用 `TG_SOURCE` 或 `--source`）。要保留文件里另一个频道的项目，加上 `--merge`。
 
 字段对应：`name`、`handle`、`chain`、`category`（发射台 / Meme币 / GameFi / NFT铸造 / DeFi协议 / AI代理 / 基础设施 / 其他）、`status`、`listing`（开盘）、`risk`、`why`（中文摘要）、`bio`、`tweet_url`、`date_iso`、`message_id`。
 

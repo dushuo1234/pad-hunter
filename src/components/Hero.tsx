@@ -1,22 +1,22 @@
 import { RadarGraphic } from './RadarGraphic'
-import { formatNumber } from '../utils/format'
+import { formatNumber, sourceChannel } from '../utils/format'
 
 interface HeroProps {
   projectCount: number
   categoryCount: number
   chainCount: number
   generatedAt?: string
-  source?: string
+  sources: string[]
 }
 
-function sourceLabel(source?: string): string | undefined {
-  if (!source) return undefined
-  if (source.startsWith('telegram:')) return `Telegram「${source.slice('telegram:'.length)}」`
-  return source
+function sourceLabel(source: string): string {
+  const channel = sourceChannel(source)
+  if (!channel || channel === source) return source
+  return `Telegram「${channel}」`
 }
 
-export function Hero({ projectCount, categoryCount, chainCount, generatedAt, source }: HeroProps) {
-  const sourceText = sourceLabel(source)
+export function Hero({ projectCount, categoryCount, chainCount, generatedAt, sources }: HeroProps) {
+  const sourceText = sources.map(sourceLabel).filter(Boolean).join('、')
   return (
     <section className="relative overflow-hidden border-b border-[var(--color-line)] dark:border-[var(--color-night-line)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(232,135,58,0.08),transparent_55%)] dark:bg-[radial-gradient(ellipse_at_top_right,rgba(232,135,58,0.12),transparent_55%)]" />
@@ -24,7 +24,7 @@ export function Hero({ projectCount, categoryCount, chainCount, generatedAt, sou
       <div className="relative mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div>
           <p className="mb-3 font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">
-            Telegram · 项目推送
+            Telegram · 项目推送 / 项目推送监控
           </p>
           <h1 className="text-3xl font-extrabold leading-[1.15] tracking-tight text-[var(--color-ink)] sm:text-4xl lg:text-[2.75rem] dark:text-[var(--color-night-ink)]">
             按链、按类型
@@ -32,7 +32,7 @@ export function Hero({ projectCount, categoryCount, chainCount, generatedAt, sou
             <span className="text-[var(--color-orange)]">看清今天推送的项目</span>
           </h1>
           <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-            台子雷达读取 Telegram「项目推送」卡片，按
+            台子雷达读取 Telegram「项目推送」和「项目推送监控」，按
             <strong className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]"> 链 </strong>
             和
             <strong className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]"> 类型 / 发射台 </strong>
@@ -45,7 +45,7 @@ export function Hero({ projectCount, categoryCount, chainCount, generatedAt, sou
             <Stat value={String(chainCount)} label="覆盖链" />
           </div>
 
-          {(generatedAt || source) && (
+          {(generatedAt || sourceText) && (
             <p className="mt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
               {sourceText ? `来源 · ${sourceText}` : '数据'}
               {generatedAt

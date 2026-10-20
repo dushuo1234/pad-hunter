@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
+import { monitorPath } from '../router'
+import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
-import { formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
+import { followerCount, formatNumber, formatShanghai, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
 
 interface DetailDrawerProps {
   candidate: Candidate | null
@@ -14,6 +16,7 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
   const profile = xProfileUrl(c.handle)
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
   const when = formatShanghai(c.date_iso)
+  const followers = followerCount(c.followers)
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -42,6 +45,9 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
             >
               @{c.handle}
             </a>
+            <div className="mt-2">
+              <SourceBadge source={c.source} />
+            </div>
           </div>
           <button
             type="button"
@@ -59,7 +65,8 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
             <Metric label="类型" value={categoryOf(c)} />
             <Metric label="状态" value={c.status || '—'} />
             <Metric label="开盘" value={c.listing || '—'} />
-            {c.followers > 0 && <Metric label="粉丝" value={formatNumber(c.followers)} />}
+            {followers > 0 && <Metric label="粉丝" value={formatNumber(followers)} />}
+            <Metric label="CA" value={c.ca ? shortAddr(c.ca) : '未发现'} />
             {c.kol_followers > 0 && <Metric label="KOL" value={String(c.kol_followers)} />}
           </div>
 
@@ -102,12 +109,18 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
 
         <div className="flex gap-2 border-t border-[var(--color-line)] px-5 py-4 dark:border-[var(--color-night-line)]">
           <a
+            href={monitorPath(c.handle)}
+            className="flex-1 rounded-xl bg-[var(--color-orange)] py-2.5 text-center text-sm font-semibold text-white transition hover:bg-[var(--color-orange-deep)]"
+          >
+            监控详情
+          </a>
+          <a
             href={profile}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 rounded-xl bg-[var(--color-orange)] py-2.5 text-center text-sm font-semibold text-white transition hover:bg-[var(--color-orange-deep)]"
+            className="flex-1 rounded-xl border border-[var(--color-line)] py-2.5 text-center text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:text-[var(--color-night-ink)]"
           >
-            打开 X 主页
+            打开 X
           </a>
           {isTweet && (
             <a
