@@ -23,7 +23,7 @@ export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRe
             </span>
             <span className="hidden text-sm font-medium text-[var(--color-ink-muted)] sm:inline">/ Pad Hunter</span>
           </a>
-          <nav className="flex items-center gap-1" aria-label="主导航">
+          <nav className="flex flex-wrap items-center gap-1" aria-label="主导航">
             <NavLink href={appPath()} active={route.name === 'home'}>
               项目
             </NavLink>
@@ -32,6 +32,9 @@ export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRe
               {todayCount != null && todayCount > 0 && (
                 <span className="font-mono text-[10px] opacity-80">{todayCount}</span>
               )}
+            </NavLink>
+            <NavLink href={appPath('ca')} active={route.name === 'ca'}>
+              发现CA
             </NavLink>
             <NavLink href={appPath('workbench')} active={route.name === 'workbench'}>
               工作台
