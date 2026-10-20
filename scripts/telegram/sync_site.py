@@ -61,7 +61,32 @@ def as_int(value: Any, default: int = 0) -> int:
         return default
 
 
-def to_candidate(project: Dict[str, Any], rank: int) -> Dict[str, Any]:
+def follower_count(project: Dict[str, Any]) -> int:
+    followers = project.get("followers")
+    if isinstance(followers, bool):
+        return 0
+    if isinstance(followers, (int, float)) and int(followers) > 0:
+        return int(followers)
+    if isinstance(followers, str):
+        stripped = followers.strip()
+        if stripped.isdigit():
+            return int(stripped)
+        parsed = parse_fans(stripped)
+        if parsed:
+            return parsed
+    return parse_fans(str(project.get("fans") or ""))
+
+
+def normalize_source(value: str) -> str:
+    text = value.strip()
+    if not text:
+        return ""
+    if text.startswith("telegram:") or ":" in text:
+        return text
+    return f"telegram:{text}"
+
+
+def to_candidate(project: Dict[str, Any], rank: int, default_source: str = "telegram:项目推送") -> Dict[str, Any]:
     """Map a Telegram card, or an already-shaped site record, into candidates.json."""
     handle = str(project.get("handle") or project.get("twitter_handle") or "").lstrip("@")
     message_id = project.get("message_id")
@@ -80,15 +105,12 @@ def to_candidate(project: Dict[str, Any], rank: int) -> Dict[str, Any]:
     if not isinstance(score, (int, float)):
         score = 50
 
-    followers = project.get("followers")
-    if not isinstance(followers, (int, float)) or int(followers) == 0:
-        followers = parse_fans(str(project.get("fans") or ""))
-
-    return {
+    source = normalize_source(str(project.get("source") or "")) or default_source
+    row: Dict[str, Any] = {
         "rank": rank,
         "handle": handle,
         "name": str(project.get("name") or handle or "未命名"),
-        "followers": as_int(followers),
+        "followers": follower_count(project),
         "kol_followers": as_int(project.get("kol_followers")),
         "bio": bio,
         "why": why,
@@ -102,7 +124,23 @@ def to_candidate(project: Dict[str, Any], rank: int) -> Dict[str, Any]:
         "notes": notes or "",
         "message_id": message_id,
         "date_iso": date_iso,
+        "source": source,
     }
+    for key in ("ca", "ca_chain", "ca_source", "listing_signal", "last_checked", "onchain_notes"):
+        value = project.get(key)
+        if value not in (None, ""):
+            row[key] = value
+    sites = project.get("sites")
+    if isinstance(sites, list) and sites:
+        urls = []
+        for site in sites:
+            if isinstance(site, str) and site.strip():
+                urls.append(site.strip())
+            elif isinstance(site, dict) and site.get("url"):
+                urls.append(str(site["url"]))
+        if urls:
+            row["sites"] = urls
+    return row
 
 
 def load_projects(path: Path) -> List[Dict[str, Any]]:
@@ -116,14 +154,82 @@ def load_projects(path: Path) -> List[Dict[str, Any]]:
     raise ValueError(f"unrecognized snapshot shape: {path}")
 
 
-def write_site(projects: List[Dict[str, Any]], out: Path) -> None:
+def channel_name(source: str) -> str:
+    return source.split(":", 1)[-1] if ":" in source else source
+
+
+def goal_for(sources: List[str]) -> str:
+    names = [channel_name(source) for source in sources if source]
+    if len(names) == 2:
+        inner = f"「{names[0]}」与「{names[1]}」"
+    elif len(names) > 2:
+        inner = "、".join(f"「{name}」" for name in names)
+    else:
+        inner = f"「{names[0] if names else '项目推送'}」"
+    return f"Telegram{inner}· 按链与类型分类"
+
+
+def preferred_sources(found: List[str]) -> List[str]:
+    order = ["telegram:项目推送监控", "telegram:项目推送"]
+
+    def key(source: str) -> tuple:
+        return (order.index(source) if source in order else len(order), source)
+
+    return sorted(dict.fromkeys(found), key=key)
+
+
+def resolve_source(projects: List[Dict[str, Any]], explicit: str) -> str:
+    if explicit.strip():
+        return normalize_source(explicit)
+    env = os.environ.get("TG_SOURCE", "").strip()
+    if env:
+        return normalize_source(env)
+    found = [normalize_source(str(p.get("source") or "")) for p in projects]
+    found = [item for item in found if item]
+    unique = list(dict.fromkeys(found))
+    if len(unique) == 1:
+        return unique[0]
+    return "telegram:项目推送"
+
+
+def write_site(projects: List[Dict[str, Any]], out: Path, source: str, merge: bool) -> None:
     ordered = sorted(projects, key=lambda p: as_int(p.get("message_id")), reverse=True)
-    # Stable rank: newest message first. If message ids tie, keep prior order.
+    candidates = [to_candidate(p, i, source) for i, p in enumerate(ordered, start=1)]
+    if merge and out.exists():
+        try:
+            old = json.loads(out.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"warning: could not merge existing {out}: {exc}")
+            old = None
+        old_list = old.get("candidates") if isinstance(old, dict) else None
+        if isinstance(old_list, list):
+            kept = []
+            for item in old_list:
+                if not isinstance(item, dict):
+                    continue
+                item_source = normalize_source(str(item.get("source") or ""))
+                if not item_source and isinstance(old, dict):
+                    item_source = normalize_source(str(old.get("source") or ""))
+                if item_source and item_source != source:
+                    kept.append(item)
+            candidates = kept + candidates
+            candidates.sort(
+                key=lambda p: (str(p.get("date_iso") or ""), as_int(p.get("message_id"))),
+                reverse=True,
+            )
+    for index, candidate in enumerate(candidates, start=1):
+        candidate["rank"] = index
+    sources = preferred_sources(
+        [str(item.get("source") or source) for item in candidates if isinstance(item, dict)]
+    )
+    payload_source = sources[0] if sources else source
+    # Stable rank: newest message first when not merging. Merge re-ranks by date.
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "goal": "Telegram「项目推送」· 按链与类型分类",
-        "source": "telegram:项目推送",
-        "candidates": [to_candidate(p, i) for i, p in enumerate(ordered, start=1)],
+        "goal": goal_for(sources or [source]),
+        "source": payload_source,
+        "sources": sources or [source],
+        "candidates": candidates,
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -158,6 +264,16 @@ def main() -> int:
     ap.add_argument("--no-fetch", action="store_true", help="only convert the existing snapshot")
     ap.add_argument("--out", default=str(DEFAULT_OUT), help="candidates.json path")
     ap.add_argument("--allow-empty", action="store_true", help="allow writing an empty candidate list")
+    ap.add_argument(
+        "--source",
+        default="",
+        help="channel id stamped on candidates (default TG_SOURCE or telegram:项目推送)",
+    )
+    ap.add_argument(
+        "--merge",
+        action="store_true",
+        help="keep candidates from other sources already in the output file",
+    )
     args = ap.parse_args()
 
     now = datetime.now(SHANGHAI).strftime("%Y-%m-%d %H:%M:%S")
@@ -188,7 +304,9 @@ def main() -> int:
         return 1
 
     out = Path(args.out)
-    write_site(projects, out)
+    source = resolve_source(projects, args.source)
+    print(f"source: {source} merge={bool(args.merge)}")
+    write_site(projects, out, source, bool(args.merge))
 
     written = json.loads(out.read_text(encoding="utf-8"))
     candidates = written["candidates"]

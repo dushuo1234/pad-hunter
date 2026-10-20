@@ -1,6 +1,6 @@
 # 台子雷达 / Pad Hunter
 
-中文优先的项目雷达。页面读取 Telegram 群「项目推送」整理出的 JSON，按 **链** 和 **类型 / 发射台** 筛选，不用登录。
+中文优先的项目雷达。页面读取 Telegram「项目推送」和「项目推送监控」整理出的 JSON，按 **链** 和 **类型 / 发射台** 筛选，不用登录。每条项目可以打开 **监控详情**，导航里另有 **今日开盘**。
 
 技术栈：Vite + React + TypeScript + Tailwind CSS。
 
@@ -28,7 +28,7 @@ GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hun
 
 ## 数据文件
 
-默认从 `public/data/candidates.json` 加载。当前文件是 Telegram「项目推送」的分类结果（来源字段 `telegram:项目推送`），每条包含：
+默认从 `public/data/candidates.json` 加载。文件可以同时包含两个频道。顶层 `sources` 列出频道，每条 candidate 用自己的 `source`（`telegram:项目推送` 或 `telegram:项目推送监控`）。缺省时界面回退到顶层 `source`。卡片上的来源徽章显示频道名。
 
 | 字段 | 含义 |
 | --- | --- |
@@ -41,9 +41,12 @@ GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hun
 | `why` / `bio` | 中文摘要 / 英文简介 |
 | `tweet_url` | X 链接 |
 | `date_iso` / `message_id` | 推送时间、Telegram 消息 id |
-| `rank` / `score` / `followers` / `kol_followers` | 兼容旧版卡片的排序字段 |
+| `source` | 频道，`telegram:项目推送` 或 `telegram:项目推送监控` |
+| `ca` / `ca_chain` / `ca_source` | 已发现的合约，可空 |
+| `listing_signal` / `sites` / `last_checked` | 最近开盘信号、站点、检查时间，可空 |
+| `rank` / `score` / `followers` / `kol_followers` | 兼容旧版卡片的排序字段。`followers` 可以是数字，或 `粉丝 188 · 你圈子 1 人` 这种原文 |
 
-顶层还有 `generated_at_utc`、`goal`、`source`。
+顶层还有 `generated_at_utc`、`goal`、`source`、`sources`。
 
 页面右上角 **刷新** 会重新请求这份 JSON（适合按日替换文件后看新数据）。**上传 JSON** 只替换当前会话，刷新页面后恢复仓库里的文件。
 
@@ -81,9 +84,82 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - Hero：项目数、类型数、覆盖链、北京时间更新时间
 - **类型 / 发射台** 筛选芯片。点一个类型，下面只显示该类型的项目；「全部」是一条总列表
 - 链、搜索、粉丝、KOL 筛选，以及最新 / 评分 / 粉丝 / KOL 排序，都作用在当前列表上
-- 卡片带类型、状态、开盘徽章
-- 详情侧栏：摘要、风险、开盘、X 链接
+- 卡片带类型、状态、开盘徽章，以及来源（项目推送 / 项目推送监控）
+- 卡片上的 **监控详情** 进入该项目的时间线
+- 导航 **今日开盘**：mint进行中、即将启动、开盘信号，或文案里写了今天日期的项目
+- 详情侧栏：摘要、风险、开盘、X 链接，可再进监控详情
 - 浅色 / 深色主题
+
+## 监控详情与今日开盘
+
+- 项目列表：`/pad-hunter/`
+- 今日开盘：`/pad-hunter/today`
+- 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
+
+GitHub Pages 会把 `dist/index.html` 复制成 `404.html`，所以这些路径刷新后仍能打开。
+
+监控时间线读 `public/data/monitor_events.json`。没有事件时详情页是空时间线，项目列表不受影响。`sample: true` 的事件只出现在时间线上，并标成「示例」，不会当成当前合约。
+
+### 以后怎么写入真实事件
+
+保持 `handle` 和 `candidates.json` 里的 handle 一致（大小写不敏感）。追加到 `events`，或把扫描器原文嵌进同一个文件。页面会合并这些形状：
+
+| 位置 | 来源形状 | 变成 |
+| --- | --- | --- |
+| `events[]` 且 `kind: "site"` | `site` 同 `latest.json` 的 `results[]`（`url`、`status`、`http_code`、`time_s`、`error`） | 站点可用 / 不可用 |
+| `events[]` 且 `kind: "listing_signal"` | `listing_signal` 同 `new_listing_signals[]`（`signal`、`prev`） | 开盘信号 |
+| `events[]` 且 `kind: "ca"` | 同 watchlist 的 `ca`、`ca_chain`、`ca_source` | 发现合约 |
+| `events[]` 且 `kind: "factory"` | `factory_deploy`：`chain`、`tx`、`factory`、`token`、`block`、`notes` | 工厂部署 |
+| `latest` | 整份 `latest.json` | 站点事件 |
+| `listing_scan` | 整份 `listing_scan_latest.json`（`new_listing_signals`、`results[].sites`、`cas`、`signals`、`new_cas`） | 站点、信号、合约 |
+| `watchlist` | 整份 watchlist（`projects[].ca`、`listing_signal`） | 合约、信号 |
+| `factory_deploys[]` | 同上工厂字段，另加 `handle`、`name`、`at` | 工厂部署 |
+| `files` | 相对 `public/data/` 的路径，例如 `monitor/thetimecard.json`，文件内容同样是上述任一形状 | 合并进时间线 |
+
+示例：
+
+```json
+{
+  "generated_at": "2026-10-20T03:14:08Z",
+  "events": [
+    {
+      "id": "site|sparefluxai|2026-10-20T11:06:40+08:00|https://spareflux.netlify.app/",
+      "kind": "site",
+      "at": "2026-10-20T11:06:40+08:00",
+      "handle": "SpareFluxAi",
+      "name": "SpareFlux",
+      "site": {
+        "url": "https://spareflux.netlify.app/",
+        "status": "up",
+        "http_code": "200",
+        "time_s": 0.222,
+        "final_url": "https://spareflux.netlify.app/",
+        "error": ""
+      }
+    }
+  ]
+}
+```
+
+已有扫描文件时可以直接转成这份 JSON：
+
+```bash
+python3 scripts/monitor/build_monitor_events.py \
+  --latest latest.json \
+  --listing-scan listing_scan_latest.json \
+  --watchlist watchlist.json \
+  --out public/data/monitor_events.json
+```
+
+`--samples` 会额外写入两条标成示例的合约和工厂事件，只用于看时间线样式。正式数据不要加这个参数。
+
+两个频道一起留在站点文件里时，同步其中一个频道加上 `--merge`，并指定来源：
+
+```bash
+TG_SOURCE='telegram:项目推送监控' python3 scripts/telegram/sync_site.py --limit 200 --merge
+```
+
+不加 `--merge` 时，脚本仍会整份覆盖 `candidates.json`（每条会带上 `source`）。
 
 ## 设计说明
 
