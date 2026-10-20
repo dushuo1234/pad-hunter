@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T21:55:47+08:00",
+  "generated_at": "2026-10-20T22:15:03+08:00",
   "count": 7,
   "finds": [
     {
@@ -196,8 +196,33 @@
       "kind": "wallet"
     }
   ],
-  "launched_history_count": 29,
+  "launched_history_count": 30,
   "launched_history": [
+    {
+      "project": "Hatch",
+      "handle": "LetsHatchFun",
+      "chain": "ethereum",
+      "address": "0xed900d4e5a47120c8b891456a4240b37c8ba8e8e",
+      "source": "onchain_lock",
+      "evidence_url": null,
+      "detected_at": "2026-10-20T22:14:48+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:HATCH+name:hatch; deployer=0xc45b29efe2ad7c39eb9236d5673cb192825a76a2; token=HATCH / Hatch",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-20T22:14:48+08:00"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-20T22:14:54+08:00"
+        }
+      ],
+      "kind": "contract",
+      "traced_from": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2"
+    },
     {
       "project": "Elysium Name Service",
       "handle": "ElysiumNames",
