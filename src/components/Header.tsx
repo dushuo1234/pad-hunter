@@ -28,7 +28,7 @@ export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRe
               项目
             </NavLink>
             <NavLink href={appPath('today')} active={route.name === 'today'}>
-              今日开盘
+              即将开盘
               {todayCount != null && todayCount > 0 && (
                 <span className="font-mono text-[10px] opacity-80">{todayCount}</span>
               )}

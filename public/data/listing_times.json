@@ -1,0 +1,10 @@
+{
+  "generated_at": null,
+  "note": "可选开盘时间覆盖层，按 handle 对齐 candidates.json。times 为空时页面只使用候选自身的 listing_at / launch_at，或正文里能解析出的开盘时间。example 只说明字段形状，不会被加载。listing_at 用 ISO-8601；只有日期时按上海时间 0 点。listing_at_source 取 site、x 或 tg。",
+  "example": {
+    "handle": "samplepad",
+    "listing_at": "2026-10-22T20:00:00+08:00",
+    "listing_at_source": "tg"
+  },
+  "times": []
+}

@@ -5,6 +5,7 @@ import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
+import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
 
 interface CandidateCardProps {
   candidate: Candidate
@@ -18,6 +19,8 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
   const when = formatShanghai(c.date_iso)
   const followers = followerCount(c.followers)
+  const launch = structuredLaunch(c)
+  const launchSource = launch ? listingSourceLabel(launch.source) : ''
 
   return (
     <article
@@ -90,6 +93,10 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
         <Chip>{c.chain}</Chip>
         {c.status && <Chip>{c.status}</Chip>}
         {c.listing && <Chip>{c.listing}</Chip>}
+        <Chip tone={launch ? 'accent' : 'default'} title={launchSource ? `来源 ${launchSource}` : undefined}>
+          开盘时间 {launchTimeText(launch)}
+          {launch && launchSource ? ` · ${launchSource}` : ''}
+        </Chip>
         {c.risk && (
           <Chip tone="warn" title={c.risk}>
             风险

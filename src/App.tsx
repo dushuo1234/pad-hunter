@@ -7,7 +7,7 @@ import { HomePage } from './pages/HomePage'
 import { MonitorPage } from './pages/MonitorPage'
 import { TodayPage } from './pages/TodayPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
-import { countToday } from './utils/opening'
+import { countUpcoming } from './utils/launch'
 import { appPath, useRoute } from './router'
 
 export default function App() {
@@ -15,14 +15,17 @@ export default function App() {
   const route = useRoute()
   const data = usePadData()
   const todayCount = useMemo(
-    () => (data.loading && data.candidates.length === 0 ? null : countToday(data.candidates, data.events)),
-    [data.candidates, data.events, data.loading],
+    () =>
+      data.loading && data.candidates.length === 0
+        ? null
+        : countUpcoming(data.candidates, data.events, data.listingTimes),
+    [data.candidates, data.events, data.listingTimes, data.loading],
   )
 
   useEffect(() => {
     const titles: Record<typeof route.name, string> = {
       home: '台子雷达 · 项目推送',
-      today: '今日开盘 · 台子雷达',
+      today: '即将开盘 · 台子雷达',
       ca: '发现CA · 台子雷达',
       workbench: '工作台 · 台子雷达',
       monitor: '监控详情 · 台子雷达',
@@ -54,7 +57,12 @@ export default function App() {
         />
       )}
       {route.name === 'today' && (
-        <TodayPage candidates={data.candidates} events={data.events} loading={data.loading} />
+        <TodayPage
+          candidates={data.candidates}
+          events={data.events}
+          listingTimes={data.listingTimes}
+          loading={data.loading}
+        />
       )}
       {route.name === 'ca' && <CaPage candidates={data.candidates} />}
       {route.name === 'workbench' && (

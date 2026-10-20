@@ -14,6 +14,12 @@ export interface Candidate {
   category?: string
   status?: string
   listing?: string
+  /** ISO-8601 launch time. `YYYY-MM-DD` is a Shanghai date with no clock. */
+  listing_at?: string | null
+  /** Alias of `listing_at` when a pipeline uses that name. */
+  launch_at?: string | null
+  /** Where the launch time was read: `site`, `x`, or `tg`. */
+  listing_at_source?: string | null
   risk?: string
   message_id?: number
   date_iso?: string
