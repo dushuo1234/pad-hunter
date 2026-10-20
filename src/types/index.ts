@@ -14,6 +14,12 @@ export interface Candidate {
   category?: string
   status?: string
   listing?: string
+  /** ISO-8601 launch time. `YYYY-MM-DD` is a Shanghai date with no clock. */
+  listing_at?: string | null
+  /** Alias of `listing_at` when a pipeline uses that name. */
+  launch_at?: string | null
+  /** Where the launch time was read: `site`, `x`, or `tg`. */
+  listing_at_source?: string | null
   risk?: string
   message_id?: number
   date_iso?: string
@@ -114,4 +120,30 @@ export interface MonitorDocument {
   generatedAt?: string
   note?: string
   files: string[]
+}
+
+/** Where a contract address was spotted. Canonical values match `ca_finds.json`. */
+export type CaFindSource = 'site' | 'js' | 'x' | 'tg' | 'on-chain'
+
+export type CaFindConfidence = 'high' | 'low'
+
+/**
+ * One detected contract address from `public/data/ca_finds.json`.
+ * `confidence: "low"` marks weak signals such as third-party token icons.
+ */
+export interface CaFind {
+  project: string
+  handle: string
+  chain: string
+  address: string
+  source: string
+  evidence_url: string
+  detected_at: string
+  confidence: CaFindConfidence | ''
+  note: string
+}
+
+export interface CaFindsPayload {
+  generated_at?: string
+  finds: CaFind[]
 }

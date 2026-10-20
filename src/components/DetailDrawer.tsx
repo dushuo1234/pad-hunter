@@ -5,6 +5,7 @@ import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, formatShanghai, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
+import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
 
 interface DetailDrawerProps {
   candidate: Candidate | null
@@ -18,6 +19,8 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
   const when = formatShanghai(c.date_iso)
   const followers = followerCount(c.followers)
+  const launch = structuredLaunch(c)
+  const launchSource = launch ? listingSourceLabel(launch.source) : ''
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -66,6 +69,10 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
             <Metric label="类型" value={categoryOf(c)} />
             <Metric label="状态" value={c.status || '—'} />
             <Metric label="开盘" value={c.listing || '—'} />
+            <Metric
+              label="开盘时间"
+              value={`${launchTimeText(launch)}${launch && launchSource ? ` · ${launchSource}` : ''}`}
+            />
             {followers > 0 && <Metric label="粉丝" value={formatNumber(followers)} />}
             <Metric label="CA" value={c.ca ? shortAddr(c.ca) : '未发现'} />
             {c.kol_followers > 0 && <Metric label="KOL" value={String(c.kol_followers)} />}

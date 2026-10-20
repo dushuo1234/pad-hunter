@@ -23,7 +23,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - run: cp dist/index.html dist/404.html
+      - name: Check SPA deep-link fallback
+        run: |
+          test -f dist/404.html
+          grep -F 'pathSegmentsToKeep' dist/404.html
+          grep -F 'l.search[1]' dist/index.html
       - name: Deploy GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4

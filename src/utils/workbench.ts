@@ -256,14 +256,39 @@ export function pinManual(input: ManualPinInput): PinResult {
   return 'added'
 }
 
-export function pinObserved(input: { name: string; handle: string; candidate?: Candidate | null }): PinResult {
-  if (input.candidate) return pinCandidate(input.candidate)
+function fillEmptyCa(handle: string, ca: string, caChain: string): void {
+  const nextCa = ca.trim().slice(0, 200)
+  const nextChain = caChain.trim().slice(0, 80)
+  if (!nextCa && !nextChain) return
+  const list = items.slice()
+  const index = indexByHandle(list, handle)
+  if (index < 0) return
+  const prev = list[index]
+  const filledCa = prev.ca || nextCa
+  const filledChain = prev.caChain || nextChain
+  if (filledCa === prev.ca && filledChain === prev.caChain) return
+  list[index] = { ...prev, ca: filledCa, caChain: filledChain }
+  commit(list)
+}
+
+export function pinObserved(input: {
+  name: string
+  handle: string
+  candidate?: Candidate | null
+  ca?: string
+  caChain?: string
+}): PinResult {
+  if (input.candidate) {
+    const result = pinCandidate(input.candidate)
+    fillEmptyCa(input.candidate.handle || input.handle, input.ca ?? '', input.caChain ?? '')
+    return result
+  }
   return pinManual({
     name: input.name,
     handle: input.handle,
     siteUrl: '',
-    ca: '',
-    caChain: '',
+    ca: input.ca ?? '',
+    caChain: input.caChain ?? '',
     origin: 'catalog',
   })
 }

@@ -1,6 +1,6 @@
 # 台子雷达 / Pad Hunter
 
-中文优先的项目雷达。页面读取 Telegram「项目推送」和「项目推送监控」整理出的 JSON，按 **链** 和 **类型 / 发射台** 筛选，不用登录。每条项目可以打开 **监控详情**，导航里另有 **今日开盘**。
+中文优先的项目雷达。页面读取 Telegram「项目推送」和「项目推送监控」整理出的 JSON，按 **链** 和 **类型 / 发射台** 筛选，不用登录。每条项目可以打开 **监控详情**，导航里另有 **即将开盘** 和 **发现CA**。
 
 技术栈：Vite + React + TypeScript + Tailwind CSS。
 
@@ -86,16 +86,19 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 链、搜索、粉丝、KOL 筛选，以及最新 / 评分 / 粉丝 / KOL 排序，都作用在当前列表上
 - 卡片带类型、状态、开盘徽章，以及来源（项目推送 / 项目推送监控）
 - 卡片上的 **监控详情** 进入该项目的时间线
-- 导航 **今日开盘**：mint进行中、即将启动、开盘信号，或文案里写了今天日期的项目
+- 导航 **即将开盘**：尚未开盘、且开盘时间落在上海时间今天起 3 天内的项目
+- 导航 **发现CA**：按项目列出扫到的合约地址，每秒重读 `ca_finds.json`
 - 导航 **工作台**：钉住关心的项目，写个人备注，并对照监控进度
 - 卡片和监控详情上的 **加入工作台** 把项目钉到本机工作台
 - 详情侧栏：摘要、风险、开盘、X 链接，可再进监控详情
 - 浅色 / 深色主题
 
-## 监控详情与今日开盘
+## 监控详情、即将开盘与发现CA
 
 - 项目列表：`/pad-hunter/`
-- 今日开盘：`/pad-hunter/today`
+- 即将开盘：`/pad-hunter/today`
+- 发现CA：`/pad-hunter/ca`
+- 已开盘：`/pad-hunter/launched`
 - 工作台：`/pad-hunter/workbench`
 - 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
 
@@ -165,6 +168,33 @@ TG_SOURCE='telegram:项目推送监控' python3 scripts/telegram/sync_site.py --
 ```
 
 不加 `--merge` 时，脚本仍会整份覆盖 `candidates.json`（每条会带上 `source`）。
+
+## 发现CA
+
+`/pad-hunter/ca` 读取 `public/data/ca_finds.json`，每秒带 `?t=` 重新请求。打开页面之后新写入的行会高亮。可以按链、置信度筛选，并用项目名或地址搜索。每条地址可以复制、打开对应浏览器（Etherscan、Solscan、Basescan 等），并进入该项目的监控详情或加入工作台。
+
+`confidence` 为 `low` 时页面会标成低置信。这用来放第三方弱信号，例如 Baola、Ballast 等信息流站点上的代币图标，不一定是项目自己公布的合约。
+
+```json
+{
+  "generated_at": "2026-10-20T00:00:00.000Z",
+  "finds": [
+    {
+      "project": "项目名",
+      "handle": "X账号",
+      "chain": "Base",
+      "address": "0x…",
+      "source": "site",
+      "evidence_url": "https://example.com/evidence",
+      "detected_at": "2026-10-20T08:00:00.000Z",
+      "confidence": "high",
+      "note": ""
+    }
+  ]
+}
+```
+
+`source` 取 `site`、`js`、`x`、`tg`、`on-chain`。`confidence` 取 `high` 或 `low`。发现时间按北京时间（Asia/Shanghai）显示。没有发现时 `finds` 为空数组。
 
 ## 设计说明
 

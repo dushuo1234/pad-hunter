@@ -6,12 +6,13 @@ interface HeaderProps {
   theme: 'light' | 'dark'
   route: AppRoute
   todayCount: number | null
+  launchedCount: number | null
   onToggleTheme: () => void
   onUpload: (file: File) => void
   onRefresh: () => void
 }
 
-export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
+export function Header({ theme, route, todayCount, launchedCount, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-cream)_88%,transparent)] backdrop-blur-md dark:border-[var(--color-night-line)] dark:bg-[color-mix(in_srgb,var(--color-night)_88%,transparent)]">
       <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2 sm:px-6">
@@ -23,14 +24,23 @@ export function Header({ theme, route, todayCount, onToggleTheme, onUpload, onRe
             </span>
             <span className="hidden text-sm font-medium text-[var(--color-ink-muted)] sm:inline">/ Pad Hunter</span>
           </a>
-          <nav className="flex items-center gap-1" aria-label="主导航">
+          <nav className="flex flex-wrap items-center gap-1" aria-label="主导航">
             <NavLink href={appPath()} active={route.name === 'home'}>
               项目
             </NavLink>
             <NavLink href={appPath('today')} active={route.name === 'today'}>
-              今日开盘
+              即将开盘
               {todayCount != null && todayCount > 0 && (
                 <span className="font-mono text-[10px] opacity-80">{todayCount}</span>
+              )}
+            </NavLink>
+            <NavLink href={appPath('ca')} active={route.name === 'ca'}>
+              发现CA
+            </NavLink>
+            <NavLink href={appPath('launched')} active={route.name === 'launched'}>
+              已开盘
+              {launchedCount != null && (
+                <span className="font-mono text-[10px] opacity-80">{launchedCount}</span>
               )}
             </NavLink>
             <NavLink href={appPath('workbench')} active={route.name === 'workbench'}>

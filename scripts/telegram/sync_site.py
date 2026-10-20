@@ -126,7 +126,17 @@ def to_candidate(project: Dict[str, Any], rank: int, default_source: str = "tele
         "date_iso": date_iso,
         "source": source,
     }
-    for key in ("ca", "ca_chain", "ca_source", "listing_signal", "last_checked", "onchain_notes"):
+    for key in (
+        "ca",
+        "ca_chain",
+        "ca_source",
+        "listing_signal",
+        "listing_at",
+        "launch_at",
+        "listing_at_source",
+        "last_checked",
+        "onchain_notes",
+    ):
         value = project.get(key)
         if value not in (None, ""):
             row[key] = value

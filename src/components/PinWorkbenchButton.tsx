@@ -6,6 +6,8 @@ interface PinWorkbenchButtonProps {
   candidate?: Candidate | null
   name?: string
   handle?: string
+  ca?: string
+  caChain?: string
   variant?: 'link' | 'button'
   className?: string
 }
@@ -14,6 +16,8 @@ export function PinWorkbenchButton({
   candidate,
   name,
   handle,
+  ca,
+  caChain,
   variant = 'link',
   className = '',
 }: PinWorkbenchButtonProps) {
@@ -26,7 +30,7 @@ export function PinWorkbenchButton({
   const onPin = (event: { stopPropagation: () => void; preventDefault: () => void }) => {
     event.stopPropagation()
     event.preventDefault()
-    pinObserved({ name: resolvedName, handle: resolvedHandle, candidate })
+    pinObserved({ name: resolvedName, handle: resolvedHandle, candidate, ca, caChain })
   }
 
   const label = pinned ? '已在工作台' : '加入工作台'

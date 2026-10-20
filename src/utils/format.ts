@@ -35,18 +35,20 @@ export function sameXUrl(a: string, b: string): boolean {
   return norm(a) === norm(b)
 }
 
-export function formatShanghai(iso?: string): string {
+export function formatShanghai(iso?: string, withSeconds = false): string {
   if (!iso) return ''
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return ''
-  return date.toLocaleString('zh-CN', {
+  const options: Intl.DateTimeFormatOptions = {
     timeZone: 'Asia/Shanghai',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false,
-  })
+  }
+  if (withSeconds) options.second = '2-digit'
+  return date.toLocaleString('zh-CN', options)
 }
 
 export function formatLatency(timeS?: number): string {
