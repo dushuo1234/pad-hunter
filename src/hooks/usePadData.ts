@@ -2,11 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Candidate, CandidatesPayload, MonitorEvent } from '../types'
 import { withSourceFallback } from '../utils/candidates'
 import { applyListingTimes, readListingTimes, type ListingTimeEntry } from '../utils/launch'
+import { launchedHandleSet, readLaunched, withoutLaunched, type LaunchedDocument } from '../utils/launched'
 import { collectMonitorEvents, listedMonitorFiles, readMonitorDocument } from '../utils/monitor'
 
 const CANDIDATES_URL = `${import.meta.env.BASE_URL}data/candidates.json`
 const EVENTS_URL = `${import.meta.env.BASE_URL}data/monitor_events.json`
 const LISTING_TIMES_URL = `${import.meta.env.BASE_URL}data/listing_times.json`
+const LAUNCHED_URL = `${import.meta.env.BASE_URL}data/launched.json`
+
+const EMPTY_LAUNCHED: LaunchedDocument = { count: 0, items: [] }
 
 const EMPTY_CANDIDATES: Candidate[] = []
 
@@ -72,22 +76,25 @@ export function usePadData() {
   const [eventsNote, setEventsNote] = useState<string | undefined>(undefined)
   const [eventsAt, setEventsAt] = useState<string | undefined>(undefined)
   const [listingTimes, setListingTimes] = useState<ListingTimeEntry[]>([])
+  const [launched, setLaunched] = useState<LaunchedDocument>(EMPTY_LAUNCHED)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [uploadNote, setUploadNote] = useState<string | null>(null)
 
   const loadDefault = useCallback(async () => {
     try {
-      const [candidatesJson, monitor, listingTimesJson] = await Promise.all([
+      const [candidatesJson, monitor, listingTimesJson, launchedJson] = await Promise.all([
         fetchJson(CANDIDATES_URL),
         loadEvents(),
         fetchOptional(LISTING_TIMES_URL),
+        fetchOptional(LAUNCHED_URL),
       ])
       setPayload(parsePayload(candidatesJson))
       setEvents(monitor.events)
       setEventsNote(monitor.note)
       setEventsAt(monitor.generatedAt)
       setListingTimes(readListingTimes(listingTimesJson))
+      setLaunched(readLaunched(launchedJson))
       setUploadNote(null)
       setError(null)
     } catch (e) {
@@ -114,9 +121,14 @@ export function usePadData() {
     }
   }
 
-  const candidates = useMemo(
+  const allCandidates = useMemo(
     () => applyListingTimes(payload?.candidates ?? EMPTY_CANDIDATES, listingTimes),
     [payload, listingTimes],
+  )
+  const launchedHandles = useMemo(() => launchedHandleSet(launched.items), [launched])
+  const candidates = useMemo(
+    () => withoutLaunched(allCandidates, launchedHandles),
+    [allCandidates, launchedHandles],
   )
 
   return {
@@ -125,11 +137,14 @@ export function usePadData() {
     eventsNote,
     eventsAt,
     listingTimes,
+    launched,
+    launchedHandles,
     error,
     loading,
     uploadNote,
     loadDefault,
     handleUpload,
     candidates,
+    allCandidates,
   }
 }

@@ -1,6 +1,20 @@
 <!doctype html>
 <html lang="zh-CN">
   <head>
+    <script>
+      // GitHub Pages has no history rewrite. 404.html sends /pad-hunter/launched to
+      // /pad-hunter/?/launched; restore the path before the app reads location.
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) { return s.replace(/~and~/g, '&') })
+            .join('?')
+          window.history.replaceState(null, '', l.pathname.slice(0, -1) + decoded + l.hash)
+        }
+      })(window.location)
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/radar.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

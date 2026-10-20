@@ -98,12 +98,13 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 项目列表：`/pad-hunter/`
 - 即将开盘：`/pad-hunter/today`
 - 发现CA：`/pad-hunter/ca`
+- 已开盘：`/pad-hunter/launched`
 - 工作台：`/pad-hunter/workbench`
 - 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
 
 GitHub Pages 会把 `dist/index.html` 复制成 `404.html`，所以这些路径刷新后仍能打开。
 
-工作台的钉选和备注只写在浏览器 localStorage（键名 `pad-hunter.workbench.v1`），不经过服务器。页面可以导出 JSON 备份，导入 JSON 会替换当前工作台。刷新页面后还在；清除站点数据会丢掉，所以换浏览器前先导出。
+工作台的钉选、备注和推送开关写在浏览器 localStorage（键名 `pad-hunter.workbench.v1`）。填了监控接口令牌后，同一份钉选会同步到监控服务，用来实时检查站点和开盘。页面可以导出 JSON 备份，导入 JSON 会替换当前工作台。刷新页面后钉选还在；清除站点数据会丢掉令牌和钉选，所以换浏览器前先导出。
 
 监控时间线读 `public/data/monitor_events.json`。没有事件时详情页是空时间线，项目列表不受影响。`sample: true` 的事件只出现在时间线上，并标成「示例」，不会当成当前合约。
 
@@ -198,3 +199,27 @@ TG_SOURCE='telegram:项目推送监控' python3 scripts/telegram/sync_site.py --
 ## 设计说明
 
 视觉沿用奶油底、橙色强调、等宽标签和雷达动效，信息按链和类型排开，方便扫读。
+
+## 实时工作台
+
+`/pad-hunter/workbench` 只列出本机钉选的项目。表格列是名称和简介、URL、推特、项目上线、站点状态、上次检查/间隔、变更数、扫出的地址、开盘时间、推送开关，以及「检查」「详情」。摘要形如「共 N 个目标 · 已上线 x · 未上线 y · 合约总数 z」。
+
+没有令牌时表格仍可离线使用。填了令牌之后，页面会在打开时、以及钉选、备注或推送开关变化后约 0.5 秒，把钉选同步到监控接口。浏览器标签可见时每秒拉取状态；切到后台就暂停。`public/data/launched.json` 如果存在，里面的项目会在名称旁显示「已开盘」。
+
+### 配置令牌
+
+监控接口令牌不要写进仓库，也不要放进 GitHub Pages 的构建产物。站点是公开的。
+
+1. 打开工作台。未配置时顶部会显示「请填写监控接口令牌」。
+2. 点开「监控接口」，把令牌粘贴到「接口令牌」，然后保存。
+3. 令牌存在这台浏览器的 localStorage，键名 `pad-hunter.workbench.api`。换浏览器或清除站点数据后需要再贴一次。
+4. 「接口地址」留空时，用构建变量 `VITE_WORKBENCH_API_BASE`；没有该变量时用内置的监控地址。只有接口换域名才需要填写。
+5. 保存后，标题旁的状态来自 `/health`：在线或离线。这个请求不需要令牌。令牌错误时，页面会提示「令牌无效或缺失」。
+
+本地换默认接口：
+
+```bash
+VITE_WORKBENCH_API_BASE=https://example.ngrok-free.dev npm run dev
+```
+
+`launched.json` 可以是 handle 字符串数组，或带 `handle` / `name` 的对象列表（也认 `projects`、`items`、`launched` 这些字段）。没有这个文件时不显示「已开盘」。

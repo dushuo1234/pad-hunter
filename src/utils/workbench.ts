@@ -12,6 +12,8 @@ export interface WorkbenchItem {
   ca: string
   caChain: string
   notes: string
+  /** Sent to the monitor API as `push`. Missing stored values default on. */
+  push: boolean
   pinnedAt: string
   origin: 'catalog' | 'manual'
 }
@@ -36,6 +38,13 @@ function asString(value: unknown): string {
   if (typeof value === 'string') return value
   if (typeof value === 'number' && Number.isFinite(value)) return String(value)
   return ''
+}
+
+function asBool(value: unknown, fallback: boolean): boolean {
+  if (typeof value === 'boolean') return value
+  if (value === 1 || value === '1' || value === 'true') return true
+  if (value === 0 || value === '0' || value === 'false') return false
+  return fallback
 }
 
 export function normalizeHandle(handle: string): string {
@@ -80,6 +89,7 @@ function normalizeItem(raw: unknown, index: number): WorkbenchItem | null {
     ca: asString(row.ca).trim().slice(0, 200),
     caChain: asString(row.caChain || row.ca_chain || row.chain).trim().slice(0, 80),
     notes: asString(row.notes).slice(0, 20_000),
+    push: asBool(row.push, true),
     pinnedAt: pinnedAt || new Date().toISOString(),
     origin,
   }
@@ -166,7 +176,8 @@ export function pinCandidate(candidate: Candidate): PinResult {
   const handle = normalizeHandle(candidate.handle)
   const list = items.slice()
   const index = indexByHandle(list, handle)
-  const site = candidate.sites?.map((url) => safeHttpUrl(url)).find(Boolean) ?? ''
+  const extraSite = (candidate as Candidate & { site?: string }).site
+  const site = candidate.sites?.map((url) => safeHttpUrl(url)).find(Boolean) || safeHttpUrl(extraSite || '') || ''
   const ca = candidate.ca?.trim() ?? ''
   const caChain = (candidate.ca_chain || '').trim()
   if (index >= 0) {
@@ -190,6 +201,7 @@ export function pinCandidate(candidate: Candidate): PinResult {
     ca,
     caChain,
     notes: '',
+    push: true,
     pinnedAt: new Date().toISOString(),
     origin: 'catalog',
   })
@@ -236,6 +248,7 @@ export function pinManual(input: ManualPinInput): PinResult {
     ca,
     caChain,
     notes: '',
+    push: true,
     pinnedAt: new Date().toISOString(),
     origin: input.origin ?? 'manual',
   })
@@ -288,8 +301,22 @@ export function updateWorkbenchNotes(id: string, notes: string): void {
   commit(next)
 }
 
+export function setWorkbenchPush(id: string, push: boolean): void {
+  const index = items.findIndex((item) => item.id === id)
+  if (index < 0 || items[index].push === push) return
+  const next = items.slice()
+  next[index] = { ...next[index], push }
+  commit(next)
+}
+
 export function removeWorkbenchItem(id: string): void {
   commit(items.filter((item) => item.id !== id))
+}
+
+export function removeWorkbenchItems(ids: Iterable<string>): void {
+  const drop = new Set(ids)
+  if (drop.size === 0) return
+  commit(items.filter((item) => !drop.has(item.id)))
 }
 
 export function replaceWorkbench(next: WorkbenchItem[]): void {
