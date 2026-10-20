@@ -39,10 +39,10 @@ export function PinWorkbenchButton({
         title={pinned ? '已钉选。再次点击会用公开资料补全空字段，备注保留' : '加入工作台'}
         onClick={onPin}
         onKeyDown={(event) => event.stopPropagation()}
-        className={`rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ${
+        className={`inline-flex items-center justify-center rounded-lg border px-3 py-2 text-sm font-semibold transition ${
           pinned
             ? 'border-[var(--color-orange)] bg-[var(--color-orange-soft)] text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.12)] dark:text-[var(--color-orange)]'
-            : 'border-[var(--color-line)] bg-[var(--color-card)] text-[var(--color-ink-soft)] hover:border-[var(--color-orange)] hover:text-[var(--color-orange-deep)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-soft)]'
+            : 'border-[var(--color-orange)] bg-[var(--color-orange)] text-white hover:bg-[var(--color-orange-deep)]'
         } ${className}`}
       >
         {label}
