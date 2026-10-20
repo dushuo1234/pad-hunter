@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-20T22:20:11+08:00",
-  "count": 10,
+  "generated_at": "2026-10-20T22:25:03+08:00",
+  "count": 9,
   "finds": [
     {
       "project": "HappyBlock",
@@ -26,43 +26,12 @@
         {
           "origin": "wallet_trace.classify",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
       "addr_kind": "wallet"
-    },
-    {
-      "project": "股城",
-      "handle": "stock__opolis",
-      "chain": "bsc",
-      "address": "0xaacbc156435dbab7815a61bccba1c827e52a7777",
-      "source": "site:https://x.com/STOCK__OPOLIS",
-      "evidence_url": "https://x.com/STOCK__OPOLIS",
-      "detected_at": "2026-10-20T22:14:53+08:00",
-      "confidence": "high",
-      "note": "classified as contract (45 bytes)",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T22:14:53+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T22:14:53+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T22:19:29+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "addr_kind": "contract"
     },
     {
       "project": "Ink Pirates",
@@ -83,7 +52,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
       "kind": "wallet",
@@ -99,22 +68,14 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": null,
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
         }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      ]
     },
     {
       "project": "Elysium Name Service",
@@ -125,22 +86,14 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": null,
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
         }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      ]
     },
     {
       "project": "Elysium Name Service",
@@ -151,33 +104,25 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": null,
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
         }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      ]
     },
     {
       "project": "Ink Daddy",
       "handle": "InkDaddynft",
-      "chain": "ethereum",
+      "chain": "ink",
       "address": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
       "source": "inline:https://ink-daddy.com/",
       "evidence_url": "https://ink-daddy.com/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as contract (45 bytes)",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -192,17 +137,17 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract"
     },
     {
       "project": "Superboard",
       "handle": "Superboard_",
-      "chain": "ethereum",
+      "chain": "base",
       "address": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
       "source": "inline:https://www.superboard.xyz/",
       "evidence_url": "https://www.superboard.xyz/",
@@ -223,7 +168,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
       "kind": "wallet",
@@ -233,13 +178,13 @@
     {
       "project": "Timecard",
       "handle": "thetimecard",
-      "chain": "ethereum",
+      "chain": "ink",
       "address": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
       "source": "inline:https://thetimecard.xyz",
       "evidence_url": "https://thetimecard.xyz",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as contract (13692 bytes)",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -249,23 +194,23 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract"
     },
     {
       "project": "肖战羊",
       "handle": "xiaozhanyangx",
-      "chain": "ethereum",
+      "chain": "bsc",
       "address": "0x5ce033b2bfca3af30b3e8c8457deaf776a8b695a",
       "source": "inline:https://tapeout.link/",
       "evidence_url": "https://tapeout.link/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as contract (2205 bytes)",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -280,16 +225,42 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://tapeout.link/",
-          "detected_at": "2026-10-20T22:19:29+08:00"
+          "detected_at": "2026-10-20T22:25:03+08:00"
         }
       ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract"
     }
   ],
-  "launched_history_count": 26,
+  "launched_history_count": 27,
   "launched_history": [
+    {
+      "project": "股城",
+      "handle": "stock__opolis",
+      "chain": "bsc",
+      "address": "0xaacbc156435dbab7815a61bccba1c827e52a7777",
+      "source": "site:https://x.com/STOCK__OPOLIS",
+      "evidence_url": "https://x.com/STOCK__OPOLIS",
+      "detected_at": "2026-10-20T22:14:53+08:00",
+      "confidence": "high",
+      "note": "classified as contract (45 bytes)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T22:14:53+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T22:25:03+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract"
+    },
     {
       "project": "Hatch",
       "handle": "LetsHatchFun",
