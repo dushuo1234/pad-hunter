@@ -1,4 +1,4 @@
-import type { Filters as FiltersState, SortKey, ViewMode } from '../types'
+import type { Filters as FiltersState, SortKey } from '../types'
 import { sortCategories } from '../utils/categories'
 
 interface FiltersProps {
@@ -8,9 +8,7 @@ interface FiltersProps {
   categoryCounts: Map<string, number>
   resultCount: number
   totalCount: number
-  view: ViewMode
   onChange: (next: Partial<FiltersState>) => void
-  onViewChange: (view: ViewMode) => void
 }
 
 const SORTS: [SortKey, string][] = [
@@ -27,9 +25,7 @@ export function FiltersBar({
   categoryCounts,
   resultCount,
   totalCount,
-  view,
   onChange,
-  onViewChange,
 }: FiltersProps) {
   const ordered = sortCategories(categories)
   const dirty =
@@ -43,31 +39,7 @@ export function FiltersBar({
         <h2 className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
           筛选与排序
         </h2>
-        <div className="flex items-center gap-2">
-          <div className="flex rounded-full border border-[var(--color-line)] p-0.5 dark:border-[var(--color-night-line)]">
-            {(
-              [
-                ['board', '看板'],
-                ['feed', '列表'],
-              ] as [ViewMode, string][]
-            ).map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={view === key}
-                onClick={() => onViewChange(key)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                  view === key
-                    ? 'bg-[var(--color-orange)] text-white'
-                    : 'text-[var(--color-ink-soft)] hover:text-[var(--color-orange-deep)] dark:text-[var(--color-night-soft)]'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          <span className="font-mono text-[11px] text-[var(--color-ink-muted)]">{resultCount} 个结果</span>
-        </div>
+        <span className="font-mono text-[11px] text-[var(--color-ink-muted)]">{resultCount} 个结果</span>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -177,7 +149,7 @@ export function FiltersBar({
               active={filters.category === category}
               label={category}
               count={categoryCounts.get(category) ?? 0}
-              onClick={() => onChange({ category: filters.category === category ? '' : category })}
+              onClick={() => onChange({ category })}
             />
           ))}
         </div>
@@ -202,11 +174,6 @@ export function FiltersBar({
             {label}
           </button>
         ))}
-        {view === 'board' && (
-          <span className="ml-auto hidden font-mono text-[10px] text-[var(--color-ink-muted)] sm:inline">
-            左右滑动查看类型列
-          </span>
-        )}
       </div>
     </div>
   )
