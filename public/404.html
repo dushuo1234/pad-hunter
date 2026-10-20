@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>台子雷达</title>
+    <script>
+      // GitHub Pages serves this file for a missing path (/pad-hunter/ca, /today,
+      // /launched, /workbench, /monitor/...). Land on index.html (HTTP 200) and
+      // keep the route in the query so the app can restore it.
+      // pathSegmentsToKeep is 1 because the site is hosted at /pad-hunter/.
+      (function (l) {
+        var pathSegmentsToKeep = 1
+        var parts = l.pathname.slice(1).split('/')
+        var base = '/' + parts.slice(0, pathSegmentsToKeep).join('/')
+        var rest = parts.slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~')
+        var search = l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : ''
+        l.replace(
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            base + '/?/' + rest + search + l.hash
+        )
+      })(window.location)
+    </script>
+  </head>
+  <body></body>
+</html>
