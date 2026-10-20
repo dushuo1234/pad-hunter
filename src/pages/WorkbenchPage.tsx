@@ -5,6 +5,7 @@ import type { Candidate, MonitorEvent } from '../types'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, shortAddr } from '../utils/format'
 import type { MonitorSnapshot } from '../utils/monitor'
+import { isLaunchedHandle } from '../utils/launched'
 import {
   isHandlePinned,
   parseWorkbenchItems,
@@ -23,12 +24,13 @@ interface WorkbenchPageProps {
   events: MonitorEvent[]
   loading: boolean
   eventsAt?: string
+  launchedHandles: Set<string>
 }
 
 const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
 
-export function WorkbenchPage({ candidates, events, loading, eventsAt }: WorkbenchPageProps) {
+export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
   const items = useWorkbenchItems()
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [manualOpen, setManualOpen] = useState(false)
@@ -258,6 +260,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt }: Workben
               candidates={candidates}
               events={events}
               loading={loading}
+              launched={isLaunchedHandle(launchedHandles, item.handle)}
             />
           ))}
         </ul>
@@ -271,11 +274,13 @@ function WorkbenchCard({
   candidates,
   events,
   loading,
+  launched,
 }: {
   item: WorkbenchItem
   candidates: Candidate[]
   events: MonitorEvent[]
   loading: boolean
+  launched: boolean
 }) {
   const progress = useMemo(() => progressForItem(item, candidates, events), [item, candidates, events])
   const { candidate, snap, eventCount } = progress
@@ -292,6 +297,11 @@ function WorkbenchCard({
             <span className="rounded-md bg-[var(--color-cream-2)] px-1.5 py-0.5 text-[11px] text-[var(--color-ink-soft)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-soft)]">
               {item.origin === 'manual' ? '手动' : '候选'}
             </span>
+            {launched && (
+              <span className="rounded-md bg-[var(--color-orange-soft)] px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
+                已开盘
+              </span>
+            )}
             {candidate?.status && <Meta>{candidate.status}</Meta>}
             {candidate?.listing && <Meta>{candidate.listing}</Meta>}
           </div>
