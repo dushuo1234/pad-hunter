@@ -1,22 +1,66 @@
 {
-  "generated_at": "2026-10-20T16:44:49+08:00",
-  "count": 8,
+  "generated_at": "2026-10-20T21:41:41+08:00",
+  "count": 12,
   "finds": [
     {
+      "project": "Hookereum",
+      "handle": "hookereum",
+      "chain": "ethereum",
+      "address": "0x00269307a8272e47d7656005ee71cfb508c6498e",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/hookereum",
+      "detected_at": "2026-10-20T21:41:27+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via name:hookereum; deployer=0xea2d2539b4fd88993d5353558e828a54fb2d5982; token=HOOK / Hookereum",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-20T21:41:27+08:00"
+        }
+      ],
+      "kind": "contract",
+      "traced_from": "0xea2d2539b4fd88993d5353558e828a54fb2d5982"
+    },
+    {
+      "project": "Ink Pirates",
+      "handle": "inkpirates",
+      "chain": "robinhood",
+      "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
+      "source": "site:https://x.com/inkpirates",
+      "evidence_url": "https://x.com/inkpirates",
+      "detected_at": "2026-10-20T21:08:45+08:00",
+      "confidence": "high",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/inkpirates",
+          "detected_at": "2026-10-20T21:08:45+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/inkpirates",
+          "detected_at": "2026-10-20T21:16:20+08:00"
+        }
+      ],
+      "kind": "wallet"
+    },
+    {
       "project": "ZeroFee",
-      "handle": "ZeroFeeSi",
+      "handle": "zerofeesi",
       "chain": "solana",
       "address": "ErvkxE8gc7EwmaQfvoGfVfcDJbVG4EcHQr3yweTkpump",
       "source": "x_bio:https://x.com/ZeroFeeSi",
       "evidence_url": "https://x.com/ZeroFeeSi",
-      "detected_at": "2026-10-20T16:40:05+08:00",
+      "detected_at": "2026-10-20T21:07:56+08:00",
       "confidence": "high",
       "note": null,
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "x_bio:https://x.com/ZeroFeeSi",
-          "detected_at": "2026-10-20T16:40:05+08:00"
+          "detected_at": "2026-10-20T21:07:56+08:00"
         }
       ]
     },
@@ -27,73 +71,132 @@
       "address": "AcV6CcpMGFrA1dhRFiCKNiVNje8QE6ZXR9ep9jh7pump",
       "source": "site:https://x.com/tetsuo_si",
       "evidence_url": "https://x.com/tetsuo_si",
-      "detected_at": "2026-10-20T16:38:38+08:00",
+      "detected_at": "2026-10-20T21:06:32+08:00",
       "confidence": "high",
       "note": null,
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/tetsuo_si",
-          "detected_at": "2026-10-20T16:38:38+08:00"
+          "detected_at": "2026-10-20T21:06:32+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_post/site:https://x.com/tetsuo_si",
-          "detected_at": "2026-10-20T16:38:38+08:00"
+          "detected_at": "2026-10-20T21:06:32+08:00"
+        }
+      ]
+    },
+    {
+      "project": "股城",
+      "handle": "stock__opolis",
+      "chain": "ethereum",
+      "address": "0xaacbc156435dbab7815a61bccba1c827e52a7777",
+      "source": "site:https://x.com/STOCK__OPOLIS",
+      "evidence_url": "https://x.com/STOCK__OPOLIS",
+      "detected_at": "2026-10-20T21:05:49+08:00",
+      "confidence": "high",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T21:05:49+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T21:16:20+08:00"
+        }
+      ],
+      "kind": "wallet"
+    },
+    {
+      "project": "HappyBlock",
+      "handle": "realhappyblock",
+      "chain": "ethereum",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "source": "x_post:https://x.com/RealHappyBlock",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "detected_at": "2026-10-20T21:04:37+08:00",
+      "confidence": "high",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-20T21:04:37+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-20T21:04:37+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-20T21:16:20+08:00"
+        }
+      ],
+      "kind": "wallet"
+    },
+    {
+      "project": "♱ 17-26",
+      "handle": "0xmeaustin",
+      "chain": "solana",
+      "address": "pkmuvif6c691r3u62jgep7o66qcucidb",
+      "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+      "evidence_url": "https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+      "detected_at": "2026-10-20T20:21:35+08:00",
+      "confidence": "medium",
+      "note": null,
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+          "detected_at": "2026-10-20T20:21:35+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+          "detected_at": "2026-10-20T21:14:36+08:00"
         }
       ]
     },
     {
       "project": "Master Studios",
-      "handle": "0xMasterStudios",
+      "handle": "0xmasterstudios",
       "chain": "robinhood",
       "address": "0xA905d663A8cEb43Bf9FB1b866bbA7604a0b4791C",
       "source": "site:https://x.com/0xMasterStudios",
       "evidence_url": "https://x.com/0xMasterStudios",
-      "detected_at": "2026-10-20T16:37:59+08:00",
+      "detected_at": "2026-10-20T18:23:40+08:00",
       "confidence": "high",
-      "note": "classified as contract (3248 bytes)",
+      "note": "classified as contract (3248 bytes); onchain_lock confirmed via wallet+token:symbol:SIEGE; deployer=0x0000000000000000000000000000000000000001; token=SIEGE / Hood Siege",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/0xMasterStudios",
-          "detected_at": "2026-10-20T16:37:59+08:00"
+          "detected_at": "2026-10-20T21:05:50+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_post/site:https://x.com/0xMasterStudios",
-          "detected_at": "2026-10-20T16:37:59+08:00"
+          "detected_at": "2026-10-20T21:05:50+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/0xMasterStudios",
-          "detected_at": "2026-10-20T16:44:49+08:00"
-        }
-      ],
-      "kind": "contract"
-    },
-    {
-      "project": "HappyBlock",
-      "handle": "RealHappyBlock",
-      "chain": "evm",
-      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
-      "source": "x_post:https://x.com/RealHappyBlock",
-      "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-20T16:36:42+08:00",
-      "confidence": "high",
-      "note": null,
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-20T16:36:42+08:00"
+          "detected_at": "2026-10-20T21:16:20+08:00"
         },
         {
-          "origin": "watchlist.ca",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T16:36:42+08:00"
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-20T18:23:40+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "traced_from": "0x0000000000000000000000000000000000000001"
     },
     {
       "project": "Ink Daddy",
@@ -114,12 +217,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T16:44:13+08:00"
+          "detected_at": "2026-10-20T21:14:36+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T16:44:49+08:00"
+          "detected_at": "2026-10-20T21:16:20+08:00"
         }
       ],
       "kind": "wallet"
@@ -143,12 +246,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T16:44:13+08:00"
+          "detected_at": "2026-10-20T21:14:36+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T16:44:49+08:00"
+          "detected_at": "2026-10-20T21:16:20+08:00"
         }
       ],
       "kind": "wallet"
@@ -172,7 +275,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-20T16:44:49+08:00"
+          "detected_at": "2026-10-20T21:16:20+08:00"
         }
       ],
       "kind": "wallet"
@@ -196,12 +299,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://tapeout.link/",
-          "detected_at": "2026-10-20T16:44:13+08:00"
+          "detected_at": "2026-10-20T21:14:36+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://tapeout.link/",
-          "detected_at": "2026-10-20T16:44:49+08:00"
+          "detected_at": "2026-10-20T21:16:20+08:00"
         }
       ],
       "kind": "wallet"
