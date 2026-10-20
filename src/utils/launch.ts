@@ -5,17 +5,7 @@ import { isAlreadyOpened } from './opening'
 /** Today through the Shanghai day three days ahead, inclusive. */
 const WINDOW_DAYS = 3
 
-const LAUNCH_HINT = /开盘|上线|发射|开铸|启动|tge|\b(?:listing|launch|mint|live)\b/i
-const ISO_RE = /(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2})(?::(\d{2}))?(Z|[+-]\d{2}:?\d{2})?)?/g
-const CN_RE = /(?:(\d{4})\s*年\s*)?(\d{1,2})\s*月\s*(\d{1,2})\s*日(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g
-
-const RELATIVE: { re: RegExp; addDays: number }[] = [
-  { re: /大后天(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g, addDays: 3 },
-  { re: /(?<!大)后天(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g, addDays: 2 },
-  { re: /今晚(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g, addDays: 0 },
-  { re: /(?:明天|明日)(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g, addDays: 1 },
-  { re: /(?:今天|今日)(?:\s*(\d{1,2})\s*[:：点时]\s*(\d{1,2}))?/g, addDays: 0 },
-]
+export const UNKNOWN_LAUNCH = '未知'
 
 export interface ListingTimeEntry {
   handle: string
@@ -33,12 +23,6 @@ export interface UpcomingRow {
   candidate: Candidate
   launch: ResolvedLaunch
   snap: MonitorSnapshot
-}
-
-interface FoundDate {
-  at: Date
-  dateOnly: boolean
-  absolute: boolean
 }
 
 function pad(value: number): string {
@@ -59,16 +43,6 @@ function shanghaiYmd(date: Date): { year: number; month: number; day: number } {
 export function shanghaiDayStart(date: Date): Date {
   const { year, month, day } = shanghaiYmd(date)
   return new Date(`${year}-${pad(month)}-${pad(day)}T00:00:00+08:00`)
-}
-
-function shanghaiDateTime(year: number, month: number, day: number, hour = 0, minute = 0): Date | null {
-  if (month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || minute > 59) return null
-  const iso = `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}:00+08:00`
-  const date = new Date(iso)
-  if (Number.isNaN(date.getTime())) return null
-  const ymd = shanghaiYmd(date)
-  if (ymd.year !== year || ymd.month !== month || ymd.day !== day) return null
-  return date
 }
 
 export function upcomingWindow(now = new Date()): { start: Date; end: Date } {
@@ -99,6 +73,11 @@ export function listingSourceLabel(source?: string): string {
   if (source === 'x') return 'X'
   if (source === 'tg') return 'TG 卡片'
   return source ?? ''
+}
+
+export function launchTimeText(launch: ResolvedLaunch | null | undefined): string {
+  if (!launch) return UNKNOWN_LAUNCH
+  return formatLaunchLabel(launch) || UNKNOWN_LAUNCH
 }
 
 export function formatLaunchLabel(launch: ResolvedLaunch): string {
@@ -134,121 +113,33 @@ export function structuredLaunch(candidate: Pick<Candidate, 'listing_at' | 'laun
   return { ...parsed, source: normalizeListingSource(candidate.listing_at_source) }
 }
 
-function candidateChannel(candidate: Candidate): string | undefined {
-  const source = candidate.source?.toLowerCase() ?? ''
-  if (source.includes('telegram') || source.includes('tg')) return 'tg'
-  if (source.includes('twitter') || source === 'x') return 'x'
-  return undefined
-}
-
-function signalChannel(text: string): string {
-  return /(?:^|[;\n；])\s*(?:listing|status)\s*[=：]/i.test(text) ? 'site' : 'x'
-}
-
-function findDates(text: string, now: Date): FoundDate[] {
-  const found: FoundDate[] = []
-  const { year } = shanghaiYmd(now)
-  const today = shanghaiDayStart(now)
-
-  ISO_RE.lastIndex = 0
-  for (const match of text.matchAll(ISO_RE)) {
-    const [, y, m, d, hh, mm, , zone] = match
-    const hasTime = Boolean(hh)
-    if (!hasTime && !zone) {
-      const date = shanghaiDateTime(Number(y), Number(m), Number(d))
-      if (date) found.push({ at: date, dateOnly: true, absolute: true })
-      continue
-    }
-    const raw = zone || hasTime ? match[0] : ''
-    const stamped = zone ? raw : `${y}-${m}-${d}T${hh}:${mm}:00+08:00`
-    const time = Date.parse(stamped)
-    if (!Number.isNaN(time)) found.push({ at: new Date(time), dateOnly: false, absolute: true })
-  }
-
-  CN_RE.lastIndex = 0
-  for (const match of text.matchAll(CN_RE)) {
-    const hasYear = Boolean(match[1])
-    const hasTime = match[4] != null
-    const month = Number(match[2])
-    const day = Number(match[3])
-    const hour = hasTime ? Number(match[4]) : 0
-    const minute = hasTime ? Number(match[5] ?? 0) : 0
-    let date = shanghaiDateTime(hasYear ? Number(match[1]) : year, month, day, hour, minute)
-    if (!date) continue
-    if (!hasYear && date.getTime() < today.getTime()) {
-      date = shanghaiDateTime(year + 1, month, day, hour, minute)
-    }
-    if (date) found.push({ at: date, dateOnly: !hasTime, absolute: true })
-  }
-
-  for (const { re, addDays } of RELATIVE) {
-    re.lastIndex = 0
-    for (const match of text.matchAll(re)) {
-      const hasTime = match[1] != null
-      const base = new Date(today.getTime() + addDays * 24 * 60 * 60 * 1000)
-      const ymd = shanghaiYmd(base)
-      const date = shanghaiDateTime(
-        ymd.year,
-        ymd.month,
-        ymd.day,
-        hasTime ? Number(match[1]) : 0,
-        hasTime ? Number(match[2] ?? 0) : 0,
-      )
-      if (date) found.push({ at: date, dateOnly: !hasTime, absolute: false })
-    }
-  }
-
-  return found
-}
-
-function pickLaunchDate(found: FoundDate[], now: Date): { at: Date; dateOnly: boolean } | null {
-  if (found.length === 0) return null
-  const { start, end } = upcomingWindow(now)
-  const inWindow = found.filter((item) => item.at.getTime() >= start.getTime() && item.at.getTime() < end.getTime())
-  const pool = inWindow.length > 0 ? inWindow : found.filter((item) => item.absolute)
-  if (pool.length === 0) return null
-  const absolute = pool.filter((item) => item.absolute)
-  const choices = (absolute.length > 0 ? absolute : pool).slice().sort((a, b) => a.at.getTime() - b.at.getTime())
-  return choices[0] ?? null
-}
-
-function launchFromText(text: string | null | undefined, now: Date, requireHint: boolean): { at: string; dateOnly: boolean } | null {
-  const raw = text?.trim() ?? ''
-  if (!raw) return null
-  if (requireHint && !LAUNCH_HINT.test(raw)) return null
-  const picked = pickLaunchDate(findDates(raw, now), now)
-  if (!picked) return null
-  return { at: picked.at.toISOString(), dateOnly: picked.dateOnly }
-}
-
+/** listing_at / launch_at, or the same fields from listing_times.json. Free text does not count. */
 export function resolveLaunch(
   candidate: Candidate,
-  snap: MonitorSnapshot,
   overlays: ReadonlyMap<string, ListingTimeEntry>,
-  now = new Date(),
 ): ResolvedLaunch | null {
   const structured = structuredLaunch(candidate)
   if (structured) return structured
 
   const overlay = overlays.get(candidate.handle.replace(/^@/, '').trim().toLowerCase())
   const overlayParsed = overlay ? parseIsoField(overlay.listing_at) : null
-  if (overlayParsed) {
-    return { ...overlayParsed, source: normalizeListingSource(overlay?.listing_at_source) }
-  }
+  if (!overlayParsed) return null
+  return { ...overlayParsed, source: normalizeListingSource(overlay?.listing_at_source) }
+}
 
-  const channel = candidateChannel(candidate)
-  const attempts: { text?: string | null; source?: string; requireHint: boolean }[] = [
-    { text: candidate.listing, source: channel, requireHint: false },
-    { text: candidate.why, source: channel, requireHint: true },
-    { text: candidate.listing_signal, source: candidate.listing_signal ? signalChannel(candidate.listing_signal) : undefined, requireHint: true },
-    { text: snap.lastSignal?.text, source: snap.lastSignal?.text ? signalChannel(snap.lastSignal.text) : undefined, requireHint: true },
-  ]
-  for (const attempt of attempts) {
-    const parsed = launchFromText(attempt.text, now, attempt.requireHint)
-    if (parsed && isInUpcomingWindow(parsed.at, now)) return { ...parsed, source: attempt.source }
-  }
-
-  return null
+export function applyListingTimes(candidates: Candidate[], times: ListingTimeEntry[]): Candidate[] {
+  if (times.length === 0) return candidates
+  const overlays = indexListingTimes(times)
+  return candidates.map((candidate) => {
+    if (structuredLaunch(candidate)) return candidate
+    const entry = overlays.get(candidate.handle.replace(/^@/, '').trim().toLowerCase())
+    if (!entry || !parseIsoField(entry.listing_at)) return candidate
+    return {
+      ...candidate,
+      listing_at: entry.listing_at,
+      listing_at_source: entry.listing_at_source ?? candidate.listing_at_source,
+    }
+  })
 }
 
 export function indexListingTimes(entries: ListingTimeEntry[]): Map<string, ListingTimeEntry> {
@@ -272,7 +163,7 @@ export function upcomingLaunches(
   for (const candidate of candidates) {
     const snap = snapshotForCandidate(candidate, events)
     if (isAlreadyOpened(candidate, snap)) continue
-    const launch = resolveLaunch(candidate, snap, overlays, now)
+    const launch = resolveLaunch(candidate, overlays)
     if (!launch || !isInUpcomingWindow(launch.at, now)) continue
     rows.push({ candidate, launch, snap })
   }

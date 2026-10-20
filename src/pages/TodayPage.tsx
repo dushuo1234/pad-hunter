@@ -6,7 +6,7 @@ import type { Candidate, MonitorEvent } from '../types'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, shortAddr } from '../utils/format'
 import {
-  formatLaunchLabel,
+  launchTimeText,
   listingSourceLabel,
   upcomingLaunches,
   type ListingTimeEntry,
@@ -34,7 +34,7 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
         即将开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        只显示尚未开盘、并且能解析出开盘时间的项目。时间按上海时间，从今天到第 3 天（含两端）。只写「即将开盘」、没有具体时间的不会出现；已开盘、已上线、正在交易的也不会出现。按开盘时间从近到远排列。
+        只显示尚未开盘、并且开盘时间落在上海时间今天到第 3 天（含两端）的项目。开盘时间未知的不出现在这里。已开盘、已上线、正在交易的也不会出现。按开盘时间从近到远排列。
       </p>
 
       {loading && candidates.length === 0 ? (
@@ -43,7 +43,7 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
         </div>
       ) : rows.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-          未来 3 天没有尚未开盘、且带开盘时间的项目。
+          未来 3 天没有尚未开盘、且已有开盘时间的项目。开盘时间未知的不在这张表里。
         </div>
       ) : (
         <ul className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
@@ -56,12 +56,13 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
   )
 }
 
-function TodayRow({ row }: { row: { candidate: Candidate; launch: ResolvedLaunch; snap: MonitorSnapshot } }) {
+function TodayRow({ row }: { row: { candidate: Candidate; launch: ResolvedLaunch | null; snap: MonitorSnapshot } }) {
   const { candidate: c, launch, snap } = row
   const site = snap.lastSite
   const health = site?.status ?? 'unknown'
   const signal = snap.lastSignal?.text
-  const source = listingSourceLabel(launch.source)
+  const source = launch ? listingSourceLabel(launch.source) : ''
+  const when = launchTimeText(launch)
   return (
     <li className="border-b border-[var(--color-line)] px-4 py-3 last:border-b-0 dark:border-[var(--color-night-line)]">
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_auto] lg:items-center">
@@ -87,9 +88,13 @@ function TodayRow({ row }: { row: { candidate: Candidate; launch: ResolvedLaunch
 
         <div className="min-w-0">
           <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">开盘时间</div>
-          <time className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]" dateTime={launch.at}>
-            {formatLaunchLabel(launch)}
-          </time>
+          {launch ? (
+            <time className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]" dateTime={launch.at}>
+              {when}
+            </time>
+          ) : (
+            <div className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{when}</div>
+          )}
           {source && <div className="mt-0.5 text-[11px] text-[var(--color-ink-muted)]">来源 {source}</div>}
         </div>
 

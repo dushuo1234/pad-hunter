@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Candidate, CandidatesPayload, MonitorEvent } from '../types'
 import { withSourceFallback } from '../utils/candidates'
-import { readListingTimes, type ListingTimeEntry } from '../utils/launch'
+import { applyListingTimes, readListingTimes, type ListingTimeEntry } from '../utils/launch'
 import { collectMonitorEvents, listedMonitorFiles, readMonitorDocument } from '../utils/monitor'
 
 const CANDIDATES_URL = `${import.meta.env.BASE_URL}data/candidates.json`
@@ -114,6 +114,11 @@ export function usePadData() {
     }
   }
 
+  const candidates = useMemo(
+    () => applyListingTimes(payload?.candidates ?? EMPTY_CANDIDATES, listingTimes),
+    [payload, listingTimes],
+  )
+
   return {
     payload,
     events,
@@ -125,6 +130,6 @@ export function usePadData() {
     uploadNote,
     loadDefault,
     handleUpload,
-    candidates: payload?.candidates ?? EMPTY_CANDIDATES,
+    candidates,
   }
 }
