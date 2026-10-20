@@ -1,60 +1,7 @@
 {
-  "generated_at": "2026-10-20T22:15:09+08:00",
-  "count": 7,
+  "generated_at": "2026-10-20T22:20:11+08:00",
+  "count": 10,
   "finds": [
-    {
-      "project": "Ink Pirates",
-      "handle": "inkpirates",
-      "chain": "robinhood",
-      "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
-      "source": "site:https://x.com/inkpirates",
-      "evidence_url": "https://x.com/inkpirates",
-      "detected_at": "2026-10-20T21:45:24+08:00",
-      "confidence": "high",
-      "note": "classified as EOA/wallet via eth_getCode",
-      "sources": [
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-20T21:45:24+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-20T21:54:39+08:00"
-        }
-      ],
-      "kind": "wallet"
-    },
-    {
-      "project": "股城",
-      "handle": "stock__opolis",
-      "chain": "ethereum",
-      "address": "0xaacbc156435dbab7815a61bccba1c827e52a7777",
-      "source": "site:https://x.com/STOCK__OPOLIS",
-      "evidence_url": "https://x.com/STOCK__OPOLIS",
-      "detected_at": "2026-10-20T21:41:55+08:00",
-      "confidence": "high",
-      "note": "classified as EOA/wallet via eth_getCode",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T21:41:55+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T21:41:55+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/STOCK__OPOLIS",
-          "detected_at": "2026-10-20T21:54:39+08:00"
-        }
-      ],
-      "kind": "wallet"
-    },
     {
       "project": "HappyBlock",
       "handle": "realhappyblock",
@@ -62,27 +9,164 @@
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post:https://x.com/RealHappyBlock",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-20T21:40:14+08:00",
+      "detected_at": "2026-10-20T22:14:55+08:00",
       "confidence": "high",
       "note": "classified as EOA/wallet via eth_getCode",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-20T21:40:14+08:00"
+          "detected_at": "2026-10-20T22:14:55+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T21:40:14+08:00"
+          "detected_at": "2026-10-20T22:14:55+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T21:54:39+08:00"
+          "detected_at": "2026-10-20T22:19:29+08:00"
         }
       ],
-      "kind": "wallet"
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
+    },
+    {
+      "project": "股城",
+      "handle": "stock__opolis",
+      "chain": "bsc",
+      "address": "0xaacbc156435dbab7815a61bccba1c827e52a7777",
+      "source": "site:https://x.com/STOCK__OPOLIS",
+      "evidence_url": "https://x.com/STOCK__OPOLIS",
+      "detected_at": "2026-10-20T22:14:53+08:00",
+      "confidence": "high",
+      "note": "classified as contract (45 bytes)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T22:14:53+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T22:14:53+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/STOCK__OPOLIS",
+          "detected_at": "2026-10-20T22:19:29+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract"
+    },
+    {
+      "project": "Ink Pirates",
+      "handle": "inkpirates",
+      "chain": "robinhood",
+      "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
+      "source": "site:https://x.com/inkpirates",
+      "evidence_url": "https://x.com/inkpirates",
+      "detected_at": "2026-10-20T22:14:52+08:00",
+      "confidence": "high",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/inkpirates",
+          "detected_at": "2026-10-20T22:14:52+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/inkpirates",
+          "detected_at": "2026-10-20T22:19:29+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
+    },
+    {
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames",
+      "chain": "evm",
+      "address": "0x13a130b336400409c956df042c128238f1486ddd",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "evidence_url": "https://elysiumnameservice.xyz/",
+      "detected_at": "2026-10-20T21:52:54+08:00",
+      "confidence": "medium",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T21:52:54+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T22:19:29+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
+    },
+    {
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames",
+      "chain": "evm",
+      "address": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "evidence_url": "https://elysiumnameservice.xyz/",
+      "detected_at": "2026-10-20T21:52:54+08:00",
+      "confidence": "medium",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T21:52:54+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T22:19:29+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
+    },
+    {
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames",
+      "chain": "evm",
+      "address": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "evidence_url": "https://elysiumnameservice.xyz/",
+      "detected_at": "2026-10-20T21:52:54+08:00",
+      "confidence": "medium",
+      "note": "classified as EOA/wallet via eth_getCode",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T21:52:54+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-20T22:19:29+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
     },
     {
       "project": "Ink Daddy",
@@ -103,15 +187,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
+          "detected_at": "2026-10-20T22:19:20+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T21:54:39+08:00"
+          "detected_at": "2026-10-20T22:19:29+08:00"
         }
       ],
-      "kind": "wallet"
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
     },
     {
       "project": "Superboard",
@@ -132,15 +218,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
+          "detected_at": "2026-10-20T22:19:20+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T21:54:39+08:00"
+          "detected_at": "2026-10-20T22:19:29+08:00"
         }
       ],
-      "kind": "wallet"
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
     },
     {
       "project": "Timecard",
@@ -161,10 +249,12 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-20T21:54:39+08:00"
+          "detected_at": "2026-10-20T22:19:29+08:00"
         }
       ],
-      "kind": "wallet"
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
     },
     {
       "project": "肖战羊",
@@ -185,18 +275,20 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://tapeout.link/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
+          "detected_at": "2026-10-20T22:19:20+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://tapeout.link/",
-          "detected_at": "2026-10-20T21:54:39+08:00"
+          "detected_at": "2026-10-20T22:19:29+08:00"
         }
       ],
-      "kind": "wallet"
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet"
     }
   ],
-  "launched_history_count": 30,
+  "launched_history_count": 26,
   "launched_history": [
     {
       "project": "Hatch",
@@ -221,94 +313,9 @@
         }
       ],
       "kind": "contract",
-      "traced_from": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2"
-    },
-    {
-      "project": "Elysium Name Service",
-      "handle": "ElysiumNames",
-      "chain": "evm",
-      "address": "0x13a130b336400409c956df042c128238f1486ddd",
-      "source": "inline:https://elysiumnameservice.xyz/",
-      "evidence_url": "https://elysiumnameservice.xyz/",
-      "detected_at": "2026-10-20T21:52:54+08:00",
-      "confidence": "medium",
-      "note": null,
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        }
-      ]
-    },
-    {
-      "project": "Elysium Name Service",
-      "handle": "ElysiumNames",
-      "chain": "evm",
-      "address": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
-      "source": "inline:https://elysiumnameservice.xyz/",
-      "evidence_url": "https://elysiumnameservice.xyz/",
-      "detected_at": "2026-10-20T21:52:54+08:00",
-      "confidence": "medium",
-      "note": null,
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        }
-      ]
-    },
-    {
-      "project": "Elysium Name Service",
-      "handle": "ElysiumNames",
-      "chain": "evm",
-      "address": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
-      "source": "inline:https://elysiumnameservice.xyz/",
-      "evidence_url": "https://elysiumnameservice.xyz/",
-      "detected_at": "2026-10-20T21:52:54+08:00",
-      "confidence": "medium",
-      "note": null,
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T21:52:54+08:00"
-        }
-      ]
-    },
-    {
-      "project": "Tetsuo Super Intelligence",
-      "handle": "tetsuo_si",
-      "chain": "solana",
-      "address": "AcV6CcpMGFrA1dhRFiCKNiVNje8QE6ZXR9ep9jh7pump",
-      "source": "site:https://x.com/tetsuo_si",
-      "evidence_url": "https://x.com/tetsuo_si",
-      "detected_at": "2026-10-20T21:42:42+08:00",
-      "confidence": "high",
-      "note": null,
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/tetsuo_si",
-          "detected_at": "2026-10-20T21:42:42+08:00"
-        }
-      ]
+      "label_zh": "合约CA",
+      "traced_from": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2",
+      "addr_kind": "contract"
     },
     {
       "project": "Hookereum",
@@ -328,7 +335,9 @@
         }
       ],
       "kind": "contract",
-      "traced_from": "0xea2d2539b4fd88993d5353558e828a54fb2d5982"
+      "label_zh": "合约CA",
+      "traced_from": "0xea2d2539b4fd88993d5353558e828a54fb2d5982",
+      "addr_kind": "contract"
     },
     {
       "project": "♱ 17-26",
@@ -345,35 +354,20 @@
           "origin": "js_factory_events",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
           "detected_at": "2026-10-20T20:21:35+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-20T21:52:54+08:00"
         }
       ]
     },
     {
       "project": "Master Studios",
-      "handle": "0xmasterstudios",
+      "handle": "0xMasterStudios",
       "chain": "robinhood",
       "address": "0xA905d663A8cEb43Bf9FB1b866bbA7604a0b4791C",
-      "source": "site:https://x.com/0xMasterStudios",
-      "evidence_url": "https://x.com/0xMasterStudios",
+      "source": "onchain_lock",
+      "evidence_url": null,
       "detected_at": "2026-10-20T18:23:40+08:00",
       "confidence": "high",
-      "note": "classified as contract (3248 bytes); onchain_lock confirmed via wallet+token:symbol:SIEGE; deployer=0x0000000000000000000000000000000000000001; token=SIEGE / Hood Siege",
+      "note": "onchain_lock confirmed via wallet+token:symbol:SIEGE; deployer=0x0000000000000000000000000000000000000001; token=SIEGE / Hood Siege",
       "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/0xMasterStudios",
-          "detected_at": "2026-10-20T21:41:58+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/0xMasterStudios",
-          "detected_at": "2026-10-20T21:54:39+08:00"
-        },
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
@@ -381,7 +375,9 @@
         }
       ],
       "kind": "contract",
-      "traced_from": "0x0000000000000000000000000000000000000001"
+      "label_zh": "合约CA",
+      "traced_from": "0x0000000000000000000000000000000000000001",
+      "addr_kind": "contract"
     },
     {
       "project": "Baola",
