@@ -3,6 +3,7 @@ import { Header } from './components/Header'
 import { usePadData } from './hooks/usePadData'
 import { useTheme } from './hooks/useTheme'
 import { HomePage } from './pages/HomePage'
+import { LaunchedPage } from './pages/LaunchedPage'
 import { MonitorPage } from './pages/MonitorPage'
 import { TodayPage } from './pages/TodayPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
@@ -25,6 +26,7 @@ export default function App() {
     const titles: Record<typeof route.name, string> = {
       home: '台子雷达 · 项目推送',
       today: '即将开盘 · 台子雷达',
+      launched: '已开盘 · 台子雷达',
       workbench: '工作台 · 台子雷达',
       monitor: '监控详情 · 台子雷达',
       notfound: '未找到 · 台子雷达',
@@ -38,6 +40,7 @@ export default function App() {
         theme={theme}
         route={route}
         todayCount={todayCount}
+        launchedCount={data.loading && data.launched.items.length === 0 ? null : data.launched.count}
         onToggleTheme={toggle}
         onUpload={(file) => void data.handleUpload(file)}
         onRefresh={() => void data.loadDefault()}
@@ -62,18 +65,22 @@ export default function App() {
           loading={data.loading}
         />
       )}
+      {route.name === 'launched' && (
+        <LaunchedPage items={data.launched.items} generatedAt={data.launched.generatedAt} loading={data.loading} />
+      )}
       {route.name === 'workbench' && (
         <WorkbenchPage
-          candidates={data.candidates}
+          candidates={data.allCandidates}
           events={data.events}
           loading={data.loading}
           eventsAt={data.eventsAt}
+          launchedHandles={data.launchedHandles}
         />
       )}
       {route.name === 'monitor' && (
         <MonitorPage
           handle={route.handle}
-          candidates={data.candidates}
+          candidates={data.allCandidates}
           events={data.events}
           eventsNote={data.eventsNote}
           eventsAt={data.eventsAt}
