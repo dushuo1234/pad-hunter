@@ -64,12 +64,12 @@ export function TodayPage({ candidates, events, loading }: TodayPageProps) {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">开盘盯盘</p>
+      <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">尚未开盘</p>
       <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
-        今日开盘
+        今日即将开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        预计今天开盘，或状态为 mint进行中 / 即将启动，或扫描里已经出现开盘信号的项目。这里比总表更密：状态、合约、最近一次站点探测和最近一条信号放在同一行。
+        只列尚未开盘的项目：预计今天开盘，或状态为 mint进行中 / 即将启动 / 即将开盘，或扫描里已有开盘信号。已开盘、已上线、正在交易的不会出现。状态、合约、最近一次站点探测和最近一条信号放在同一行。
       </p>
 
       {loading && candidates.length === 0 ? (
@@ -106,7 +106,7 @@ export function TodayPage({ candidates, events, loading }: TodayPageProps) {
 
           {visible.length === 0 ? (
             <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-              今天没有符合条件的开盘盯盘项目。
+              今天没有尚未开盘的盯盘项目。
             </div>
           ) : (
             <ul className="mt-4 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
@@ -138,6 +138,11 @@ function TodayRow({ row }: { row: Row }) {
               {c.name}
             </a>
             <SourceBadge source={c.source} />
+            {c.listing && (
+              <span className="rounded-md border border-[var(--color-line)] bg-[var(--color-cream-2)] px-2 py-0.5 text-[11px] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-soft)]">
+                {c.listing}
+              </span>
+            )}
           </div>
           <p className="mt-0.5 truncate font-mono text-[11px] text-[var(--color-ink-muted)]">
             @{c.handle} · {categoryOf(c)} · {c.chain}

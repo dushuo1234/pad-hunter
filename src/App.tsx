@@ -21,7 +21,7 @@ export default function App() {
   useEffect(() => {
     const titles: Record<typeof route.name, string> = {
       home: '台子雷达 · 项目推送',
-      today: '今日开盘 · 台子雷达',
+      today: '今日即将开盘 · 台子雷达',
       workbench: '工作台 · 台子雷达',
       monitor: '监控详情 · 台子雷达',
       notfound: '未找到 · 台子雷达',
