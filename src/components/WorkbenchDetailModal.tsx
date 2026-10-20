@@ -11,6 +11,7 @@ import {
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
 import type { WorkbenchItem } from '../utils/workbench'
+import { observeWorkbenchDetail } from '../utils/caAlert'
 import { safeHttpUrl, setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
 import {
   chainLabel,
@@ -99,6 +100,7 @@ export function WorkbenchDetailModal({
           if (!alive) return
           setDetail(next)
           setDetailError(null)
+          observeWorkbenchDetail(item.handle, item.name || candidate?.name || '', next.addresses)
         })
         .catch((error: unknown) => {
           if (!alive) return
@@ -116,7 +118,7 @@ export function WorkbenchDetailModal({
       alive = false
       window.clearInterval(timer)
     }
-  }, [base, chain, detailTick, item.handle, token])
+  }, [base, chain, candidate?.name, detailTick, item.handle, item.name, token])
 
   const addresses: FoundAddress[] =
     detail && detail.addresses.length > 0

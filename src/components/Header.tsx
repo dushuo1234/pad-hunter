@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { AppRoute } from '../router'
 import { appPath } from '../router'
+import { SoundAlertControls } from './CaAlert'
 
 interface HeaderProps {
   theme: 'light' | 'dark'
@@ -50,6 +51,7 @@ export function Header({ theme, route, todayCount, launchedCount, onToggleTheme,
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <SoundAlertControls />
           <button
             type="button"
             onClick={onRefresh}

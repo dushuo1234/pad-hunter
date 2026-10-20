@@ -150,7 +150,8 @@ export function detectedMs(find: CaFind): number {
   return Number.isNaN(time) ? 0 : time
 }
 
-function addressIdentity(address: string): string {
+/** Checksum-only changes share an id. Empty input stays empty. */
+export function caAddressId(address: string): string {
   const trimmed = address.trim()
   if (trimmed.startsWith('0x') || trimmed.startsWith('0X')) return trimmed.toLowerCase()
   return trimmed
@@ -162,7 +163,7 @@ export function caFindKey(find: CaFind): string {
     find.handle.replace(/^@/, '').trim().toLowerCase(),
     find.project.trim().toLowerCase(),
     find.chain.trim().toLowerCase(),
-    addressIdentity(find.address),
+    caAddressId(find.address),
     find.source.trim().toLowerCase(),
     find.detected_at.trim(),
     find.evidence_url.trim(),
@@ -174,7 +175,7 @@ export function projectGroupKey(find: CaFind): string {
   if (handle) return `h:${handle}`
   const project = find.project.trim().toLowerCase()
   if (project) return `p:${project}`
-  return `a:${addressIdentity(find.address)}`
+  return `a:${caAddressId(find.address)}`
 }
 
 export function parseCaFinds(data: unknown): CaFindsPayload {

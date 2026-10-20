@@ -22,6 +22,7 @@ import {
   type LaunchedIndex,
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
+import { observeWorkbenchStatus, retainWorkbenchLive } from '../utils/caAlert'
 import { handleKey } from '../utils/workbench'
 import { useWorkbenchItems } from './useWorkbench'
 
@@ -69,6 +70,8 @@ export function useWorkbenchLive(candidates: Candidate[]) {
     sessionRef.current = { token, base }
   }, [token, base])
 
+  useEffect(() => retainWorkbenchLive(), [])
+
   const noteAuth = useCallback((error: unknown) => {
     if (isAuthError(error)) setAuthFor(token)
   }, [token])
@@ -89,6 +92,7 @@ export function useWorkbenchLive(candidates: Candidate[]) {
         hasStatus: true,
         error: null,
       })
+      observeWorkbenchStatus(parsed.items)
       const index = statusIndex(parsed.items)
       let changed = false
       let finished = false
