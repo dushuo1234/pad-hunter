@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { SourceBadge } from '../components/SourceBadge'
 import { monitorPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
@@ -182,6 +183,9 @@ function TodayRow({ row }: { row: Row }) {
         >
           监控详情
         </a>
+      </div>
+      <div className="mt-3">
+        <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
       </div>
     </li>
   )

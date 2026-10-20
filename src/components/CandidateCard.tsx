@@ -103,7 +103,6 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
           </time>
         )}
         <span className="ml-auto flex items-center gap-3">
-          <PinWorkbenchButton candidate={c} />
           <a
             href={monitorPath(c.handle)}
             onClick={(e) => e.stopPropagation()}
@@ -121,6 +120,10 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
             {isTweet ? '查看推文 →' : '打开 X →'}
           </a>
         </span>
+      </div>
+
+      <div className="mt-3 border-t border-[var(--color-line)] pt-3 dark:border-[var(--color-night-line)]">
+        <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
       </div>
     </article>
   )
