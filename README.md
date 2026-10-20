@@ -87,6 +87,8 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 卡片带类型、状态、开盘徽章，以及来源（项目推送 / 项目推送监控）
 - 卡片上的 **监控详情** 进入该项目的时间线
 - 导航 **今日开盘**：mint进行中、即将启动、开盘信号，或文案里写了今天日期的项目
+- 导航 **工作台**：钉住关心的项目，写个人备注，并对照监控进度
+- 卡片和监控详情上的 **加入工作台** 把项目钉到本机工作台
 - 详情侧栏：摘要、风险、开盘、X 链接，可再进监控详情
 - 浅色 / 深色主题
 
@@ -94,9 +96,12 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 
 - 项目列表：`/pad-hunter/`
 - 今日开盘：`/pad-hunter/today`
+- 工作台：`/pad-hunter/workbench`
 - 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
 
 GitHub Pages 会把 `dist/index.html` 复制成 `404.html`，所以这些路径刷新后仍能打开。
+
+工作台的钉选和备注只写在浏览器 localStorage（键名 `pad-hunter.workbench.v1`），不经过服务器。页面可以导出 JSON 备份，导入 JSON 会替换当前工作台。刷新页面后还在；清除站点数据会丢掉，所以换浏览器前先导出。
 
 监控时间线读 `public/data/monitor_events.json`。没有事件时详情页是空时间线，项目列表不受影响。`sample: true` 的事件只出现在时间线上，并标成「示例」，不会当成当前合约。
 
