@@ -212,9 +212,14 @@ export function useWorkbenchLive(candidates: Candidate[]) {
         return
       }
       const previous = statusIndex(rows).get(key)?.lastCheckAt ?? ''
-      checkingRef.current.set(key, { since: Date.now(), previousCheckAt: previous })
+      const started = Date.now()
+      checkingRef.current.set(key, { since: started, previousCheckAt: previous })
       setChecking(new Set(checkingRef.current.keys()))
       setActionError(null)
+      const holdChecking = async () => {
+        const wait = 800 - (Date.now() - started)
+        if (wait > 0) await new Promise((resolve) => window.setTimeout(resolve, wait))
+      }
       try {
         const queued = await checkWorkbench(base, token, handle.trim())
         if (!queued) {
@@ -223,6 +228,7 @@ export function useWorkbenchLive(candidates: Candidate[]) {
         }
         await pullStatus()
       } catch (error) {
+        await holdChecking()
         checkingRef.current.delete(handleKey(handle))
         setChecking(new Set(checkingRef.current.keys()))
         noteAuth(error)
