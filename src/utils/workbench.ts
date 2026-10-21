@@ -28,6 +28,10 @@ const EMPTY: WorkbenchItem[] = []
 
 let items: WorkbenchItem[] = loadItems()
 const listeners = new Set<() => void>()
+let autoRemoveMessage: string | null = null
+const autoRemoveListeners = new Set<() => void>()
+let autoRemoveSubscribers = 0
+let autoRemoveIdleTimer = 0
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
@@ -148,6 +152,32 @@ export function subscribeWorkbench(onStoreChange: () => void): () => void {
     listeners.delete(onStoreChange)
     window.removeEventListener('storage', onStorage)
   }
+}
+
+export function getAutoRemoveMessage(): string | null {
+  return autoRemoveMessage
+}
+
+export function subscribeAutoRemoveMessage(onStoreChange: () => void): () => void {
+  autoRemoveListeners.add(onStoreChange)
+  autoRemoveSubscribers += 1
+  if (typeof window !== 'undefined') window.clearTimeout(autoRemoveIdleTimer)
+  return () => {
+    autoRemoveListeners.delete(onStoreChange)
+    autoRemoveSubscribers -= 1
+    if (autoRemoveSubscribers > 0 || typeof window === 'undefined') return
+    autoRemoveIdleTimer = window.setTimeout(() => {
+      if (autoRemoveSubscribers > 0 || autoRemoveMessage == null) return
+      autoRemoveMessage = null
+    }, 0)
+  }
+}
+
+function announceAutoRemove(count: number) {
+  if (count <= 0) return
+  const previous = Number(/^已自动移出已开盘 (\d+) 个$/.exec(autoRemoveMessage ?? '')?.[1] ?? 0)
+  autoRemoveMessage = `已自动移出已开盘 ${previous + count} 个`
+  for (const listener of autoRemoveListeners) listener()
 }
 
 function commit(next: WorkbenchItem[]) {
@@ -317,6 +347,29 @@ export function removeWorkbenchItems(ids: Iterable<string>): void {
   const drop = new Set(ids)
   if (drop.size === 0) return
   commit(items.filter((item) => !drop.has(item.id)))
+}
+
+/**
+ * Drop pins whose handle is already launched. Writes localStorage the same way as a manual 移出.
+ * Pins with no handle, and pins whose handle is not in the set, stay.
+ * Returns how many pins were removed.
+ */
+export function removeLaunchedWorkbenchItems(handles: Iterable<string>): number {
+  const launched = new Set<string>()
+  for (const handle of handles) {
+    const key = handleKey(handle)
+    if (key) launched.add(key)
+  }
+  if (launched.size === 0) return 0
+  const ids: string[] = []
+  for (const item of items) {
+    const key = handleKey(item.handle)
+    if (key && launched.has(key)) ids.push(item.id)
+  }
+  if (ids.length === 0) return 0
+  removeWorkbenchItems(ids)
+  announceAutoRemove(ids.length)
+  return ids.length
 }
 
 export function replaceWorkbench(next: WorkbenchItem[]): void {

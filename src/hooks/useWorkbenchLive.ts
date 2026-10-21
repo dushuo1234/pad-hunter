@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Candidate } from '../types'
 import {
   checkWorkbench,
   clearApiToken,
   defaultApiBase,
+  droppedLaunchedHandles,
   emptyLaunched,
   errorText,
   fetchHealth,
@@ -23,23 +24,28 @@ import {
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
 import { observeWorkbenchStatus, retainWorkbenchLive } from '../utils/caAlert'
-import { handleKey } from '../utils/workbench'
+import { getAutoRemoveMessage, handleKey, removeLaunchedWorkbenchItems, subscribeAutoRemoveMessage } from '../utils/workbench'
 import { useWorkbenchItems } from './useWorkbench'
 
 const SERVER_SETTINGS: ApiSettings = { token: '', baseUrl: '' }
 const EMPTY_ROWS: WorkbenchStatusItem[] = []
+const EMPTY_HANDLES: ReadonlySet<string> = new Set()
+
+function errorBody(error: unknown): unknown {
+  if (!error || typeof error !== 'object' || !('body' in error)) return null
+  return (error as { body?: unknown }).body
+}
 
 interface CheckingMeta {
   since: number
   previousCheckAt: string
 }
 
-export function useWorkbenchLive(candidates: Candidate[]) {
+export function useWorkbenchLive(candidates: Candidate[], launchedHandles: ReadonlySet<string> = EMPTY_HANDLES) {
   const items = useWorkbenchItems()
   const settings = useSyncExternalStore(subscribeApiSettings, getApiSettings, () => SERVER_SETTINGS)
   const token = settings.token.trim()
   const base = resolveApiBase(settings.baseUrl)
-  const syncItems = useMemo(() => syncItemsFromPins(items, candidates), [items, candidates])
 
   const [health, setHealth] = useState<HealthInfo | null>(null)
   const [healthState, setHealthState] = useState<'unknown' | 'online' | 'offline'>('unknown')
@@ -59,9 +65,33 @@ export function useWorkbenchLive(candidates: Candidate[]) {
   const [actionError, setActionError] = useState<string | null>(null)
   const [authFor, setAuthFor] = useState('')
   const [launched, setLaunched] = useState<LaunchedIndex>(() => emptyLaunched())
+  const autoRemoveMessage = useSyncExternalStore(subscribeAutoRemoveMessage, getAutoRemoveMessage, () => null)
   const [now, setNow] = useState(() => Date.now())
   const [checking, setChecking] = useState<ReadonlySet<string>>(() => new Set())
   const [detailTick, setDetailTick] = useState(0)
+
+  const launchedKeys = useMemo(() => {
+    const keys = new Set<string>()
+    for (const handle of launchedHandles) {
+      const key = handleKey(handle)
+      if (key) keys.add(key)
+    }
+    for (const handle of launched.handles) {
+      const key = handleKey(handle)
+      if (key) keys.add(key)
+    }
+    return keys
+  }, [launched, launchedHandles])
+  const syncItems = useMemo(() => {
+    const active =
+      launchedKeys.size === 0
+        ? items
+        : items.filter((item) => {
+            const key = handleKey(item.handle)
+            return !key || !launchedKeys.has(key)
+          })
+    return syncItemsFromPins(active, candidates)
+  }, [items, candidates, launchedKeys])
 
   const checkingRef = useRef<Map<string, CheckingMeta>>(new Map())
   const sessionRef = useRef({ token, base })
@@ -132,6 +162,10 @@ export function useWorkbenchLive(candidates: Candidate[]) {
     }
   }, [])
 
+  useLayoutEffect(() => {
+    removeLaunchedWorkbenchItems(launchedKeys)
+  }, [items, launchedKeys])
+
   useEffect(() => {
     if (!token) return
     let cancelled = false
@@ -139,12 +173,14 @@ export function useWorkbenchLive(candidates: Candidate[]) {
       void (async () => {
         setSyncState('syncing')
         try {
-          const count = await syncWorkbench(base, token, syncItems)
+          const result = await syncWorkbench(base, token, syncItems)
+          removeLaunchedWorkbenchItems(result.droppedLaunched)
           if (cancelled) return
           setAuthFor((current) => (current === token ? '' : current))
           setSyncState('ok')
-          setSyncMessage(`已同步 ${count} 个目标`)
+          setSyncMessage(`已同步 ${result.count} 个目标`)
         } catch (error) {
+          removeLaunchedWorkbenchItems(droppedLaunchedHandles(errorBody(error)))
           if (cancelled) return
           noteAuth(error)
           setSyncState('error')
@@ -258,6 +294,7 @@ export function useWorkbenchLive(candidates: Candidate[]) {
     hasStatus: Boolean(token) && hasStatus,
     syncState: token ? syncState : 'idle',
     syncMessage: token ? syncMessage : null,
+    autoRemoveMessage,
     statusError: token ? statusError : null,
     actionError,
     authError: Boolean(token) && authFor === token,
