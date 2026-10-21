@@ -161,6 +161,12 @@ export function sightingsFromDetail(project: string, handle: string, addresses: 
   }))
 }
 
+/** Record addresses without a toast. Used for 已开盘 contracts so a later poll cannot ring. */
+export function rememberQuiet(addresses: string[]) {
+  const changed = remember(addresses.map((address) => ({ address, project: '' })))
+  if (changed) persistSeen()
+}
+
 function remember(sightings: CaSighting[]): boolean {
   let changed = false
   for (const sighting of sightings) {
@@ -180,7 +186,12 @@ function takeNovel(sightings: CaSighting[]): CaSighting[] {
     if (!id || seen.ids.has(id) || batch.has(id)) continue
     batch.add(id)
     seen.ids.add(id)
-    novel.push({ address: sighting.address.trim(), project: sighting.project })
+    novel.push({
+      address: sighting.address.trim(),
+      project: sighting.project,
+      statusZh: sighting.statusZh,
+      provenanceZh: sighting.provenanceZh,
+    })
   }
   return novel
 }

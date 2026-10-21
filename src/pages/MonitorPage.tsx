@@ -7,6 +7,7 @@ import { findByHandle } from '../utils/candidates'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, xProfileUrl } from '../utils/format'
 import { lockForHandle, safeEvidenceUrl } from '../utils/caFinds'
+import { matchLaunched, normalizeHandle, type LaunchedItem } from '../utils/launched'
 import { eventsForHandle, siteHealth, snapshotForCandidate } from '../utils/monitor'
 
 interface MonitorPageProps {
@@ -15,16 +16,23 @@ interface MonitorPageProps {
   events: MonitorEvent[]
   eventsNote?: string
   eventsAt?: string
+  launchedItems: LaunchedItem[]
 }
 
-export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }: MonitorPageProps) {
+export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt, launchedItems }: MonitorPageProps) {
   const candidate = findByHandle(candidates, handle)
   const timeline = eventsForHandle(events, handle)
   const snap = candidate ? snapshotForCandidate(candidate, events) : null
   const name = candidate?.name || timeline[0]?.name || handle
-  const { locks } = useCaFinds()
+  const { locks, launchedArchive, suspectedCopycats } = useCaFinds()
   const lock = lockForHandle(locks, handle, name)
   const lockUrl = lock ? safeEvidenceUrl(lock.url) : null
+  const handleKey = normalizeHandle(handle)
+  const launched =
+    matchLaunched(launchedItems, { handle, project: name }) != null ||
+    [...launchedArchive, ...suspectedCopycats].some(
+      (row) => normalizeHandle(row.handle) === handleKey && matchLaunched(launchedItems, row) != null,
+    )
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -39,6 +47,17 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
         <SourceBadge source={candidate?.source} />
       </div>
       <p className="mt-1 font-mono text-sm text-[var(--color-ink-muted)]">@{handle.replace(/^@/, '')}</p>
+      {launched && (
+        <p className="mt-3 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+          <a
+            href={appPath('launched')}
+            className="mr-2 inline-flex rounded-md bg-[var(--color-orange-soft)] px-2 py-0.5 text-[11px] font-semibold text-[var(--color-orange-deep)] hover:underline dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]"
+          >
+            已开盘
+          </a>
+          这个项目已经开盘，不再当作新的 CA 目标。下面的监控动态照常显示。
+        </p>
+      )}
       {lock && (
         <p className="mt-3 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
           {lockUrl ? (

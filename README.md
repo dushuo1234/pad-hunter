@@ -185,9 +185,9 @@ TapeRobot 的教训：同名山寨会被自动当成 CA。真正的官方晶体�
 | 监控钱包动态 | `wallet_activity[]`，或带 `activity: true` 的行 | 否。官推锁定之后仍然显示 |
 | 官推已锁定 | 行上 `ca_locked: true`，或 `ca_locked_projects` 里的 project key。链接 `locked_by_official_x_url` | 锁定本身不响铃。上游跳过之后的非官方 CA |
 
-顶栏计数用文件里的 `status_counts` 和 `suspected_copycat_count`，不在页面上重算。`confidence` 的 high / medium / low 仍显示在行上，但不决定是不是确认 CA。Processor 行显示 `paired_with`。`launched_history` 里被取代的地址会灰着出现，方便对照官推换掉的旧合约，不会再响一次。
+顶栏计数用文件里的 `status_counts` 和 `suspected_copycat_count`，不在页面上重算。`confidence` 的 high / medium / low 仍显示在行上，但不决定是不是确认 CA。Processor 行显示 `paired_with`。`launched_history` 里被取代的地址会灰着出现，方便对照官推换掉的旧合约，不会再响一次。同一份历史里 `ca_status: confirmed` 的行，只有 `launched.json` 对得上项目（账号、project key，或名字在 · 之前的部分）时，才出现在「已开盘 · 不再追踪」。它们不计入顶栏的已确认，也不响铃。已开盘项目的同名地址仍在疑似山寨里，但单独标成已开盘同名。
 
-监控脚本不在这个仓库。流水线请按 schema v2 写字段。官推锁定之后，不要再把非官方 CA 放进 `finds` 并设 `alert_ok: true`。监控钱包的相关地址放进 `wallet_activity`。页面会显示这些动态，但不会把它们当成新 CA。
+监控脚本不在这个仓库。流水线请按 schema v2 写字段。项目写入 `launched.json` 之后，不要再把该项目的新 CA 放进 `finds` 并设 `alert_ok: true`；已经确认的地址放进 `launched_history`。官推锁定之后，不要再把非官方 CA 放进 `finds` 并设 `alert_ok: true`。监控钱包的相关地址放进 `wallet_activity`。页面会显示这些动态，但不会把它们当成新 CA。
 
 `ca_status` 取 `confirmed` / `candidate` / `superseded` / `not_ca` / `suspected_copycat`。`provenance` 取 `wallet_factory` / `official_x` / `both`，或空。`ca_role` 取 `token` / `transistors` / `processor`。`confidence` 仍可取 `high` / `medium` / `low`。发现时间按北京时间（Asia/Shanghai）显示。
 

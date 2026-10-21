@@ -79,6 +79,48 @@ export function isLaunchedHandle(handles: Set<string>, handle: string | null | u
   return key !== '' && handles.has(key)
 }
 
+export interface LaunchRef {
+  handle?: string | null
+  project?: string | null
+  projectKey?: string | null
+  address?: string | null
+}
+
+const CHAIN_SUFFIX = /_(bsc|eth|base|sol|arb|op)$/i
+
+function compactName(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, '')
+}
+
+/** Project name before · / • / |, after a leading 【…】 tag. */
+export function projectNameHead(project: string | null | undefined): string {
+  const stripped = (project ?? '').replace(/^【[^】]*】\s*/, '').trim()
+  return stripped.split(/[·•|/]/)[0]?.trim() ?? ''
+}
+
+/**
+ * Exact join to `launched.json`. Handle, project key, and the name before · can match.
+ * Substrings do not, so other TapeOut projects stay off TapeRobot's 已开盘 card.
+ */
+export function matchLaunched(items: LaunchedItem[], ref: LaunchRef): LaunchedItem | null {
+  const handle = normalizeHandle(ref.handle)
+  const projectKey = normalizeHandle(ref.projectKey)
+  const keyStem = compactName(projectKey.replace(CHAIN_SUFFIX, ''))
+  const head = compactName(projectNameHead(ref.project))
+  const address = (ref.address ?? '').trim().toLowerCase()
+  for (const item of items) {
+    const itemHandle = normalizeHandle(item.handle)
+    const itemName = compactName(item.project)
+    const itemCa = (item.ca ?? '').trim().toLowerCase()
+    if (handle && itemHandle && handle === itemHandle) return item
+    if (projectKey && itemHandle && projectKey === itemHandle) return item
+    if (address && itemCa && address === itemCa) return item
+    if (head.length >= 3 && itemName && head === itemName) return item
+    if (keyStem.length >= 3 && itemName && keyStem === itemName) return item
+  }
+  return null
+}
+
 export function withoutLaunched(candidates: Candidate[], handles: Set<string>): Candidate[] {
   if (handles.size === 0) return candidates
   return candidates.filter((candidate) => !isLaunchedHandle(handles, candidate.handle))

@@ -211,6 +211,11 @@ export interface CaFindsPayload {
   suspectedCopycats: CaFind[]
   /** Superseded rows from the active list and from `launched_history`. */
   supersededArchive: CaFind[]
+  /**
+   * Confirmed rows the pipeline moved into `launched_history`.
+   * Not part of `status_counts`. Shown only when `launched.json` names the same project.
+   */
+  launchedArchive: CaFind[]
   walletActivity: CaFind[]
   locks: CaProjectLock[]
 }
