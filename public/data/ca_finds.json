@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-21T15:55:26+08:00",
-  "count": 15,
-  "token_ca_count": 2,
+  "generated_at": "2026-10-21T15:56:21+08:00",
+  "count": 13,
+  "token_ca_count": 0,
   "wallet_count": 6,
   "finds": [
     {
@@ -170,70 +170,6 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
-    },
-    {
-      "project": "PlayBlastOff",
-      "handle": "play_blastoff",
-      "chain": "base",
-      "address": "0xb2000000000000000000002218dfa260a9aaf720",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/play_blastoff",
-      "detected_at": "2026-10-21T15:27:38+08:00",
-      "confidence": "low",
-      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0xc6c7696ea8473526ea818f212a77450e42959c69; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-21T15:27:38+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0xc6c7696ea8473526ea818f212a77450e42959c69",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "base",
-        "symbol": "BLAST",
-        "name": "Blast",
-        "decimals": 18,
-        "code_bytes": 1,
-        "note": "ERC20 verified: BLAST dec=18"
-      }
-    },
-    {
-      "project": "PlayBlastOff",
-      "handle": "play_blastoff",
-      "chain": "base",
-      "address": "0xf3ee49aacdb8c0f5114e59aa2a012141aebcd89c",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/play_blastoff",
-      "detected_at": "2026-10-21T15:00:49+08:00",
-      "confidence": "low",
-      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x7238b752e03ee3db9f2710eb59745d766ef71aeb; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-21T15:00:49+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "base",
-        "symbol": "BLAST",
-        "name": "Blast",
-        "decimals": 18,
-        "code_bytes": 1627,
-        "note": "ERC20 verified: BLAST dec=18"
       }
     },
     {
