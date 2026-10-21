@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T23:22:59+08:00",
+  "generated_at": "2026-10-21T23:34:11+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 12,
@@ -2095,7 +2095,7 @@
       "evidence_url": "https://x.com/InkDaddynft",
       "detected_at": "2026-10-21T22:06:05+08:00",
       "confidence": "low",
-      "note": "onchain_lock low via symbol:ID; deployer=0x550c4f6209ed185f9f3e1c5fad26f7bf44a12a33; token=ID / ID; onchain_lock low via symbol:ID; deployer=0x893e314459fadfa580682aca487d2eb90d309dbe; token=ID / ID; ca_gate: ERC20 verified: ID dec=18",
+      "note": "onchain_lock low via symbol:ID; deployer=0x550c4f6209ed185f9f3e1c5fad26f7bf44a12a33; token=ID / ID; onchain_lock low via symbol:ID; deployer=0x893e314459fadfa580682aca487d2eb90d309dbe; token=ID / ID; onchain_lock low via symbol:ID; deployer=0x3897b3f38b4ddf86531705d1c865a89d4846efb2; token=ID / ID; ca_gate: ERC20 verified: ID dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -2108,6 +2108,13 @@
           "origin": "onchain_lock",
           "source": "onchain_lock",
           "detected_at": "2026-10-21T22:22:44+08:00",
+          "reason": "symbol:ID",
+          "via": "factory:fourmeme_tm2_bsc:Unknown"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T23:33:52+08:00",
           "reason": "symbol:ID",
           "via": "factory:fourmeme_tm2_bsc:Unknown"
         }
