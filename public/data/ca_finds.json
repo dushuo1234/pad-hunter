@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T23:49:56+08:00",
+  "generated_at": "2026-10-22T01:23:30+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 12,
@@ -2036,8 +2036,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 14,
+  "suspected_copycat_count": 15,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Dither World",
+      "handle": "DitherDotWorld",
+      "chain": "ethereum",
+      "address": "0xe8e35f864c46490dff0e856bb43c6674fa24b6ea",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/DitherDotWorld",
+      "detected_at": "2026-10-22T01:23:18+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:dither world; deployer=0xc5d22a7d5b203164bfa6479d72de9297cff19bf5; token=WORLD / WORLD; ca_gate: ERC20 verified: WORLD dec=9",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-22T01:23:18+08:00",
+          "reason": "name_fuzzy:dither world",
+          "via": "factory:univ4_pm_eth:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "WORLD",
+        "name": "WORLD",
+        "decimals": 9,
+        "code_bytes": 12900,
+        "note": "ERC20 verified: WORLD dec=9"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】SIMAN LABS",
       "handle": "SIMANLABS",
