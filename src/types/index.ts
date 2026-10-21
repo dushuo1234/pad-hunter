@@ -125,11 +125,20 @@ export interface MonitorDocument {
 /** Where a contract address was spotted. Canonical values match `ca_finds.json`. */
 export type CaFindSource = 'site' | 'js' | 'x' | 'tg' | 'on-chain'
 
-export type CaFindConfidence = 'high' | 'low'
+export type CaFindConfidence = 'high' | 'medium' | 'low'
+
+/** Schema v2 status. Name-only matches stay `suspected_copycat`, not a confirmed CA. */
+export type CaStatus = 'confirmed' | 'candidate' | 'superseded' | 'not_ca' | 'suspected_copycat' | ''
+
+/** Why a row was confirmed. Empty when the pipeline has not established provenance. */
+export type CaProvenance = 'wallet_factory' | 'official_x' | 'both' | ''
+
+export type CaRole = 'token' | 'transistors' | 'processor' | ''
 
 /**
- * One detected contract address from `public/data/ca_finds.json`.
- * `confidence: "low"` marks weak signals such as third-party token icons.
+ * One address row from `ca_finds.json` (`finds`, `suspected_copycats`, `wallet_activity`, or archived superseded history).
+ * `alertOk` is the only signal that may sound or highlight a new CA. `caLocked` stops later CA alerts upstream;
+ * wallet activity for that project is still a row and is not a CA alert.
  */
 export interface CaFind {
   project: string
@@ -141,9 +150,67 @@ export interface CaFind {
   detected_at: string
   confidence: CaFindConfidence | ''
   note: string
+  labelZh: string
+  caStatus: CaStatus
+  caStatusZh: string
+  provenance: CaProvenance
+  provenanceZh: string
+  officialXConfirmed: boolean
+  walletFactoryConfirmed: boolean
+  officialXUrl: string
+  caRole: CaRole
+  alertOk: boolean
+  supersededBy: string
+  pairedWith: string
+  confirmBasisZh: string
+  creator: string
+  /** null when the pipeline did not say whether the creator is a watched wallet. */
+  creatorWatched: boolean | null
+  tx: string
+  cpu: string
+  mintPriceBnb: string
+  supplyCap: string
+  processor: string
+  transistors: string
+  caLocked: boolean
+  lockUrl: string
+  /** Pipeline key such as `taperobot_bsc`, also listed in `ca_locked_projects`. */
+  projectKey: string
+  lockAt: string
+  /** Watched-wallet activity. Shown even after an official-X lock. Never a CA alert. */
+  activity: boolean
+  /** From `launched_history`. Not part of the active status_counts. */
+  archived: boolean
+}
+
+export interface CaStatusCounts {
+  confirmed: number
+  candidate: number
+  superseded: number
+  not_ca: number
+}
+
+/** A project whose official X has posted a verified CA. */
+export interface CaProjectLock {
+  id: string
+  project: string
+  handle: string
+  url: string
+  aliases: string[]
 }
 
 export interface CaFindsPayload {
   generated_at?: string
+  schemaVersion?: number
+  confidenceModel?: string
+  statusCounts: CaStatusCounts
+  confirmedCount: number
+  candidateCount: number
+  suspectedCopycatCount: number
   finds: CaFind[]
+  suspectedCopycats: CaFind[]
+  /** Superseded rows from the active list and from `launched_history`. */
+  supersededArchive: CaFind[]
+  walletActivity: CaFind[]
+  locks: CaProjectLock[]
 }

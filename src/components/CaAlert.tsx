@@ -57,7 +57,12 @@ export function CaAlertToasts() {
           className="ca-toast-in pointer-events-auto relative overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] p-3 pr-8 shadow-[0_12px_40px_rgba(26,22,18,0.12)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]"
         >
           <span className="absolute inset-y-0 left-0 w-1 bg-[var(--color-orange)]" aria-hidden="true" />
-          <p className="pl-2 font-mono text-[10px] tracking-[0.16em] text-[var(--color-orange)]">新CA</p>
+          <p className="pl-2 font-mono text-[10px] tracking-[0.16em] text-[var(--color-orange)]">{toast.statusZh || '新CA'}</p>
+          {toast.provenanceZh && (
+            <p className="mt-1 pl-2 text-[11px] font-medium text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+              {toast.provenanceZh}
+            </p>
+          )}
           <p className="mt-1 pl-2 text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{toast.project}</p>
           <p className="mt-1 pl-2 font-mono text-[12px] break-all text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
             {toast.address}

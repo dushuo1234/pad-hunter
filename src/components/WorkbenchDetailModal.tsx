@@ -100,7 +100,7 @@ export function WorkbenchDetailModal({
           if (!alive) return
           setDetail(next)
           setDetailError(null)
-          observeWorkbenchDetail(item.handle, item.name || candidate?.name || '', next.addresses)
+          observeWorkbenchDetail(item.handle, item.name || candidate?.name || '', next.addresses, { launched })
         })
         .catch((error: unknown) => {
           if (!alive) return
@@ -118,7 +118,7 @@ export function WorkbenchDetailModal({
       alive = false
       window.clearInterval(timer)
     }
-  }, [base, chain, candidate?.name, detailTick, item.handle, item.name, token])
+  }, [base, chain, candidate?.name, detailTick, item.handle, item.name, launched, token])
 
   const addresses: FoundAddress[] =
     detail && detail.addresses.length > 0

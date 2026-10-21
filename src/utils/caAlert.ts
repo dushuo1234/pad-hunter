@@ -1,5 +1,5 @@
 import type { CaFind } from '../types'
-import { caAddressId } from './caFinds'
+import { alertableFinds, caAddressId, displayProjectName } from './caFinds'
 import { handleKey } from './workbench'
 import type { FoundAddress, WorkbenchStatusItem } from './workbenchApi'
 
@@ -13,12 +13,16 @@ const FLASH_MS = 900
 export interface CaSighting {
   address: string
   project: string
+  statusZh?: string
+  provenanceZh?: string
 }
 
 export interface CaToast {
   id: string
   project: string
   address: string
+  statusZh: string
+  provenanceZh: string
 }
 
 interface AlertUi {
@@ -130,15 +134,18 @@ export function projectLabel(project: string, handle = ''): string {
 }
 
 export function sightingsFromFinds(finds: CaFind[]): CaSighting[] {
-  return finds.map((find) => ({
+  return alertableFinds(finds).map((find) => ({
     address: find.address,
-    project: projectLabel(find.project, find.handle),
+    project: displayProjectName(find.project, find.handle),
+    statusZh: find.caStatusZh || '已确认CA',
+    provenanceZh: find.provenanceZh,
   }))
 }
 
 export function sightingsFromStatus(items: WorkbenchStatusItem[]): CaSighting[] {
   const sightings: CaSighting[] = []
   for (const item of items) {
+    if (item.alreadyListed) continue
     const project = projectLabel(item.name, item.handle)
     for (const address of item.lastAddresses) {
       sightings.push({ address, project })
@@ -207,9 +214,22 @@ export function observeWorkbenchStatus(items: WorkbenchStatusItem[]) {
  * Detail is polled per project. The first snapshot in this tab only fills the seen set,
  * so opening a row does not replay addresses the status feed never listed.
  */
-export function observeWorkbenchDetail(handle: string, project: string, addresses: FoundAddress[]) {
+function detailAlertAddresses(addresses: FoundAddress[], launched: boolean): FoundAddress[] {
+  if (launched) return []
+  return addresses.filter((found) => !/扫出钱包|疑似山寨|非CA|非地址|NFT合约|未确认/.test(found.label))
+}
+
+export function observeWorkbenchDetail(
+  handle: string,
+  project: string,
+  addresses: FoundAddress[],
+  options?: { launched?: boolean },
+) {
+  const launched = options?.launched === true
+  const silent = launched ? addresses : addresses.filter((found) => /扫出钱包|疑似山寨|非CA|非地址|NFT合约|未确认/.test(found.label))
+  if (remember(sightingsFromDetail(project, handle, silent))) persistSeen()
   const key = handleKey(handle) || project.trim().toLowerCase()
-  const sightings = sightingsFromDetail(project, handle, addresses)
+  const sightings = sightingsFromDetail(project, handle, detailAlertAddresses(addresses, launched))
   const first = key ? !detailPrimed.has(key) : false
   if (key) detailPrimed.add(key)
   if (!seen.baselined.workbench) {
@@ -246,6 +266,8 @@ function pushToasts(items: CaSighting[]) {
     id: `ca-${++toastSeq}`,
     project: item.project,
     address: item.address,
+    statusZh: item.statusZh || '新CA',
+    provenanceZh: item.provenanceZh || '',
   }))
   ui = { ...ui, toasts: [...ui.toasts, ...next].slice(-TOAST_LIMIT) }
   emitUi()
@@ -377,8 +399,12 @@ export function previewAlertSound() {
 
 function notifyDesktop(items: CaSighting[]) {
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return
-  const title = items.length === 1 ? `新CA · ${items[0].project}` : `新CA · ${items.length} 个`
-  const body = items.map((item) => `${item.project}\n${item.address}`).join('\n\n').slice(0, 500)
+  const headline = items.length === 1 ? items[0].statusZh || '新CA' : `新CA · ${items.length} 个`
+  const title = items.length === 1 ? `${headline} · ${items[0].project}` : headline
+  const body = items
+    .map((item) => [item.statusZh, item.provenanceZh, item.project, item.address].filter(Boolean).join('\n'))
+    .join('\n\n')
+    .slice(0, 500)
   try {
     new Notification(title, { body, lang: 'zh-CN', tag: 'pad-hunter-new-ca' })
   } catch {
