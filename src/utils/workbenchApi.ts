@@ -108,6 +108,12 @@ export interface LaunchedIndex {
 export interface ApiError {
   status: number
   message: string
+  body?: unknown
+}
+
+export interface WorkbenchSyncResult {
+  count: number
+  droppedLaunched: string[]
 }
 
 const EMPTY_SETTINGS: ApiSettings = { token: '', baseUrl: '' }
@@ -392,7 +398,7 @@ async function apiFetch(base: string, path: string, token: string, init?: Reques
     }
   }
   if (!response.ok) {
-    const failure: ApiError = { status: response.status, message: errorMessage(response.status, body) }
+    const failure: ApiError = { status: response.status, message: errorMessage(response.status, body), body }
     throw failure
   }
   if (text && body == null) {
@@ -414,7 +420,30 @@ export async function fetchHealth(base: string, token = ''): Promise<HealthInfo>
   }
 }
 
-export async function syncWorkbench(base: string, token: string, items: SyncItem[]): Promise<number> {
+export function droppedLaunchedHandles(body: unknown): string[] {
+  const row = asRecord(body)
+  if (!row) return []
+  const raw = row.dropped_launched ?? row.droppedLaunched
+  if (raw == null || typeof raw === 'number' || typeof raw === 'boolean') return []
+  const entries = Array.isArray(raw) ? raw : [raw]
+  const found: string[] = []
+  const seen = new Set<string>()
+  for (const entry of entries) {
+    let handle = ''
+    if (typeof entry === 'string' || typeof entry === 'number') handle = asString(entry)
+    else {
+      const record = asRecord(entry)
+      if (record) handle = asString(record.handle ?? record.x ?? record.twitter)
+    }
+    const key = handleKey(handle)
+    if (!key || seen.has(key)) continue
+    seen.add(key)
+    found.push(key)
+  }
+  return found
+}
+
+export async function syncWorkbench(base: string, token: string, items: SyncItem[]): Promise<WorkbenchSyncResult> {
   const body = await apiFetch(
     base,
     '/v1/workbench/sync',
@@ -425,10 +454,13 @@ export async function syncWorkbench(base: string, token: string, items: SyncItem
     },
     15000,
   )
-  if (typeof body === 'number' && Number.isFinite(body)) return body
+  if (typeof body === 'number' && Number.isFinite(body)) return { count: body, droppedLaunched: [] }
   const row = asRecord(body)
   const count = row ? pickNumber(row, ['count', 'workbench_count', 'synced']) : null
-  return count ?? items.length
+  return {
+    count: count ?? items.length,
+    droppedLaunched: droppedLaunchedHandles(body),
+  }
 }
 
 export async function checkWorkbench(base: string, token: string, handle: string): Promise<boolean> {

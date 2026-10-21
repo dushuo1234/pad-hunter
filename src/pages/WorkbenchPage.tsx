@@ -48,7 +48,7 @@ const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
 
 export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
-  const live = useWorkbenchLive(candidates)
+  const live = useWorkbenchLive(candidates, launchedHandles)
   const items = live.items
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [manualOpen, setManualOpen] = useState(false)
@@ -285,9 +285,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         )}
       </section>
 
-      {(message || live.syncState === 'syncing' || live.syncMessage || live.statusError || live.actionError) && (
+      {(message || live.autoRemoveMessage || live.syncState === 'syncing' || live.syncMessage || live.statusError || live.actionError) && (
         <p className="mt-3 font-mono text-xs text-[var(--color-ink-muted)]" role="status">
-          {[message, live.syncState === 'syncing' ? '正在同步…' : live.syncMessage, live.statusError, live.actionError]
+          {[message, live.autoRemoveMessage, live.syncState === 'syncing' ? '正在同步…' : live.syncMessage, live.statusError, live.actionError]
             .filter(Boolean)
             .join(' · ')}
         </p>
