@@ -1,11 +1,21 @@
 {
-  "generated_at": "2026-10-21T16:14:41+08:00",
-  "count": 16,
-  "token_ca_count": 3,
+  "generated_at": "2026-10-21T16:22:18+08:00",
+  "schema_version": 2,
+  "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
+  "count": 14,
+  "token_ca_count": 1,
   "wallet_count": 6,
+  "confirmed_count": 3,
+  "candidate_count": 0,
+  "status_counts": {
+    "confirmed": 3,
+    "candidate": 0,
+    "superseded": 0,
+    "not_ca": 11
+  },
   "finds": [
     {
-      "project": "TapeRobot·TapeOut监控",
+      "project": "【官方$TapeRobot代币CA】TapeRobot·TapeOut监控",
       "handle": "TapeOutWatch",
       "chain": "bsc",
       "address": "0x11e87d97a34f8000f710d054e4eac30011a3ac8d",
@@ -18,11 +28,13 @@
         {
           "origin": "tapeout_watch",
           "source": "x:@TapeRobot_bsc",
-          "detected_at": "2026-10-21T16:14:38+08:00"
+          "detected_at": "2026-10-21T16:14:38+08:00",
+          "post_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+          "ca_kind": "token"
         }
       ],
       "kind": "contract",
-      "label_zh": "合约CA",
+      "label_zh": "官方$TapeRobot代币CA",
       "addr_kind": "contract",
       "is_token": true,
       "verify": {
@@ -33,7 +45,19 @@
         "decimals": 18,
         "code_bytes": 170,
         "note": "ERC20 verified: TapeRobot dec=18"
-      }
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": true,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+      "official": true,
+      "tapeout_ca": false,
+      "confirm_basis_zh": "官推确认"
     },
     {
       "project": "【扫出钱包·非CA】Ink Pirates",
@@ -66,7 +90,15 @@
         "chain": "robinhood",
         "code_bytes": 23,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
@@ -101,7 +133,15 @@
         "name": "TapeAI",
         "code_bytes": 295,
         "note": "NFT contract (ERC721) — not a token CA"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】HappyBlock",
@@ -139,10 +179,18 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
-      "project": "TapeRobot·TapeOut监控",
+      "project": "【官方TapeRobot·晶体管合约(ERC-1155)】TapeRobot·TapeOut监控",
       "handle": "TapeOutWatch",
       "chain": "bsc",
       "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
@@ -155,11 +203,19 @@
         {
           "origin": "tapeout_watch",
           "source": "factory:tapeout:creator_watched",
-          "detected_at": "2026-10-21T15:59:30+08:00"
+          "detected_at": "2026-10-21T15:59:30+08:00",
+          "creator_watched": true,
+          "ca_kind": "transistors"
+        },
+        {
+          "origin": "tapeout_watch",
+          "source": "x:@TapeRobot_bsc",
+          "detected_at": "2026-10-21T16:03:45+08:00",
+          "post_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823"
         }
       ],
       "kind": "nft",
-      "label_zh": "晶体管合约(ERC-1155)",
+      "label_zh": "官方TapeRobot·晶体管合约(ERC-1155)",
       "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
       "addr_kind": "nft",
       "is_token": false,
@@ -169,10 +225,25 @@
         "code_bytes": 295,
         "note": "NFT contract (ERC1155) — not a token CA"
       },
-      "tapeout_ca": true
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "both",
+      "provenance_zh": "监控钱包创建+官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": true,
+      "ca_role": "transistors",
+      "alert_ok": true,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "official": true,
+      "tapeout_ca": true,
+      "mint_price_bnb": 0.0005,
+      "supply_cap": 100000,
+      "cpu": "#1387",
+      "processor": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "confirm_basis_zh": "监控钱包创建+官推确认（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
     },
     {
-      "project": "TapeRobot·TapeOut监控",
+      "project": "【官方TapeRobot·Processor(ERC-721)】TapeRobot·TapeOut监控",
       "handle": "TapeOutWatch",
       "chain": "bsc",
       "address": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
@@ -185,11 +256,13 @@
         {
           "origin": "tapeout_watch",
           "source": "factory:tapeout:creator_watched",
-          "detected_at": "2026-10-21T15:59:30+08:00"
+          "detected_at": "2026-10-21T15:59:30+08:00",
+          "creator_watched": true,
+          "ca_kind": "processor"
         }
       ],
       "kind": "nft",
-      "label_zh": "TapeOut Processor",
+      "label_zh": "官方TapeRobot·Processor(ERC-721)",
       "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
       "addr_kind": "nft",
       "is_token": false,
@@ -201,71 +274,19 @@
         "code_bytes": 295,
         "note": "NFT contract (ERC721) — not a token CA"
       },
-      "tapeout_ca": true
-    },
-    {
-      "project": "PlayBlastOff",
-      "handle": "play_blastoff",
-      "chain": "base",
-      "address": "0xb2000000000000000000002218dfa260a9aaf720",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/play_blastoff",
-      "detected_at": "2026-10-21T15:27:38+08:00",
-      "confidence": "low",
-      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0xc6c7696ea8473526ea818f212a77450e42959c69; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-21T15:27:38+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0xc6c7696ea8473526ea818f212a77450e42959c69",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "base",
-        "symbol": "BLAST",
-        "name": "Blast",
-        "decimals": 18,
-        "code_bytes": 1,
-        "note": "ERC20 verified: BLAST dec=18"
-      }
-    },
-    {
-      "project": "PlayBlastOff",
-      "handle": "play_blastoff",
-      "chain": "base",
-      "address": "0xf3ee49aacdb8c0f5114e59aa2a012141aebcd89c",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/play_blastoff",
-      "detected_at": "2026-10-21T15:00:49+08:00",
-      "confidence": "low",
-      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x7238b752e03ee3db9f2710eb59745d766ef71aeb; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-21T15:00:49+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "base",
-        "symbol": "BLAST",
-        "name": "Blast",
-        "decimals": 18,
-        "code_bytes": 1627,
-        "note": "ERC20 verified: BLAST dec=18"
-      }
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": "processor",
+      "alert_ok": true,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "official": true,
+      "tapeout_ca": true,
+      "paired_with": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "confirm_basis_zh": "监控钱包创建（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
     },
     {
       "project": "【非地址·非CA】Pulse",
@@ -297,7 +318,15 @@
         "kind": "invalid",
         "chain": "未知",
         "note": "hex string (hash / git SHA), not a Solana address"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -323,7 +352,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -340,7 +369,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -366,7 +403,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -383,7 +420,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -409,7 +454,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -426,7 +471,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【非地址·非CA】♱ 17-26",
@@ -452,7 +505,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         }
       ],
       "kind": "invalid",
@@ -463,7 +516,15 @@
         "kind": "invalid",
         "chain": "未知",
         "note": "not a valid Solana pubkey"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【NFT合约·非CA】Ink Daddy",
@@ -484,7 +545,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -503,7 +564,15 @@
         "name": "Ink Daddy",
         "code_bytes": 45,
         "note": "NFT contract (ERC721) — not a token CA"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Superboard",
@@ -529,7 +598,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T15:46:33+08:00"
+          "detected_at": "2026-10-21T16:17:40+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -546,7 +615,15 @@
         "chain": "base",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【NFT合约·非CA】Timecard",
@@ -581,30 +658,39 @@
         "name": "TIMECARD",
         "code_bytes": 13692,
         "note": "NFT contract (ERC721) — not a token CA"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     }
   ],
   "launched_history_count": 30,
   "launched_history": [
     {
-      "project": "【官方TapeRobot·晶体管合约(ERC-1155)】TapeRobot",
+      "project": "【非正式·官推未认 晶体管(ERC-1155)】TapeRobot",
       "handle": "TapeRobot_bsc",
       "chain": "bsc",
       "address": "0x6EF766001d293848c0e4aa188539e01Eb4f25e26",
-      "source": "tapeout:official",
-      "evidence_url": "https://tapeout.net/old#p/0x06CBb481AE376FdF17a765c770233d5718E4F91F",
+      "source": "tapeout:superseded",
+      "evidence_url": "https://bscscan.com/tx/0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35",
       "detected_at": "2026-10-21T13:48:58+08:00",
-      "confidence": "high",
-      "note": "【官方TapeRobot·晶体管合约(ERC-1155)】官方 TapeRobot（tapeout.net 页面核实）；creator=0x89413b1005B0C2499f41663Ba27b9C909D89Fff1; tx=0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35；非代币CA; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "confidence": "low",
+      "note": "【非正式·官推未认 晶体管(ERC-1155)】watched wallet 0x8941 created 13:48 but @TapeRobot_bsc named 0x37e4/0xcd28; never confirmed; superseded_by=0x37e41a9841f56d2ce71d927251966813447ca8f0; ca_gate: NFT contract (ERC1155) — not a token CA",
       "sources": [
         {
-          "origin": "tapeout_official",
-          "source": "tapeout:official",
-          "detected_at": "2026-10-21T13:48:58+08:00"
+          "origin": "tapeout_superseded",
+          "source": "tapeout:superseded",
+          "detected_at": "2026-10-21T13:48:58+08:00",
+          "wallet_factory": true
         }
       ],
       "kind": "nft",
-      "label_zh": "官方TapeRobot·晶体管合约(ERC-1155)",
+      "label_zh": "非正式·官推未认 晶体管(ERC-1155)",
       "traced_from": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
       "addr_kind": "nft",
       "is_token": false,
@@ -614,28 +700,38 @@
         "code_bytes": 295,
         "note": "NFT contract (ERC1155) — not a token CA"
       },
-      "official": true,
-      "tapeout_ca": true
+      "ca_status": "superseded",
+      "ca_status_zh": "非正式·官推未认",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": "transistors",
+      "alert_ok": false,
+      "superseded_by": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "official": false,
+      "tapeout_ca": false
     },
     {
-      "project": "【官方TapeRobot·Processor(ERC-721)】TapeRobot",
+      "project": "【非正式·官推未认 Processor(ERC-721)】TapeRobot",
       "handle": "TapeRobot_bsc",
       "chain": "bsc",
       "address": "0x06CBb481AE376FdF17a765c770233d5718E4F91F",
-      "source": "tapeout:official",
-      "evidence_url": "https://tapeout.net/old#p/0x06CBb481AE376FdF17a765c770233d5718E4F91F",
+      "source": "tapeout:superseded",
+      "evidence_url": "https://bscscan.com/tx/0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35",
       "detected_at": "2026-10-21T13:48:58+08:00",
-      "confidence": "high",
-      "note": "【官方TapeRobot·Processor(ERC-721)】官方 TapeRobot（tapeout.net 页面核实）；creator=0x89413b1005B0C2499f41663Ba27b9C909D89Fff1; tx=0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35；非代币CA; ca_gate: NFT contract (ERC721) — not a token CA",
+      "confidence": "low",
+      "note": "【非正式·官推未认 Processor(ERC-721)】watched wallet 0x8941 created 13:48 but @TapeRobot_bsc named 0x37e4/0xcd28; never confirmed; superseded_by=0xcd28c21d3382ec72d0693a7187eec0287f7e5174; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
-          "origin": "tapeout_official",
-          "source": "tapeout:official",
-          "detected_at": "2026-10-21T13:48:58+08:00"
+          "origin": "tapeout_superseded",
+          "source": "tapeout:superseded",
+          "detected_at": "2026-10-21T13:48:58+08:00",
+          "wallet_factory": true
         }
       ],
       "kind": "nft",
-      "label_zh": "官方TapeRobot·Processor(ERC-721)",
+      "label_zh": "非正式·官推未认 Processor(ERC-721)",
       "traced_from": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
       "addr_kind": "nft",
       "is_token": false,
@@ -647,8 +743,17 @@
         "code_bytes": 295,
         "note": "NFT contract (ERC721) — not a token CA"
       },
-      "official": true,
-      "tapeout_ca": true
+      "ca_status": "superseded",
+      "ca_status_zh": "非正式·官推未认",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": "processor",
+      "alert_ok": false,
+      "superseded_by": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "official": false,
+      "tapeout_ca": false
     },
     {
       "project": "Nookleus",
@@ -664,7 +769,9 @@
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-21T04:56:27+08:00"
+          "detected_at": "2026-10-21T04:56:27+08:00",
+          "reason": "name:nookleus",
+          "via": "factory:univ4_pm_eth:Initialize"
         }
       ],
       "kind": "contract",
@@ -680,7 +787,15 @@
         "decimals": 18,
         "code_bytes": 2628,
         "note": "ERC20 verified: NOOK dec=18"
-      }
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "QuantumPad V4",
@@ -696,7 +811,9 @@
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-20T22:55:57+08:00"
+          "detected_at": "2026-10-20T22:55:57+08:00",
+          "reason": "symbol:QUANTUMPAD",
+          "via": "factory:univ4_pm_eth:Initialize"
         }
       ],
       "kind": "contract",
@@ -712,7 +829,15 @@
         "decimals": 18,
         "code_bytes": 2383,
         "note": "ERC20 verified: QUANTUMPAD dec=18"
-      }
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Hatch",
@@ -728,12 +853,16 @@
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-20T22:14:48+08:00"
+          "detected_at": "2026-10-20T22:14:48+08:00",
+          "reason": "symbol:HATCH+name:hatch",
+          "via": "factory:univ4_pm_eth:Initialize"
         },
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-20T22:14:54+08:00"
+          "detected_at": "2026-10-20T22:14:54+08:00",
+          "reason": "symbol:HATCH+name:hatch",
+          "via": "factory:univ4_pm_eth:Initialize"
         }
       ],
       "kind": "contract",
@@ -749,7 +878,15 @@
         "decimals": 18,
         "code_bytes": 8860,
         "note": "ERC20 verified: HATCH dec=18"
-      }
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Hookereum",
@@ -765,7 +902,9 @@
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-20T21:41:27+08:00"
+          "detected_at": "2026-10-20T21:41:27+08:00",
+          "reason": "name:hookereum",
+          "via": "factory:univ4_pm_eth:Initialize"
         }
       ],
       "kind": "contract",
@@ -781,7 +920,15 @@
         "decimals": 18,
         "code_bytes": 2628,
         "note": "ERC20 verified: HOOK dec=18"
-      }
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Master Studios",
@@ -797,7 +944,9 @@
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
-          "detected_at": "2026-10-20T18:23:40+08:00"
+          "detected_at": "2026-10-20T18:23:40+08:00",
+          "reason": "wallet+token:symbol:SIEGE",
+          "via": "backtest_inject"
         }
       ],
       "kind": "contract",
@@ -813,7 +962,16 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: SIEGE dec=18"
-      }
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": "token",
+      "alert_ok": false,
+      "confirm_basis_zh": "监控钱包创建（创建者 0x0000000000000000000000000000000000000001）"
     },
     {
       "project": "Baola",
@@ -844,7 +1002,15 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: SEASON dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -875,7 +1041,15 @@
         "decimals": 18,
         "code_bytes": 45,
         "note": "ERC20 verified: LLL dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -906,7 +1080,15 @@
         "decimals": 18,
         "code_bytes": 45,
         "note": "ERC20 verified: 币安神算子 dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "【未确认地址·非CA】Baola",
@@ -933,7 +1115,15 @@
         "kind": "unknown",
         "chain": "solana",
         "note": "account does not exist on Solana mainnet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -964,7 +1154,15 @@
         "decimals": 18,
         "code_bytes": 7154,
         "note": "ERC20 verified: HOOKR dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -995,7 +1193,15 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: SPRITE dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -1026,7 +1232,15 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: + dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "【未确认地址·非CA】Baola",
@@ -1053,7 +1267,15 @@
         "kind": "unknown",
         "chain": "solana",
         "note": "account does not exist on Solana mainnet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -1084,7 +1306,15 @@
         "decimals": 18,
         "code_bytes": 1764,
         "note": "ERC20 verified: GIGATENEV dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -1115,7 +1345,15 @@
         "decimals": 18,
         "code_bytes": 5915,
         "note": "ERC20 verified: TORCH dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -1146,7 +1384,15 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: GPAD dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1174,7 +1420,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1202,7 +1456,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1230,7 +1492,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1258,7 +1528,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1286,7 +1564,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1314,7 +1600,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1342,7 +1636,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1370,7 +1672,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1398,7 +1708,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1426,7 +1744,15 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false
     },
     {
       "project": "Baola",
@@ -1462,7 +1788,15 @@
         "decimals": 18,
         "code_bytes": 3248,
         "note": "ERC20 verified: WTZ dec=18"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     },
     {
       "project": "肖战羊",
@@ -1493,10 +1827,18 @@
         "decimals": 8,
         "code_bytes": 2205,
         "note": "ERC20 verified: BEM dec=8"
-      }
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false
     }
   ],
-  "suspected_copycat_count": 8,
+  "suspected_copycat_count": 10,
   "suspected_copycats": [
     {
       "project": "【疑似山寨·同名非官方】TapeRobot",
@@ -1508,7 +1850,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "transistors",
       "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "creator_watched": false,
       "tx": "0xd4df08b62f78919092ae77036beee0f686e154fae9f0d149524a8c6041933c5d",
       "detected_at": "2026-10-21T16:07:51+08:00",
       "processor": "0x737257a6cdee457e88e759d271c4edea9cbabec1",
@@ -1526,7 +1876,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "processor",
       "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "creator_watched": false,
       "tx": "0xd4df08b62f78919092ae77036beee0f686e154fae9f0d149524a8c6041933c5d",
       "detected_at": "2026-10-21T16:07:51+08:00",
       "processor": "0x737257a6cdee457e88e759d271c4edea9cbabec1",
@@ -1544,7 +1902,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "transistors",
       "creator": "0x7f364ed2f900513ccabdfb2c856782b4e53f1b44",
+      "creator_watched": false,
       "tx": "0xd8bb91998ce20dedbbf91dcadf60e496e1cf2b641c27b205d93b2b59c6bf365f",
       "detected_at": "2026-10-21T16:03:38+08:00",
       "processor": "0x65b3aac80c318619c9e41b188723461196d3c0ac",
@@ -1562,7 +1928,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "processor",
       "creator": "0x7f364ed2f900513ccabdfb2c856782b4e53f1b44",
+      "creator_watched": false,
       "tx": "0xd8bb91998ce20dedbbf91dcadf60e496e1cf2b641c27b205d93b2b59c6bf365f",
       "detected_at": "2026-10-21T16:03:38+08:00",
       "processor": "0x65b3aac80c318619c9e41b188723461196d3c0ac",
@@ -1580,7 +1954,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "transistors",
       "creator": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "creator_watched": false,
       "tx": "0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
       "detected_at": "2026-10-21T15:57:20+08:00",
       "processor": "0xf1f87c8bba872bee0d2d7b0cf1ffeb426ad5945b",
@@ -1598,7 +1980,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "processor",
       "creator": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "creator_watched": false,
       "tx": "0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
       "detected_at": "2026-10-21T15:57:20+08:00",
       "processor": "0xf1f87c8bba872bee0d2d7b0cf1ffeb426ad5945b",
@@ -1616,7 +2006,15 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "processor",
       "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "creator_watched": false,
       "tx": "0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
       "detected_at": "2026-10-21T15:51:31+08:00",
       "processor": "0xb841e9c6cac146d903a2f5449a724cef4b0ae5e6",
@@ -1634,13 +2032,115 @@
       "official": false,
       "suspected_copycat": true,
       "status": "name_match_unconfirmed",
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "alert_ok": false,
+      "ca_role": "transistors",
       "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "creator_watched": false,
       "tx": "0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
       "detected_at": "2026-10-21T15:51:30+08:00",
       "processor": "0xb841e9c6cac146d903a2f5449a724cef4b0ae5e6",
       "transistors": "0x8de74a7a93826b5158c17a880f45d55ab52dc64b",
       "evidence_url": "https://bscscan.com/tx/0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
       "note": "同名非官方：创建者 0x2590782dd8c42f62b8e3b4ff788505fc64ed637e 不在监控钱包内，官推未确认；name_match_unconfirmed"
+    },
+    {
+      "project": "【疑似山寨·同名未确认】PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "base",
+      "address": "0xb2000000000000000000002218dfa260a9aaf720",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T15:27:38+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0xc6c7696ea8473526ea818f212a77450e42959c69; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T15:27:38+08:00",
+          "reason": "name_fuzzy:playblastoff",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc6c7696ea8473526ea818f212a77450e42959c69",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "BLAST",
+        "name": "Blast",
+        "decimals": 18,
+        "code_bytes": 1,
+        "note": "ERC20 verified: BLAST dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc6c7696ea8473526ea818f212a77450e42959c69",
+      "creator_watched": false
+    },
+    {
+      "project": "【疑似山寨·同名未确认】PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "base",
+      "address": "0xf3ee49aacdb8c0f5114e59aa2a012141aebcd89c",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T15:00:49+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x7238b752e03ee3db9f2710eb59745d766ef71aeb; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T15:00:49+08:00",
+          "reason": "name_fuzzy:playblastoff",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "BLAST",
+        "name": "Blast",
+        "decimals": 18,
+        "code_bytes": 1627,
+        "note": "ERC20 verified: BLAST dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
+      "creator_watched": false
     }
   ]
 }
