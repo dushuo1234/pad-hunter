@@ -1,9 +1,39 @@
 {
-  "generated_at": "2026-10-21T15:57:20+08:00",
-  "count": 16,
+  "generated_at": "2026-10-21T15:59:30+08:00",
+  "count": 18,
   "token_ca_count": 2,
   "wallet_count": 6,
   "finds": [
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "source": "factory:tapeout:creator_watched",
+      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+      "detected_at": "2026-10-21T15:59:30+08:00",
+      "confidence": "high",
+      "note": "【晶体管合约(ERC-1155)】TapeOut监控 TapeRobot via factory:tapeout:creator_watched; creator=0x88bcc5b698f58ab96833630ac78e0db4d800dd47; tx=0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:creator_watched",
+          "detected_at": "2026-10-21T15:59:30+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "晶体管合约(ERC-1155)",
+      "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC1155) — not a token CA"
+      },
+      "tapeout_ca": true
+    },
     {
       "project": "TapeRobot·TapeOut监控",
       "handle": "TapeOutWatch",
@@ -31,6 +61,38 @@
         "chain": "bsc",
         "code_bytes": 295,
         "note": "NFT contract (ERC1155) — not a token CA"
+      },
+      "tapeout_ca": true
+    },
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0xf1f87c8bba872bee0d2d7b0cf1ffeb426ad5945b",
+      "source": "factory:tapeout:name_match",
+      "evidence_url": "https://bscscan.com/tx/0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
+      "detected_at": "2026-10-21T15:57:20+08:00",
+      "confidence": "high",
+      "note": "【TapeOut Processor】TapeOut监控 TapeRobot via factory:tapeout:name_match; creator=0x9379dc54624c42dff703054dee97ce3ad87cb4e0; tx=0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679; ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:name_match",
+          "detected_at": "2026-10-21T15:57:20+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "TapeOut Processor",
+      "traced_from": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TapeRobot",
+        "name": "TapeRobot",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
       },
       "tapeout_ca": true
     },
