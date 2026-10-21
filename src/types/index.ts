@@ -146,6 +146,8 @@ export interface CaFind {
   chain: string
   address: string
   source: string
+  /** Raw discovery strings from `source` and `sources[]`, primary first. */
+  sourceRefs: string[]
   evidence_url: string
   detected_at: string
   confidence: CaFindConfidence | ''
@@ -179,7 +181,7 @@ export interface CaFind {
   lockAt: string
   /** Watched-wallet activity. Shown even after an official-X lock. Never a CA alert. */
   activity: boolean
-  /** From `launched_history`. Not part of the active status_counts. */
+  /** From `launched_history`. Not part of the active status_counts. Shown under 已开盘. */
   archived: boolean
 }
 
@@ -211,6 +213,8 @@ export interface CaFindsPayload {
   suspectedCopycats: CaFind[]
   /** Superseded rows from the active list and from `launched_history`. */
   supersededArchive: CaFind[]
+  /** Every `launched_history` row, including confirmed and candidate. */
+  launchedHistory: CaFind[]
   walletActivity: CaFind[]
   locks: CaProjectLock[]
 }
