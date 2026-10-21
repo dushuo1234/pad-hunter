@@ -14,11 +14,11 @@ const publicBase = typeof import.meta.env?.BASE_URL === 'string' ? import.meta.e
 export const CA_FINDS_URL = `${publicBase}data/ca_finds.json`
 
 export const CA_SOURCE_LABEL: Record<CaFindSource, string> = {
-  site: 'site',
-  js: 'JS',
-  x: 'X',
-  tg: 'TG',
-  'on-chain': 'on-chain',
+  site: '官网',
+  js: '官网JS',
+  x: '官推X',
+  tg: 'Telegram',
+  'on-chain': '链上',
 }
 
 const SOURCE_ALIASES: Record<string, CaFindSource> = {
@@ -175,9 +175,100 @@ export function normalizeCaSource(value: string): string {
   return SOURCE_ALIASES[key] ?? value.trim()
 }
 
+export interface CaSourceBadgeModel {
+  label: string
+  href: string
+}
+
+const X_HOSTS = new Set(['x.com', 'twitter.com', 'mobile.twitter.com', 'mobile.x.com'])
+const TG_HOSTS = new Set(['t.me', 'telegram.me', 'telegram.dog'])
+
+function httpUrlIn(text: string): string {
+  const match = text.match(/https?:\/\/[^\s<>"']+/i)
+  if (!match) return ''
+  return safeEvidenceUrl(match[0].replace(/[),.;]+$/, '')) ?? ''
+}
+
+function siteHost(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '').toLowerCase()
+  } catch {
+    return ''
+  }
+}
+
+function xProfileFromSource(text: string): string {
+  const match = text.match(/(?:^|[:\s])@([A-Za-z0-9_]{1,15})\b/)
+  if (!match) return ''
+  return safeEvidenceUrl(`https://x.com/${match[1]}`) ?? ''
+}
+
+/** Human label for one discovery string. The label never includes the raw `js:https://…` form. */
+export function describeCaSource(raw: string): CaSourceBadgeModel {
+  const text = raw.trim()
+  if (!text) return { label: '', href: '' }
+  const href = httpUrlIn(text) || xProfileFromSource(text)
+  const lower = text.toLowerCase()
+  const head = (lower.split(':')[0] ?? '').trim()
+  const host = href ? siteHost(href) : ''
+  const xHost = X_HOSTS.has(host)
+  const tgHost = TG_HOSTS.has(host)
+
+  if (head === 'onchain_lock' || lower === 'onchain_lock' || lower.includes('onchain_lock')) {
+    return { label: '链上锁定扫描', href }
+  }
+  if (head === 'factory' || head === 'tapeout' || lower.startsWith('factory:') || lower.startsWith('tapeout:')) {
+    return { label: '链上工厂', href }
+  }
+  if (head === 'js' || head === 'javascript' || head === 'script') return { label: '官网JS', href }
+  if (head === 'inline') return { label: '内联页面', href }
+  if (head === 'tg' || head === 'telegram' || tgHost || lower.startsWith('tg:') || lower.startsWith('telegram:')) {
+    return { label: 'Telegram', href }
+  }
+  if (
+    head === 'x' ||
+    head === 'x_post' ||
+    head === 'twitter' ||
+    head === 'tweet' ||
+    lower === 'x_post' ||
+    lower.startsWith('x:@') ||
+    lower.startsWith('x_post') ||
+    xHost
+  ) {
+    return { label: '官推X', href }
+  }
+  if (head === 'html' || head === 'site' || head === 'website' || head === 'web' || head === '站点') {
+    return { label: '官网', href }
+  }
+  if (head === 'on-chain' || head === 'onchain' || head === 'chain' || lower === '链上') {
+    return { label: '链上', href }
+  }
+  if (head === 'watchlist' || lower.startsWith('watchlist')) return { label: '监控名单', href }
+  if (lower.startsWith('http://') || lower.startsWith('https://')) {
+    if (tgHost) return { label: 'Telegram', href }
+    return { label: '官网', href }
+  }
+  if (text in CA_SOURCE_LABEL) return { label: CA_SOURCE_LABEL[text as CaFindSource], href }
+  if (/[\u4e00-\u9fff]/.test(text)) return { label: text, href }
+  return { label: '其他来源', href }
+}
+
 export function caSourceLabel(source: string): string {
-  if (source in CA_SOURCE_LABEL) return CA_SOURCE_LABEL[source as CaFindSource]
-  return source || '未知来源'
+  return describeCaSource(source).label || '未知来源'
+}
+
+/** One badge per distinct Chinese method. Evidence URL is not repeated as a second link. */
+export function caSourceBadges(sources: string[], evidenceUrl = ''): CaSourceBadgeModel[] {
+  const evidence = safeEvidenceUrl(evidenceUrl) ?? ''
+  const seen = new Set<string>()
+  const badges: CaSourceBadgeModel[] = []
+  for (const raw of sources) {
+    const badge = describeCaSource(raw)
+    if (!badge.label || seen.has(badge.label)) continue
+    seen.add(badge.label)
+    badges.push({ label: badge.label, href: badge.href && badge.href !== evidence ? badge.href : '' })
+  }
+  return badges
 }
 
 export function normalizeCaConfidence(value: string): CaFindConfidence | '' {
@@ -293,6 +384,27 @@ function normalizeRole(value: unknown): CaRole {
   return ROLES.has(key) ? (key as CaRole) : ''
 }
 
+function readSourceRefs(row: Record<string, unknown>): string[] {
+  const refs: string[] = []
+  const seen = new Set<string>()
+  const push = (value: string) => {
+    const text = normalizeCaSource(value)
+    if (!text) return
+    const key = text.toLowerCase()
+    if (seen.has(key)) return
+    seen.add(key)
+    refs.push(text)
+  }
+  push(asString(row.source))
+  if (Array.isArray(row.sources)) {
+    for (const item of row.sources) {
+      if (typeof item === 'string') push(item)
+      else if (item && typeof item === 'object') push(asString((item as Record<string, unknown>).source))
+    }
+  }
+  return refs
+}
+
 function isActivityRow(row: Record<string, unknown>, kind: string, status: string): boolean {
   if (row.activity === true || row.is_activity === true || row.wallet_activity === true) return true
   const key = kind.trim().toLowerCase()
@@ -318,6 +430,7 @@ function readCaRow(raw: unknown, options: ReadRowOptions = {}): CaFind | null {
   const kind = asString(row.kind || row.addr_kind)
   const status = normalizeStatus(asString(row.ca_status || row.caStatus)) || options.defaultStatus || ''
   const activity = options.activity === true || isActivityRow(row, kind, status)
+  const sourceRefs = readSourceRefs(row)
   const provenance = normalizeProvenance(row.provenance)
   const provenanceZh = asString(row.provenance_zh || row.provenanceZh) || (provenance ? PROVENANCE_ZH[provenance] : '')
   const statusZh =
@@ -332,7 +445,8 @@ function readCaRow(raw: unknown, options: ReadRowOptions = {}): CaFind | null {
     handle: asString(row.handle).replace(/^@/, ''),
     chain: asString(row.chain),
     address,
-    source: normalizeCaSource(asString(row.source)),
+    source: sourceRefs[0] ?? '',
+    sourceRefs,
     evidence_url: asString(row.evidence_url),
     detected_at: asString(row.detected_at),
     confidence: normalizeCaConfidence(asString(row.confidence)),
@@ -485,8 +599,66 @@ function applyLocks(rows: CaFind[], locks: CaProjectLock[]) {
   }
 }
 
+export function compareFindsByNewest(a: CaFind, b: CaFind): number {
+  return detectedMs(b) - detectedMs(a) || a.address.localeCompare(b.address)
+}
+
 function sortFinds(rows: CaFind[]) {
-  rows.sort((a, b) => detectedMs(b) - detectedMs(a) || a.address.localeCompare(b.address))
+  rows.sort(compareFindsByNewest)
+}
+
+export interface LaunchedFindIndex {
+  handles: Set<string>
+  names: Set<string>
+  addresses: Set<string>
+}
+
+/** Handles, project names, and CA addresses from `launched.json`. */
+export function indexLaunchedProjects(
+  items: { handle?: string | null; project?: string | null; ca?: string | null }[],
+): LaunchedFindIndex {
+  const handles = new Set<string>()
+  const names = new Set<string>()
+  const addresses = new Set<string>()
+  for (const item of items) {
+    const handle = (item.handle ?? '').replace(/^@/, '').trim().toLowerCase()
+    if (handle) handles.add(handle)
+    const project = (item.project ?? '').trim().toLowerCase()
+    if (project) {
+      names.add(project)
+      const head = project.split(/[·•|/]/)[0]?.trim()
+      if (head) names.add(head)
+    }
+    const ca = (item.ca ?? '').trim()
+    if (ca) addresses.add(caAddressId(ca))
+  }
+  return { handles, names, addresses }
+}
+
+function matchesLaunchIndex(aliases: string[], index: LaunchedFindIndex): boolean {
+  for (const alias of aliases) {
+    const value = alias.slice(2)
+    if ((alias.startsWith('h:') || alias.startsWith('k:')) && index.handles.has(value)) return true
+    if ((alias.startsWith('n:') || alias.startsWith('p:')) && index.names.has(value)) return true
+  }
+  return false
+}
+
+/** Launched-history rows, launched handles, matching project names, and known launched CAs. */
+export function findIsLaunched(find: CaFind, index: LaunchedFindIndex): boolean {
+  if (find.archived) return true
+  if (index.addresses.has(caAddressId(find.address))) return true
+  const handle = find.handle.replace(/^@/, '').trim().toLowerCase()
+  if (handle && index.handles.has(handle)) return true
+  const key = find.projectKey.trim().toLowerCase()
+  if (key && index.handles.has(key)) return true
+  return matchesLaunchIndex(caProjectAliases(find.project, find.handle, find.projectKey), index)
+}
+
+export function lockIsLaunched(lock: CaProjectLock, index: LaunchedFindIndex): boolean {
+  const handle = lock.handle.replace(/^@/, '').trim().toLowerCase()
+  if (handle && index.handles.has(handle)) return true
+  return matchesLaunchIndex(lock.aliases, index)
 }
 
 /** CA sound and the orange「新」highlight. Wallet activity and archived rows never qualify. */
@@ -537,10 +709,14 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
     finds.push(find)
   }
 
+  const launchedSeen = new Set<string>()
+  const launchedHistory: CaFind[] = []
   if (Array.isArray(obj.launched_history)) {
     for (const item of obj.launched_history) {
       const row = readCaRow(item, { archived: true })
-      if (!row || row.caStatus !== 'superseded') continue
+      if (!row) continue
+      pushUnique(launchedHistory, launchedSeen, row)
+      if (row.caStatus !== 'superseded') continue
       if (archive.some((prev) => caAddressId(prev.address) === caAddressId(row.address) && prev.chain.toLowerCase() === row.chain.toLowerCase())) {
         continue
       }
@@ -555,13 +731,17 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
   const known = new Set([...finds, ...suspected, ...archive].map((find) => caAddressId(find.address)))
   const walletActivity = activity.filter((find) => !known.has(caAddressId(find.address)))
 
-  const locks = mergeLocks([declaredLocks, locksFromRows([...finds, ...suspected, ...archive, ...walletActivity])])
-  applyLocks([...finds, ...suspected, ...archive, ...walletActivity], locks)
+  const locks = mergeLocks([
+    declaredLocks,
+    locksFromRows([...finds, ...suspected, ...archive, ...walletActivity, ...launchedHistory]),
+  ])
+  applyLocks([...finds, ...suspected, ...archive, ...walletActivity, ...launchedHistory], locks)
 
   sortFinds(finds)
   sortFinds(suspected)
   sortFinds(archive)
   sortFinds(walletActivity)
+  sortFinds(launchedHistory)
 
   const statusCounts = readStatusCounts(obj.status_counts)
   const suspectedCopycatCount = asCount(obj.suspected_copycat_count) || suspected.length
@@ -576,6 +756,7 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
     finds,
     suspectedCopycats: suspected,
     supersededArchive: archive,
+    launchedHistory,
     walletActivity,
     locks,
   }
