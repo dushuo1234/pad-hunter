@@ -1,9 +1,177 @@
 {
-  "generated_at": "2026-10-21T15:27:49+08:00",
-  "count": 13,
+  "generated_at": "2026-10-21T15:51:33+08:00",
+  "count": 15,
   "token_ca_count": 2,
   "wallet_count": 6,
   "finds": [
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0xb841e9c6cac146d903a2f5449a724cef4b0ae5e6",
+      "source": "factory:tapeout:name_match",
+      "evidence_url": "https://bscscan.com/tx/0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
+      "detected_at": "2026-10-21T15:51:31+08:00",
+      "confidence": "high",
+      "note": "【TapeOut Processor】TapeOut监控 TapeRobot via factory:tapeout:name_match; creator=0x2590782dd8c42f62b8e3b4ff788505fc64ed637e; tx=0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a; ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:name_match",
+          "detected_at": "2026-10-21T15:51:31+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "TapeOut Processor",
+      "traced_from": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TapeRobot",
+        "name": "TapeRobot",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
+      },
+      "tapeout_ca": true
+    },
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0x8de74a7a93826b5158c17a880f45d55ab52dc64b",
+      "source": "factory:tapeout:name_match",
+      "evidence_url": "https://bscscan.com/tx/0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
+      "detected_at": "2026-10-21T15:51:30+08:00",
+      "confidence": "high",
+      "note": "【晶体管合约(ERC-1155)】TapeOut监控 TapeRobot via factory:tapeout:name_match; creator=0x2590782dd8c42f62b8e3b4ff788505fc64ed637e; tx=0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:name_match",
+          "detected_at": "2026-10-21T15:51:30+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "晶体管合约(ERC-1155)",
+      "traced_from": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC1155) — not a token CA"
+      },
+      "tapeout_ca": true
+    },
+    {
+      "project": "【扫出钱包·非CA】Ink Pirates",
+      "handle": "inkpirates",
+      "chain": "robinhood",
+      "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
+      "source": "watchlist.scanned_wallets",
+      "evidence_url": "https://x.com/inkpirates",
+      "detected_at": "2026-10-21T15:39:48+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-21T15:39:48+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-21T15:20:45+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "robinhood",
+        "code_bytes": 23,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
+    },
+    {
+      "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "bsc",
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "source": "site:https://x.com/bemer77",
+      "evidence_url": "https://x.com/bemer77",
+      "detected_at": "2026-10-21T15:37:34+08:00",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T15:37:34+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T15:20:45+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TAI",
+        "name": "TapeAI",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
+      }
+    },
+    {
+      "project": "【扫出钱包·非CA】HappyBlock",
+      "handle": "RealHappyBlock",
+      "chain": "ethereum",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "source": "x_post",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "detected_at": "2026-10-21T15:36:24+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-21T15:36:24+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-21T15:36:24+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post",
+          "detected_at": "2026-10-21T15:20:45+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
+    },
     {
       "project": "PlayBlastOff",
       "handle": "play_blastoff",
@@ -34,112 +202,6 @@
         "decimals": 18,
         "code_bytes": 1,
         "note": "ERC20 verified: BLAST dec=18"
-      }
-    },
-    {
-      "project": "【扫出钱包·非CA】Ink Pirates",
-      "handle": "inkpirates",
-      "chain": "robinhood",
-      "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
-      "source": "watchlist.scanned_wallets",
-      "evidence_url": "https://x.com/inkpirates",
-      "detected_at": "2026-10-21T15:12:20+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "watchlist.scanned_wallets",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T15:12:20+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T15:20:45+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "robinhood",
-        "code_bytes": 23,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      }
-    },
-    {
-      "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
-      "handle": "bemer77",
-      "chain": "bsc",
-      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
-      "source": "site:https://x.com/bemer77",
-      "evidence_url": "https://x.com/bemer77",
-      "detected_at": "2026-10-21T15:09:39+08:00",
-      "confidence": "low",
-      "note": "【NFT合约·非CA】 classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-21T15:09:39+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-21T15:20:45+08:00"
-        }
-      ],
-      "kind": "nft",
-      "label_zh": "NFT合约",
-      "addr_kind": "nft",
-      "is_token": false,
-      "verify": {
-        "kind": "nft",
-        "chain": "bsc",
-        "symbol": "TAI",
-        "name": "TapeAI",
-        "code_bytes": 295,
-        "note": "NFT contract (ERC721) — not a token CA"
-      }
-    },
-    {
-      "project": "【扫出钱包·非CA】HappyBlock",
-      "handle": "RealHappyBlock",
-      "chain": "ethereum",
-      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
-      "source": "x_post",
-      "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-21T15:08:29+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-21T15:08:29+08:00"
-        },
-        {
-          "origin": "watchlist.scanned_wallets",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T15:08:29+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "x_post",
-          "detected_at": "2026-10-21T15:20:45+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
       }
     },
     {
@@ -230,7 +292,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -273,7 +335,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -316,7 +378,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -359,7 +421,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         }
       ],
       "kind": "invalid",
@@ -391,7 +453,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -436,7 +498,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T15:19:32+08:00"
+          "detected_at": "2026-10-21T15:46:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
