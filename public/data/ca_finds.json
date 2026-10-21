@@ -1,73 +1,19 @@
 {
-  "generated_at": "2026-10-21T16:28:49+08:00",
+  "generated_at": "2026-10-21T17:10:35+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 14,
-  "token_ca_count": 1,
+  "count": 11,
+  "token_ca_count": 0,
   "wallet_count": 6,
-  "confirmed_count": 3,
+  "confirmed_count": 0,
   "candidate_count": 0,
   "status_counts": {
-    "confirmed": 3,
+    "confirmed": 0,
     "candidate": 0,
     "superseded": 0,
     "not_ca": 11
   },
   "finds": [
-    {
-      "project": "【官方$TapeRobot代币CA】TapeRobot·TapeOut监控",
-      "handle": "TapeOutWatch",
-      "chain": "bsc",
-      "address": "0x11e87d97a34f8000f710d054e4eac30011a3ac8d",
-      "source": "x:@TapeRobot_bsc",
-      "evidence_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
-      "detected_at": "2026-10-21T16:14:38+08:00",
-      "confidence": "high",
-      "note": "【合约CA】TapeOut监控 TapeRobot via x:@TapeRobot_bsc; creator=; tx=; ca_gate: ERC20 verified: TapeRobot dec=18",
-      "sources": [
-        {
-          "origin": "tapeout_watch",
-          "source": "x:@TapeRobot_bsc",
-          "detected_at": "2026-10-21T16:14:38+08:00",
-          "post_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
-          "ca_kind": "token"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "官方$TapeRobot代币CA",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "bsc",
-        "symbol": "TapeRobot",
-        "name": "TapeRobot",
-        "decimals": 18,
-        "code_bytes": 170,
-        "note": "ERC20 verified: TapeRobot dec=18"
-      },
-      "ca_status": "confirmed",
-      "ca_status_zh": "已确认CA",
-      "provenance": "official_x",
-      "provenance_zh": "官推确认",
-      "official_x_confirmed": true,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": true,
-      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
-      "ca_locked": true,
-      "ca_locked_at": "2026-10-21T16:27:21+08:00",
-      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
-      "locked_cas": [
-        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
-        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
-        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
-      ],
-      "project_key": "taperobot_bsc",
-      "official": true,
-      "tapeout_ca": false,
-      "confirm_basis_zh": "官推确认"
-    },
     {
       "project": "【扫出钱包·非CA】Ink Pirates",
       "handle": "inkpirates",
@@ -75,19 +21,19 @@
       "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
       "source": "watchlist.scanned_wallets",
       "evidence_url": "https://x.com/inkpirates",
-      "detected_at": "2026-10-21T16:11:03+08:00",
+      "detected_at": "2026-10-21T16:38:31+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T16:11:03+08:00"
+          "detected_at": "2026-10-21T16:38:31+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -117,19 +63,19 @@
       "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
       "source": "site:https://x.com/bemer77",
       "evidence_url": "https://x.com/bemer77",
-      "detected_at": "2026-10-21T16:08:47+08:00",
+      "detected_at": "2026-10-21T16:35:38+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-21T16:08:47+08:00"
+          "detected_at": "2026-10-21T16:35:38+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "nft",
@@ -161,24 +107,24 @@
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-21T16:07:43+08:00",
+      "detected_at": "2026-10-21T16:34:33+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-21T16:07:43+08:00"
+          "detected_at": "2026-10-21T16:34:33+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T16:07:43+08:00"
+          "detected_at": "2026-10-21T16:34:33+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "x_post",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -200,123 +146,6 @@
       "ca_role": null,
       "alert_ok": false,
       "ca_locked": false
-    },
-    {
-      "project": "【官方TapeRobot·晶体管合约(ERC-1155)】TapeRobot·TapeOut监控",
-      "handle": "TapeOutWatch",
-      "chain": "bsc",
-      "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
-      "source": "factory:tapeout:creator_watched",
-      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
-      "detected_at": "2026-10-21T15:59:30+08:00",
-      "confidence": "high",
-      "note": "【晶体管合约(ERC-1155)】TapeOut监控 TapeRobot via factory:tapeout:creator_watched; creator=0x88bcc5b698f58ab96833630ac78e0db4d800dd47; tx=0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73; ca_gate: NFT contract (ERC1155) — not a token CA",
-      "sources": [
-        {
-          "origin": "tapeout_watch",
-          "source": "factory:tapeout:creator_watched",
-          "detected_at": "2026-10-21T15:59:30+08:00",
-          "creator_watched": true,
-          "ca_kind": "transistors"
-        },
-        {
-          "origin": "tapeout_watch",
-          "source": "x:@TapeRobot_bsc",
-          "detected_at": "2026-10-21T16:03:45+08:00",
-          "post_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823"
-        }
-      ],
-      "kind": "nft",
-      "label_zh": "官方TapeRobot·晶体管合约(ERC-1155)",
-      "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
-      "addr_kind": "nft",
-      "is_token": false,
-      "verify": {
-        "kind": "nft",
-        "chain": "bsc",
-        "code_bytes": 295,
-        "note": "NFT contract (ERC1155) — not a token CA"
-      },
-      "ca_status": "confirmed",
-      "ca_status_zh": "已确认CA",
-      "provenance": "both",
-      "provenance_zh": "监控钱包创建+官推确认",
-      "official_x_confirmed": true,
-      "wallet_factory_confirmed": true,
-      "ca_role": "transistors",
-      "alert_ok": true,
-      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
-      "ca_locked": true,
-      "ca_locked_at": "2026-10-21T16:27:21+08:00",
-      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
-      "locked_cas": [
-        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
-        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
-        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
-      ],
-      "project_key": "taperobot_bsc",
-      "official": true,
-      "tapeout_ca": true,
-      "mint_price_bnb": 0.0005,
-      "supply_cap": 100000,
-      "cpu": "#1387",
-      "processor": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
-      "confirm_basis_zh": "监控钱包创建+官推确认（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
-    },
-    {
-      "project": "【官方TapeRobot·Processor(ERC-721)】TapeRobot·TapeOut监控",
-      "handle": "TapeOutWatch",
-      "chain": "bsc",
-      "address": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
-      "source": "factory:tapeout:creator_watched",
-      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
-      "detected_at": "2026-10-21T15:59:30+08:00",
-      "confidence": "high",
-      "note": "【TapeOut Processor】TapeOut监控 TapeRobot via factory:tapeout:creator_watched; creator=0x88bcc5b698f58ab96833630ac78e0db4d800dd47; tx=0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73; ca_gate: NFT contract (ERC721) — not a token CA",
-      "sources": [
-        {
-          "origin": "tapeout_watch",
-          "source": "factory:tapeout:creator_watched",
-          "detected_at": "2026-10-21T15:59:30+08:00",
-          "creator_watched": true,
-          "ca_kind": "processor"
-        }
-      ],
-      "kind": "nft",
-      "label_zh": "官方TapeRobot·Processor(ERC-721)",
-      "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
-      "addr_kind": "nft",
-      "is_token": false,
-      "verify": {
-        "kind": "nft",
-        "chain": "bsc",
-        "symbol": "TapeRobot",
-        "name": "TapeRobot",
-        "code_bytes": 295,
-        "note": "NFT contract (ERC721) — not a token CA"
-      },
-      "ca_status": "confirmed",
-      "ca_status_zh": "已确认CA",
-      "provenance": "wallet_factory",
-      "provenance_zh": "监控钱包创建",
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": true,
-      "ca_role": "processor",
-      "alert_ok": true,
-      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
-      "ca_locked": true,
-      "ca_locked_at": "2026-10-21T16:27:21+08:00",
-      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
-      "locked_cas": [
-        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
-        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
-        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
-      ],
-      "project_key": "taperobot_bsc",
-      "official": true,
-      "tapeout_ca": true,
-      "paired_with": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
-      "confirm_basis_zh": "监控钱包创建（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
     },
     {
       "project": "【非地址·非CA】Pulse",
@@ -383,12 +212,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -435,12 +264,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -487,12 +316,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -539,7 +368,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         }
       ],
       "kind": "invalid",
@@ -580,12 +409,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "nft",
@@ -634,12 +463,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T16:17:40+08:00"
+          "detected_at": "2026-10-21T16:45:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "wallet",
@@ -681,7 +510,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-21T16:25:17+08:00"
+          "detected_at": "2026-10-21T16:52:43+08:00"
         }
       ],
       "kind": "nft",
@@ -707,8 +536,179 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 30,
+  "launched_history_count": 33,
   "launched_history": [
+    {
+      "project": "【官方$TapeRobot代币CA】TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0x11e87d97a34f8000f710d054e4eac30011a3ac8d",
+      "source": "x:@TapeRobot_bsc",
+      "evidence_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+      "detected_at": "2026-10-21T16:14:38+08:00",
+      "confidence": "high",
+      "note": "【合约CA】TapeOut监控 TapeRobot via x:@TapeRobot_bsc; creator=; tx=; ca_gate: ERC20 verified: TapeRobot dec=18",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "x:@TapeRobot_bsc",
+          "detected_at": "2026-10-21T16:14:38+08:00",
+          "post_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+          "ca_kind": "token"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "官方$TapeRobot代币CA",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "TapeRobot",
+        "name": "TapeRobot",
+        "decimals": 18,
+        "code_bytes": 170,
+        "note": "ERC20 verified: TapeRobot dec=18"
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
+      "official": true,
+      "tapeout_ca": false,
+      "confirm_basis_zh": "官推确认"
+    },
+    {
+      "project": "【官方TapeRobot·晶体管合约(ERC-1155)】TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "source": "factory:tapeout:creator_watched",
+      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+      "detected_at": "2026-10-21T15:59:30+08:00",
+      "confidence": "high",
+      "note": "【晶体管合约(ERC-1155)】TapeOut监控 TapeRobot via factory:tapeout:creator_watched; creator=0x88bcc5b698f58ab96833630ac78e0db4d800dd47; tx=0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:creator_watched",
+          "detected_at": "2026-10-21T15:59:30+08:00",
+          "creator_watched": true,
+          "ca_kind": "transistors"
+        },
+        {
+          "origin": "tapeout_watch",
+          "source": "x:@TapeRobot_bsc",
+          "detected_at": "2026-10-21T16:03:45+08:00",
+          "post_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "官方TapeRobot·晶体管合约(ERC-1155)",
+      "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC1155) — not a token CA"
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "both",
+      "provenance_zh": "监控钱包创建+官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": true,
+      "ca_role": "transistors",
+      "alert_ok": false,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
+      "official": true,
+      "tapeout_ca": true,
+      "mint_price_bnb": 0.0005,
+      "supply_cap": 100000,
+      "cpu": "#1387",
+      "processor": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "confirm_basis_zh": "监控钱包创建+官推确认（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
+    },
+    {
+      "project": "【官方TapeRobot·Processor(ERC-721)】TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "source": "factory:tapeout:creator_watched",
+      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+      "detected_at": "2026-10-21T15:59:30+08:00",
+      "confidence": "high",
+      "note": "【TapeOut Processor】TapeOut监控 TapeRobot via factory:tapeout:creator_watched; creator=0x88bcc5b698f58ab96833630ac78e0db4d800dd47; tx=0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73; ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:creator_watched",
+          "detected_at": "2026-10-21T15:59:30+08:00",
+          "creator_watched": true,
+          "ca_kind": "processor"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "官方TapeRobot·Processor(ERC-721)",
+      "traced_from": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TapeRobot",
+        "name": "TapeRobot",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": "processor",
+      "alert_ok": false,
+      "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
+      "official": true,
+      "tapeout_ca": true,
+      "paired_with": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "confirm_basis_zh": "监控钱包创建（创建者 0x88bcc5b698f58ab96833630ac78e0db4d800dd47）"
+    },
     {
       "project": "【非正式·官推未认 晶体管(ERC-1155)】TapeRobot",
       "handle": "TapeRobot_bsc",
