@@ -1,3 +1,4 @@
+import { useCaFinds } from '../hooks/useCaFinds'
 import { appPath } from '../router'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { SourceBadge } from '../components/SourceBadge'
@@ -5,6 +6,7 @@ import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from '../utils/candidates'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, xProfileUrl } from '../utils/format'
+import { lockForHandle, safeEvidenceUrl } from '../utils/caFinds'
 import { eventsForHandle, siteHealth, snapshotForCandidate } from '../utils/monitor'
 
 interface MonitorPageProps {
@@ -20,6 +22,9 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
   const timeline = eventsForHandle(events, handle)
   const snap = candidate ? snapshotForCandidate(candidate, events) : null
   const name = candidate?.name || timeline[0]?.name || handle
+  const { locks } = useCaFinds()
+  const lock = lockForHandle(locks, handle, name)
+  const lockUrl = lock ? safeEvidenceUrl(lock.url) : null
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -34,6 +39,25 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
         <SourceBadge source={candidate?.source} />
       </div>
       <p className="mt-1 font-mono text-sm text-[var(--color-ink-muted)]">@{handle.replace(/^@/, '')}</p>
+      {lock && (
+        <p className="mt-3 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+          {lockUrl ? (
+            <a
+              href={lockUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mr-2 inline-flex rounded-md border border-[#1d4ed8] bg-[#eff6ff] px-2 py-0.5 text-[11px] font-semibold text-[#1e3a8a] hover:underline dark:border-[#93c5fd] dark:bg-[#172554] dark:text-[#bfdbfe]"
+            >
+              官推已锁定
+            </a>
+          ) : (
+            <span className="mr-2 inline-flex rounded-md border border-[#1d4ed8] bg-[#eff6ff] px-2 py-0.5 text-[11px] font-semibold text-[#1e3a8a] dark:border-[#93c5fd] dark:bg-[#172554] dark:text-[#bfdbfe]">
+              官推已锁定
+            </span>
+          )}
+          锁定只停掉后续非官方 CA 推送。下面的监控钱包和站点动态照常显示。
+        </p>
+      )}
       <div className="mt-4">
         <PinWorkbenchButton candidate={candidate} name={name} handle={handle} variant="button" />
       </div>

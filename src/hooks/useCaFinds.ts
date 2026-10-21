@@ -1,13 +1,23 @@
 import { useMemo, useState, useSyncExternalStore } from 'react'
-import type { CaFind } from '../types'
-import { CA_FINDS_URL, caFindKey, parseCaFinds } from '../utils/caFinds'
+import type { CaFind, CaFindsPayload, CaProjectLock, CaStatusCounts } from '../types'
+import { CA_FINDS_URL, caFindKey, EMPTY_STATUS_COUNTS, parseCaFinds } from '../utils/caFinds'
 
 const POLL_MS = 1000
 const EMPTY_FRESH: Set<string> = new Set()
+const EMPTY_FINDS: CaFind[] = []
+const EMPTY_LOCKS: CaProjectLock[] = []
 
 export interface CaFindsState {
   finds: CaFind[]
+  suspectedCopycats: CaFind[]
+  supersededArchive: CaFind[]
+  walletActivity: CaFind[]
+  locks: CaProjectLock[]
   generatedAt?: string
+  schemaVersion?: number
+  confidenceModel?: string
+  statusCounts: CaStatusCounts
+  suspectedCopycatCount: number
   lastChecked: string | null
   loading: boolean
   error: string | null
@@ -15,8 +25,7 @@ export interface CaFindsState {
 }
 
 interface CaFindsSnapshot {
-  finds: CaFind[]
-  generatedAt?: string
+  payload: CaFindsPayload
   lastChecked: string | null
   loading: boolean
   error: string | null
@@ -24,9 +33,20 @@ interface CaFindsSnapshot {
   ready: boolean
 }
 
+const EMPTY_PAYLOAD: CaFindsPayload = {
+  statusCounts: EMPTY_STATUS_COUNTS,
+  confirmedCount: 0,
+  candidateCount: 0,
+  suspectedCopycatCount: 0,
+  finds: EMPTY_FINDS,
+  suspectedCopycats: EMPTY_FINDS,
+  supersededArchive: EMPTY_FINDS,
+  walletActivity: EMPTY_FINDS,
+  locks: EMPTY_LOCKS,
+}
+
 let snapshot: CaFindsSnapshot = {
-  finds: [],
-  generatedAt: undefined,
+  payload: EMPTY_PAYLOAD,
   lastChecked: null,
   loading: true,
   error: null,
@@ -55,13 +75,29 @@ async function tick() {
     const res = await fetch(`${CA_FINDS_URL}?t=${Date.now()}`, { cache: 'no-store' })
     if (!res.ok) throw new Error(`加载失败 (${res.status})`)
     const payload = parseCaFinds(await res.json())
-    const keys = payload.finds.map(caFindKey)
-    const nextSignature = `${payload.generated_at ?? ''}\n${keys.join('\n')}`
+    const keys = [
+      ...payload.finds,
+      ...payload.suspectedCopycats,
+      ...payload.supersededArchive,
+      ...payload.walletActivity,
+    ].map(caFindKey)
+    const lockSig = payload.locks.map((lock) => `${lock.id}\n${lock.url}`).join('\n')
+    const counts = payload.statusCounts
+    const nextSignature = [
+      payload.generated_at ?? '',
+      payload.schemaVersion ?? '',
+      counts.confirmed,
+      counts.candidate,
+      counts.superseded,
+      counts.not_ca,
+      payload.suspectedCopycatCount,
+      lockSig,
+      keys.join('\n'),
+    ].join('\n')
     if (nextSignature !== signature) {
       signature = nextSignature
       publish({
-        finds: payload.finds,
-        generatedAt: payload.generated_at,
+        payload,
         lastChecked: new Date().toISOString(),
         loading: false,
         error: null,
@@ -70,7 +106,7 @@ async function tick() {
     } else {
       publish({
         ...snapshot,
-        finds: snapshot.finds,
+        payload: snapshot.payload,
         lastChecked: new Date().toISOString(),
         loading: false,
         error: null,
@@ -124,23 +160,49 @@ export function useCaFinds(): CaFindsState {
   const data = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
   const [baseline, setBaseline] = useState<Set<string> | null>(null)
   if (baseline == null && data.ready) {
-    setBaseline(new Set(data.finds.map(caFindKey)))
+    setBaseline(
+      new Set(
+        [
+          ...data.payload.finds,
+          ...data.payload.suspectedCopycats,
+          ...data.payload.supersededArchive,
+          ...data.payload.walletActivity,
+        ].map(caFindKey),
+      ),
+    )
   }
+  const rows = useMemo(
+    () => [
+      ...data.payload.finds,
+      ...data.payload.suspectedCopycats,
+      ...data.payload.supersededArchive,
+      ...data.payload.walletActivity,
+    ],
+    [data.payload],
+  )
   const freshKeys = useMemo(() => {
     if (!baseline) return EMPTY_FRESH
     let fresh: Set<string> | null = null
-    for (const find of data.finds) {
+    for (const find of rows) {
       const key = caFindKey(find)
       if (baseline.has(key)) continue
       if (!fresh) fresh = new Set()
       fresh.add(key)
     }
     return fresh ?? EMPTY_FRESH
-  }, [baseline, data.finds])
+  }, [baseline, rows])
 
   return {
-    finds: data.finds,
-    generatedAt: data.generatedAt,
+    finds: data.payload.finds,
+    suspectedCopycats: data.payload.suspectedCopycats,
+    supersededArchive: data.payload.supersededArchive,
+    walletActivity: data.payload.walletActivity,
+    locks: data.payload.locks,
+    generatedAt: data.payload.generated_at,
+    schemaVersion: data.payload.schemaVersion,
+    confidenceModel: data.payload.confidenceModel,
+    statusCounts: data.payload.statusCounts,
+    suspectedCopycatCount: data.payload.suspectedCopycatCount,
     lastChecked: data.lastChecked,
     loading: data.loading,
     error: data.error,
