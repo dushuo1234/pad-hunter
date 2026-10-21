@@ -1,9 +1,39 @@
 {
-  "generated_at": "2026-10-21T15:56:21+08:00",
-  "count": 13,
-  "token_ca_count": 0,
+  "generated_at": "2026-10-21T15:57:20+08:00",
+  "count": 16,
+  "token_ca_count": 2,
   "wallet_count": 6,
   "finds": [
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "address": "0xbc53a0c9d45972134063d05fdecdbf1a1bdd2fe4",
+      "source": "factory:tapeout:name_match",
+      "evidence_url": "https://bscscan.com/tx/0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
+      "detected_at": "2026-10-21T15:57:20+08:00",
+      "confidence": "high",
+      "note": "【晶体管合约(ERC-1155)】TapeOut监控 TapeRobot via factory:tapeout:name_match; creator=0x9379dc54624c42dff703054dee97ce3ad87cb4e0; tx=0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "sources": [
+        {
+          "origin": "tapeout_watch",
+          "source": "factory:tapeout:name_match",
+          "detected_at": "2026-10-21T15:57:20+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "晶体管合约(ERC-1155)",
+      "traced_from": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC1155) — not a token CA"
+      },
+      "tapeout_ca": true
+    },
     {
       "project": "TapeRobot·TapeOut监控",
       "handle": "TapeOutWatch",
@@ -170,6 +200,70 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
+    },
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "base",
+      "address": "0xb2000000000000000000002218dfa260a9aaf720",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T15:27:38+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0xc6c7696ea8473526ea818f212a77450e42959c69; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T15:27:38+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0xc6c7696ea8473526ea818f212a77450e42959c69",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "BLAST",
+        "name": "Blast",
+        "decimals": 18,
+        "code_bytes": 1,
+        "note": "ERC20 verified: BLAST dec=18"
+      }
+    },
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "base",
+      "address": "0xf3ee49aacdb8c0f5114e59aa2a012141aebcd89c",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T15:00:49+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x7238b752e03ee3db9f2710eb59745d766ef71aeb; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T15:00:49+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "BLAST",
+        "name": "Blast",
+        "decimals": 18,
+        "code_bytes": 1627,
+        "note": "ERC20 verified: BLAST dec=18"
       }
     },
     {
