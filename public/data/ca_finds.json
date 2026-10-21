@@ -1,32 +1,114 @@
 {
-  "generated_at": "2026-10-21T13:34:13+08:00",
-  "count": 9,
+  "generated_at": "2026-10-21T14:59:45+08:00",
+  "count": 11,
+  "token_ca_count": 0,
+  "wallet_count": 6,
   "finds": [
     {
       "project": "Ink Pirates",
       "handle": "inkpirates",
       "chain": "robinhood",
       "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
-      "source": "site:https://x.com/inkpirates",
+      "source": "watchlist.scanned_wallets",
       "evidence_url": "https://x.com/inkpirates",
-      "detected_at": "2026-10-21T13:18:49+08:00",
-      "confidence": "high",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "detected_at": "2026-10-21T14:40:36+08:00",
+      "confidence": "medium",
+      "note": "classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-21T13:18:49+08:00"
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-21T14:40:36+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "robinhood",
+        "code_bytes": 23,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
+    },
+    {
+      "project": "老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "bsc",
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "source": "site:https://x.com/bemer77",
+      "evidence_url": "https://x.com/bemer77",
+      "detected_at": "2026-10-21T14:37:51+08:00",
+      "confidence": "low",
+      "note": "classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T14:37:51+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T14:48:55+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TAI",
+        "name": "TapeAI",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
+      }
+    },
+    {
+      "project": "HappyBlock",
+      "handle": "RealHappyBlock",
+      "chain": "ethereum",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "source": "x_post",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "detected_at": "2026-10-21T14:36:42+08:00",
+      "confidence": "medium",
+      "note": "classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-21T14:36:42+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-21T14:36:42+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-21T14:48:55+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Pulse",
@@ -37,7 +119,7 @@
       "evidence_url": "https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
       "detected_at": "2026-10-21T13:15:14+08:00",
       "confidence": "medium",
-      "note": null,
+      "note": "ca_gate: hex string (hash / git SHA), not a Solana address",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -48,44 +130,17 @@
           "origin": "js_factory_events",
           "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
           "detected_at": "2026-10-21T13:16:33+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
-          "detected_at": "2026-10-21T13:25:40+08:00"
-        }
-      ]
-    },
-    {
-      "project": "HappyBlock",
-      "handle": "RealHappyBlock",
-      "chain": "ethereum",
-      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
-      "source": "x_post:https://x.com/RealHappyBlock",
-      "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-21T13:15:08+08:00",
-      "confidence": "high",
-      "note": "classified as EOA/wallet via eth_getCode",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-21T13:15:08+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-21T13:15:08+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-21T13:32:58+08:00"
         }
       ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "hex string (hash / git SHA), not a Solana address"
+      }
     },
     {
       "project": "Elysium Name Service",
@@ -96,7 +151,7 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -111,17 +166,24 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:25:40+08:00"
+          "detected_at": "2026-10-21T14:47:22+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Elysium Name Service",
@@ -132,7 +194,7 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -147,17 +209,24 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:25:40+08:00"
+          "detected_at": "2026-10-21T14:47:22+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Elysium Name Service",
@@ -168,7 +237,7 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-20T21:52:54+08:00",
       "confidence": "medium",
-      "note": "classified as EOA/wallet via eth_getCode",
+      "note": "classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -183,17 +252,56 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:25:40+08:00"
+          "detected_at": "2026-10-21T14:47:22+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
+    },
+    {
+      "project": "♱ 17-26",
+      "handle": "0xmeaustin",
+      "chain": "比特币",
+      "address": "pkmuvif6c691r3u62jgep7o66qcucidb",
+      "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+      "evidence_url": "https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+      "detected_at": "2026-10-20T20:21:35+08:00",
+      "confidence": "medium",
+      "note": "ca_gate: not a valid Solana pubkey",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+          "detected_at": "2026-10-21T14:57:36+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
+          "detected_at": "2026-10-20T20:21:35+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "not a valid Solana pubkey"
+      }
     },
     {
       "project": "Ink Daddy",
@@ -204,7 +312,7 @@
       "evidence_url": "https://ink-daddy.com/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "classified as contract (45 bytes)",
+      "note": "classified as contract (45 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -214,17 +322,26 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T13:25:40+08:00"
+          "detected_at": "2026-10-21T14:47:22+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "addr_kind": "contract"
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "ink",
+        "symbol": "Daddy",
+        "name": "Ink Daddy",
+        "code_bytes": 45,
+        "note": "NFT contract (ERC721) — not a token CA"
+      }
     },
     {
       "project": "Superboard",
@@ -235,7 +352,7 @@
       "evidence_url": "https://www.superboard.xyz/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode",
+      "note": "appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -250,17 +367,24 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T13:25:40+08:00"
+          "detected_at": "2026-10-21T14:47:22+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "addr_kind": "wallet"
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Timecard",
@@ -271,7 +395,7 @@
       "evidence_url": "https://thetimecard.xyz",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "classified as contract (13692 bytes)",
+      "note": "classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -281,15 +405,24 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-21T13:32:58+08:00"
+          "detected_at": "2026-10-21T14:48:55+08:00"
         }
       ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "addr_kind": "contract"
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "ink",
+        "symbol": "TIME",
+        "name": "TIMECARD",
+        "code_bytes": 13692,
+        "note": "NFT contract (ERC721) — not a token CA"
+      }
     }
   ],
-  "launched_history_count": 29,
+  "launched_history_count": 28,
   "launched_history": [
     {
       "project": "Nookleus",
@@ -300,7 +433,7 @@
       "evidence_url": null,
       "detected_at": "2026-10-21T04:56:27+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via name:nookleus; deployer=0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9; token=NOOK / Nookleus",
+      "note": "onchain_lock medium via name:nookleus; deployer=0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9; token=NOOK / Nookleus; ca_gate: ERC20 verified: NOOK dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -311,7 +444,17 @@
       "kind": "contract",
       "label_zh": "合约CA",
       "traced_from": "0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9",
-      "addr_kind": "contract"
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "NOOK",
+        "name": "Nookleus",
+        "decimals": 18,
+        "code_bytes": 2628,
+        "note": "ERC20 verified: NOOK dec=18"
+      }
     },
     {
       "project": "QuantumPad V4",
@@ -322,7 +465,7 @@
       "evidence_url": null,
       "detected_at": "2026-10-20T22:55:57+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via symbol:QUANTUMPAD; deployer=0x9170da7f3576c9a243f7953c950a2ec33fc1779d; token=QUANTUMPAD / QuantumPad",
+      "note": "onchain_lock medium via symbol:QUANTUMPAD; deployer=0x9170da7f3576c9a243f7953c950a2ec33fc1779d; token=QUANTUMPAD / QuantumPad; ca_gate: ERC20 verified: QUANTUMPAD dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -333,7 +476,17 @@
       "kind": "contract",
       "label_zh": "合约CA",
       "traced_from": "0x9170da7f3576c9a243f7953c950a2ec33fc1779d",
-      "addr_kind": "contract"
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "QUANTUMPAD",
+        "name": "QuantumPad",
+        "decimals": 18,
+        "code_bytes": 2383,
+        "note": "ERC20 verified: QUANTUMPAD dec=18"
+      }
     },
     {
       "project": "Hatch",
@@ -344,7 +497,7 @@
       "evidence_url": null,
       "detected_at": "2026-10-20T22:14:48+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via symbol:HATCH+name:hatch; deployer=0xc45b29efe2ad7c39eb9236d5673cb192825a76a2; token=HATCH / Hatch",
+      "note": "onchain_lock medium via symbol:HATCH+name:hatch; deployer=0xc45b29efe2ad7c39eb9236d5673cb192825a76a2; token=HATCH / Hatch; ca_gate: ERC20 verified: HATCH dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -360,7 +513,17 @@
       "kind": "contract",
       "label_zh": "合约CA",
       "traced_from": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2",
-      "addr_kind": "contract"
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "HATCH",
+        "name": "Hatch",
+        "decimals": 18,
+        "code_bytes": 8860,
+        "note": "ERC20 verified: HATCH dec=18"
+      }
     },
     {
       "project": "Hookereum",
@@ -371,7 +534,7 @@
       "evidence_url": null,
       "detected_at": "2026-10-20T21:41:27+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via name:hookereum; deployer=0xea2d2539b4fd88993d5353558e828a54fb2d5982; token=HOOK / Hookereum",
+      "note": "onchain_lock medium via name:hookereum; deployer=0xea2d2539b4fd88993d5353558e828a54fb2d5982; token=HOOK / Hookereum; ca_gate: ERC20 verified: HOOK dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -382,25 +545,17 @@
       "kind": "contract",
       "label_zh": "合约CA",
       "traced_from": "0xea2d2539b4fd88993d5353558e828a54fb2d5982",
-      "addr_kind": "contract"
-    },
-    {
-      "project": "♱ 17-26",
-      "handle": "0xmeaustin",
-      "chain": "solana",
-      "address": "pkmuvif6c691r3u62jgep7o66qcucidb",
-      "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-      "evidence_url": "https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-      "detected_at": "2026-10-20T20:21:35+08:00",
-      "confidence": "medium",
-      "note": null,
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-20T20:21:35+08:00"
-        }
-      ]
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "HOOK",
+        "name": "Hookereum",
+        "decimals": 18,
+        "code_bytes": 2628,
+        "note": "ERC20 verified: HOOK dec=18"
+      }
     },
     {
       "project": "Master Studios",
@@ -411,7 +566,7 @@
       "evidence_url": null,
       "detected_at": "2026-10-20T18:23:40+08:00",
       "confidence": "high",
-      "note": "onchain_lock confirmed via wallet+token:symbol:SIEGE; deployer=0x0000000000000000000000000000000000000001; token=SIEGE / Hood Siege",
+      "note": "onchain_lock confirmed via wallet+token:symbol:SIEGE; deployer=0x0000000000000000000000000000000000000001; token=SIEGE / Hood Siege; ca_gate: ERC20 verified: SIEGE dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -422,61 +577,110 @@
       "kind": "contract",
       "label_zh": "合约CA",
       "traced_from": "0x0000000000000000000000000000000000000001",
-      "addr_kind": "contract"
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "SIEGE",
+        "name": "Hood Siege",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: SIEGE dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0xea0071a8778fa02c12378e88868255e0e0952be6",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T16:27:05+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: ERC20 verified: SEASON dec=18",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T16:27:05+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "SEASON",
+        "name": "Farming Season",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: SEASON dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0xfc5a5c521c80d8e1d6b5aee6454b8c9483c91bff",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T16:27:05+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token); ca_gate: ERC20 verified: LLL dec=18",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T16:27:05+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "LLL",
+        "name": "Lighthouse",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: LLL dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "bsc",
       "address": "0x5cd8fbf29c20cc82eed477c47794b0077f347777",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T16:27:05+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token); ca_gate: ERC20 verified: 币安神算子 dec=18",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T16:27:05+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "币安神算子",
+        "name": "币安神算子",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: 币安神算子 dec=18"
+      }
     },
     {
       "project": "Baola",
@@ -487,68 +691,116 @@
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T16:16:39+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; address appears all-lowercase (taken from a URL); Solana is case-sensitive — verify exact mint; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; address appears all-lowercase (taken from a URL); Solana is case-sensitive — verify exact mint; taken from a token-icon URL on the page (may be a third-party token); ca_gate: account does not exist on Solana mainnet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T16:16:39+08:00"
         }
-      ]
+      ],
+      "kind": "unknown",
+      "addr_kind": "unknown",
+      "is_token": false,
+      "label_zh": "未确认地址",
+      "verify": {
+        "kind": "unknown",
+        "chain": "solana",
+        "note": "account does not exist on Solana mainnet"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0x18e674231a58c239dc7daedcffe15ec3a24cff5c",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T15:40:28+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: ERC20 verified: HOOKR dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T15:40:28+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "HOOKR",
+        "name": "Hookr.fun",
+        "decimals": 18,
+        "code_bytes": 7154,
+        "note": "ERC20 verified: HOOKR dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0x155d0bdcb0c17da07bf293763ab09bb93eb0b61e",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T15:40:28+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token); ca_gate: ERC20 verified: SPRITE dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T15:40:28+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "SPRITE",
+        "name": "Sprite Agent",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: SPRITE dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0xf014a3782e6979bd965376f6638d90914820ebff",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T15:40:28+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token); ca_gate: ERC20 verified: + dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T15:40:28+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "+",
+        "name": "+",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: + dec=18"
+      }
     },
     {
       "project": "Baola",
@@ -559,259 +811,407 @@
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T15:13:32+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; address appears all-lowercase (taken from a URL); Solana is case-sensitive — verify exact mint; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; address appears all-lowercase (taken from a URL); Solana is case-sensitive — verify exact mint; taken from a token-icon URL on the page (may be a third-party token); ca_gate: account does not exist on Solana mainnet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T15:13:32+08:00"
         }
-      ]
+      ],
+      "kind": "unknown",
+      "addr_kind": "unknown",
+      "is_token": false,
+      "label_zh": "未确认地址",
+      "verify": {
+        "kind": "unknown",
+        "chain": "solana",
+        "note": "account does not exist on Solana mainnet"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0xc9675fe679c7d4e1b94416f66d61c96127eb964a",
       "source": "html:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T14:42:37+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: ERC20 verified: GIGATENEV dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "html:https://bao.la/",
           "detected_at": "2026-10-20T14:42:37+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "GIGATENEV",
+        "name": "Giga Tenev",
+        "decimals": 18,
+        "code_bytes": 1764,
+        "note": "ERC20 verified: GIGATENEV dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0x000050e18ffa3f8f7ad170eb9cef160eb3ed1111",
       "source": "html:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T14:42:37+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: ERC20 verified: TORCH dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "html:https://bao.la/",
           "detected_at": "2026-10-20T14:42:37+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "TORCH",
+        "name": "Torch",
+        "decimals": 18,
+        "code_bytes": 5915,
+        "note": "ERC20 verified: TORCH dec=18"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0xc3d0bfb2bc55661063839d9e222c8a16e5834cad",
       "source": "html:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T14:42:37+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: ERC20 verified: GPAD dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "html:https://bao.la/",
           "detected_at": "2026-10-20T14:42:37+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "GPAD",
+        "name": "GridPad",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: GPAD dec=18"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0xf22731ad894ba8b5258803ae6bbafd3426116c91",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x9aaf95952c102dbee73b31d0e042c3d369a0bf86",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x8e4d72fff912a72a5d224b7e44ac91c7e20dd583",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x3ad7041e07509628d1344bce21d3abd688c84066",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x2f6d1a0a64818ccb39a74f6391d09f9cc761be38",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x1d54706bf55b000e01bad8f4dfcdf0394a8f6798",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x9d08f46aa9f19e07a8893012233543c701a8c716",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x825e54a9b2df67e97cd19b2aef4ef75fd97bd18c",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0x2c6f79758713b60ce01576a03e8761cbf3b09b81",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Ballast",
       "handle": "LaunchBL",
-      "chain": "evm",
+      "chain": "ethereum",
       "address": "0xf6bbe894b685620c92cccd5787f5b6e44d8e915e",
       "source": "inline:https://ballast.exchange/",
       "evidence_url": "https://ballast.exchange/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://ballast.exchange/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "label_zh": "扫出钱包",
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      }
     },
     {
       "project": "Baola",
       "handle": "Baodotla",
-      "chain": "evm",
+      "chain": "robinhood",
       "address": "0x92bffc0ca8d18ed0971dc94957c15e05e6e6f223",
       "source": "inline:https://bao.la/",
       "evidence_url": "https://bao.la/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token)",
+      "note": "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA; taken from a token-icon URL on the page (may be a third-party token); ca_gate: ERC20 verified: WTZ dec=18",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -823,25 +1223,51 @@
           "source": "inline:https://bao.la/",
           "detected_at": "2026-10-20T14:11:10+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "WTZ",
+        "name": "Winternitz",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: WTZ dec=18"
+      }
     },
     {
       "project": "肖战羊",
       "handle": "xiaozhanyangx",
-      "chain": "evm",
+      "chain": "bsc",
       "address": "0x5ce033b2bfca3af30b3e8c8457deaf776a8b695a",
       "source": "inline:https://tapeout.link/",
       "evidence_url": "https://tapeout.link/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": null,
+      "note": "ca_gate: ERC20 verified: BEM dec=8",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://tapeout.link/",
           "detected_at": "2026-10-20T14:05:53+08:00"
         }
-      ]
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "BEM",
+        "name": "BEM",
+        "decimals": 8,
+        "code_bytes": 2205,
+        "note": "ERC20 verified: BEM dec=8"
+      }
     }
   ]
 }
