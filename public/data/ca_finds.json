@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T16:22:18+08:00",
+  "generated_at": "2026-10-21T16:28:49+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 14,
@@ -55,6 +55,15 @@
       "ca_role": "token",
       "alert_ok": true,
       "official_x_url": "https://x.com/TapeRobot_bsc/status/2112818396119359670",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
       "official": true,
       "tapeout_ca": false,
       "confirm_basis_zh": "官推确认"
@@ -78,7 +87,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -98,7 +107,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
@@ -119,7 +129,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "nft",
@@ -141,7 +151,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】HappyBlock",
@@ -167,7 +178,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "x_post",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -187,7 +198,8 @@
       "official_x_confirmed": true,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【官方TapeRobot·晶体管合约(ERC-1155)】TapeRobot·TapeOut监控",
@@ -234,6 +246,15 @@
       "ca_role": "transistors",
       "alert_ok": true,
       "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
       "official": true,
       "tapeout_ca": true,
       "mint_price_bnb": 0.0005,
@@ -283,6 +304,15 @@
       "ca_role": "processor",
       "alert_ok": true,
       "official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
       "official": true,
       "tapeout_ca": true,
       "paired_with": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
@@ -326,7 +356,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -357,7 +388,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -377,7 +408,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -408,7 +440,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -428,7 +460,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Elysium Name Service",
@@ -459,7 +492,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -479,7 +512,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【非地址·非CA】♱ 17-26",
@@ -524,7 +558,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【NFT合约·非CA】Ink Daddy",
@@ -550,7 +585,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "nft",
@@ -572,7 +607,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Superboard",
@@ -603,7 +639,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "wallet",
@@ -623,7 +659,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【NFT合约·非CA】Timecard",
@@ -634,7 +671,7 @@
       "evidence_url": "https://thetimecard.xyz",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "【NFT合约·非CA】 classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -644,7 +681,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-21T15:54:23+08:00"
+          "detected_at": "2026-10-21T16:25:17+08:00"
         }
       ],
       "kind": "nft",
@@ -666,7 +703,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     }
   ],
   "launched_history_count": 30,
@@ -709,6 +747,15 @@
       "ca_role": "transistors",
       "alert_ok": false,
       "superseded_by": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
       "official": false,
       "tapeout_ca": false
     },
@@ -752,6 +799,15 @@
       "ca_role": "processor",
       "alert_ok": false,
       "superseded_by": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-21T16:27:21+08:00",
+      "locked_by_official_x_url": "https://x.com/TapeRobot_bsc/status/2112816173557731823",
+      "locked_cas": [
+        "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+        "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+        "0x11e87d97a34f8000f710d054e4eac30011a3ac8d"
+      ],
+      "project_key": "taperobot_bsc",
       "official": false,
       "tapeout_ca": false
     },
@@ -795,7 +851,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "QuantumPad V4",
@@ -837,7 +894,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Hatch",
@@ -886,7 +944,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Hookereum",
@@ -928,7 +987,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Master Studios",
@@ -971,6 +1031,7 @@
       "wallet_factory_confirmed": true,
       "ca_role": "token",
       "alert_ok": false,
+      "ca_locked": false,
       "confirm_basis_zh": "监控钱包创建（创建者 0x0000000000000000000000000000000000000001）"
     },
     {
@@ -1010,7 +1071,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1049,7 +1111,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1088,7 +1151,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【未确认地址·非CA】Baola",
@@ -1123,7 +1187,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1162,7 +1227,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1201,7 +1267,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1240,7 +1307,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【未确认地址·非CA】Baola",
@@ -1275,7 +1343,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1314,7 +1383,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1353,7 +1423,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1392,7 +1463,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1428,7 +1500,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1464,7 +1537,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1500,7 +1574,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1536,7 +1611,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1572,7 +1648,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1608,7 +1685,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1644,7 +1722,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1680,7 +1759,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1716,7 +1796,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Ballast",
@@ -1752,7 +1833,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Baola",
@@ -1796,7 +1878,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "肖战羊",
@@ -1835,7 +1918,8 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": "token",
-      "alert_ok": false
+      "alert_ok": false,
+      "ca_locked": false
     }
   ],
   "suspected_copycat_count": 10,
@@ -2089,6 +2173,7 @@
       "wallet_factory_confirmed": false,
       "ca_role": "token",
       "alert_ok": false,
+      "ca_locked": false,
       "suspected_copycat": true,
       "official": false,
       "status": "name_match_unconfirmed",
@@ -2136,11 +2221,16 @@
       "wallet_factory_confirmed": false,
       "ca_role": "token",
       "alert_ok": false,
+      "ca_locked": false,
       "suspected_copycat": true,
       "official": false,
       "status": "name_match_unconfirmed",
       "creator": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
       "creator_watched": false
     }
+  ],
+  "ca_locked_project_count": 1,
+  "ca_locked_projects": [
+    "taperobot_bsc"
   ]
 }
