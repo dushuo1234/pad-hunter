@@ -175,7 +175,8 @@ export function subscribeAutoRemoveMessage(onStoreChange: () => void): () => voi
 
 function announceAutoRemove(count: number) {
   if (count <= 0) return
-  autoRemoveMessage = `已自动移出已开盘 ${count} 个`
+  const previous = Number(/^已自动移出已开盘 (\d+) 个$/.exec(autoRemoveMessage ?? '')?.[1] ?? 0)
+  autoRemoveMessage = `已自动移出已开盘 ${previous + count} 个`
   for (const listener of autoRemoveListeners) listener()
 }
 
