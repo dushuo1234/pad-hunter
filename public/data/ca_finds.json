@@ -1,9 +1,41 @@
 {
-  "generated_at": "2026-10-21T14:59:45+08:00",
-  "count": 11,
-  "token_ca_count": 0,
+  "generated_at": "2026-10-21T15:00:59+08:00",
+  "count": 12,
+  "token_ca_count": 1,
   "wallet_count": 6,
   "finds": [
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "base",
+      "address": "0xf3ee49aacdb8c0f5114e59aa2a012141aebcd89c",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T15:00:49+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x7238b752e03ee3db9f2710eb59745d766ef71aeb; token=BLAST / Blast; ca_gate: ERC20 verified: BLAST dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T15:00:49+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0x7238b752e03ee3db9f2710eb59745d766ef71aeb",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "BLAST",
+        "name": "Blast",
+        "decimals": 18,
+        "code_bytes": 1627,
+        "note": "ERC20 verified: BLAST dec=18"
+      }
+    },
     {
       "project": "Ink Pirates",
       "handle": "inkpirates",
