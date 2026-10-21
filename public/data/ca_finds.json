@@ -1,29 +1,7 @@
 {
-  "generated_at": "2026-10-21T04:56:35+08:00",
-  "count": 9,
+  "generated_at": "2026-10-21T08:23:21+08:00",
+  "count": 10,
   "finds": [
-    {
-      "project": "Nookleus",
-      "handle": "NookleusETH",
-      "chain": "ethereum",
-      "address": "0x95a06beb34c17a4ca07a89e992587ce7b3654494",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/NookleusETH",
-      "detected_at": "2026-10-21T04:56:27+08:00",
-      "confidence": "medium",
-      "note": "onchain_lock medium via name:nookleus; deployer=0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9; token=NOOK / Nookleus",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-21T04:56:27+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9",
-      "addr_kind": "contract"
-    },
     {
       "project": "HappyBlock",
       "handle": "realhappyblock",
@@ -31,24 +9,24 @@
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post:https://x.com/RealHappyBlock",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-20T22:41:44+08:00",
+      "detected_at": "2026-10-21T08:10:34+08:00",
       "confidence": "high",
       "note": "classified as EOA/wallet via eth_getCode",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-20T22:41:44+08:00"
+          "detected_at": "2026-10-21T08:10:34+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T22:41:44+08:00"
+          "detected_at": "2026-10-21T08:10:34+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
@@ -62,24 +40,70 @@
       "address": "0x9f791d5e8b8475b3b73fa7cf854d846d6f4062ec",
       "source": "site:https://x.com/inkpirates",
       "evidence_url": "https://x.com/inkpirates",
-      "detected_at": "2026-10-20T22:41:41+08:00",
+      "detected_at": "2026-10-21T08:10:32+08:00",
       "confidence": "high",
       "note": "classified as EOA/wallet via eth_getCode",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-20T22:41:41+08:00"
+          "detected_at": "2026-10-21T08:10:32+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/inkpirates",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
       "addr_kind": "wallet"
+    },
+    {
+      "project": "老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "evm",
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "source": "site:https://x.com/bemer77",
+      "evidence_url": "https://x.com/bemer77",
+      "detected_at": "2026-10-21T08:05:53+08:00",
+      "confidence": "high",
+      "note": null,
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T08:05:53+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T08:05:53+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Hollow Dig",
+      "handle": "hollowdighook",
+      "chain": "evm",
+      "address": "0xFDAa78896D09E4090c7789690D4bf50a5AE016d5",
+      "source": "site:https://x.com/hollowdighook",
+      "evidence_url": "https://x.com/hollowdighook",
+      "detected_at": "2026-10-21T08:05:12+08:00",
+      "confidence": "high",
+      "note": null,
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/hollowdighook",
+          "detected_at": "2026-10-21T08:05:12+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/hollowdighook",
+          "detected_at": "2026-10-21T08:05:12+08:00"
+        }
+      ]
     },
     {
       "project": "Elysium Name Service",
@@ -105,12 +129,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:46:27+08:00"
+          "detected_at": "2026-10-21T08:16:00+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
@@ -141,12 +165,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:46:27+08:00"
+          "detected_at": "2026-10-21T08:16:00+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
@@ -177,12 +201,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:46:27+08:00"
+          "detected_at": "2026-10-21T08:16:00+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
@@ -208,12 +232,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T22:46:27+08:00"
+          "detected_at": "2026-10-21T08:16:00+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "contract",
@@ -239,12 +263,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T22:46:27+08:00"
+          "detected_at": "2026-10-21T08:16:00+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "wallet",
@@ -270,7 +294,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-20T22:53:35+08:00"
+          "detected_at": "2026-10-21T08:23:21+08:00"
         }
       ],
       "kind": "contract",
@@ -278,8 +302,66 @@
       "addr_kind": "contract"
     }
   ],
-  "launched_history_count": 28,
+  "launched_history_count": 31,
   "launched_history": [
+    {
+      "project": "Meth Miners",
+      "handle": "LAB_FOUNDERS",
+      "chain": "evm",
+      "address": "0x22cf03da665b4d1459a56dd09dbc069935d16b37",
+      "source": "site:https://x.com/LAB_FOUNDERS",
+      "evidence_url": "https://x.com/LAB_FOUNDERS",
+      "detected_at": "2026-10-21T08:12:04+08:00",
+      "confidence": "high",
+      "note": null,
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/LAB_FOUNDERS",
+          "detected_at": "2026-10-21T08:12:04+08:00"
+        }
+      ]
+    },
+    {
+      "project": "BLOOM",
+      "handle": "bloom_v4",
+      "chain": "evm",
+      "address": "0x0c7f2155c40a11154b760f784f50e253809ae833",
+      "source": "site:https://x.com/bloom_v4",
+      "evidence_url": "https://x.com/bloom_v4",
+      "detected_at": "2026-10-21T08:08:27+08:00",
+      "confidence": "high",
+      "note": null,
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bloom_v4",
+          "detected_at": "2026-10-21T08:08:27+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Nookleus",
+      "handle": "NookleusETH",
+      "chain": "ethereum",
+      "address": "0x95a06beb34c17a4ca07a89e992587ce7b3654494",
+      "source": "onchain_lock",
+      "evidence_url": null,
+      "detected_at": "2026-10-21T04:56:27+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via name:nookleus; deployer=0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9; token=NOOK / Nookleus",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T04:56:27+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9",
+      "addr_kind": "contract"
+    },
     {
       "project": "QuantumPad V4",
       "handle": "quantumpad_v4",
