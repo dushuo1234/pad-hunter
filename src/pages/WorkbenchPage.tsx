@@ -3,7 +3,7 @@ import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
-import { isLaunchedHandle } from '../utils/launched'
+import { isLaunchedHandle, matchLaunched, type LaunchedItem } from '../utils/launched'
 import {
   handleKey,
   isHandlePinned,
@@ -42,12 +42,13 @@ interface WorkbenchPageProps {
   loading: boolean
   eventsAt?: string
   launchedHandles: Set<string>
+  launchedItems: LaunchedItem[]
 }
 
 const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
 
-export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
+export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles, launchedItems }: WorkbenchPageProps) {
   const live = useWorkbenchLive(candidates)
   const items = live.items
   const [catalogOpen, setCatalogOpen] = useState(false)
@@ -508,7 +509,10 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const checking = live.isChecking(item.handle)
                 const ago = status?.lastCheckAt ? formatAgo(status.lastCheckAt, live.now) : ''
                 const pace = [formatInterval(status?.intervalS ?? null), formatMs(status?.lastLatencyMs ?? null)].filter(Boolean).join(' · ')
-                const launched = isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)
+                const launched =
+                  isLaunchedHandle(launchedHandles, item.handle) ||
+                  rowLaunched(live.launched, item) ||
+                  matchLaunched(launchedItems, { handle: item.handle, project: item.name }) != null
                 return (
                   <tr key={item.id} className="border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)]">
                     <td className="px-3 py-3">
@@ -640,7 +644,11 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           item={detailItem}
           candidate={candidateFor(detailItem, candidates)}
           status={detailItem.handle ? live.statusByHandle.get(handleKey(detailItem.handle)) : undefined}
-          launched={isLaunchedHandle(launchedHandles, detailItem.handle) || rowLaunched(live.launched, detailItem)}
+          launched={
+            isLaunchedHandle(launchedHandles, detailItem.handle) ||
+            rowLaunched(live.launched, detailItem) ||
+            matchLaunched(launchedItems, { handle: detailItem.handle, project: detailItem.name }) != null
+          }
           checking={live.isChecking(detailItem.handle)}
           token={live.token}
           base={live.base}

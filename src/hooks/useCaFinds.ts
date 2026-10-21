@@ -11,6 +11,7 @@ export interface CaFindsState {
   finds: CaFind[]
   suspectedCopycats: CaFind[]
   supersededArchive: CaFind[]
+  launchedArchive: CaFind[]
   walletActivity: CaFind[]
   locks: CaProjectLock[]
   generatedAt?: string
@@ -41,6 +42,7 @@ const EMPTY_PAYLOAD: CaFindsPayload = {
   finds: EMPTY_FINDS,
   suspectedCopycats: EMPTY_FINDS,
   supersededArchive: EMPTY_FINDS,
+  launchedArchive: EMPTY_FINDS,
   walletActivity: EMPTY_FINDS,
   locks: EMPTY_LOCKS,
 }
@@ -79,6 +81,7 @@ async function tick() {
       ...payload.finds,
       ...payload.suspectedCopycats,
       ...payload.supersededArchive,
+      ...payload.launchedArchive,
       ...payload.walletActivity,
     ].map(caFindKey)
     const lockSig = payload.locks.map((lock) => `${lock.id}\n${lock.url}`).join('\n')
@@ -166,6 +169,7 @@ export function useCaFinds(): CaFindsState {
           ...data.payload.finds,
           ...data.payload.suspectedCopycats,
           ...data.payload.supersededArchive,
+          ...data.payload.launchedArchive,
           ...data.payload.walletActivity,
         ].map(caFindKey),
       ),
@@ -176,6 +180,7 @@ export function useCaFinds(): CaFindsState {
       ...data.payload.finds,
       ...data.payload.suspectedCopycats,
       ...data.payload.supersededArchive,
+      ...data.payload.launchedArchive,
       ...data.payload.walletActivity,
     ],
     [data.payload],
@@ -196,6 +201,7 @@ export function useCaFinds(): CaFindsState {
     finds: data.payload.finds,
     suspectedCopycats: data.payload.suspectedCopycats,
     supersededArchive: data.payload.supersededArchive,
+    launchedArchive: data.payload.launchedArchive,
     walletActivity: data.payload.walletActivity,
     locks: data.payload.locks,
     generatedAt: data.payload.generated_at,

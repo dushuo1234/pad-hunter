@@ -18,7 +18,7 @@ export default function App() {
   const { theme, toggle } = useTheme()
   const route = useRoute()
   const data = usePadData()
-  useCaAlertWatcher()
+  useCaAlertWatcher(data.launched.items, data.loading)
   const todayCount = useMemo(
     () =>
       data.loading && data.candidates.length === 0
@@ -71,7 +71,9 @@ export default function App() {
           loading={data.loading}
         />
       )}
-      {route.name === 'ca' && <CaPage candidates={data.candidates} />}
+      {route.name === 'ca' && (
+        <CaPage candidates={data.candidates} launchedItems={data.launched.items} launchedLoading={data.loading} />
+      )}
       {route.name === 'launched' && (
         <LaunchedPage items={data.launched.items} generatedAt={data.launched.generatedAt} loading={data.loading} />
       )}
@@ -82,6 +84,7 @@ export default function App() {
           loading={data.loading}
           eventsAt={data.eventsAt}
           launchedHandles={data.launchedHandles}
+          launchedItems={data.launched.items}
         />
       )}
       {route.name === 'monitor' && (
@@ -91,6 +94,7 @@ export default function App() {
           events={data.events}
           eventsNote={data.eventsNote}
           eventsAt={data.eventsAt}
+          launchedItems={data.launched.items}
         />
       )}
       {route.name === 'notfound' && (

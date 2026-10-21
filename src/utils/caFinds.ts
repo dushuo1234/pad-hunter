@@ -9,6 +9,7 @@ import type {
   CaStatus,
   CaStatusCounts,
 } from '../types'
+import { matchLaunched, type LaunchedItem } from './launched'
 
 const publicBase = typeof import.meta.env?.BASE_URL === 'string' ? import.meta.env.BASE_URL : '/'
 export const CA_FINDS_URL = `${publicBase}data/ca_finds.json`
@@ -489,9 +490,11 @@ function sortFinds(rows: CaFind[]) {
   rows.sort((a, b) => detectedMs(b) - detectedMs(a) || a.address.localeCompare(b.address))
 }
 
-/** CA sound and the orange「新」highlight. Wallet activity and archived rows never qualify. */
-export function alertableFinds(finds: CaFind[]): CaFind[] {
-  return finds.filter((find) => find.alertOk && !find.activity && !find.archived)
+/** CA sound and the orange「新」highlight. Wallet activity, archived rows, and 已开盘 projects never qualify. */
+export function alertableFinds(finds: CaFind[], launched: LaunchedItem[] = []): CaFind[] {
+  return finds.filter(
+    (find) => find.alertOk && !find.activity && !find.archived && matchLaunched(launched, find) == null,
+  )
 }
 
 export function projectGroupKey(find: CaFind): string {
@@ -537,14 +540,22 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
     finds.push(find)
   }
 
+  const launchedSeen = new Set<string>()
+  const launchedArchive: CaFind[] = []
   if (Array.isArray(obj.launched_history)) {
     for (const item of obj.launched_history) {
       const row = readCaRow(item, { archived: true })
-      if (!row || row.caStatus !== 'superseded') continue
-      if (archive.some((prev) => caAddressId(prev.address) === caAddressId(row.address) && prev.chain.toLowerCase() === row.chain.toLowerCase())) {
+      if (!row) continue
+      const sameAddress = (prev: CaFind) =>
+        caAddressId(prev.address) === caAddressId(row.address) && prev.chain.toLowerCase() === row.chain.toLowerCase()
+      if (row.caStatus === 'superseded') {
+        if (archive.some(sameAddress)) continue
+        pushUnique(archive, archiveSeen, row)
         continue
       }
-      pushUnique(archive, archiveSeen, row)
+      if (row.caStatus !== 'confirmed') continue
+      if (finds.some(sameAddress) || launchedArchive.some(sameAddress)) continue
+      pushUnique(launchedArchive, launchedSeen, row)
     }
   }
 
@@ -552,15 +563,19 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
   for (const key of LOCK_LIST_KEYS) absorbProjectRecords(obj[key], activity, activitySeen, declaredLocks)
   for (const key of ACTIVITY_KEYS) readRows(obj[key], { activity: true }, activity, activitySeen)
 
-  const known = new Set([...finds, ...suspected, ...archive].map((find) => caAddressId(find.address)))
+  const known = new Set([...finds, ...suspected, ...archive, ...launchedArchive].map((find) => caAddressId(find.address)))
   const walletActivity = activity.filter((find) => !known.has(caAddressId(find.address)))
 
-  const locks = mergeLocks([declaredLocks, locksFromRows([...finds, ...suspected, ...archive, ...walletActivity])])
-  applyLocks([...finds, ...suspected, ...archive, ...walletActivity], locks)
+  const locks = mergeLocks([
+    declaredLocks,
+    locksFromRows([...finds, ...suspected, ...archive, ...launchedArchive, ...walletActivity]),
+  ])
+  applyLocks([...finds, ...suspected, ...archive, ...launchedArchive, ...walletActivity], locks)
 
   sortFinds(finds)
   sortFinds(suspected)
   sortFinds(archive)
+  sortFinds(launchedArchive)
   sortFinds(walletActivity)
 
   const statusCounts = readStatusCounts(obj.status_counts)
@@ -576,6 +591,7 @@ export function parseCaFinds(data: unknown): CaFindsPayload {
     finds,
     suspectedCopycats: suspected,
     supersededArchive: archive,
+    launchedArchive,
     walletActivity,
     locks,
   }

@@ -1,12 +1,16 @@
 import { useState } from 'react'
+import { useCaFinds } from '../hooks/useCaFinds'
 import { xProfileUrl } from '../utils/format'
 import { shortAddr } from '../utils/format'
+import { CA_ROLE_ZH, explorerFor } from '../utils/caFinds'
 import {
   explorerUrl,
   formatRemovedAt,
   launchLabel,
+  matchLaunched,
   type LaunchedItem,
 } from '../utils/launched'
+import type { CaFind } from '../types'
 
 interface LaunchedPageProps {
   items: LaunchedItem[]
@@ -15,6 +19,7 @@ interface LaunchedPageProps {
 }
 
 export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps) {
+  const { launchedArchive } = useCaFinds()
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">已从主列表归档</p>
@@ -22,7 +27,7 @@ export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps)
         已开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        监控确认已经开盘的项目会从主列表移出，记在这里。按移出时间从新到旧排列。开盘时间没有记录时显示「未知」。
+        监控确认已经开盘的项目会从主列表移出，记在这里。发现记录里确认过的合约会写在对应卡片上。按移出时间从新到旧排列。开盘时间没有记录时显示「未知」。
         {generatedAt ? ` 归档时间 ${formatRemovedAt(generatedAt)}。` : ''}
       </p>
 
@@ -37,7 +42,13 @@ export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps)
       ) : (
         <ul className="mt-6 space-y-3">
           {items.map((item, index) => (
-            <LaunchedCard key={`${item.handle || item.project}-${item.removedAt}-${index}`} item={item} />
+            <LaunchedCard
+              key={`${item.handle || item.project}-${item.removedAt}-${index}`}
+              item={item}
+              records={launchedArchive.filter(
+                (row) => row.caStatus === 'confirmed' && matchLaunched([item], row) != null,
+              )}
+            />
           ))}
         </ul>
       )}
@@ -45,10 +56,13 @@ export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps)
   )
 }
 
-function LaunchedCard({ item }: { item: LaunchedItem }) {
+function LaunchedCard({ item, records }: { item: LaunchedItem; records: CaFind[] }) {
   const name = item.project || item.handle || '未命名'
   const profile = item.xUrl || (item.handle ? xProfileUrl(item.handle) : '')
   const when = launchLabel(item.listingAt)
+  const primary = item.ca?.trim().toLowerCase() ?? ''
+  const primaryRecord = records.find((row) => row.address.toLowerCase() === primary)
+  const extra = records.filter((row) => row.address.toLowerCase() !== primary)
   const explorer = item.ca ? explorerUrl(item.ca, item.caChain || item.chain) : null
   return (
     <li className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] px-4 py-4 dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
@@ -103,6 +117,14 @@ function LaunchedCard({ item }: { item: LaunchedItem }) {
                 {shortAddr(item.ca)}
                 {item.caChain ? ` · ${item.caChain}` : ''}
               </span>
+              {primaryRecord?.caRole && CA_ROLE_ZH[primaryRecord.caRole] && (
+                <span className="rounded-md border border-[var(--color-line)] px-1.5 py-0.5 text-[11px] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:text-[var(--color-night-soft)]">
+                  {CA_ROLE_ZH[primaryRecord.caRole]}
+                </span>
+              )}
+              {primaryRecord?.provenanceZh && (
+                <span className="text-[11px] text-[var(--color-ink-muted)]">{primaryRecord.provenanceZh}</span>
+              )}
               <CopyButton value={item.ca} />
               {explorer && (
                 <a href={explorer} target="_blank" rel="noreferrer" className="font-mono text-[11px] text-[var(--color-orange)] hover:underline">
@@ -112,6 +134,27 @@ function LaunchedCard({ item }: { item: LaunchedItem }) {
             </dd>
           ) : (
             <dd className="mt-1 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">未发现</dd>
+          )}
+          {extra.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {extra.map((row) => {
+                const link = explorerFor(row.chain, row.address)
+                const role = row.caRole ? CA_ROLE_ZH[row.caRole] : ''
+                return (
+                  <li key={`${row.chain}-${row.address}`} className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+                    <span>{role || row.labelZh || '合约'}</span>
+                    <span title={row.address}>{shortAddr(row.address)}</span>
+                    {row.provenanceZh && <span className="text-[var(--color-ink-muted)]">{row.provenanceZh}</span>}
+                    <CopyButton value={row.address} />
+                    {link && (
+                      <a href={link.url} target="_blank" rel="noreferrer" className="text-[var(--color-orange)] hover:underline">
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
           )}
         </div>
         <Field label="原因" value={item.reason || '无'} />

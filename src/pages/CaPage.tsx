@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { useCaFinds } from '../hooks/useCaFinds'
-import { monitorPath } from '../router'
+import { appPath, monitorPath } from '../router'
 import type { CaFind, CaProjectLock, CaStatus, Candidate } from '../types'
 import {
   CA_ROLE_ZH,
@@ -19,9 +19,12 @@ import {
 } from '../utils/caFinds'
 import { findByHandle } from '../utils/candidates'
 import { formatShanghai, shortAddr, xProfileUrl } from '../utils/format'
+import { matchLaunched, type LaunchedItem } from '../utils/launched'
 
 interface CaPageProps {
   candidates: Candidate[]
+  launchedItems: LaunchedItem[]
+  launchedLoading: boolean
 }
 
 type Focus = 'all' | 'confirmed' | 'candidate' | 'superseded' | 'not_ca' | 'copycat'
@@ -29,11 +32,12 @@ type Focus = 'all' | 'confirmed' | 'candidate' | 'superseded' | 'not_ca' | 'copy
 const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
 
-export function CaPage({ candidates }: CaPageProps) {
+export function CaPage({ candidates, launchedItems, launchedLoading }: CaPageProps) {
   const {
     finds,
     suspectedCopycats,
     supersededArchive,
+    launchedArchive,
     walletActivity,
     locks,
     generatedAt,
@@ -50,8 +54,8 @@ export function CaPage({ candidates }: CaPageProps) {
   const [focus, setFocus] = useState<Focus>('all')
 
   const pool = useMemo(
-    () => [...finds, ...suspectedCopycats, ...supersededArchive, ...walletActivity],
-    [finds, suspectedCopycats, supersededArchive, walletActivity],
+    () => [...finds, ...suspectedCopycats, ...supersededArchive, ...launchedArchive, ...walletActivity],
+    [finds, suspectedCopycats, supersededArchive, launchedArchive, walletActivity],
   )
   const chains = useMemo(() => chainOptions(pool), [pool])
   const match = useMemo(() => {
@@ -64,7 +68,27 @@ export function CaPage({ candidates }: CaPageProps) {
     }
   }, [search, chain])
 
+  const isLaunchedRow = useMemo(() => {
+    return (find: CaFind) => !launchedLoading && matchLaunched(launchedItems, find) != null
+  }, [launchedItems, launchedLoading])
   const confirmed = useMemo(() => finds.filter((find) => find.caStatus === 'confirmed' && match(find)), [finds, match])
+  const hunting = useMemo(
+    () => (launchedLoading ? [] : confirmed.filter((find) => !isLaunchedRow(find))),
+    [confirmed, isLaunchedRow, launchedLoading],
+  )
+  const launchedRows = useMemo(() => {
+    if (launchedLoading) return []
+    const seen = new Set<string>()
+    const rows: CaFind[] = []
+    for (const find of [...confirmed, ...launchedArchive]) {
+      if (find.caStatus !== 'confirmed' || !match(find) || !isLaunchedRow(find)) continue
+      const id = find.address.toLowerCase()
+      if (seen.has(id)) continue
+      seen.add(id)
+      rows.push(find)
+    }
+    return rows
+  }, [confirmed, launchedArchive, isLaunchedRow, launchedLoading, match])
   const pending = useMemo(() => finds.filter((find) => find.caStatus === 'candidate' && match(find)), [finds, match])
   const notCa = useMemo(
     () => finds.filter((find) => find.caStatus !== 'confirmed' && find.caStatus !== 'candidate' && match(find)),
@@ -72,11 +96,14 @@ export function CaPage({ candidates }: CaPageProps) {
   )
   const superseded = useMemo(() => supersededArchive.filter(match), [supersededArchive, match])
   const copycats = useMemo(() => suspectedCopycats.filter(match), [suspectedCopycats, match])
+  const launchedCopycats = useMemo(() => copycats.filter(isLaunchedRow), [copycats, isLaunchedRow])
+  const openCopycats = useMemo(() => copycats.filter((find) => !isLaunchedRow(find)), [copycats, isLaunchedRow])
   const activity = useMemo(() => walletActivity.filter(match), [walletActivity, match])
-  const confirmedGroups = useMemo(() => groupCaFinds(confirmed), [confirmed])
+  const huntingGroups = useMemo(() => groupCaFinds(hunting), [hunting])
+  const launchedGroups = useMemo(() => groupCaFinds(launchedRows), [launchedRows])
   const freshAlerts = useMemo(
-    () => confirmed.filter((find) => find.alertOk && freshKeys.has(caFindKey(find))).length,
-    [confirmed, freshKeys],
+    () => hunting.filter((find) => find.alertOk && freshKeys.has(caFindKey(find))).length,
+    [hunting, freshKeys],
   )
 
   const checkedLabel = lastChecked ? formatShanghai(lastChecked, true) : ''
@@ -95,7 +122,7 @@ export function CaPage({ candidates }: CaPageProps) {
         </p>
       </div>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        已确认 CA 只认两条路：监控钱包经已知工厂创建，和/或官推贴出地址并链上核验为代币或 TapeOut 晶体管 / Processor。同名合约是疑似山寨，不会响铃。官推锁定之后，后来的非官方 CA 不再推送；监控钱包的相关地址动态照常显示。
+        已确认 CA 只认两条路：监控钱包经已知工厂创建，和/或官推贴出地址并链上核验为代币或 TapeOut 晶体管 / Processor。同名合约是疑似山寨，不会响铃。已经开盘的项目退出追踪，官推锁定之后后来的非官方 CA 不再推送。监控钱包的相关地址动态照常显示。
       </p>
       {confidenceModel && (
         <p className="mt-2 max-w-3xl font-mono text-[11px] leading-relaxed text-[var(--color-ink-muted)]" title={confidenceModel}>
@@ -164,6 +191,9 @@ export function CaPage({ candidates }: CaPageProps) {
                 本次打开后新增确认 {freshAlerts} 条
               </span>
             )}
+            {!launchedLoading && launchedRows.length > 0 && (
+              <span>已开盘归档 {launchedRows.length} 条，不计入已确认，不再追踪</span>
+            )}
             {filtering && <span>下面是筛选结果</span>}
             {error && <span className="text-[var(--color-orange-deep)] dark:text-[var(--color-orange)]">{error}</span>}
           </div>
@@ -171,24 +201,31 @@ export function CaPage({ candidates }: CaPageProps) {
           {show('confirmed') && (
             <section className="mt-6" aria-labelledby="confirmed-heading">
               <h2 id="confirmed-heading" className="text-lg font-bold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
-                已确认 CA
+                正在追踪
               </h2>
               <p className="mt-1 max-w-3xl text-xs leading-relaxed text-[var(--color-ink-muted)]">
-                徽章是 ca_status_zh，旁边是确认路径。只有 alert_ok 的行会响铃、标成「新」。
+                还没开盘的已确认 CA。徽章是 ca_status_zh，旁边是确认路径。只有 alert_ok 的行会响铃、标成「新」。已开盘的不在这里。
               </p>
-              {confirmedGroups.length === 0 ? (
+              {launchedLoading ? (
                 <p className="mt-3 rounded-2xl border border-dashed border-[var(--color-line)] px-4 py-8 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-                  当前筛选下没有已确认 CA。
+                  正在对照已开盘名单…
+                </p>
+              ) : huntingGroups.length === 0 ? (
+                <p className="mt-3 rounded-2xl border border-dashed border-[var(--color-line)] px-4 py-8 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
+                  {filtering
+                    ? '当前筛选下没有正在追踪的已确认 CA。'
+                    : '还没有正在追踪的已确认 CA。已经开盘的项目记在下面，不再当作新目标。'}
                 </p>
               ) : (
                 <div className="mt-3 flex flex-col gap-4">
-                  {confirmedGroups.map((group) => (
+                  {huntingGroups.map((group) => (
                     <ProjectGroup
                       key={group.key}
                       group={group}
                       candidates={candidates}
                       freshKeys={freshKeys}
                       locks={locks}
+                      variant="hunt"
                       activity={activity.filter((row) => group.finds.some((find) => sameProject(row, find) || sharesLock(locks, row, find)))}
                     />
                   ))}
@@ -196,11 +233,47 @@ export function CaPage({ candidates }: CaPageProps) {
               )}
               <LockedActivity
                 locks={locks}
-                confirmed={confirmed}
+                housed={[...hunting, ...launchedRows]}
                 activity={activity}
                 candidates={candidates}
                 freshKeys={freshKeys}
+                launchedItems={launchedItems}
+                launchedLoading={launchedLoading}
               />
+            </section>
+          )}
+
+          {show('confirmed') && !launchedLoading && (launchedGroups.length > 0 || focus === 'confirmed') && (
+            <section className="mt-8" aria-labelledby="launched-ca-heading">
+              <div className="flex flex-wrap items-end justify-between gap-2">
+                <h2 id="launched-ca-heading" className="text-lg font-bold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
+                  已开盘 · 不再追踪
+                </h2>
+                <a href={appPath('launched')} className="font-mono text-[11px] text-[var(--color-orange)] hover:underline">
+                  打开已开盘
+                </a>
+              </div>
+              <p className="mt-1 max-w-3xl text-xs leading-relaxed text-[var(--color-ink-muted)]">
+                这些地址在发现记录里确认过，项目已经写入已开盘。不响铃，也不钉成新 CA。官推锁定还在。监控钱包动态如果出现，只记在卡片下面。
+              </p>
+              {launchedGroups.length === 0 ? (
+                <p className="mt-3 text-sm text-[var(--color-ink-muted)]">当前筛选下没有已开盘的确认记录。</p>
+              ) : (
+                <div className="mt-3 flex flex-col gap-4">
+                  {launchedGroups.map((group) => (
+                    <ProjectGroup
+                      key={`launched-${group.key}`}
+                      group={group}
+                      candidates={candidates}
+                      freshKeys={freshKeys}
+                      locks={locks}
+                      variant="launched"
+                      launchedItems={launchedItems}
+                      activity={activity.filter((row) => group.finds.some((find) => sameProject(row, find) || sharesLock(locks, row, find)))}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
           )}
 
@@ -233,7 +306,15 @@ export function CaPage({ candidates }: CaPageProps) {
               ) : (
                 <ul className="mt-3 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-cream-2)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)]">
                   {superseded.map((find) => (
-                    <FindRow key={caFindKey(find)} find={find} fresh={false} candidates={candidates} tone="superseded" locks={locks} />
+                    <FindRow
+                      key={caFindKey(find)}
+                      find={find}
+                      fresh={false}
+                      candidates={candidates}
+                      tone="superseded"
+                      locks={locks}
+                      launched={isLaunchedRow(find)}
+                    />
                   ))}
                 </ul>
               )}
@@ -242,7 +323,8 @@ export function CaPage({ candidates }: CaPageProps) {
 
           {show('copycat') && (
             <CopycatSection
-              rows={copycats}
+              openRows={openCopycats}
+              launchedRows={launchedCopycats}
               open={focus === 'copycat' || filtering}
               candidates={candidates}
               locks={locks}
@@ -262,7 +344,15 @@ export function CaPage({ candidates }: CaPageProps) {
             />
           )}
 
-          {show('confirmed') && <OrphanActivity activity={activity} confirmed={confirmed} candidates={candidates} freshKeys={freshKeys} locks={locks} />}
+          {show('confirmed') && (
+            <OrphanActivity
+              activity={activity}
+              housed={[...hunting, ...launchedRows]}
+              candidates={candidates}
+              freshKeys={freshKeys}
+              locks={locks}
+            />
+          )}
         </>
       )}
     </main>
@@ -307,23 +397,37 @@ function ProjectGroup({
   freshKeys,
   locks,
   activity,
+  variant,
+  launchedItems,
 }: {
   group: CaProjectGroup
   candidates: Candidate[]
   freshKeys: Set<string>
   locks: CaProjectLock[]
   activity: CaFind[]
+  variant: 'hunt' | 'launched'
+  launchedItems?: LaunchedItem[]
 }) {
   const sample = group.finds[0]
-  const name = displayProjectName(group.project, group.handle)
+  const listed = sample && launchedItems ? matchLaunched(launchedItems, sample) : null
+  const name = listed?.project || displayProjectName(group.project, group.handle)
   const lock = sample ? lockForFind(locks, sample) : null
+  const launched = variant === 'launched'
+  const shell = launched
+    ? 'overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-cream-2)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)]'
+    : 'overflow-hidden rounded-2xl border border-[#166534]/30 bg-[var(--color-card)] dark:border-[#86efac]/30 dark:bg-[var(--color-night-card)]'
   return (
-    <section className="overflow-hidden rounded-2xl border border-[#166534]/30 bg-[var(--color-card)] dark:border-[#86efac]/30 dark:bg-[var(--color-night-card)]">
+    <section className={shell}>
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] px-4 py-3 dark:border-[var(--color-night-line)]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <ProjectTitle name={name} handle={group.handle} />
-            <span className="font-mono text-[10px] text-[var(--color-ink-muted)]">{group.finds.length} 个已确认</span>
+            <span className="rounded-md bg-[var(--color-orange-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
+              {launched ? '已开盘' : '追踪中'}
+            </span>
+            <span className="font-mono text-[10px] text-[var(--color-ink-muted)]">
+              {group.finds.length} 个{launched ? '记录' : '已确认'}
+            </span>
             {lock && <LockBadge url={lock.url || sample?.lockUrl || ''} at={sample?.lockAt} />}
           </div>
           {group.handle && <HandleLink handle={group.handle} />}
@@ -339,45 +443,75 @@ function ProjectGroup({
           <FindRow
             key={caFindKey(find)}
             find={find}
-            fresh={find.alertOk && freshKeys.has(caFindKey(find))}
+            fresh={!launched && find.alertOk && freshKeys.has(caFindKey(find))}
             candidates={candidates}
-            tone="confirmed"
+            tone={launched ? 'launched' : 'confirmed'}
             locks={locks}
+            launched={launched}
           />
         ))}
       </ul>
-      <ActivityBlock rows={activity} locked={Boolean(lock)} freshKeys={freshKeys} candidates={candidates} locks={locks} />
+      <ActivityBlock
+        rows={activity}
+        mode={launched ? 'launched' : lock ? 'locked' : 'plain'}
+        freshKeys={freshKeys}
+        candidates={candidates}
+        locks={locks}
+      />
     </section>
   )
 }
 
 function LockedActivity({
   locks,
-  confirmed,
+  housed,
   activity,
   candidates,
   freshKeys,
+  launchedItems,
+  launchedLoading,
 }: {
   locks: CaProjectLock[]
-  confirmed: CaFind[]
+  housed: CaFind[]
   activity: CaFind[]
   candidates: Candidate[]
   freshKeys: Set<string>
+  launchedItems: LaunchedItem[]
+  launchedLoading: boolean
 }) {
-  const lonely = locks.filter((lock) => !confirmed.some((find) => lockForFind([lock], find)))
+  const lonely = locks.filter((lock) => !housed.some((find) => lockForFind([lock], find)))
   if (lonely.length === 0) return null
   return (
     <div className="mt-4 flex flex-col gap-4">
       {lonely.map((lock) => {
         const rows = activity.filter((row) => lockForFind([lock], row))
-        const name = displayProjectName(lock.project, lock.handle) 
+        const name = displayProjectName(lock.project, lock.handle)
+        const launched = !launchedLoading && matchLaunched(launchedItems, { handle: lock.handle, project: lock.project }) != null
         return (
-          <section key={lock.id} className="overflow-hidden rounded-2xl border border-[#1d4ed8]/30 bg-[var(--color-card)] dark:border-[#93c5fd]/30 dark:bg-[var(--color-night-card)]">
+          <section
+            key={lock.id}
+            className={`overflow-hidden rounded-2xl border bg-[var(--color-card)] dark:bg-[var(--color-night-card)] ${
+              launched
+                ? 'border-[var(--color-line)] dark:border-[var(--color-night-line)]'
+                : 'border-[#1d4ed8]/30 dark:border-[#93c5fd]/30'
+            }`}
+          >
             <header className="flex flex-wrap items-center gap-2 px-4 py-3">
               <h3 className="text-sm font-semibold">{name === '未命名项目' ? '已锁定项目' : name}</h3>
+              {launched && (
+                <span className="rounded-md bg-[var(--color-orange-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
+                  已开盘
+                </span>
+              )}
               <LockBadge url={lock.url} />
             </header>
-            <ActivityBlock rows={rows} locked freshKeys={freshKeys} candidates={candidates} locks={[lock]} />
+            <ActivityBlock
+              rows={rows}
+              mode={launched ? 'launched' : 'locked'}
+              freshKeys={freshKeys}
+              candidates={candidates}
+              locks={[lock]}
+            />
           </section>
         )
       })}
@@ -387,51 +521,53 @@ function LockedActivity({
 
 function OrphanActivity({
   activity,
-  confirmed,
+  housed,
   candidates,
   freshKeys,
   locks,
 }: {
   activity: CaFind[]
-  confirmed: CaFind[]
+  housed: CaFind[]
   candidates: Candidate[]
   freshKeys: Set<string>
   locks: CaProjectLock[]
 }) {
   const rows = activity.filter(
-    (row) => !confirmed.some((find) => sameProject(row, find) || sharesLock(locks, row, find)) && !lockForFind(locks, row),
+    (row) => !housed.some((find) => sameProject(row, find) || sharesLock(locks, row, find)) && !lockForFind(locks, row),
   )
   if (rows.length === 0) return null
   return (
     <section className="mt-6">
       <h2 className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">监控钱包动态</h2>
-      <ActivityBlock rows={rows} locked={false} freshKeys={freshKeys} candidates={candidates} locks={locks} />
+      <ActivityBlock rows={rows} mode="plain" freshKeys={freshKeys} candidates={candidates} locks={locks} />
     </section>
   )
 }
 
 function ActivityBlock({
   rows,
-  locked,
+  mode,
   freshKeys,
   candidates,
   locks,
 }: {
   rows: CaFind[]
-  locked: boolean
+  mode: 'plain' | 'locked' | 'launched'
   freshKeys: Set<string>
   candidates: Candidate[]
   locks: CaProjectLock[]
 }) {
-  if (rows.length === 0 && !locked) return null
+  if (rows.length === 0 && mode === 'plain') return null
+  const note =
+    mode === 'launched'
+      ? '已开盘，不再当作新 CA。锁定后的钱包相关地址如果出现，只记在这里，不响铃。'
+      : mode === 'locked'
+        ? '官推已锁定，后来的非官方 CA 不再推送。这里仍显示监控钱包的相关地址，不当作新 CA，也不响铃。'
+        : '相关地址动态，不是确认 CA，不响铃。'
   return (
     <div className="border-t border-dashed border-[var(--color-line)] bg-[var(--color-cream)] px-4 py-3 dark:border-[var(--color-night-line)] dark:bg-[var(--color-night)]">
       <p className="text-xs font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">监控钱包动态</p>
-      <p className="mt-1 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">
-        {locked
-          ? '官推已锁定，后来的非官方 CA 不再推送。这里仍显示监控钱包的相关地址，不当作新 CA，也不响铃。'
-          : '相关地址动态，不是确认 CA，不响铃。'}
-      </p>
+      <p className="mt-1 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">{note}</p>
       {rows.length === 0 ? (
         <p className="mt-2 text-[11px] text-[var(--color-ink-muted)]">还没有新的钱包动态。</p>
       ) : (
@@ -453,18 +589,21 @@ function ActivityBlock({
 }
 
 function CopycatSection({
-  rows,
+  openRows,
+  launchedRows,
   open,
   candidates,
   locks,
   freshKeys,
 }: {
-  rows: CaFind[]
+  openRows: CaFind[]
+  launchedRows: CaFind[]
   open: boolean
   candidates: Candidate[]
   locks: CaProjectLock[]
   freshKeys: Set<string>
 }) {
+  const total = openRows.length + launchedRows.length
   return (
     <details
       key={open ? 'copycat-open' : 'copycat-shut'}
@@ -472,27 +611,59 @@ function CopycatSection({
       className="mt-8 rounded-2xl border border-dashed border-[#9f1239] bg-[#fff1f2] px-4 py-3 dark:border-[#fb7185] dark:bg-[#4c0519]"
     >
       <summary className="cursor-pointer list-none text-sm font-bold text-[#9f1239] dark:text-[#fecdd3]">
-        疑似山寨 · {rows.length} 条
+        疑似山寨 · {total} 条
+        {launchedRows.length > 0 && (
+          <span className="ml-2 font-normal text-[11px] text-[#9f1239]/80 dark:text-[#fecdd3]/80">
+            已开盘同名 {launchedRows.length} 条
+          </span>
+        )}
         <span className="ml-2 font-normal text-[11px] text-[#9f1239]/80 dark:text-[#fecdd3]/80">名字或符号对上而已，不是确认 CA，不会响铃</span>
       </summary>
       <p className="mt-2 text-xs leading-relaxed text-[#881337] dark:text-[#fecdd3]">
-        创建者不在监控钱包里，官推也还没认。不要跟。和上面的已确认列表分开。
+        创建者不在监控钱包里，官推也还没认。不要跟。和已确认列表分开。
       </p>
-      {rows.length === 0 ? (
+      {total === 0 ? (
         <p className="mt-3 text-sm text-[#9f1239] dark:text-[#fecdd3]">没有疑似山寨。</p>
       ) : (
-        <ul className="mt-3 overflow-hidden rounded-xl border border-[#fecdd3] bg-white dark:border-[#fb7185]/40 dark:bg-[var(--color-night-card)]">
-          {rows.map((find) => (
-            <FindRow
-              key={caFindKey(find)}
-              find={find}
-              fresh={freshKeys.has(caFindKey(find))}
-              candidates={candidates}
-              tone="copycat"
-              locks={locks}
-            />
-          ))}
-        </ul>
+        <div className="mt-3 space-y-3">
+          {openRows.length > 0 && (
+            <ul className="overflow-hidden rounded-xl border border-[#fecdd3] bg-white dark:border-[#fb7185]/40 dark:bg-[var(--color-night-card)]">
+              {openRows.map((find) => (
+                <FindRow
+                  key={caFindKey(find)}
+                  find={find}
+                  fresh={freshKeys.has(caFindKey(find))}
+                  candidates={candidates}
+                  tone="copycat"
+                  locks={locks}
+                />
+              ))}
+            </ul>
+          )}
+          {launchedRows.length > 0 && (
+            <div className="rounded-xl border border-dashed border-[var(--color-line)] bg-[var(--color-cream)] px-3 py-3 dark:border-[var(--color-night-line)] dark:bg-[var(--color-night)]">
+              <p className="text-xs font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
+                已开盘项目的同名地址 · {launchedRows.length} 条
+              </p>
+              <p className="mt-1 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">
+                项目已经开盘。这些只是同名，不要跟，也不再当作正在追踪的目标。
+              </p>
+              <ul className="mt-2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-white dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
+                {launchedRows.map((find) => (
+                  <FindRow
+                    key={caFindKey(find)}
+                    find={find}
+                    fresh={false}
+                    candidates={candidates}
+                    tone="copycat"
+                    locks={locks}
+                    launched
+                  />
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       )}
     </details>
   )
@@ -545,12 +716,14 @@ function FindRow({
   candidates,
   tone,
   locks,
+  launched = false,
 }: {
   find: CaFind
   fresh: boolean
   candidates: Candidate[]
-  tone: 'confirmed' | 'candidate' | 'superseded' | 'copycat' | 'quiet' | 'activity'
+  tone: 'confirmed' | 'launched' | 'candidate' | 'superseded' | 'copycat' | 'quiet' | 'activity'
   locks: CaProjectLock[]
+  launched?: boolean
 }) {
   const explorer = explorerFor(find.chain, find.address)
   const evidence = safeEvidenceUrl(find.evidence_url)
@@ -560,9 +733,10 @@ function FindRow({
   const when = formatShanghai(find.detected_at, true)
   const name = displayProjectName(find.project, find.handle)
   const candidate = find.handle ? findByHandle(candidates, find.handle) : undefined
-  const showPair = Boolean(find.pairedWith) && (find.caRole === 'processor' || tone !== 'copycat')
+  const showPair = Boolean(find.pairedWith) && (find.caRole === 'processor' || (tone !== 'copycat' && tone !== 'quiet'))
   const grey = tone === 'superseded'
-  const highlight = fresh && find.alertOk && tone === 'confirmed'
+  const highlight = fresh && find.alertOk && tone === 'confirmed' && !launched
+  const showLock = (find.caLocked || lock) && tone !== 'quiet' && tone !== 'copycat' && tone !== 'activity'
   return (
     <li
       id={`ca-${find.address.toLowerCase()}`}
@@ -572,6 +746,11 @@ function FindRow({
     >
       <div className="flex flex-wrap items-center gap-2">
         {highlight && <span className="rounded-md bg-[var(--color-orange)] px-1.5 py-0.5 text-[10px] font-semibold text-white">新</span>}
+        {launched && tone !== 'launched' && (
+          <span className="rounded-md bg-[var(--color-orange-soft)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
+            已开盘
+          </span>
+        )}
         {fresh && tone === 'activity' && (
           <span className="rounded-md bg-[var(--color-cream-2)] px-1.5 py-0.5 text-[10px] text-[var(--color-ink-muted)] dark:bg-[var(--color-night-2)]">新动态</span>
         )}
@@ -583,7 +762,7 @@ function FindRow({
         <StatusBadge status={find.caStatus} text={find.caStatusZh || (tone === 'activity' ? '钱包动态' : '未标注')} />
         {find.provenanceZh && tone !== 'quiet' && tone !== 'activity' && <ProvenanceChip text={find.provenanceZh} />}
         {find.caRole && CA_ROLE_ZH[find.caRole] && <MetaChip>{CA_ROLE_ZH[find.caRole]}</MetaChip>}
-        {(find.caLocked || lock) && tone !== 'quiet' && <LockBadge url={lockUrl || ''} at={find.lockAt} />}
+        {showLock && <LockBadge url={lockUrl || ''} at={find.lockAt} />}
         {find.confidence && <MetaChip>{confidenceLabel(find.confidence)}</MetaChip>}
         <SourceBadge source={find.source} />
         {find.chain && <MetaChip>{find.chain}</MetaChip>}
@@ -594,7 +773,7 @@ function FindRow({
           </time>
         )}
       </div>
-      {tone !== 'confirmed' && (
+      {tone !== 'confirmed' && tone !== 'launched' && (
         <p className="mt-2 text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{name}</p>
       )}
       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -643,8 +822,8 @@ function FindRow({
           candidate={candidate}
           name={name}
           handle={find.handle || candidate?.handle}
-          ca={tone === 'confirmed' && find.alertOk ? find.address : undefined}
-          caChain={tone === 'confirmed' && find.alertOk ? find.chain : undefined}
+          ca={tone === 'confirmed' && find.alertOk && !launched ? find.address : undefined}
+          caChain={tone === 'confirmed' && find.alertOk && !launched ? find.chain : undefined}
         />
       </div>
       {(find.cpu || find.mintPriceBnb || find.supplyCap) && (
@@ -661,7 +840,7 @@ function FindRow({
           {find.tx ? ` · tx ${shortAddr(find.tx)}` : ''}
         </p>
       )}
-      {find.note && tone !== 'confirmed' && (
+      {find.note && tone !== 'confirmed' && tone !== 'launched' && (
         <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">{find.note}</p>
       )}
     </li>
