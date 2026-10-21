@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-10-21T22:03:34+08:00",
+  "generated_at": "2026-10-21T22:06:25+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 13,
-  "token_ca_count": 1,
+  "count": 12,
+  "token_ca_count": 0,
   "wallet_count": 7,
   "confirmed_count": 0,
-  "candidate_count": 1,
+  "candidate_count": 0,
   "status_counts": {
     "confirmed": 0,
-    "candidate": 1,
+    "candidate": 0,
     "superseded": 0,
     "not_ca": 12
   },
@@ -89,48 +89,6 @@
       "official_x_confirmed": false,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "pilled",
-      "handle": "pilledwtf",
-      "chain": "solana",
-      "address": "AvKPd7XbDojj2D1VyBPBrfmiPr7dnPje92CDuz5Npump",
-      "source": "site:https://www.pilled.wtf/",
-      "evidence_url": "https://www.pilled.wtf/",
-      "detected_at": "2026-10-21T21:40:52+08:00",
-      "confidence": "high",
-      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://www.pilled.wtf/",
-          "detected_at": "2026-10-21T21:40:52+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://www.pilled.wtf/",
-          "detected_at": "2026-10-21T21:40:52+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "solana",
-        "decimals": 6,
-        "note": "SPL mint verified (owner Tokenz…, dec=6)"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
       "alert_ok": false,
       "ca_locked": false
     },
@@ -607,7 +565,7 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 40,
+  "launched_history_count": 41,
   "launched_history": [
     {
       "project": "【未确认地址·非CA】Baola",
@@ -845,6 +803,43 @@
       "cpu": "#1387",
       "processor": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
       "confirm_basis_zh": "监控钱包创建+官推确认"
+    },
+    {
+      "project": "pilled",
+      "handle": "pilledwtf",
+      "chain": "solana",
+      "address": "AvKPd7XbDojj2D1VyBPBrfmiPr7dnPje92CDuz5Npump",
+      "source": "site:https://www.pilled.wtf/",
+      "evidence_url": "https://www.pilled.wtf/",
+      "detected_at": "2026-10-21T21:40:52+08:00",
+      "confidence": "medium",
+      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://www.pilled.wtf/",
+          "detected_at": "2026-10-21T21:40:52+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "solana",
+        "decimals": 6,
+        "note": "SPL mint verified (owner Tokenz…, dec=6)"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【扫出钱包·非CA】Cropz",
@@ -2317,8 +2312,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 12,
+  "suspected_copycat_count": 13,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Ink Daddy",
+      "handle": "InkDaddynft",
+      "chain": "bsc",
+      "address": "0x5cd0bb38d07c4fd1cf4b40d8f42a096c40cb4444",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/InkDaddynft",
+      "detected_at": "2026-10-21T22:06:05+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via symbol:ID; deployer=0x550c4f6209ed185f9f3e1c5fad26f7bf44a12a33; token=ID / ID; ca_gate: ERC20 verified: ID dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T22:06:05+08:00",
+          "reason": "symbol:ID",
+          "via": "factory:fourmeme_tm2_bsc:Unknown"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x550c4f6209ed185f9f3e1c5fad26f7bf44a12a33",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "ID",
+        "name": "ID",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: ID dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x550c4f6209ed185f9f3e1c5fad26f7bf44a12a33",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Ink Daddy",
       "handle": "InkDaddynft",
