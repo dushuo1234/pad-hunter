@@ -453,7 +453,7 @@ function ProjectGroup({
       </ul>
       <ActivityBlock
         rows={activity}
-        mode={launched ? 'launched' : lock ? 'locked' : 'plain'}
+        mode={lock ? (launched ? 'launched' : 'locked') : 'plain'}
         freshKeys={freshKeys}
         candidates={candidates}
         locks={locks}
@@ -818,13 +818,15 @@ function FindRow({
             监控详情
           </a>
         )}
-        <PinWorkbenchButton
-          candidate={candidate}
-          name={name}
-          handle={find.handle || candidate?.handle}
-          ca={tone === 'confirmed' && find.alertOk && !launched ? find.address : undefined}
-          caChain={tone === 'confirmed' && find.alertOk && !launched ? find.chain : undefined}
-        />
+        {tone !== 'launched' && (
+          <PinWorkbenchButton
+            candidate={candidate}
+            name={name}
+            handle={find.handle || candidate?.handle}
+            ca={tone === 'confirmed' && find.alertOk && !launched ? find.address : undefined}
+            caChain={tone === 'confirmed' && find.alertOk && !launched ? find.chain : undefined}
+          />
+        )}
       </div>
       {(find.cpu || find.mintPriceBnb || find.supplyCap) && (
         <p className="mt-2 font-mono text-[11px] text-[var(--color-ink-muted)]">
