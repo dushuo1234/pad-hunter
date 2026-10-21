@@ -1,7 +1,29 @@
 {
-  "generated_at": "2026-10-21T09:59:38+08:00",
-  "count": 8,
+  "generated_at": "2026-10-21T10:01:33+08:00",
+  "count": 10,
   "finds": [
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "chain": "ethereum",
+      "address": "0x71b9e0fd392713a14fcab92d9af7a21f47e3b1fa",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/play_blastoff",
+      "detected_at": "2026-10-21T09:55:10+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:playblastoff; deployer=0x0b711dfaa26754ddebddce858561a643a7b9428d; token=BLAST / Blast",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-21T09:55:10+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0x0b711dfaa26754ddebddce858561a643a7b9428d",
+      "addr_kind": "contract"
+    },
     {
       "project": "HappyBlock",
       "handle": "realhappyblock",
@@ -58,6 +80,24 @@
       "kind": "wallet",
       "label_zh": "扫出钱包",
       "addr_kind": "wallet"
+    },
+    {
+      "project": "老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "evm",
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "source": "site:https://x.com/bemer77",
+      "evidence_url": "https://x.com/bemer77",
+      "detected_at": "2026-10-21T09:40:49+08:00",
+      "confidence": "high",
+      "note": null,
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-21T09:40:49+08:00"
+        }
+      ]
     },
     {
       "project": "Elysium Name Service",
@@ -810,7 +850,5 @@
         }
       ]
     }
-  ],
-  "updated_at": "2026-10-21T10:01:28+08:00",
-  "note": "; filtered false bemer TapeAI + ambiguous BLAST@2026-10-21T10:01:28+08:00"
+  ]
 }
