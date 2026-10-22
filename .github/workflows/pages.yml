@@ -17,6 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Parent history is required so a SPA-only push can be told apart
+          # from a commit that actually updates public/data.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -28,6 +32,25 @@ jobs:
           test -f dist/404.html
           grep -F 'pathSegmentsToKeep' dist/404.html
           grep -F 'l.search[1]' dist/index.html
+      - name: Keep live automation data on SPA-only deploys
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git fetch origin gh-pages
+          mkdir -p /tmp/gh-pages-data
+          git archive origin/gh-pages data | tar -x -C /tmp/gh-pages-data
+          changed=$(git diff --name-only HEAD^1 HEAD)
+          for path in dist/data/*; do
+            [ -f "$path" ] || continue
+            base=$(basename "$path")
+            live="/tmp/gh-pages-data/data/$base"
+            [ -f "$live" ] || continue
+            if printf '%s\n' "$changed" | grep -qx "public/data/$base"; then
+              echo "publish $base from this commit"
+            else
+              cp "$live" "$path"
+              echo "keep live $base"
+            fi
+          done
       - name: Deploy GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4

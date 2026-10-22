@@ -24,7 +24,7 @@ npm run preview
 
 GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hunter/>
 
-合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
+合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。这次提交没有改到的 `data/*.json`（`candidates.json`、`launched.json`、`ca_finds.json`、`projects.json`、`listing_times.json`、`monitor_events.json`）会沿用 `gh-pages` 上已发布的文件，避免前端发布把自动化数据盖掉。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
 
 ## 数据文件
 
