@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { PushDate } from '../components/PushDate'
 import { xProfileUrl } from '../utils/format'
 import { shortAddr } from '../utils/format'
+import { findByHandle } from '../utils/candidates'
+import type { Candidate } from '../types'
 import {
   explorerUrl,
   formatRemovedAt,
@@ -10,11 +13,12 @@ import {
 
 interface LaunchedPageProps {
   items: LaunchedItem[]
+  catalog: Candidate[]
   generatedAt?: string
   loading: boolean
 }
 
-export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps) {
+export function LaunchedPage({ items, catalog, generatedAt, loading }: LaunchedPageProps) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">已从主列表归档</p>
@@ -37,7 +41,11 @@ export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps)
       ) : (
         <ul className="mt-6 space-y-3">
           {items.map((item, index) => (
-            <LaunchedCard key={`${item.handle || item.project}-${item.removedAt}-${index}`} item={item} />
+            <LaunchedCard
+              key={`${item.handle || item.project}-${item.removedAt}-${index}`}
+              item={item}
+              catalog={catalog}
+            />
           ))}
         </ul>
       )}
@@ -45,10 +53,11 @@ export function LaunchedPage({ items, generatedAt, loading }: LaunchedPageProps)
   )
 }
 
-function LaunchedCard({ item }: { item: LaunchedItem }) {
+function LaunchedCard({ item, catalog }: { item: LaunchedItem; catalog: Candidate[] }) {
   const name = item.project || item.handle || '未命名'
   const profile = item.xUrl || (item.handle ? xProfileUrl(item.handle) : '')
   const when = launchLabel(item.listingAt)
+  const pushedFrom = item.handle ? findByHandle(catalog, item.handle) : undefined
   const explorer = item.ca ? explorerUrl(item.ca, item.caChain || item.chain) : null
   return (
     <li className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] px-4 py-4 dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
@@ -94,6 +103,12 @@ function LaunchedCard({ item }: { item: LaunchedItem }) {
       </div>
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="min-w-0">
+          <dt className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">推送日期</dt>
+          <dd className="mt-1">
+            <PushDate records={[item, pushedFrom]} variant="value" />
+          </dd>
+        </div>
         <Field label="开盘时间" value={when} />
         <div>
           <dt className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">CA</dt>

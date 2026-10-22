@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
+import { PushDate } from '../components/PushDate'
 import { useCaFinds } from '../hooks/useCaFinds'
 import { monitorPath } from '../router'
 import type { CaFind, CaProjectLock, CaStatus, Candidate } from '../types'
@@ -417,6 +418,7 @@ function ProjectGroup({
             <ProjectTitle name={name} handle={group.handle} />
             <span className="font-mono text-[10px] text-[var(--color-ink-muted)]">{group.finds.length} 个已确认</span>
             {lock && <LockBadge url={lock.url || sample?.lockUrl || ''} at={sample?.lockAt} />}
+            <PushDate records={catalogMatch(candidates, group.handle)} />
           </div>
           {group.handle && <HandleLink handle={group.handle} />}
         </div>
@@ -468,6 +470,7 @@ function LockedActivity({
             <header className="flex flex-wrap items-center gap-2 px-4 py-3">
               <h3 className="text-sm font-semibold">{name === '未命名项目' ? '已锁定项目' : name}</h3>
               <LockBadge url={lock.url} />
+              <PushDate records={catalogMatch(candidates, lock.handle)} />
             </header>
             <ActivityBlock rows={rows} locked freshKeys={freshKeys} candidates={candidates} locks={[lock]} />
           </section>
@@ -688,6 +691,7 @@ function FindRow({
             {when} 北京时间
           </time>
         )}
+        <PushDate records={candidate ? [candidate] : []} />
       </div>
       {tone !== 'confirmed' && (
         <p className="mt-2 text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{name}</p>
@@ -882,6 +886,7 @@ function LaunchedArchive({
                       </span>
                       <span className="font-mono text-[10px] text-[var(--color-ink-muted)]">{group.finds.length} 条</span>
                       {lock && <LockBadge url={lock.url || sample?.lockUrl || ''} at={sample?.lockAt} />}
+                      <PushDate records={catalogMatch(candidates, group.handle)} />
                     </div>
                     {group.handle && <HandleLink handle={group.handle} />}
                   </div>
@@ -910,6 +915,12 @@ function LaunchedArchive({
       )}
     </section>
   )
+}
+
+function catalogMatch(candidates: Candidate[], handle: string): Candidate[] {
+  if (!handle) return []
+  const match = findByHandle(candidates, handle)
+  return match ? [match] : []
 }
 
 function ProjectTitle({ name, handle }: { name: string; handle: string }) {

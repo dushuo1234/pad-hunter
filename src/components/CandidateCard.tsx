@@ -4,8 +4,9 @@ import { monitorPath } from '../router'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
-import { followerCount, formatNumber, formatShanghai, sameXUrl, xProfileUrl } from '../utils/format'
+import { followerCount, formatNumber, sameXUrl, xProfileUrl } from '../utils/format'
 import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
+import { formatPushDate, resolvePushDate, UNKNOWN_PUSH_DATE } from '../utils/pushDate'
 
 interface CandidateCardProps {
   candidate: Candidate
@@ -17,10 +18,11 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
   const profile = xProfileUrl(c.handle)
   const link = c.tweet_url || profile
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
-  const when = formatShanghai(c.date_iso)
   const followers = followerCount(c.followers)
   const launch = structuredLaunch(c)
   const launchSource = launch ? listingSourceLabel(launch.source) : ''
+  const pushed = resolvePushDate([c])
+  const pushedText = pushed ? formatPushDate(pushed) || UNKNOWN_PUSH_DATE : UNKNOWN_PUSH_DATE
 
   return (
     <article
@@ -63,11 +65,6 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
         {compact ? (
           <div className="shrink-0 text-right">
             <div className="font-mono text-[10px] text-[var(--color-ink-muted)]">#{c.rank}</div>
-            {when && (
-              <time className="font-mono text-[10px] text-[var(--color-ink-muted)]" dateTime={c.date_iso}>
-                {when}
-              </time>
-            )}
           </div>
         ) : (
           <div className="shrink-0 text-right">
@@ -97,6 +94,10 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
           开盘时间 {launchTimeText(launch)}
           {launch && launchSource ? ` · ${launchSource}` : ''}
         </Chip>
+        <Chip mono title={pushed ? `来源 ${pushed.field}` : '没有可用的推送时间'}>
+          推送日期{' '}
+          {pushed && pushedText !== UNKNOWN_PUSH_DATE ? <time dateTime={pushed.at}>{pushedText}</time> : pushedText}
+        </Chip>
         {c.risk && (
           <Chip tone="warn" title={c.risk}>
             风险
@@ -104,11 +105,6 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
         )}
         {followers > 0 && <Chip mono>{formatNumber(followers)} 粉丝</Chip>}
         {c.kol_followers > 0 && <Chip mono>{c.kol_followers} KOL</Chip>}
-        {!compact && when && (
-          <time className="font-mono text-[11px] text-[var(--color-ink-muted)]" dateTime={c.date_iso}>
-            {when}
-          </time>
-        )}
         <span className="ml-auto flex items-center gap-3">
           <a
             href={monitorPath(c.handle)}

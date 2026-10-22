@@ -40,13 +40,16 @@ GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hun
 | `risk` | 风险 |
 | `why` / `bio` | 中文摘要 / 英文简介 |
 | `tweet_url` | X 链接 |
-| `date_iso` / `message_id` | 推送时间、Telegram 消息 id |
+| `date_iso` / `message_id` | Telegram 卡片上的消息时间、消息 id。同一项目被再次推送时，这条通常是最新一条 |
+| `push_date` | 推送日期。项目第一次进入雷达的时间。页面也会读 `first_seen`、`added_at`、`synced_at`、`created_at`，取最早的一条。候选行自己没有这些时间时，再用 `projects.json` 里同一 handle 的卡片时间。都没有就显示「未知」。不用 `listing_at` / `launch_at` |
 | `source` | 频道，`telegram:项目推送` 或 `telegram:项目推送监控` |
 | `ca` / `ca_chain` / `ca_source` | 已发现的合约，可空 |
 | `listing_signal` / `sites` / `last_checked` | 最近开盘信号、站点、检查时间，可空 |
 | `rank` / `score` / `followers` / `kol_followers` | 兼容旧版卡片的排序字段。`followers` 可以是数字，或 `粉丝 188 · 你圈子 1 人` 这种原文 |
 
 顶层还有 `generated_at_utc`、`goal`、`source`、`sources`。
+
+推送日期按北京时间显示，有钟点时写成 `YYYY-MM-DD HH:mm`，只有日期时写成 `YYYY-MM-DD`。主列表、即将开盘、已开盘、工作台、发现 CA 和监控详情都会带上。候选自己没有入列时间时，页面用 `public/data/projects.json` 里同一 X 账号的 `date_iso`（或上面的入列字段）补上，不改开盘时间，也不编造。`scripts/telegram/sync_site.py` 会把最早的一条写成 `push_date`，并在下次覆盖同一账号时留下更早的值。ops 流水线如果绕过这个脚本直接写 JSON，也应写 `push_date` 并保留更早的值。
 
 页面右上角 **刷新** 会重新请求这份 JSON（适合按日替换文件后看新数据）。**上传 JSON** 只替换当前会话，刷新页面后恢复仓库里的文件。
 
@@ -84,7 +87,7 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - Hero：项目数、类型数、覆盖链、北京时间更新时间
 - **类型 / 发射台** 筛选芯片。点一个类型，下面只显示该类型的项目；「全部」是一条总列表
 - 链、搜索、粉丝、KOL 筛选，以及最新 / 评分 / 粉丝 / KOL 排序，都作用在当前列表上
-- 卡片带类型、状态、开盘徽章，以及来源（项目推送 / 项目推送监控）
+- 卡片带类型、状态、开盘徽章、推送日期，以及来源（项目推送 / 项目推送监控）
 - 卡片上的 **监控详情** 进入该项目的时间线
 - 导航 **即将开盘**：尚未开盘，且满足下面任一条件的项目。有确定开盘时间、并且落在上海时间今天起 3 天内的排在前面；没有确定时间、但标记为「即将启动」，或站点 / JS / is 文件显示项目、合约代码、游戏代码完成度高的，时间显示「未知」
 - 导航 **发现CA**：已确认 CA、疑似山寨、扫出钱包分开显示，每秒重读 `ca_finds.json`

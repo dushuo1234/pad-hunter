@@ -179,16 +179,10 @@ def write_jsonl(by_id: Dict[int, Dict[str, Any]]) -> None:
 
 
 def write_snapshot(by_id: Dict[int, Dict[str, Any]]) -> List[Dict[str, Any]]:
-    # unique by twitter_handle (prefer newest message_id)
-    by_handle: Dict[str, Dict[str, Any]] = {}
-    for obj in sorted(by_id.values(), key=lambda x: int(x.get("message_id", 0))):
-        h = (obj.get("twitter_handle") or "").lower() or f"msg:{obj.get('message_id')}"
-        by_handle[h] = obj
-    items = sorted(by_handle.values(), key=lambda x: int(x.get("message_id", 0)), reverse=True)
-    # slim snapshot without raw_text for board
-    slim = []
-    for o in items:
-        slim.append({k: v for k, v in o.items() if k != "raw_text"})
+    # unique by twitter_handle (prefer newest message_id) and keep the earliest card time
+    from push_date import collapse_by_handle
+
+    slim = collapse_by_handle(by_id.values())
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     SNAPSHOT.write_text(json.dumps(slim, ensure_ascii=False, indent=2), encoding="utf-8")
     os.chmod(SNAPSHOT, 0o600)

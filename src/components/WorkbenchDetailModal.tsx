@@ -11,6 +11,7 @@ import {
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
 import type { WorkbenchItem } from '../utils/workbench'
+import { PushDate } from './PushDate'
 import { observeWorkbenchDetail } from '../utils/caAlert'
 import { safeHttpUrl, setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
 import {
@@ -188,6 +189,9 @@ export function WorkbenchDetailModal({
               )}
             </Info>
             <Info label="介绍">{introFor(candidate) || '—'}</Info>
+            <Info label="推送日期">
+              <PushDate records={[candidate]} variant="value" />
+            </Info>
             <Info label="推特">
               {item.handle ? (
                 <a href={xProfileUrl(item.handle)} target="_blank" rel="noreferrer" className="text-[var(--color-orange)] hover:underline">
