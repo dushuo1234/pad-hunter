@@ -14,6 +14,8 @@ export interface Candidate {
   category?: string
   status?: string
   listing?: string
+  /** Pipeline flag: already listed, even when the status text has not caught up. */
+  already_listed?: boolean
   /** ISO-8601 launch time. `YYYY-MM-DD` is a Shanghai date with no clock. */
   listing_at?: string | null
   /** Alias of `listing_at` when a pipeline uses that name. */
@@ -32,6 +34,23 @@ export interface Candidate {
   sites?: string[]
   last_checked?: string
   onchain_notes?: string
+  /**
+   * Site / JS / is-file completion. A 0–1 fraction, a 0–100 score, or a label
+   * such as `high` / `complete` / `完成`. See `upcomingSignals.ts`.
+   * Any one of these being high puts the project on 即将开盘 when it has no listing time.
+   */
+  completion?: number | string | null
+  site_completion?: number | string | null
+  js_completion?: number | string | null
+  contract_completion?: number | string | null
+  contract_code?: number | string | null
+  contract_code_completion?: number | string | null
+  game_completion?: number | string | null
+  game_code?: number | string | null
+  game_code_completion?: number | string | null
+  /** Nested scrape, for example `{ game_code: "complete" }`. */
+  is_file?: Record<string, unknown> | null
+  site_js?: Record<string, unknown> | null
 }
 
 export interface CandidatesPayload {
@@ -67,6 +86,8 @@ export interface SiteProbe {
   error?: string
   name?: string
   handle?: string
+  /** Completion fields copied from a site / JS / is-file probe. */
+  scrape?: Record<string, unknown>
 }
 
 /** Listing signal. Same fields as `listing_scan_latest.json` `new_listing_signals[]`. */
@@ -77,6 +98,8 @@ export interface ListingSignal {
   prev?: string | null
   keyword?: string
   source?: string
+  /** Completion fields copied from the signal object, separate from free-text `signal`. */
+  scrape?: Record<string, unknown>
 }
 
 /** On-chain factory deploy. Scanner output can use this object under `factory_deploy`. */

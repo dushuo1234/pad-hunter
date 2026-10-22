@@ -24,7 +24,7 @@ npm run preview
 
 GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hunter/>
 
-合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
+合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。这次提交没有改到的 `data/*.json`（`candidates.json`、`launched.json`、`ca_finds.json`、`projects.json`、`listing_times.json`、`monitor_events.json`）会沿用 `gh-pages` 上已发布的文件，避免前端发布把自动化数据盖掉。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
 
 ## 数据文件
 
@@ -86,7 +86,7 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 链、搜索、粉丝、KOL 筛选，以及最新 / 评分 / 粉丝 / KOL 排序，都作用在当前列表上
 - 卡片带类型、状态、开盘徽章，以及来源（项目推送 / 项目推送监控）
 - 卡片上的 **监控详情** 进入该项目的时间线
-- 导航 **即将开盘**：尚未开盘、且开盘时间落在上海时间今天起 3 天内的项目
+- 导航 **即将开盘**：尚未开盘，且满足下面任一条件的项目。有确定开盘时间、并且落在上海时间今天起 3 天内的排在前面；没有确定时间、但标记为「即将启动」，或站点 / JS / is 文件显示项目、合约代码、游戏代码完成度高的，时间显示「未知」
 - 导航 **发现CA**：已确认 CA、疑似山寨、扫出钱包分开显示，每秒重读 `ca_finds.json`
 - 导航 **工作台**：钉住关心的项目，写个人备注，并对照监控进度
 - 卡片和监控详情上的 **加入工作台** 把项目钉到本机工作台
@@ -101,6 +101,12 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 已开盘：`/pad-hunter/launched`
 - 工作台：`/pad-hunter/workbench`
 - 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
+
+即将开盘：有 `listing_at`（或 `launch_at`，或 `listing_times.json` 里的同名字段）且落在上海时间今天到第 3 天的，按时间从近到远排。没有解析出的开盘时间时，状态或开盘信号里的「即将启动」（也包括即将上线、about to start、starting soon）会进来；站点、JS 或 is 文件抓到的高完成度也会进来，项目整体、合约代码、游戏代码任一达到即可。高完成度指 0–1 里至少 0.8、百分制至少 80，或 `high` / `complete` / `完成` / `就绪`。`low` 和 `medium` 不算。这些行的时间写「未知」，不编造时间。已知开盘时间但落在 3 天窗外的，仍然不进这张表。已开盘、已上线，以及 `already_listed`、`launched.json` 里的项目不进。没有时间的按 `date_iso` 从新到旧，再按名称排。顶栏「即将开盘」旁的数字用同一条规则（`countUpcoming`）。
+
+完成度读这些字段（候选上、站点探测的 `scrape`，或开盘信号里的 `key=value`）：`completion`、`site_completion`、`js_completion`、`contract_code`、`contract_code_completion`、`game_code`、`game_code_completion`，以及嵌套的 `site_js` / `js` / `is` / `is_file`。当前公开 JSON 里还没有填这些完成度；流水线写上之后页面会直接用。
+
+发现 CA 行上的机器备注（`note`、`confirm_basis_zh`、`label_zh`）若是英文，页面改成中文再显示。例如低置信的信息流站点说明，以及 `ca_gate: ERC20 verified: BONER dec=18` 显示为「核验：已确认 ERC20（符号 BONER，精度 18）」。原文 JSON 不改。
 
 GitHub Pages 会把 `dist/index.html` 复制成 `404.html`，所以这些路径刷新后仍能打开。
 

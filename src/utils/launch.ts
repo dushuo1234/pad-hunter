@@ -1,6 +1,13 @@
 import type { Candidate, MonitorEvent } from '../types'
 import { snapshotForCandidate, type MonitorSnapshot } from './monitor'
 import { isAlreadyOpened } from './opening'
+import {
+  completionFacets,
+  completionTags,
+  isAboutToStart,
+  pickScrape,
+  recordFromSignalText,
+} from './upcomingSignals'
 
 /** Today through the Shanghai day three days ahead, inclusive. */
 const WINDOW_DAYS = 3
@@ -21,8 +28,14 @@ export interface ResolvedLaunch {
 
 export interface UpcomingRow {
   candidate: Candidate
-  launch: ResolvedLaunch
+  /** Null when the row is included without a confirmed listing time. Display that as 未知. */
+  launch: ResolvedLaunch | null
   snap: MonitorSnapshot
+  /**
+   * Why an untimed row is here: 即将启动, and/or high site/JS/is-file completion
+   * of the project, its contract code, or its game code. Empty for timed rows.
+   */
+  tags: string[]
 }
 
 function pad(value: number): string {
@@ -152,6 +165,23 @@ export function indexListingTimes(entries: ListingTimeEntry[]): Map<string, List
   return map
 }
 
+function postedAt(candidate: Candidate): number {
+  const time = Date.parse(candidate.date_iso || '')
+  return Number.isNaN(time) ? 0 : time
+}
+
+/**
+ * 即将开盘 rows.
+ *
+ * 1. Confirmed `listing_at` / `launch_at` inside the next 3 Shanghai days, soonest first.
+ * 2. Otherwise, only when there is no resolved listing time: status or listing signal
+ *    「即将启动」 (or an equivalent about-to-start phrase), or high completion of the
+ *    project / contract code / game code from site, JS, or is-file scrape fields.
+ *    Those show no invented time. Newest `date_iso` first, then name.
+ *
+ * A resolved listing time outside the window stays off this list.
+ * Already-open wording and `already_listed` are excluded. Callers also drop `launched.json`.
+ */
 export function upcomingLaunches(
   candidates: Candidate[],
   events: MonitorEvent[],
@@ -162,16 +192,33 @@ export function upcomingLaunches(
   const rows: UpcomingRow[] = []
   for (const candidate of candidates) {
     const snap = snapshotForCandidate(candidate, events)
-    if (isAlreadyOpened(candidate, snap)) continue
+    if (isAlreadyOpened(candidate, snap) || candidate.already_listed === true) continue
     const launch = resolveLaunch(candidate, overlays)
-    if (!launch || !isInUpcomingWindow(launch.at, now)) continue
-    rows.push({ candidate, launch, snap })
+    const timed = Boolean(launch && isInUpcomingWindow(launch.at, now))
+    const signalText = snap.lastSignal?.text
+    const starting = isAboutToStart(candidate, signalText)
+    const facets = completionFacets([
+      pickScrape(candidate as Candidate & Record<string, unknown>),
+      recordFromSignalText(signalText),
+      recordFromSignalText(candidate.listing_signal),
+      snap.siteScrape,
+      snap.signalScrape,
+    ])
+    const ready = facets.project || facets.contract || facets.game
+    if (!timed && (launch || (!starting && !ready))) continue
+    const tags = timed ? [] : [...(starting ? ['即将启动'] : []), ...completionTags(facets)]
+    rows.push({ candidate, launch: timed ? launch : null, snap, tags })
   }
-  rows.sort(
-    (a, b) =>
-      Date.parse(a.launch.at) - Date.parse(b.launch.at) ||
-      a.candidate.name.localeCompare(b.candidate.name, 'zh'),
-  )
+  rows.sort((a, b) => {
+    if (Boolean(a.launch) !== Boolean(b.launch)) return a.launch ? -1 : 1
+    if (a.launch && b.launch) {
+      return (
+        Date.parse(a.launch.at) - Date.parse(b.launch.at) ||
+        a.candidate.name.localeCompare(b.candidate.name, 'zh')
+      )
+    }
+    return postedAt(b.candidate) - postedAt(a.candidate) || a.candidate.name.localeCompare(b.candidate.name, 'zh')
+  })
   return rows
 }
 
