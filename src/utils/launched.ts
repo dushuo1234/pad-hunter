@@ -14,6 +14,13 @@ export interface LaunchedItem {
   reason: string
   evidence: string
   removedAt: string
+  /** Entry timestamps for 推送日期. Launch time stays on `listingAt`. */
+  push_date?: string
+  first_seen?: string
+  added_at?: string
+  synced_at?: string
+  created_at?: string
+  date_iso?: string
 }
 
 export interface LaunchedDocument {
@@ -34,6 +41,23 @@ function asNullable(value: unknown): string | null {
   if (value == null) return null
   const text = asString(value)
   return text || null
+}
+
+const PUSH_KEYS = ['push_date', 'first_seen', 'added_at', 'synced_at', 'created_at', 'date_iso'] as const
+
+function pushFields(item: Record<string, unknown>): Partial<Pick<LaunchedItem, (typeof PUSH_KEYS)[number]>> {
+  const out: Partial<Pick<LaunchedItem, (typeof PUSH_KEYS)[number]>> = {}
+  for (const key of PUSH_KEYS) {
+    const camel = key.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase())
+    const value = item[key] ?? item[camel]
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      out[key] = String(value)
+      continue
+    }
+    const text = asString(value)
+    if (text) out[key] = text
+  }
+  return out
 }
 
 export function readLaunched(data: unknown): LaunchedDocument {
@@ -58,6 +82,7 @@ export function readLaunched(data: unknown): LaunchedDocument {
       reason: asString(item.reason),
       evidence: asString(item.evidence),
       removedAt: asString(item.removed_at || item.removedAt),
+      ...pushFields(item),
     })
   }
   items.sort((a, b) => (Date.parse(b.removedAt) || 0) - (Date.parse(a.removedAt) || 0))

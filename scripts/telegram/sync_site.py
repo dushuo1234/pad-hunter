@@ -16,8 +16,10 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from zoneinfo import ZoneInfo
+
+from push_date import ENTRY_FIELDS, apply_push_date, canonical_push_date, parse_entry_time
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parents[1]
@@ -126,6 +128,16 @@ def to_candidate(project: Dict[str, Any], rank: int, default_source: str = "tele
         "date_iso": date_iso,
         "source": source,
     }
+    for key in ENTRY_FIELDS:
+        if key == "date_iso":
+            continue
+        value = project.get(key)
+        if value in (None, ""):
+            camel = key.split("_")[0] + "".join(part.capitalize() for part in key.split("_")[1:])
+            value = project.get(camel)
+        if value not in (None, ""):
+            row[key] = value
+    apply_push_date(row, project)
     for key in (
         "ca",
         "ca_chain",
@@ -202,7 +214,48 @@ def resolve_source(projects: List[Dict[str, Any]], explicit: str) -> str:
     return "telegram:项目推送"
 
 
+def previous_by_handle(out: Path) -> Dict[str, Dict[str, Any]]:
+    """Earlier site rows, used only to keep the first push date. Missing file is fine."""
+    if not out.exists():
+        return {}
+    try:
+        old = json.loads(out.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    rows = old.get("candidates") if isinstance(old, dict) else None
+    if not isinstance(rows, list):
+        return {}
+    found: Dict[str, Dict[str, Any]] = {}
+    for item in rows:
+        if not isinstance(item, dict):
+            continue
+        handle = str(item.get("handle") or "").lstrip("@").lower()
+        if not handle:
+            continue
+        current = found.get(handle)
+        if current is None:
+            found[handle] = item
+            continue
+        found[handle] = _earlier_entry(current, item)
+    return found
+
+
+def _entry_ms(record: Dict[str, Any]) -> Optional[int]:
+    text = canonical_push_date(record)
+    parsed = parse_entry_time(text)
+    return parsed[0] if parsed else None
+
+
+def _earlier_entry(left: Dict[str, Any], right: Dict[str, Any]) -> Dict[str, Any]:
+    left_ms = _entry_ms(left)
+    right_ms = _entry_ms(right)
+    if right_ms is not None and (left_ms is None or right_ms < left_ms):
+        return right
+    return left
+
+
 def write_site(projects: List[Dict[str, Any]], out: Path, source: str, merge: bool) -> None:
+    earlier = previous_by_handle(out)
     ordered = sorted(projects, key=lambda p: as_int(p.get("message_id")), reverse=True)
     candidates = [to_candidate(p, i, source) for i, p in enumerate(ordered, start=1)]
     if merge and out.exists():
@@ -229,6 +282,8 @@ def write_site(projects: List[Dict[str, Any]], out: Path, source: str, merge: bo
             )
     for index, candidate in enumerate(candidates, start=1):
         candidate["rank"] = index
+        handle = str(candidate.get("handle") or "").lstrip("@").lower()
+        apply_push_date(candidate, earlier.get(handle))
     sources = preferred_sources(
         [str(item.get("source") or source) for item in candidates if isinstance(item, dict)]
     )

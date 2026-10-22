@@ -1,6 +1,7 @@
 import { useCaFinds } from '../hooks/useCaFinds'
 import { appPath } from '../router'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
+import { PushDate } from '../components/PushDate'
 import { SourceBadge } from '../components/SourceBadge'
 import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from '../utils/candidates'
@@ -39,6 +40,9 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
         <SourceBadge source={candidate?.source} />
       </div>
       <p className="mt-1 font-mono text-sm text-[var(--color-ink-muted)]">@{handle.replace(/^@/, '')}</p>
+      <p className="mt-2">
+        <PushDate records={[candidate]} />
+      </p>
       {lock && (
         <p className="mt-3 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
           {lockUrl ? (

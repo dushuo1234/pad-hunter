@@ -59,7 +59,11 @@ python3 scripts/telegram/sync_site.py --limit 200
 2. 按 handle 去重，写入 `scripts/telegram/.data/projects.json`
 3. 转成台子雷达 schema，覆盖 `public/data/candidates.json`。每条带 `source`（默认 `telegram:项目推送`，也可用 `TG_SOURCE` 或 `--source`）。要保留文件里另一个频道的项目，加上 `--merge`。
 
-字段对应：`name`、`handle`、`chain`、`category`（发射台 / Meme币 / GameFi / NFT铸造 / DeFi协议 / AI代理 / 基础设施 / 其他）、`status`、`listing`（开盘）、`risk`、`why`（中文摘要）、`bio`、`tweet_url`、`date_iso`、`message_id`。
+字段对应：`name`、`handle`、`chain`、`category`（发射台 / Meme币 / GameFi / NFT铸造 / DeFi协议 / AI代理 / 基础设施 / 其他）、`status`、`listing`（开盘）、`risk`、`why`（中文摘要）、`bio`、`tweet_url`、`date_iso`、`message_id`、`push_date`。
+
+`push_date` 是推送日期：这条项目第一次进入名单的时间。脚本从 `push_date`、`first_seen`、`added_at`、`synced_at`、`created_at`、`date_iso` 里取最早的一条（快照里同一 handle 的多条消息会先收成 `first_seen`）。覆盖同一 handle 时，保留输出文件里更早的时间，不拿开盘时间 `listing_at` 来填。快照里没有这些时间的项目不写 `push_date`。
+
+若 ops 流水线不经过本脚本、直接写 `candidates.json`：请同样写入 `push_date`（ISO-8601，带时区），并在后续更新里保留更早的值。页面会自己读上面那些字段；缺了就显示「未知」。
 
 只转换已有快照、不再请求 Telegram：
 

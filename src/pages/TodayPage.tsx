@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
+import { PushDate } from '../components/PushDate'
 import { SourceBadge } from '../components/SourceBadge'
 import { monitorPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
@@ -82,6 +83,9 @@ function TodayRow({ row }: { row: UpcomingRow }) {
           </div>
           <p className="mt-0.5 truncate font-mono text-[11px] text-[var(--color-ink-muted)]">
             @{c.handle} · {categoryOf(c)} · {c.chain}
+          </p>
+          <p className="mt-1">
+            <PushDate records={[c]} />
           </p>
         </div>
 

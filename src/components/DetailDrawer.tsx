@@ -4,8 +4,9 @@ import { monitorPath } from '../router'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
-import { followerCount, formatNumber, formatShanghai, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
+import { followerCount, formatNumber, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
 import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
+import { pushDateText } from '../utils/pushDate'
 
 interface DetailDrawerProps {
   candidate: Candidate | null
@@ -17,7 +18,6 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
   const c = candidate
   const profile = xProfileUrl(c.handle)
   const isTweet = Boolean(c.tweet_url) && !sameXUrl(c.tweet_url, profile)
-  const when = formatShanghai(c.date_iso)
   const followers = followerCount(c.followers)
   const launch = structuredLaunch(c)
   const launchSource = launch ? listingSourceLabel(launch.source) : ''
@@ -36,7 +36,6 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
             <div className="font-mono text-[11px] uppercase tracking-wider text-[var(--color-orange)]">
               #{c.rank}
               {c.message_id ? ` · msg ${c.message_id}` : ''}
-              {when ? ` · ${when}` : ''}
             </div>
             <h2 className="mt-1 text-xl font-bold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
               {c.name}
@@ -65,6 +64,7 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
 
         <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5">
           <div className="grid grid-cols-2 gap-2">
+            <Metric label="推送日期" value={pushDateText([c])} />
             <Metric label="链" value={c.chain || '—'} />
             <Metric label="类型" value={categoryOf(c)} />
             <Metric label="状态" value={c.status || '—'} />

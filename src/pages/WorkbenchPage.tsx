@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
+import { PushDate } from '../components/PushDate'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
@@ -367,6 +368,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       <p className="truncate font-mono text-[11px] text-[var(--color-ink-muted)]">
                         @{candidate.handle} · {candidate.chain || '链未标注'}
                       </p>
+                      <p className="mt-0.5">
+                        <PushDate records={[candidate]} />
+                      </p>
                     </div>
                     <button
                       type="button"
@@ -463,7 +467,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         </div>
       ) : (
         <div className="mt-3 overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
-          <table className="w-full min-w-[1180px] border-collapse text-left">
+          <table className="w-full min-w-[1320px] border-collapse text-left">
             <caption className="sr-only">工作台钉选项目</caption>
             <thead className="bg-[var(--color-cream-2)] text-[11px] text-[var(--color-ink-muted)] dark:bg-[var(--color-night-2)]">
               <tr>
@@ -479,6 +483,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                   />
                 </th>
                 <th scope="col" className="px-2 py-2 font-medium">名称</th>
+                <th scope="col" className="px-2 py-2 font-medium">推送日期</th>
                 <th scope="col" className="px-2 py-2 font-medium">URL</th>
                 <th scope="col" className="px-2 py-2 font-medium">推特</th>
                 <th scope="col" className="px-2 py-2 font-medium">项目上线</th>
@@ -494,7 +499,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
             <tbody>
               {visible.length === 0 && (
                 <tr>
-                  <td colSpan={12} className="px-4 py-8 text-center text-sm text-[var(--color-ink-muted)]">
+                  <td colSpan={13} className="px-4 py-8 text-center text-sm text-[var(--color-ink-muted)]">
                     没有匹配的目标
                   </td>
                 </tr>
@@ -545,6 +550,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                           className="mt-1.5 w-full min-w-48 resize-y rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-2 py-1.5 text-xs leading-relaxed outline-none focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]"
                         />
                       )}
+                    </td>
+                    <td className="whitespace-nowrap px-2 py-3">
+                      <PushDate records={[candidate]} variant="value" />
                     </td>
                     <td className="max-w-[180px] px-2 py-3">
                       {url ? (

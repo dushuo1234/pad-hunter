@@ -24,7 +24,18 @@ export interface Candidate {
   listing_at_source?: string | null
   risk?: string
   message_id?: number
+  /** Telegram message time of the push card. Not the launch time. */
   date_iso?: string
+  /**
+   * When this project first entered the radar. Canonical field written by
+   * `scripts/telegram/sync_site.py`. The page also accepts `first_seen`,
+   * `added_at`, `synced_at`, and `created_at`, and uses the earliest one.
+   */
+  push_date?: string | null
+  first_seen?: string | null
+  added_at?: string | null
+  synced_at?: string | null
+  created_at?: string | null
   /** Channel id, e.g. `telegram:项目推送` or `telegram:项目推送监控`. */
   source?: string
   ca?: string | null

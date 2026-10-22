@@ -71,9 +71,14 @@ export default function App() {
           loading={data.loading}
         />
       )}
-      {route.name === 'ca' && <CaPage candidates={data.candidates} launchedItems={data.launched.items} />}
+      {route.name === 'ca' && <CaPage candidates={data.allCandidates} launchedItems={data.launched.items} />}
       {route.name === 'launched' && (
-        <LaunchedPage items={data.launched.items} generatedAt={data.launched.generatedAt} loading={data.loading} />
+        <LaunchedPage
+          items={data.launched.items}
+          catalog={data.allCandidates}
+          generatedAt={data.launched.generatedAt}
+          loading={data.loading}
+        />
       )}
       {route.name === 'workbench' && (
         <WorkbenchPage
