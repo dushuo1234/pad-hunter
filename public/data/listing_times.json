@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-22T08:13:11+08:00",
+  "generated_at": "2026-10-22T08:52:50+08:00",
   "timezone": "Asia/Shanghai",
   "count": 173,
-  "parseable_count": 8,
-  "within_next_3_days_count": 0,
+  "parseable_count": 9,
+  "within_next_3_days_count": 1,
   "already_listed_count": 7,
   "items": [
     {
@@ -854,15 +854,15 @@
     {
       "project": "KickflipMotors",
       "handle": "FlyingCarsNFT",
-      "listing_at": null,
-      "listing_at_display": "未知",
-      "listing_at_raw": "",
-      "source": "",
-      "evidence_url": "",
-      "confidence": "low",
+      "listing_at": "2026-10-22T09:48:34+08:00",
+      "listing_at_display": "2026-10-22T09:48:34+08:00",
+      "listing_at_raw": "giving away 10 Kickflip Motors whitelist spots. To enter: 1️⃣ Follow @FlyingCarsNFT 2️⃣ Like + repost 3️⃣ Reply with your wallet 10 winners picked at random in 24 hours! Do a kickflip!",
+      "source": "x",
+      "evidence_url": "https://x.com/FlyingCarsNFT/status/2112722680676061284",
+      "confidence": "medium",
       "already_listed": false,
-      "within_next_3_days": false,
-      "note": ""
+      "within_next_3_days": true,
+      "note": "relative_hours:24"
     },
     {
       "project": "Arscelare",
@@ -914,7 +914,7 @@
       "confidence": "high",
       "already_listed": true,
       "within_next_3_days": false,
-      "note": ""
+      "note": "listing_at passed; mint not confirmed live → 延期"
     },
     {
       "project": "Furge",
@@ -2256,6 +2256,16 @@
       "note": ""
     }
   ],
-  "within_next_3_days": [],
+  "within_next_3_days": [
+    {
+      "project": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "listing_at": "2026-10-22T09:48:34+08:00",
+      "source": "x",
+      "confidence": "medium",
+      "listing_at_raw": "giving away 10 Kickflip Motors whitelist spots. To enter: 1️⃣ Follow @FlyingCarsNFT 2️⃣ Like + repost 3️⃣ Reply with your wallet 10 winners picked at random in 24 hours! Do a kickflip!",
+      "evidence_url": "https://x.com/FlyingCarsNFT/status/2112722680676061284"
+    }
+  ],
   "sticky_rule": "fill-forward: never wipe listing_at to null/未知 once set; missing this run keeps previous; listing_at_display=未知 only when listing_at is null; exception: AMA/Space/直播 evidence clears sticky false positives (note=rejected:ama_space)"
 }
