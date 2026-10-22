@@ -2,6 +2,7 @@ import { useCaFinds } from '../hooks/useCaFinds'
 import { appPath } from '../router'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { PushDate } from '../components/PushDate'
+import { ReviewedMark } from '../components/ReviewedMark'
 import { SourceBadge } from '../components/SourceBadge'
 import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from '../utils/candidates'
@@ -9,6 +10,7 @@ import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, xProfileUrl } from '../utils/format'
 import { lockForHandle, safeEvidenceUrl } from '../utils/caFinds'
 import { eventsForHandle, siteHealth, snapshotForCandidate } from '../utils/monitor'
+import { reviewSnapshot } from '../utils/reviewed'
 
 interface MonitorPageProps {
   handle: string
@@ -38,6 +40,17 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
           {name}
         </h1>
         <SourceBadge source={candidate?.source} />
+        <ReviewedMark
+          handle={handle}
+          name={name}
+          snapshot={reviewSnapshot({
+            listing_at: candidate?.listing_at,
+            launch_at: candidate?.launch_at,
+            status: candidate?.status,
+            listing: candidate?.listing,
+            ca: snap?.ca || candidate?.ca,
+          })}
+        />
       </div>
       <p className="mt-1 font-mono text-sm text-[var(--color-ink-muted)]">@{handle.replace(/^@/, '')}</p>
       <p className="mt-2">

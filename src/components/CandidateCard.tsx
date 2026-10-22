@@ -2,11 +2,13 @@ import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
+import { ReviewedMark } from './ReviewedMark'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, sameXUrl, xProfileUrl } from '../utils/format'
 import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
 import { formatPushDate, resolvePushDate, UNKNOWN_PUSH_DATE } from '../utils/pushDate'
+import { reviewSnapshot } from '../utils/reviewed'
 
 interface CandidateCardProps {
   candidate: Candidate
@@ -47,9 +49,22 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
             </div>
           )}
           <div className="min-w-0">
-            <h3 className="truncate text-[15px] font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-orange-deep)] dark:text-[var(--color-night-ink)] dark:group-hover:text-[var(--color-orange)]">
-              {c.name}
-            </h3>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <h3 className="truncate text-[15px] font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-orange-deep)] dark:text-[var(--color-night-ink)] dark:group-hover:text-[var(--color-orange)]">
+                {c.name}
+              </h3>
+              <ReviewedMark
+                handle={c.handle}
+                name={c.name}
+                snapshot={reviewSnapshot({
+                  listing_at: c.listing_at,
+                  launch_at: c.launch_at,
+                  status: c.status,
+                  listing: c.listing,
+                  ca: c.ca,
+                })}
+              />
+            </div>
             <a
               href={profile}
               target="_blank"

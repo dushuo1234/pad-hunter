@@ -11,21 +11,22 @@ import {
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
 import type { WorkbenchItem } from '../utils/workbench'
+import { reviewSnapshot } from '../utils/reviewed'
 import { PushDate } from './PushDate'
+import { ReviewedMark } from './ReviewedMark'
 import { observeWorkbenchDetail } from '../utils/caAlert'
-import { safeHttpUrl, setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
+import { setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
 import {
+  catalogListing,
   chainLabel,
   displayUrl,
   explorerFor,
   formatAgo,
   formatBytes,
   formatInterval,
-  formatListingAt,
   formatMs,
   formatShanghaiFull,
   introFor,
-  listingSourceLabel,
   projectLaunch,
   siteBadge,
   urlProtocol,
@@ -71,9 +72,9 @@ export function WorkbenchDetailModal({
   const launch = projectLaunch(status, now)
   const site = siteBadge(status, checking)
   const protocol = urlProtocol(url)
-  const listing = formatListingAt(status?.listingAt || '未知')
-  const evidence = safeHttpUrl(status?.listingEvidenceUrl || '')
-  const source = listingSourceLabel(status?.listingSource || '')
+  const listing = catalogListing(candidate, status, new Date(now))
+  const evidence = listing.evidenceUrl
+  const source = listing.source
   const interval = formatInterval(status?.intervalS ?? null)
   const checked = formatShanghaiFull(status?.lastCheckAt)
   const latency = formatMs(status?.lastLatencyMs ?? null)
@@ -160,6 +161,17 @@ export function WorkbenchDetailModal({
               {item.name}
             </h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
+              <ReviewedMark
+                handle={item.handle}
+                name={item.name}
+                snapshot={reviewSnapshot({
+                  listing_at: candidate?.listing_at,
+                  launch_at: candidate?.launch_at,
+                  status: candidate?.status,
+                  listing: candidate?.listing,
+                  ca: candidate?.ca || status?.lastAddresses?.[0],
+                })}
+              />
               <Pill tone={launch.tone}>{launch.label}</Pill>
               <Pill tone={site.tone}>{site.label}</Pill>
               {protocol && <Pill tone="muted">{protocol}</Pill>}
@@ -218,8 +230,16 @@ export function WorkbenchDetailModal({
               )}
             </Info>
             <Info label="开盘时间">
-              <span>{listing}</span>
-              {source && <span className="ml-2 text-[var(--color-ink-muted)]">{source}</span>}
+              <span>{listing.text}</span>
+              {listing.deferred && (
+                <span
+                  title={listing.deferredTitle || '开盘时间已过，项目仍未开盘'}
+                  className="ml-2 inline-flex items-center rounded-md border border-[#a16207] bg-[#fefce8] px-1.5 py-0.5 text-[11px] font-semibold text-[#854d0e] dark:border-[#fde68a] dark:bg-[#422006] dark:text-[#fde68a]"
+                >
+                  延期
+                </span>
+              )}
+              {source && <span className="ml-2 text-[var(--color-ink-muted)]">来源 {source}</span>}
               {evidence && (
                 <a href={evidence} target="_blank" rel="noreferrer" className="ml-2 text-[var(--color-orange)] hover:underline">
                   来源

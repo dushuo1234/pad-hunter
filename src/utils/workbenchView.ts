@@ -1,8 +1,10 @@
 import type { Candidate } from '../types'
 import { findByHandle } from './candidates'
+import { launchTimeText, listingSourceLabel as launchSourceLabel, structuredLaunch } from './launch'
+import { isAlreadyOpened } from './opening'
 import type { LaunchedIndex, WorkbenchStatusItem } from './workbenchApi'
 import { isLaunched, sitesForPin } from './workbenchApi'
-import type { WorkbenchItem } from './workbench'
+import { safeHttpUrl, type WorkbenchItem } from './workbench'
 
 export type PillTone = 'ok' | 'bad' | 'warn' | 'muted'
 
@@ -127,6 +129,82 @@ export function formatListingAt(value: string): string {
   const parsed = new Date(dateOnly ? `${text}T00:00:00+08:00` : text)
   if (Number.isNaN(parsed.getTime())) return text
   return formatShanghaiFull(parsed.toISOString()).replace(/:\d{2}$/, '')
+}
+
+export interface ShownListing {
+  /** Shanghai label, same shape as 即将开盘. 「未知」 when no confirmed timestamp exists. */
+  text: string
+  source: string
+  evidenceUrl: string
+  deferred: boolean
+  deferredTitle: string
+}
+
+function candidateRecord(candidate: Candidate): Record<string, unknown> {
+  return candidate as unknown as Record<string, unknown>
+}
+
+function flagOn(value: unknown): boolean {
+  return value === true || value === 1 || value === 'true' || value === '1'
+}
+
+function textField(record: Record<string, unknown>, key: string): string {
+  const value = record[key]
+  return typeof value === 'string' ? value.trim() : ''
+}
+
+/**
+ * 延期 when the pipeline says so, or when a confirmed listing time is already
+ * past and the project is still not open. Does not invent a time.
+ */
+export function isDeferredListing(candidate: Candidate | undefined, now = new Date()): boolean {
+  if (!candidate) return false
+  const record = candidateRecord(candidate)
+  const explicit =
+    (candidate.listing ?? '').trim() === '延期' ||
+    flagOn(record.deferred) ||
+    flagOn(record.postponed) ||
+    flagOn(record['延期'])
+  if (explicit) return true
+  if (candidate.already_listed === true) return false
+  if (isAlreadyOpened(candidate, {})) return false
+  const launch = structuredLaunch(candidate)
+  if (!launch) return false
+  const time = Date.parse(launch.at)
+  return !Number.isNaN(time) && time < now.getTime()
+}
+
+/**
+ * Current listing time for a workbench row.
+ * Prefer the live candidate (20s poll, including listing_times overlay).
+ * The monitor status payload is only a fallback, and only when it is a real timestamp.
+ */
+export function catalogListing(
+  candidate: Candidate | undefined,
+  status?: Pick<WorkbenchStatusItem, 'listingAt' | 'listingSource' | 'listingEvidenceUrl'>,
+  now = new Date(),
+): ShownListing {
+  const fromCandidate = candidate ? structuredLaunch(candidate) : null
+  const fromStatus = fromCandidate
+    ? null
+    : structuredLaunch({
+        listing_at: status?.listingAt,
+        listing_at_source: status?.listingSource,
+      })
+  const launch = fromCandidate ?? fromStatus
+  const deferred = isDeferredListing(candidate, now)
+  const record = candidate ? candidateRecord(candidate) : null
+  const evidence = fromCandidate
+    ? safeHttpUrl(record ? textField(record, 'listing_at_evidence_url') : '')
+    : safeHttpUrl(status?.listingEvidenceUrl || '')
+  const note = record ? textField(record, 'deferred_reason') || textField(record, '延期_note') : ''
+  return {
+    text: launchTimeText(launch),
+    source: launch ? launchSourceLabel(launch.source) : '',
+    evidenceUrl: evidence,
+    deferred,
+    deferredTitle: deferred ? note : '',
+  }
 }
 
 export function listingSourceLabel(source: string): string {

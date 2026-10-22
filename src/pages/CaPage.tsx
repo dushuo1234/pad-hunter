@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { PushDate } from '../components/PushDate'
+import { ReviewedMark } from '../components/ReviewedMark'
 import { useCaFinds } from '../hooks/useCaFinds'
 import { monitorPath } from '../router'
 import type { CaFind, CaProjectLock, CaStatus, Candidate } from '../types'
@@ -26,6 +27,7 @@ import {
 import { localizeMachineNote } from '../utils/caNoteZh'
 import { findByHandle } from '../utils/candidates'
 import { formatShanghai, shortAddr, xProfileUrl } from '../utils/format'
+import { reviewSnapshot } from '../utils/reviewed'
 import type { LaunchedItem } from '../utils/launched'
 
 interface CaPageProps {
@@ -410,12 +412,24 @@ function ProjectGroup({
   const sample = group.finds[0]
   const name = displayProjectName(group.project, group.handle)
   const lock = sample ? lockForFind(locks, sample) : null
+  const catalog = group.handle ? findByHandle(candidates, group.handle) : undefined
   return (
     <section className="overflow-hidden rounded-2xl border border-[#166534]/30 bg-[var(--color-card)] dark:border-[#86efac]/30 dark:bg-[var(--color-night-card)]">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-line)] px-4 py-3 dark:border-[var(--color-night-line)]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <ProjectTitle name={name} handle={group.handle} />
+            <ReviewedMark
+              handle={group.handle || catalog?.handle}
+              name={name}
+              snapshot={reviewSnapshot({
+                listing_at: catalog?.listing_at,
+                launch_at: catalog?.launch_at,
+                status: catalog?.status,
+                listing: catalog?.listing,
+                ca: sample?.address || catalog?.ca,
+              })}
+            />
             <span className="font-mono text-[10px] text-[var(--color-ink-muted)]">{group.finds.length} 个已确认</span>
             {lock && <LockBadge url={lock.url || sample?.lockUrl || ''} at={sample?.lockAt} />}
             <PushDate records={catalogMatch(candidates, group.handle)} />
@@ -679,6 +693,19 @@ function FindRow({
           </span>
         )}
         <StatusBadge status={find.caStatus} text={find.caStatusZh || (tone === 'activity' ? '钱包动态' : '未标注')} />
+        {tone !== 'confirmed' && (
+          <ReviewedMark
+            handle={find.handle || candidate?.handle}
+            name={name}
+            snapshot={reviewSnapshot({
+              listing_at: candidate?.listing_at,
+              launch_at: candidate?.launch_at,
+              status: candidate?.status,
+              listing: candidate?.listing,
+              ca: find.address || candidate?.ca,
+            })}
+          />
+        )}
         {find.provenanceZh && tone !== 'quiet' && tone !== 'activity' && <ProvenanceChip text={find.provenanceZh} />}
         {find.caRole && CA_ROLE_ZH[find.caRole] && <MetaChip>{CA_ROLE_ZH[find.caRole]}</MetaChip>}
         {(find.caLocked || lock) && tone !== 'quiet' && <LockBadge url={lockUrl || ''} at={find.lockAt} />}
