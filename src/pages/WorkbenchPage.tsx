@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
 import { PushDate } from '../components/PushDate'
+import { ReviewedMark } from '../components/ReviewedMark'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
@@ -21,11 +22,11 @@ import {
 } from '../utils/workbench'
 import {
   candidateFor,
+  catalogListing,
   countSummary,
   displayUrl,
   formatAgo,
   formatInterval,
-  formatListingAt,
   formatMs,
   hostLabel,
   introFor,
@@ -36,6 +37,7 @@ import {
   urlProtocol,
   type PillTone,
 } from '../utils/workbenchView'
+import { reviewSnapshot } from '../utils/reviewed'
 
 interface WorkbenchPageProps {
   candidates: Candidate[]
@@ -514,6 +516,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const ago = status?.lastCheckAt ? formatAgo(status.lastCheckAt, live.now) : ''
                 const pace = [formatInterval(status?.intervalS ?? null), formatMs(status?.lastLatencyMs ?? null)].filter(Boolean).join(' · ')
                 const launched = isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)
+                const listing = catalogListing(candidate, status, new Date(live.now))
                 return (
                   <tr key={item.id} className="border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)]">
                     <td className="px-3 py-3">
@@ -527,6 +530,17 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                     <td className="max-w-[240px] px-2 py-3">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
+                        <ReviewedMark
+                          handle={item.handle}
+                          name={item.name}
+                          snapshot={reviewSnapshot({
+                            listing_at: candidate?.listing_at,
+                            launch_at: candidate?.launch_at,
+                            status: candidate?.status,
+                            listing: candidate?.listing,
+                            ca: candidate?.ca,
+                          })}
+                        />
                         {urlProtocol(url) && <Pill tone="muted">{urlProtocol(url)}</Pill>}
                         {launched && <Pill tone="ok">已开盘</Pill>}
                       </div>
@@ -602,7 +616,15 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       </button>
                     </td>
                     <td className="whitespace-nowrap px-2 py-3 text-xs text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-                      {formatListingAt(status?.listingAt || '未知')}
+                      <span>{listing.text}</span>
+                      {listing.deferred && (
+                        <span
+                          title={listing.deferredTitle || '开盘时间已过，项目仍未开盘'}
+                          className="ml-1.5 inline-flex items-center rounded-md border border-[#a16207] bg-[#fefce8] px-1.5 py-0.5 text-[10px] font-semibold text-[#854d0e] dark:border-[#fde68a] dark:bg-[#422006] dark:text-[#fde68a]"
+                        >
+                          延期
+                        </span>
+                      )}
                     </td>
                     <td className="px-2 py-3">
                       <button

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PushDate } from '../components/PushDate'
+import { ReviewedMark } from '../components/ReviewedMark'
 import { xProfileUrl } from '../utils/format'
 import { shortAddr } from '../utils/format'
 import { findByHandle } from '../utils/candidates'
@@ -10,6 +11,7 @@ import {
   launchLabel,
   type LaunchedItem,
 } from '../utils/launched'
+import { reviewSnapshot } from '../utils/reviewed'
 
 interface LaunchedPageProps {
   items: LaunchedItem[]
@@ -79,6 +81,17 @@ function LaunchedCard({ item, catalog }: { item: LaunchedItem; catalog: Candidat
             <span className="rounded-md bg-[var(--color-orange-soft)] px-2 py-0.5 text-[11px] font-medium text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.15)] dark:text-[var(--color-orange)]">
               已开盘
             </span>
+            <ReviewedMark
+              handle={item.handle}
+              name={name}
+              snapshot={reviewSnapshot({
+                listing_at: pushedFrom?.listing_at || item.listingAt,
+                launch_at: pushedFrom?.launch_at,
+                status: pushedFrom?.status,
+                listing: pushedFrom?.listing,
+                ca: item.ca || pushedFrom?.ca,
+              })}
+            />
             {item.chain && (
               <span className="rounded-md border border-[var(--color-line)] px-2 py-0.5 text-[11px] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:text-[var(--color-night-soft)]">
                 {item.chain}

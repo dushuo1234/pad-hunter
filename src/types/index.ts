@@ -22,6 +22,11 @@ export interface Candidate {
   launch_at?: string | null
   /** Where the launch time was read: `site`, `x`, or `tg`. */
   listing_at_source?: string | null
+  /** Link to the post or page the listing time was read from. Not a launch time. */
+  listing_at_evidence_url?: string | null
+  /** Pipeline mark: listing time passed and the project is still not open. */
+  deferred?: boolean
+  postponed?: boolean
   risk?: string
   message_id?: number
   /** Telegram message time of the push card. Not the launch time. */

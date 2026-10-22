@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { PushDate } from '../components/PushDate'
+import { ReviewedMark } from '../components/ReviewedMark'
 import { SourceBadge } from '../components/SourceBadge'
+import { useReviewedMarks } from '../hooks/useReviewed'
 import { monitorPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
 import { categoryOf } from '../utils/categories'
@@ -13,6 +15,7 @@ import {
   type ListingTimeEntry,
   type UpcomingRow,
 } from '../utils/launch'
+import { reviewKey, reviewSnapshot } from '../utils/reviewed'
 
 interface TodayPageProps {
   candidates: Candidate[]
@@ -22,10 +25,22 @@ interface TodayPageProps {
 }
 
 export function TodayPage({ candidates, events, listingTimes, loading }: TodayPageProps) {
+  const marks = useReviewedMarks()
+  const [hideReviewed, setHideReviewed] = useState(false)
   const rows = useMemo(
     () => upcomingLaunches(candidates, events, listingTimes),
     [candidates, events, listingTimes],
   )
+  const reviewedCount = rows.filter((row) => {
+    const key = reviewKey(row.candidate.handle, row.candidate.name)
+    return Boolean(key && marks[key])
+  }).length
+  const visible = hideReviewed
+    ? rows.filter((row) => {
+        const key = reviewKey(row.candidate.handle, row.candidate.name)
+        return !key || !marks[key]
+      })
+    : rows
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
@@ -46,11 +61,36 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
           这 3 天里没有已确定开盘时间的项目，也没有「即将启动」或完成度高、但时间未知的未开盘项目。
         </div>
       ) : (
-        <ul className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
-          {rows.map((row) => (
-            <TodayRow key={`${row.candidate.source ?? ''}-${row.candidate.handle}`} row={row} />
-          ))}
-        </ul>
+        <>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              aria-pressed={hideReviewed}
+              onClick={() => setHideReviewed((current) => !current)}
+              className={`inline-flex min-h-9 items-center rounded-lg border px-3 py-1.5 text-xs font-medium ${
+                hideReviewed
+                  ? 'border-[#166534] bg-[#ecfdf3] text-[#166534] dark:border-[#86efac] dark:bg-[#052e16] dark:text-[#86efac]'
+                  : 'border-[var(--color-line)] bg-[var(--color-card)] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-soft)]'
+              }`}
+            >
+              隐藏已看
+            </button>
+            <span className="font-mono text-xs text-[var(--color-ink-muted)]">
+              已看 {reviewedCount}/{rows.length}
+            </span>
+          </div>
+          {visible.length === 0 ? (
+            <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
+              已看的项目已隐藏。
+            </div>
+          ) : (
+            <ul className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
+              {visible.map((row) => (
+                <TodayRow key={`${row.candidate.source ?? ''}-${row.candidate.handle}`} row={row} />
+              ))}
+            </ul>
+          )}
+        </>
       )}
     </main>
   )
@@ -58,13 +98,26 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
 
 function TodayRow({ row }: { row: UpcomingRow }) {
   const { candidate: c, launch, snap } = row
+  const marks = useReviewedMarks()
+  const reviewed = Boolean(marks[reviewKey(c.handle, c.name)])
   const site = snap.lastSite
   const health = site?.status ?? 'unknown'
   const signal = snap.lastSignal?.text
   const source = launch ? listingSourceLabel(launch.source) : ''
   const when = launchTimeText(launch)
+  const snapshot = reviewSnapshot({
+    listing_at: c.listing_at,
+    launch_at: c.launch_at,
+    status: c.status,
+    listing: c.listing,
+    ca: snap.ca || c.ca,
+  })
   return (
-    <li className="border-b border-[var(--color-line)] px-4 py-3 last:border-b-0 dark:border-[var(--color-night-line)]">
+    <li
+      className={`border-b border-[var(--color-line)] px-4 py-3 last:border-b-0 dark:border-[var(--color-night-line)] ${
+        reviewed ? 'bg-[var(--color-cream-2)] opacity-75 dark:bg-[var(--color-night)]' : ''
+      }`}
+    >
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_minmax(0,0.9fr)_minmax(0,1.2fr)_auto] lg:items-center">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -80,6 +133,7 @@ function TodayRow({ row }: { row: UpcomingRow }) {
                 {c.listing}
               </span>
             )}
+            <ReviewedMark mode="toggle" handle={c.handle} name={c.name} snapshot={snapshot} />
           </div>
           <p className="mt-0.5 truncate font-mono text-[11px] text-[var(--color-ink-muted)]">
             @{c.handle} · {categoryOf(c)} · {c.chain}

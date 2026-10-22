@@ -2,11 +2,13 @@ import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
+import { ReviewedMark } from './ReviewedMark'
 import { SourceBadge } from './SourceBadge'
 import { categoryOf } from '../utils/categories'
 import { followerCount, formatNumber, sameXUrl, shortAddr, xProfileUrl } from '../utils/format'
 import { launchTimeText, listingSourceLabel, structuredLaunch } from '../utils/launch'
 import { pushDateText } from '../utils/pushDate'
+import { reviewSnapshot } from '../utils/reviewed'
 
 interface DetailDrawerProps {
   candidate: Candidate | null
@@ -48,8 +50,19 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
             >
               @{c.handle}
             </a>
-            <div className="mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               <SourceBadge source={c.source} />
+              <ReviewedMark
+                handle={c.handle}
+                name={c.name}
+                snapshot={reviewSnapshot({
+                  listing_at: c.listing_at,
+                  launch_at: c.launch_at,
+                  status: c.status,
+                  listing: c.listing,
+                  ca: c.ca,
+                })}
+              />
             </div>
           </div>
           <button
