@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T22:30:58+08:00",
+  "generated_at": "2026-10-22T23:14:06+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 29,
@@ -3980,8 +3980,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 25,
+  "suspected_copycat_count": 26,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Grok Pot",
+      "handle": "grokpotpaid",
+      "chain": "base",
+      "address": "0x371065bd9eb76ca9f6ab2a79f5b90619511f96ea",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/GrokPotPaid",
+      "detected_at": "2026-10-22T23:13:47+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:GROK; deployer=0xc5d22a7d5b203164bfa6479d72de9297cff19bf5; token=GROK / Grok; ca_gate: ERC20 verified: GROK dec=9",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-22T23:13:47+08:00",
+          "reason": "symbol:GROK",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "GROK",
+        "name": "Grok",
+        "decimals": 9,
+        "code_bytes": 12900,
+        "note": "ERC20 verified: GROK dec=9"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Aero Boarding Agent",
       "handle": "aero_agent",
