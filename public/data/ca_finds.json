@@ -1,19 +1,61 @@
 {
-  "generated_at": "2026-10-23T06:30:31+08:00",
+  "generated_at": "2026-10-23T06:37:30+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 42,
-  "token_ca_count": 1,
+  "count": 43,
+  "token_ca_count": 2,
   "wallet_count": 21,
   "confirmed_count": 1,
-  "candidate_count": 0,
+  "candidate_count": 1,
   "status_counts": {
     "confirmed": 1,
-    "candidate": 0,
+    "candidate": 1,
     "superseded": 0,
     "not_ca": 41
   },
   "finds": [
+    {
+      "project": "PumpCity",
+      "handle": "PumpCityio",
+      "chain": "solana",
+      "address": "2GEnh28Tz91ymBC6RpRRYgVEZ9m1K8duDv3ipb8ypump",
+      "source": "site:https://x.com/PumpCityio",
+      "evidence_url": "https://x.com/PumpCityio",
+      "detected_at": "2026-10-23T06:34:36+08:00",
+      "confidence": "high",
+      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/PumpCityio",
+          "detected_at": "2026-10-23T06:34:36+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/PumpCityio",
+          "detected_at": "2026-10-23T06:34:36+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "solana",
+        "decimals": 6,
+        "note": "SPL mint verified (owner Tokenz…, dec=6)"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【扫出钱包·非CA】HappyBlock",
       "handle": "RealHappyBlock",
@@ -21,24 +63,24 @@
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post:https://x.com/RealHappyBlock",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-23T06:07:57+08:00",
+      "detected_at": "2026-10-23T06:34:02+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-23T06:07:57+08:00"
+          "detected_at": "2026-10-23T06:34:02+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-23T06:07:57+08:00"
+          "detected_at": "2026-10-23T06:34:02+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-23T06:07:57+08:00"
+          "detected_at": "2026-10-23T06:34:02+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -127,7 +169,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://circuitpay.cc/",
-          "detected_at": "2026-10-23T06:10:09+08:00"
+          "detected_at": "2026-10-23T06:36:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -270,6 +312,13 @@
           "post_url": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223"
         },
         {
+          "origin": "x_official",
+          "source": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+          "detected_at": "2026-10-23T06:36:38+08:00",
+          "official_x": true,
+          "post_url": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223"
+        },
+        {
           "origin": "js_factory_events",
           "source": "html:https://etheriis.netlify.app/",
           "detected_at": "2026-10-22T23:26:07+08:00"
@@ -282,12 +331,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-23T06:10:06+08:00"
+          "detected_at": "2026-10-23T06:36:08+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_official:https://x.com/ETHERIISPROTOCO",
-          "detected_at": "2026-10-23T06:10:06+08:00"
+          "detected_at": "2026-10-23T06:36:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -349,12 +398,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -412,7 +461,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -470,7 +519,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -528,7 +577,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -586,7 +635,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -644,7 +693,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -702,7 +751,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -760,7 +809,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -818,7 +867,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T06:10:04+08:00"
+          "detected_at": "2026-10-23T06:36:07+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1599,7 +1648,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-23T06:07:54+08:00"
+          "detected_at": "2026-10-23T06:33:57+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1658,7 +1707,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-23T06:07:54+08:00"
+          "detected_at": "2026-10-23T06:33:57+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1715,7 +1764,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-23T06:07:54+08:00"
+          "detected_at": "2026-10-23T06:33:57+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1772,7 +1821,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-23T06:07:54+08:00"
+          "detected_at": "2026-10-23T06:33:57+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -4761,8 +4810,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 39,
+  "suspected_copycat_count": 40,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】0-0.city",
+      "handle": "0_0city",
+      "chain": "base",
+      "address": "0x7fd80e7a7a2e9e4d641ae401e580758978a196ea",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/0_0city",
+      "detected_at": "2026-10-23T06:37:29+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:CITY; deployer=0xc5d22a7d5b203164bfa6479d72de9297cff19bf5; token=CITY / Dacity Coin; ca_gate: ERC20 verified: CITY dec=9",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T06:37:29+08:00",
+          "reason": "symbol:CITY",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "CITY",
+        "name": "Dacity Coin",
+        "decimals": 9,
+        "code_bytes": 12900,
+        "note": "ERC20 verified: CITY dec=9"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Agent E",
       "handle": "AgentEly_",
