@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T00:07:25+08:00",
+  "generated_at": "2026-10-23T00:29:05+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 40,
@@ -14,6 +14,58 @@
     "not_ca": 39
   },
   "finds": [
+    {
+      "project": "【扫出钱包·非CA】HappyBlock",
+      "handle": "RealHappyBlock",
+      "chain": "ethereum",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "source": "x_post:https://x.com/RealHappyBlock",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "detected_at": "2026-10-23T00:13:00+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-23T00:13:00+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-23T00:13:00+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-23T00:13:00+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-22T23:33:09+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【扫出钱包·非CA】ShieldX",
       "handle": "SX_Protocol",
@@ -32,8 +84,8 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         }
       ],
       "kind": "wallet",
@@ -64,7 +116,7 @@
       "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
       "source": "html:https://etheriis.netlify.app/",
       "evidence_url": "https://etheriis.netlify.app/",
-      "detected_at": "2026-10-22T23:14:06+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "high",
       "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: ETHRS dec=18",
       "sources": [
@@ -76,17 +128,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-22T23:14:06+08:00"
+          "detected_at": "2026-10-23T00:15:23+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "site:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-22T23:14:06+08:00"
+          "detected_at": "2026-10-23T00:15:23+08:00"
         }
       ],
       "kind": "contract",
@@ -120,7 +172,7 @@
       "address": "0xE45526A5997E16465A9d4cd5Bea776C3332EaCdC",
       "source": "html:https://shieldxl.xyz/",
       "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -132,17 +184,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -173,7 +225,7 @@
       "address": "0xc1c442fed92829635A8eDB066A8B24F7292E9f8C",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -184,13 +236,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -221,7 +273,7 @@
       "address": "0x227F7D5Bdc6d90069eDD513DEFce9E1BBF561776",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -232,13 +284,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -269,7 +321,7 @@
       "address": "0x0C78df1331CE743DB6D51901e4aE65b359E22922",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -280,13 +332,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -317,7 +369,7 @@
       "address": "0x69c27e9e98749643C9a03774966D8BdD14300ED1",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -328,13 +380,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -365,7 +417,7 @@
       "address": "0x20875e1B7C6cF032DE71Ca5B63940c64D2e917DB",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -376,13 +428,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -413,7 +465,7 @@
       "address": "0x00447aF883f0488E6Ef88dC731e9Fe7eC76Fb03B",
       "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
       "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -424,13 +476,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -461,7 +513,7 @@
       "address": "0x7C50ea664eeeC867574D31eb427362b9906BA9c9",
       "source": "html:https://shieldxl.xyz/",
       "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -473,12 +525,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -509,7 +561,7 @@
       "address": "0xFC4c8FFA1A93eC42A26750CDc4Fd8Ff1b133d0B7",
       "source": "html:https://shieldxl.xyz/",
       "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:13:49+08:00",
+      "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
@@ -521,12 +573,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:13:49+08:00"
+          "detected_at": "2026-10-23T00:15:19+08:00"
         }
       ],
       "kind": "wallet",
@@ -545,58 +597,6 @@
       "provenance": null,
       "provenance_zh": null,
       "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】HappyBlock",
-      "handle": "RealHappyBlock",
-      "chain": "ethereum",
-      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
-      "source": "x_post:https://x.com/RealHappyBlock",
-      "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-22T23:11:44+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-22T23:11:44+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-22T23:11:44+08:00"
-        },
-        {
-          "origin": "watchlist.scanned_wallets",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-22T23:11:44+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-22T23:33:09+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": "official_x",
-      "provenance_zh": "官推确认",
-      "official_x_confirmed": true,
       "wallet_factory_confirmed": false,
       "ca_role": null,
       "alert_ok": false,
@@ -694,8 +694,8 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022151809B",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -786,8 +786,8 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/wallet.js?v=20261022151809A",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/wallet.js?v=20261022161943A",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         }
       ],
       "kind": "invalid",
@@ -834,7 +834,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -882,7 +882,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -930,7 +930,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -983,7 +983,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1036,7 +1036,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1085,6 +1085,16 @@
           "origin": "js_factory_events",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
           "detected_at": "2026-10-22T14:21:39+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "detected_at": "2026-10-23T00:26:10+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1136,8 +1146,8 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022151809B",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1189,8 +1199,8 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022151809B",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1238,7 +1248,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1291,7 +1301,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1344,12 +1354,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T23:11:38+08:00"
+          "detected_at": "2026-10-23T00:12:56+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1384,8 +1394,8 @@
       "handle": "tapefoundry",
       "chain": "bsc",
       "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
-      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 NFT contract (ERC1155) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC1155) — not a token CA",
@@ -1402,13 +1412,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T23:11:38+08:00"
+          "detected_at": "2026-10-23T00:12:56+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1441,8 +1451,8 @@
       "handle": "tapefoundry",
       "chain": "bsc",
       "address": "0xb69215ce68792eca5672b49196868369555ea181",
-      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 contract bytecode but no ERC20 decimals/symbol — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (3228 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
@@ -1459,13 +1469,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T23:11:38+08:00"
+          "detected_at": "2026-10-23T00:12:56+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1498,8 +1508,8 @@
       "handle": "tapefoundry",
       "chain": "bsc",
       "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
-      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 NFT contract (ERC721) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
@@ -1516,13 +1526,13 @@
         },
         {
           "origin": "js_factory_scan_latest",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022151809",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T23:11:38+08:00"
+          "detected_at": "2026-10-23T00:12:56+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1571,7 +1581,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://colorapp.com/assets/color/live.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         }
       ],
       "kind": "invalid",
@@ -1612,7 +1622,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1664,7 +1674,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1763,7 +1773,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1835,7 +1845,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         }
       ],
       "label_zh": "非地址",
@@ -1876,7 +1886,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -1950,7 +1960,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-22T23:26:27+08:00"
+          "detected_at": "2026-10-23T00:26:10+08:00"
         },
         {
           "origin": "wallet_trace.classify",
@@ -4511,8 +4521,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 28,
+  "suspected_copycat_count": 29,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Rebate",
+      "handle": "RebateLaunch",
+      "chain": "base",
+      "address": "0xdb49776f33bdc58743dc6265326957cd818c9ba3",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/RebateLaunch",
+      "detected_at": "2026-10-23T00:28:46+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:REBATE; deployer=0x3bcd53b331b6054b4c0e45a26ad58a142d910ade; token=rebate / rabate; ca_gate: ERC20 verified: rebate dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T00:28:46+08:00",
+          "reason": "symbol:REBATE",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x3bcd53b331b6054b4c0e45a26ad58a142d910ade",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "rebate",
+        "name": "rabate",
+        "decimals": 18,
+        "code_bytes": 44,
+        "note": "ERC20 verified: rebate dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x3bcd53b331b6054b4c0e45a26ad58a142d910ade",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】vibe/vibe ecosystem",
       "handle": "vibevibeeco",
