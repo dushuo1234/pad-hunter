@@ -1,61 +1,19 @@
 {
-  "generated_at": "2026-10-23T06:37:30+08:00",
+  "generated_at": "2026-10-23T06:37:39+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 43,
-  "token_ca_count": 2,
+  "count": 42,
+  "token_ca_count": 1,
   "wallet_count": 21,
   "confirmed_count": 1,
-  "candidate_count": 1,
+  "candidate_count": 0,
   "status_counts": {
     "confirmed": 1,
-    "candidate": 1,
+    "candidate": 0,
     "superseded": 0,
     "not_ca": 41
   },
   "finds": [
-    {
-      "project": "PumpCity",
-      "handle": "PumpCityio",
-      "chain": "solana",
-      "address": "2GEnh28Tz91ymBC6RpRRYgVEZ9m1K8duDv3ipb8ypump",
-      "source": "site:https://x.com/PumpCityio",
-      "evidence_url": "https://x.com/PumpCityio",
-      "detected_at": "2026-10-23T06:34:36+08:00",
-      "confidence": "high",
-      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/PumpCityio",
-          "detected_at": "2026-10-23T06:34:36+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/PumpCityio",
-          "detected_at": "2026-10-23T06:34:36+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "solana",
-        "decimals": 6,
-        "note": "SPL mint verified (owner Tokenz…, dec=6)"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
     {
       "project": "【扫出钱包·非CA】HappyBlock",
       "handle": "RealHappyBlock",
@@ -2323,8 +2281,45 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 60,
+  "launched_history_count": 61,
   "launched_history": [
+    {
+      "project": "PumpCity",
+      "handle": "PumpCityio",
+      "chain": "solana",
+      "address": "2GEnh28Tz91ymBC6RpRRYgVEZ9m1K8duDv3ipb8ypump",
+      "source": "site:https://x.com/PumpCityio",
+      "evidence_url": "https://x.com/PumpCityio",
+      "detected_at": "2026-10-23T06:34:36+08:00",
+      "confidence": "high",
+      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/PumpCityio",
+          "detected_at": "2026-10-23T06:34:36+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "solana",
+        "decimals": 6,
+        "note": "SPL mint verified (owner Tokenz…, dec=6)"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【合约(非代币)·非CA】Gang",
       "handle": "gangfunmeme",
@@ -4810,8 +4805,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 40,
+  "suspected_copycat_count": 41,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】0-0.city",
+      "handle": "0_0city",
+      "chain": "ethereum",
+      "address": "0xd80a03aa478a822b5ab504d01ae24e74634a26ea",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/0_0city",
+      "detected_at": "2026-10-23T06:37:38+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:CITY; deployer=0xc5d22a7d5b203164bfa6479d72de9297cff19bf5; token=CITY / Dacity Coin; ca_gate: ERC20 verified: CITY dec=9",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T06:37:38+08:00",
+          "reason": "symbol:CITY",
+          "via": "factory:univ4_pm_eth:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "CITY",
+        "name": "Dacity Coin",
+        "decimals": 9,
+        "code_bytes": 12900,
+        "note": "ERC20 verified: CITY dec=9"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】0-0.city",
       "handle": "0_0city",
