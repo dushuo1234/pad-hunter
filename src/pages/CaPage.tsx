@@ -17,6 +17,7 @@ import {
   sharesLock,
   type CaProjectGroup,
 } from '../utils/caFinds'
+import { localizeMachineNote } from '../utils/caNoteZh'
 import { findByHandle } from '../utils/candidates'
 import { formatShanghai, shortAddr, xProfileUrl } from '../utils/format'
 
@@ -59,7 +60,7 @@ export function CaPage({ candidates }: CaPageProps) {
     return (find: CaFind) => {
       if (chain && find.chain !== chain) return false
       if (!query) return true
-      const hay = `${find.project} ${find.handle} ${find.address} ${find.labelZh} ${find.creator} ${find.note} ${find.confirmBasisZh}`.toLowerCase()
+      const hay = `${find.project} ${find.handle} ${find.address} ${find.labelZh} ${localizeMachineNote(find.labelZh)} ${find.creator} ${find.note} ${localizeMachineNote(find.note)} ${find.confirmBasisZh} ${localizeMachineNote(find.confirmBasisZh)}`.toLowerCase()
       return hay.includes(query)
     }
   }, [search, chain])
@@ -98,7 +99,10 @@ export function CaPage({ candidates }: CaPageProps) {
         已确认 CA 只认两条路：监控钱包经已知工厂创建，和/或官推贴出地址并链上核验为代币或 TapeOut 晶体管 / Processor。同名合约是疑似山寨，不会响铃。官推锁定之后，后来的非官方 CA 不再推送；监控钱包的相关地址动态照常显示。
       </p>
       {confidenceModel && (
-        <p className="mt-2 max-w-3xl font-mono text-[11px] leading-relaxed text-[var(--color-ink-muted)]" title={confidenceModel}>
+        <p
+          className="mt-2 max-w-3xl font-mono text-[11px] leading-relaxed text-[var(--color-ink-muted)]"
+          title="已确认要同时满足核验通过，以及监控钱包创建或官推确认。只对上名字的是疑似山寨。监控钱包创建过、但官推指定了别的地址，算非正式。只从站点扫到的是待确认。"
+        >
           计数来自 status_counts。高 / 中 / 低置信仍写在每行上，但不决定是不是确认 CA。
         </p>
       )}
@@ -563,6 +567,9 @@ function FindRow({
   const showPair = Boolean(find.pairedWith) && (find.caRole === 'processor' || tone !== 'copycat')
   const grey = tone === 'superseded'
   const highlight = fresh && find.alertOk && tone === 'confirmed'
+  const note = localizeMachineNote(find.note)
+  const basis = localizeMachineNote(find.confirmBasisZh)
+  const label = localizeMachineNote(find.labelZh)
   return (
     <li
       id={`ca-${find.address.toLowerCase()}`}
@@ -587,7 +594,7 @@ function FindRow({
         {find.confidence && <MetaChip>{confidenceLabel(find.confidence)}</MetaChip>}
         <SourceBadge source={find.source} />
         {find.chain && <MetaChip>{find.chain}</MetaChip>}
-        {find.labelZh && <MetaChip>{find.labelZh}</MetaChip>}
+        {label && <MetaChip>{label}</MetaChip>}
         {when && (
           <time className="font-mono text-[11px] text-[var(--color-ink-muted)]" dateTime={find.detected_at}>
             {when} 北京时间
@@ -610,7 +617,7 @@ function FindRow({
           </a>
         )}
       </div>
-      {find.confirmBasisZh && <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">{find.confirmBasisZh}</p>}
+      {basis && <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">{basis}</p>}
       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
         {tweet && (
           <a href={tweet} target="_blank" rel="noreferrer" className="font-mono text-[11px] text-[var(--color-orange)] hover:underline">
@@ -661,8 +668,8 @@ function FindRow({
           {find.tx ? ` · tx ${shortAddr(find.tx)}` : ''}
         </p>
       )}
-      {find.note && tone !== 'confirmed' && (
-        <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">{find.note}</p>
+      {note && (
+        <p className="mt-2 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">{note}</p>
       )}
     </li>
   )

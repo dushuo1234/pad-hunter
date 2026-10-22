@@ -10,9 +10,8 @@ import {
   listingSourceLabel,
   upcomingLaunches,
   type ListingTimeEntry,
-  type ResolvedLaunch,
+  type UpcomingRow,
 } from '../utils/launch'
-import type { MonitorSnapshot } from '../utils/monitor'
 
 interface TodayPageProps {
   candidates: Candidate[]
@@ -29,12 +28,12 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">未来 3 天 · 尚未开盘</p>
+      <p className="font-mono text-[11px] tracking-[0.18em] text-[var(--color-orange)]">尚未开盘</p>
       <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
         即将开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        只显示尚未开盘、并且开盘时间落在上海时间今天到第 3 天（含两端）的项目。开盘时间未知的不出现在这里。已开盘、已上线、正在交易的也不会出现。按开盘时间从近到远排列。
+        尚未开盘的项目。开盘时间已经确定、并且落在上海时间今天到第 3 天（含两端）的，按时间从近到远排在前面。没有具体时间，但状态或开盘信号是「即将启动」，或者站点 / JS / is 文件显示项目、合约代码或游戏代码完成度高的，也列在这里，时间写「未知」，不编造时间。已开盘和已开盘归档不会出现。没有时间的按推送从新到旧，再按名称排。
       </p>
 
       {loading && candidates.length === 0 ? (
@@ -43,7 +42,7 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
         </div>
       ) : rows.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-line)] py-16 text-center text-sm text-[var(--color-ink-muted)] dark:border-[var(--color-night-line)]">
-          未来 3 天没有尚未开盘、且已有开盘时间的项目。开盘时间未知的不在这张表里。
+          这 3 天里没有已确定开盘时间的项目，也没有「即将启动」或完成度高、但时间未知的未开盘项目。
         </div>
       ) : (
         <ul className="mt-6 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
@@ -56,7 +55,7 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
   )
 }
 
-function TodayRow({ row }: { row: { candidate: Candidate; launch: ResolvedLaunch | null; snap: MonitorSnapshot } }) {
+function TodayRow({ row }: { row: UpcomingRow }) {
   const { candidate: c, launch, snap } = row
   const site = snap.lastSite
   const health = site?.status ?? 'unknown'
@@ -96,6 +95,18 @@ function TodayRow({ row }: { row: { candidate: Candidate; launch: ResolvedLaunch
             <div className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{when}</div>
           )}
           {source && <div className="mt-0.5 text-[11px] text-[var(--color-ink-muted)]">来源 {source}</div>}
+          {row.tags.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {row.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-md border border-[var(--color-line)] bg-[var(--color-cream-2)] px-1.5 py-0.5 text-[10px] text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-soft)]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="min-w-0 text-xs text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">

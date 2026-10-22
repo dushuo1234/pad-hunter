@@ -7,6 +7,7 @@ import type {
   MonitorKind,
   SiteProbe,
 } from '../types'
+import { mergeScrape, pickScrape } from './upcomingSignals'
 
 const KINDS = new Set<MonitorKind>(['site', 'listing_signal', 'ca', 'factory'])
 
@@ -48,7 +49,7 @@ function siteFrom(row: Record<string, unknown>, handle: string, name: string): S
   if (!url) return null
   const error = asString(row.error)
   const finalUrl = asString(row.final_url)
-  return {
+  const site: SiteProbe = {
     url,
     status: siteStatusValue(row) || undefined,
     ok: typeof row.ok === 'boolean' ? row.ok : undefined,
@@ -59,6 +60,28 @@ function siteFrom(row: Record<string, unknown>, handle: string, name: string): S
     name: name || undefined,
     handle: handle || undefined,
   }
+  const scrape = pickScrape(row)
+  if (scrape) site.scrape = scrape
+  return site
+}
+
+function listingFrom(
+  row: Record<string, unknown>,
+  handle: string,
+  name: string,
+  signal: string,
+): ListingSignal {
+  const listing: ListingSignal = {
+    name: asString(row.name) || name || undefined,
+    handle: handleOf(row) || handle,
+    signal,
+    prev: row.prev === null || typeof row.prev === 'string' ? (row.prev as string | null) : undefined,
+    keyword: asString(row.keyword) || undefined,
+    source: asString(row.source) || undefined,
+  }
+  const scrape = pickScrape(row)
+  if (scrape) listing.scrape = scrape
+  return listing
 }
 
 function push(out: MonitorEvent[], event: MonitorEvent | null) {
@@ -95,6 +118,8 @@ function eventFromNormalized(row: Record<string, unknown>, fallbackAt: string): 
     const siteRow = asRecord(row.site) ?? row
     const site = siteFrom(siteRow, handle, name)
     if (!site) return null
+    const scrape = mergeScrape(site.scrape, pickScrape(row))
+    if (scrape) site.scrape = scrape
     return {
       ...base,
       id: asString(row.id) || stamp('site', handle, at, site.url),
@@ -107,14 +132,9 @@ function eventFromNormalized(row: Record<string, unknown>, fallbackAt: string): 
     const signalRow = asRecord(row.listing_signal) ?? row
     const signal = asString(signalRow.signal || signalRow.snippet || signalRow.listing_signal)
     if (!signal) return null
-    const listing: ListingSignal = {
-      name: asString(signalRow.name) || name || undefined,
-      handle: handleOf(signalRow) || handle,
-      signal,
-      prev: signalRow.prev === null || typeof signalRow.prev === 'string' ? (signalRow.prev as string | null) : undefined,
-      keyword: asString(signalRow.keyword) || undefined,
-      source: asString(signalRow.source) || undefined,
-    }
+    const listing = listingFrom(signalRow, handle, name, signal)
+    const scrape = mergeScrape(listing.scrape, pickScrape(row))
+    if (scrape) listing.scrape = scrape
     return {
       ...base,
       id: asString(row.id) || stamp('listing_signal', handle, '', signal.slice(0, 120)),
@@ -202,13 +222,20 @@ function ingestResult(row: Record<string, unknown>, out: MonitorEvent[], fallbac
 
   const listingSignal = asString(row.listing_signal)
   if (handle && listingSignal) {
+    const scrape = pickScrape(row)
     push(out, {
       id: stamp('listing_signal', handle, '', listingSignal.slice(0, 120)),
       kind: 'listing_signal',
       at,
       handle,
       name,
-      listing_signal: { name, handle, signal: listingSignal, prev: null },
+      listing_signal: {
+        name,
+        handle,
+        signal: listingSignal,
+        prev: null,
+        ...(scrape ? { scrape } : {}),
+      },
     })
   }
 
@@ -224,14 +251,7 @@ function ingestResult(row: Record<string, unknown>, out: MonitorEvent[], fallbac
         at,
         handle,
         name,
-        listing_signal: {
-          name,
-          handle,
-          signal: text,
-          prev: null,
-          keyword: asString(signal.keyword) || undefined,
-          source: asString(signal.source) || undefined,
-        },
+        listing_signal: listingFrom(signal, handle, name, text),
       })
     }
   }
@@ -276,13 +296,14 @@ function ingestWatchProject(row: Record<string, unknown>, out: MonitorEvent[], f
   }
   const signal = asString(row.listing_signal)
   if (signal) {
+    const scrape = pickScrape(row)
     push(out, {
       id: stamp('listing_signal', handle, '', signal.slice(0, 120)),
       kind: 'listing_signal',
       at,
       handle,
       name,
-      listing_signal: { name, handle, signal, prev: null },
+      listing_signal: { name, handle, signal, prev: null, ...(scrape ? { scrape } : {}) },
     })
   }
 }
@@ -333,12 +354,7 @@ function ingest(data: unknown, out: MonitorEvent[], fallbackAt: string) {
         at: asString(row.checked_at) || at,
         handle,
         name: asString(row.name),
-        listing_signal: {
-          name: asString(row.name) || undefined,
-          handle,
-          signal,
-          prev: row.prev === null || typeof row.prev === 'string' ? (row.prev as string | null) : null,
-        },
+        listing_signal: listingFrom(row, handle, asString(row.name), signal),
       })
     }
   }
@@ -456,6 +472,10 @@ export interface MonitorSnapshot {
     tx?: string
     notes?: string
   }
+  /** Newest site probe that carried site / JS / is-file completion fields. */
+  siteScrape?: Record<string, unknown>
+  /** Newest listing signal that carried those completion fields. */
+  signalScrape?: Record<string, unknown>
 }
 
 export function summarizeEvents(events: MonitorEvent[]): MonitorSnapshot {
@@ -475,12 +495,16 @@ export function summarizeEvents(events: MonitorEvent[]): MonitorSnapshot {
         at: event.at,
       }
     }
+    if (!snap.siteScrape && event.kind === 'site' && event.site?.scrape) snap.siteScrape = event.site.scrape
     if (!snap.lastSignal && event.kind === 'listing_signal' && event.listing_signal?.signal) {
       snap.lastSignal = {
         text: event.listing_signal.signal,
         at: event.at,
         prev: event.listing_signal.prev,
       }
+    }
+    if (!snap.signalScrape && event.kind === 'listing_signal' && event.listing_signal?.scrape) {
+      snap.signalScrape = event.listing_signal.scrape
     }
     if (!snap.ca && event.kind === 'ca' && event.ca) {
       snap.ca = event.ca
