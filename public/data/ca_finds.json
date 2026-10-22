@@ -1,19 +1,115 @@
 {
-  "generated_at": "2026-10-22T09:41:09+08:00",
+  "generated_at": "2026-10-22T10:50:20+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 45,
-  "token_ca_count": 6,
-  "wallet_count": 12,
+  "count": 25,
+  "token_ca_count": 0,
+  "wallet_count": 11,
   "confirmed_count": 0,
-  "candidate_count": 6,
+  "candidate_count": 0,
   "status_counts": {
     "confirmed": 0,
-    "candidate": 6,
+    "candidate": 0,
     "superseded": 0,
-    "not_ca": 39
+    "not_ca": 25
   },
   "finds": [
+    {
+      "project": "【扫出钱包·非CA】HappyBlock",
+      "handle": "RealHappyBlock",
+      "chain": "ethereum",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "source": "x_post:https://x.com/RealHappyBlock",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "detected_at": "2026-10-22T10:45:47+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-22T10:45:47+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-22T10:45:47+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-22T10:45:47+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "bsc",
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "source": "site:https://x.com/bemer77",
+      "evidence_url": "https://x.com/bemer77",
+      "detected_at": "2026-10-22T10:37:45+08:00",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-22T10:37:45+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/bemer77",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "TAI",
+        "name": "TapeAI",
+        "code_bytes": 295,
+        "note": "NFT contract (ERC721) — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【扫出钱包·非CA】kilnpad",
       "handle": "kilnpad",
@@ -23,7 +119,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -33,7 +129,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -66,7 +167,7 @@
       "evidence_url": "https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -76,7 +177,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -109,7 +215,7 @@
       "evidence_url": "https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -119,7 +225,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -152,7 +263,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
       "detected_at": "2026-10-22T09:05:12+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -162,7 +273,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -195,7 +311,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
       "detected_at": "2026-10-22T09:05:04+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -205,7 +321,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -238,7 +359,7 @@
       "evidence_url": "https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
       "detected_at": "2026-10-22T09:04:55+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -248,7 +369,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -281,7 +407,7 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261021235752A",
       "detected_at": "2026-10-22T09:04:47+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -291,7 +417,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -324,7 +455,7 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261021235752A",
       "detected_at": "2026-10-22T09:04:46+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -334,7 +465,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -346,577 +482,6 @@
         "kind": "contract",
         "chain": "bsc",
         "code_bytes": 130,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】TapeCat",
-      "handle": "tapecat_",
-      "chain": "bsc",
-      "address": "0xc3af97f81004d2a62bad5e6f8a3ee0fc82d3e896",
-      "source": "config:https://tapecat.space/api/config",
-      "evidence_url": "https://x.com/TapeCat_",
-      "detected_at": "2026-10-22T09:04:45+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:04:45+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "页面 HTML 中的地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "bsc",
-        "code_bytes": 23415,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "TapeCat",
-      "handle": "tapecat_",
-      "chain": "bsc",
-      "address": "0x5ce033b2bfca3af30b3e8c8457deaf776a8b695a",
-      "source": "config:https://tapecat.space/api/config",
-      "evidence_url": "https://x.com/TapeCat_",
-      "detected_at": "2026-10-22T09:04:45+08:00",
-      "confidence": "medium",
-      "note": "页面 HTML 中的地址; ca_gate: ERC20 verified: BEM dec=8",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:04:45+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "页面 HTML 中的地址",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "bsc",
-        "symbol": "BEM",
-        "name": "BEM",
-        "decimals": 8,
-        "code_bytes": 2205,
-        "note": "ERC20 verified: BEM dec=8"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "TapeCat",
-      "handle": "tapecat_",
-      "chain": "bsc",
-      "address": "0xe798a60bc826e836f7624b169b15a4655c15ecee",
-      "source": "config:https://tapecat.space/api/config",
-      "evidence_url": "https://x.com/TapeCat_",
-      "detected_at": "2026-10-22T09:04:44+08:00",
-      "confidence": "high",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: TAPECAT dec=18",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:04:44+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://tapecat.space/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "bsc",
-        "symbol": "TAPECAT",
-        "name": "tapecat",
-        "decimals": 18,
-        "code_bytes": 3329,
-        "note": "ERC20 verified: TAPECAT dec=18"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0xa4503181e992723af67cbac6687d8ce3a01aefd6",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:43+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:43+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 1640,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0xd8fab0e2e0f2bf5db13cf8451bacb2585cc8b38c",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:42+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:42+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 3462,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0xd64da67c2fcda0a92f07d75b397672bb605c8cd8",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:40+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:40+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 953,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0x50791b7752fc123affe7c5ee439506b7007a07a4",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:38+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:38+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 5550,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0x3890139fa80aa2a7f24172b5b6d59f49d4c05dc8",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:36+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:36+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 18031,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0x42b45ef9514e1ae3606f148460219193e0f630c4",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:34+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:34+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 27785,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "ethereum",
-      "address": "0xe33322da1380e61e5ae5dfb21e7f62924c73004c",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:32+08:00",
-      "confidence": "high",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: CREDIT dec=6",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:32+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "ethereum",
-        "symbol": "CREDIT",
-        "name": "Orbio Credit",
-        "decimals": 6,
-        "code_bytes": 130,
-        "note": "ERC20 verified: CREDIT dec=6"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:32+08:00",
-      "confidence": "high",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: USDG dec=6",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:32+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "robinhood",
-        "symbol": "USDG",
-        "name": "Global Dollar",
-        "decimals": 6,
-        "code_bytes": 170,
-        "note": "ERC20 verified: USDG dec=6"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0x3b4e1d645c67e92cdb885e129c75b25d1bbe0a8e",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:31+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:31+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 22941,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Pulse",
-      "handle": "PulseLaunchpad",
-      "chain": "robinhood",
-      "address": "0xc918a597de1faa52c10afdb9baedef01e3fe63cf",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-      "detected_at": "2026-10-22T09:04:30+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:04:30+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "robinhood",
-        "code_bytes": 26605,
         "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
       },
       "ca_status": "not_ca",
@@ -938,7 +503,7 @@
       "evidence_url": "https://www.newspad.fun/assets/index-B6TUyJ-k.js",
       "detected_at": "2026-10-22T09:04:28+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (10455 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -948,7 +513,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -973,272 +543,6 @@
       "ca_locked": false
     },
     {
-      "project": "Badge",
-      "handle": "BadgeLaunchpad",
-      "chain": "bsc",
-      "address": "0xdf37d7e27061109b7ba94480e938e7e66ae9aaaa",
-      "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
-      "evidence_url": "https://badgepad.family/assets/index-LYgTAfs3.js",
-      "detected_at": "2026-10-22T09:04:26+08:00",
-      "confidence": "medium",
-      "note": "小型同站 JS 包中的地址赋值（中等置信）; ca_gate: ERC20 verified: BADGE dec=18",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
-          "detected_at": "2026-10-22T09:04:26+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "小型同站 JS 包中的地址赋值（中等置信）",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "bsc",
-        "symbol": "BADGE",
-        "name": "Badge",
-        "decimals": 18,
-        "code_bytes": 9034,
-        "note": "ERC20 verified: BADGE dec=18"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】Badge",
-      "handle": "BadgeLaunchpad",
-      "chain": "bsc",
-      "address": "0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
-      "source": "config:https://badgepad.family/api/config",
-      "evidence_url": "https://x.com/BadgeLaunchpad",
-      "detected_at": "2026-10-22T09:04:25+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:04:25+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "bsc",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Badge",
-      "handle": "BadgeLaunchpad",
-      "chain": "bsc",
-      "address": "0x85f84e8e0906a88f0407b194f6ae68b0afcf6f64",
-      "source": "config:https://badgepad.family/api/config",
-      "evidence_url": "https://x.com/BadgeLaunchpad",
-      "detected_at": "2026-10-22T09:04:18+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:04:18+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "bsc",
-        "code_bytes": 5654,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【NFT合约·非CA】Badge",
-      "handle": "BadgeLaunchpad",
-      "chain": "bsc",
-      "address": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
-      "source": "config:https://badgepad.family/api/config",
-      "evidence_url": "https://x.com/BadgeLaunchpad",
-      "detected_at": "2026-10-22T09:04:18+08:00",
-      "confidence": "low",
-      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:04:18+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "nft",
-      "label_zh": "NFT合约",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "nft",
-      "is_token": false,
-      "verify": {
-        "kind": "nft",
-        "chain": "bsc",
-        "symbol": "AI",
-        "name": "SPACE ID Agent ID",
-        "code_bytes": 8756,
-        "note": "NFT contract (ERC721) — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【合约(非代币)·非CA】Badge",
-      "handle": "BadgeLaunchpad",
-      "chain": "bsc",
-      "address": "0xa87c7e3e0768b904c58da9ffe8a7ba9f7d6bb4fe",
-      "source": "config:https://badgepad.family/api/config",
-      "evidence_url": "https://x.com/BadgeLaunchpad",
-      "detected_at": "2026-10-22T09:04:17+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:04:17+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "config:https://badgepad.family/api/config",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约(非代币)",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": false,
-      "verify": {
-        "kind": "contract",
-        "chain": "bsc",
-        "code_bytes": 15912,
-        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "Accumulate",
-      "handle": "AccumulateTrade",
-      "chain": "robinhood",
-      "address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
-      "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
-      "evidence_url": "https://accumulate.trade/assets/index-CzohVo5u.js",
-      "detected_at": "2026-10-22T09:04:16+08:00",
-      "confidence": "high",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: USDG dec=6",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
-          "detected_at": "2026-10-22T09:04:16+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "robinhood",
-        "symbol": "USDG",
-        "name": "Global Dollar",
-        "decimals": 6,
-        "code_bytes": 170,
-        "note": "ERC20 verified: USDG dec=6"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
       "project": "【扫出钱包·非CA】0-0.city",
       "handle": "0_0city",
       "chain": "bsc",
@@ -1247,7 +551,7 @@
       "evidence_url": "https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
       "detected_at": "2026-10-22T09:04:14+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1257,7 +561,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -1270,102 +579,6 @@
         "chain": "bsc",
         "code_bytes": 23,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】HappyBlock",
-      "handle": "RealHappyBlock",
-      "chain": "ethereum",
-      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
-      "source": "x_post:https://x.com/RealHappyBlock",
-      "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-22T08:46:37+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-22T08:46:37+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-22T08:46:37+08:00"
-        },
-        {
-          "origin": "watchlist.scanned_wallets",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-22T08:46:37+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-22T09:08:51+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": "official_x",
-      "provenance_zh": "官推确认",
-      "official_x_confirmed": true,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【NFT合约·非CA】老7🌞tapeout💎bem",
-      "handle": "bemer77",
-      "chain": "bsc",
-      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
-      "source": "site:https://x.com/bemer77",
-      "evidence_url": "https://x.com/bemer77",
-      "detected_at": "2026-10-22T08:38:01+08:00",
-      "confidence": "low",
-      "note": "【NFT合约·非CA】 classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-22T08:38:01+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/bemer77",
-          "detected_at": "2026-10-22T09:08:51+08:00"
-        }
-      ],
-      "kind": "nft",
-      "label_zh": "NFT合约",
-      "addr_kind": "nft",
-      "is_token": false,
-      "verify": {
-        "kind": "nft",
-        "chain": "bsc",
-        "symbol": "TAI",
-        "name": "TapeAI",
-        "code_bytes": 295,
-        "note": "NFT contract (ERC721) — not a token CA"
       },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
@@ -1396,17 +609,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T08:46:30+08:00"
+          "detected_at": "2026-10-22T10:45:43+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "nft",
@@ -1450,17 +663,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T08:46:30+08:00"
+          "detected_at": "2026-10-22T10:45:43+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "nft",
@@ -1502,17 +715,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T08:46:30+08:00"
+          "detected_at": "2026-10-22T10:45:43+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
@@ -1554,17 +767,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T08:46:30+08:00"
+          "detected_at": "2026-10-22T10:45:43+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "nft",
@@ -1608,7 +821,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://colorapp.com/assets/color/live.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         }
       ],
       "kind": "invalid",
@@ -1649,12 +862,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -1666,47 +879,6 @@
         "chain": "ethereum",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【非地址·非CA】Pulse",
-      "handle": "pulselaunchpad",
-      "chain": "未知",
-      "address": "45bac1b6cbbc488a684f8933a5cd1d62a7c5b3eb",
-      "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
-      "evidence_url": "https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
-      "detected_at": "2026-10-21T13:15:14+08:00",
-      "confidence": "low",
-      "note": "【非地址·非CA】 ; ca_gate: hex string (hash / git SHA), not a Solana address",
-      "sources": [
-        {
-          "origin": "fast_site_alerts",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
-          "detected_at": "2026-10-21T13:15:14+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
-          "detected_at": "2026-10-21T13:16:33+08:00"
-        }
-      ],
-      "kind": "invalid",
-      "addr_kind": "invalid",
-      "is_token": false,
-      "label_zh": "非地址",
-      "verify": {
-        "kind": "invalid",
-        "chain": "未知",
-        "note": "hex string (hash / git SHA), not a Solana address"
       },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
@@ -1742,12 +914,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -1794,7 +966,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -1841,12 +1013,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "wallet",
@@ -1908,7 +1080,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/0zeqczcc7xhzd.js",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         }
       ],
       "label_zh": "非地址",
@@ -1949,12 +1121,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "nft",
@@ -2018,12 +1190,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-22T09:05:20+08:00"
+          "detected_at": "2026-10-22T09:56:08+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "note_zh": "来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA",
@@ -2066,7 +1238,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "nft",
@@ -2092,42 +1264,172 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 37,
+  "launched_history_count": 58,
   "launched_history": [
     {
-      "project": "Black Bank",
-      "handle": "blackbankrh",
-      "chain": "robinhood",
-      "address": "0x8672656b226ed5191bb6f5a9245a7596fa971cb8",
-      "source": "site:https://x.com/blackbankrh",
-      "evidence_url": "https://x.com/blackbankrh",
-      "detected_at": "2026-10-22T08:46:35+08:00",
-      "confidence": "high",
-      "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: BLACKBANK dec=18",
+      "project": "【合约(非代币)·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0x1e65a9a141cdf313acb8884d8e1475c63bc53c2f",
+      "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "evidence_url": "https://bscscan.com/address/0x1e65a9a141cdf313acb8884d8e1475c63bc53c2f",
+      "detected_at": "2026-10-22T10:00:38+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 CREATE address for wallet nonce=0 has code on bsc; traced from wallet 0x4b95593cfcc90753e46d87696a8c9f433d23c8a2 via create_derive; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/blackbankrh",
-          "detected_at": "2026-10-22T08:46:35+08:00"
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:00:38+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "traced_from": "0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 10813,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0xb63dd353b83954c8029b3c067410f2a145552444",
+      "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "evidence_url": "https://bscscan.com/address/0xb63dd353b83954c8029b3c067410f2a145552444",
+      "detected_at": "2026-10-22T10:00:38+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 CREATE address for wallet nonce=2 has code on bsc; traced from wallet 0x4b95593cfcc90753e46d87696a8c9f433d23c8a2 via create_derive; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:00:38+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "traced_from": "0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 15912,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeCat",
+      "handle": "tapecat_",
+      "chain": "bsc",
+      "address": "0xc3af97f81004d2a62bad5e6f8a3ee0fc82d3e896",
+      "source": "config:https://tapecat.space/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:45+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (23415 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T09:04:45+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "site:https://x.com/blackbankrh",
-          "detected_at": "2026-10-22T09:08:51+08:00"
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "页面 HTML 中的地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 23415,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "TapeCat",
+      "handle": "tapecat_",
+      "chain": "bsc",
+      "address": "0x5ce033b2bfca3af30b3e8c8457deaf776a8b695a",
+      "source": "config:https://tapecat.space/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:45+08:00",
+      "confidence": "medium",
+      "note": "页面 HTML 中的地址; classified as contract (2205 bytes); ca_gate: ERC20 verified: BEM dec=8",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T09:04:45+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
         }
       ],
       "kind": "contract",
       "label_zh": "合约CA",
+      "note_zh": "页面 HTML 中的地址",
       "addr_kind": "contract",
       "is_token": true,
       "verify": {
         "kind": "token",
-        "chain": "robinhood",
-        "symbol": "BLACKBANK",
-        "name": "BLACK BANK",
-        "decimals": 18,
-        "code_bytes": 3248,
-        "note": "ERC20 verified: BLACKBANK dec=18"
+        "chain": "bsc",
+        "symbol": "BEM",
+        "name": "BEM",
+        "decimals": 8,
+        "code_bytes": 2205,
+        "note": "ERC20 verified: BEM dec=8"
       },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -2137,13 +1439,846 @@
       "wallet_factory_confirmed": false,
       "ca_role": "token",
       "alert_ok": false,
-      "ca_locked": true,
-      "ca_locked_at": "2026-10-22T08:21:33+08:00",
-      "locked_by_official_x_url": "https://x.com/blackbankrh/status/2112920842719940962",
-      "locked_cas": [
-        "0x8672656b226ed5191bb6f5a9245a7596fa971cb8"
+      "ca_locked": false
+    },
+    {
+      "project": "TapeCat",
+      "handle": "tapecat_",
+      "chain": "bsc",
+      "address": "0xe798a60bc826e836f7624b169b15a4655c15ecee",
+      "source": "config:https://tapecat.space/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:44+08:00",
+      "confidence": "high",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (3329 bytes); ca_gate: ERC20 verified: TAPECAT dec=18",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T09:04:44+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://tapecat.space/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
       ],
-      "project_key": "blackbankrh"
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "TAPECAT",
+        "name": "tapecat",
+        "decimals": 18,
+        "code_bytes": 3329,
+        "note": "ERC20 verified: TAPECAT dec=18"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0xa4503181e992723af67cbac6687d8ce3a01aefd6",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:43+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (1640 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:43+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 1640,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0xd8fab0e2e0f2bf5db13cf8451bacb2585cc8b38c",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:42+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (3462 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:42+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 3462,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0xd64da67c2fcda0a92f07d75b397672bb605c8cd8",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:40+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (953 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:40+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 953,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0x50791b7752fc123affe7c5ee439506b7007a07a4",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:38+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (5550 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:38+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 5550,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0x3890139fa80aa2a7f24172b5b6d59f49d4c05dc8",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:36+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (18031 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:36+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 18031,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0x42b45ef9514e1ae3606f148460219193e0f630c4",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:34+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (27785 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:34+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 27785,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "ethereum",
+      "address": "0xe33322da1380e61e5ae5dfb21e7f62924c73004c",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:32+08:00",
+      "confidence": "high",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: ERC20 verified: CREDIT dec=6",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:32+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "CREDIT",
+        "name": "Orbio Credit",
+        "decimals": 6,
+        "code_bytes": 130,
+        "note": "ERC20 verified: CREDIT dec=6"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:32+08:00",
+      "confidence": "high",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (170 bytes); ca_gate: ERC20 verified: USDG dec=6",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:32+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "USDG",
+        "name": "Global Dollar",
+        "decimals": 6,
+        "code_bytes": 170,
+        "note": "ERC20 verified: USDG dec=6"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0x3b4e1d645c67e92cdb885e129c75b25d1bbe0a8e",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:31+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (22941 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:31+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 22941,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Pulse",
+      "handle": "PulseLaunchpad",
+      "chain": "robinhood",
+      "address": "0xc918a597de1faa52c10afdb9baedef01e3fe63cf",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+      "detected_at": "2026-10-22T09:04:30+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (26605 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:04:30+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-CpRiB6Tn.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 26605,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0xdf37d7e27061109b7ba94480e938e7e66ae9aaaa",
+      "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
+      "evidence_url": "https://badgepad.family/assets/index-LYgTAfs3.js",
+      "detected_at": "2026-10-22T09:04:26+08:00",
+      "confidence": "medium",
+      "note": "小型同站 JS 包中的地址赋值（中等置信）; classified as contract (9034 bytes); ca_gate: ERC20 verified: BADGE dec=18",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
+          "detected_at": "2026-10-22T09:04:26+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://badgepad.family/assets/index-LYgTAfs3.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "note_zh": "小型同站 JS 包中的地址赋值（中等置信）",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "BADGE",
+        "name": "Badge",
+        "decimals": 18,
+        "code_bytes": 9034,
+        "note": "ERC20 verified: BADGE dec=18"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "source": "config:https://badgepad.family/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:25+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:04:25+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "bsc",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0x85f84e8e0906a88f0407b194f6ae68b0afcf6f64",
+      "source": "config:https://badgepad.family/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:18+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (5654 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:04:18+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 5654,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【NFT合约·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+      "source": "config:https://badgepad.family/api/config",
+      "evidence_url": null,
+      "detected_at": "2026-10-22T09:04:18+08:00",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8756 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:04:18+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "nft",
+      "label_zh": "NFT合约",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "nft",
+      "is_token": false,
+      "verify": {
+        "kind": "nft",
+        "chain": "bsc",
+        "symbol": "AI",
+        "name": "SPACE ID Agent ID",
+        "code_bytes": 8756,
+        "note": "NFT contract (ERC721) — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【合约(非代币)·非CA】Badge",
+      "handle": "BadgeLaunchpad",
+      "chain": "bsc",
+      "address": "0xa87c7e3e0768b904c58da9ffe8a7ba9f7d6bb4fe",
+      "source": "config:https://badgepad.family/api/config",
+      "evidence_url": "https://bscscan.com/address/0xa87c7e3e0768b904c58da9ffe8a7ba9f7d6bb4fe",
+      "detected_at": "2026-10-22T09:04:17+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (15912 bytes); CREATE address for wallet nonce=9 has code on bsc; traced from wallet 0x4b95593cfcc90753e46d87696a8c9f433d23c8a2 via create_derive; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:04:17+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://badgepad.family/api/config",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        },
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+          "detected_at": "2026-10-22T10:00:38+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "traced_from": "0x4b95593cfcc90753e46d87696a8c9f433d23c8a2",
+      "addr_kind": "contract",
+      "is_token": false,
+      "verify": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 15912,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": "wallet_factory",
+      "provenance_zh": "监控钱包创建",
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": true,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "Accumulate",
+      "handle": "AccumulateTrade",
+      "chain": "robinhood",
+      "address": "0x5fc5360d0400a0fd4f2af552add042d716f1d168",
+      "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
+      "evidence_url": "https://accumulate.trade/assets/index-CzohVo5u.js",
+      "detected_at": "2026-10-22T09:04:16+08:00",
+      "confidence": "high",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (170 bytes); ca_gate: ERC20 verified: USDG dec=6",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
+          "detected_at": "2026-10-22T09:04:16+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
+          "detected_at": "2026-10-22T09:56:08+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://accumulate.trade/assets/index-CzohVo5u.js",
+          "detected_at": "2026-10-22T10:03:40+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "USDG",
+        "name": "Global Dollar",
+        "decimals": 6,
+        "code_bytes": 170,
+        "note": "ERC20 verified: USDG dec=6"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "【未确认地址·非CA】Baola",
@@ -2541,6 +2676,47 @@
       "project_key": "taperobot_bsc",
       "official": false,
       "tapeout_ca": false
+    },
+    {
+      "project": "【非地址·非CA】Pulse",
+      "handle": "pulselaunchpad",
+      "chain": "未知",
+      "address": "45bac1b6cbbc488a684f8933a5cd1d62a7c5b3eb",
+      "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
+      "evidence_url": "https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
+      "detected_at": "2026-10-21T13:15:14+08:00",
+      "confidence": "low",
+      "note": "【非地址·非CA】 ; ca_gate: hex string (hash / git SHA), not a Solana address",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
+          "detected_at": "2026-10-21T13:15:14+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://www.pulsetoken.xyz/assets/index-m6irAQoM.js",
+          "detected_at": "2026-10-21T13:16:33+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "hex string (hash / git SHA), not a Solana address"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
     },
     {
       "project": "Nookleus",
@@ -3680,8 +3856,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 21,
+  "suspected_copycat_count": 22,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Aero Boarding Agent",
+      "handle": "aero_agent",
+      "chain": "base",
+      "address": "0x54d9bffecba2bab449051a67ba18c105b564b9ac",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/aero_agent",
+      "detected_at": "2026-10-22T10:50:00+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:AERO; deployer=0x36cde1a54b5dcb532d369ebe25d7e59d75862e92; token=AERO / Aero; ca_gate: ERC20 verified: AERO dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-22T10:50:00+08:00",
+          "reason": "symbol:AERO",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x36cde1a54b5dcb532d369ebe25d7e59d75862e92",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "AERO",
+        "name": "Aero",
+        "decimals": 18,
+        "code_bytes": 4509,
+        "note": "ERC20 verified: AERO dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x36cde1a54b5dcb532d369ebe25d7e59d75862e92",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Aero Boarding Agent",
       "handle": "aero_agent",
@@ -4536,9 +4760,8 @@
       "creator_watched": false
     }
   ],
-  "ca_locked_project_count": 2,
+  "ca_locked_project_count": 1,
   "ca_locked_projects": [
-    "blackbankrh",
     "taperobot_bsc"
   ]
 }
