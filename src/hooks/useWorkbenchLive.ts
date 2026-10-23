@@ -10,6 +10,7 @@ import {
   fetchStatus,
   getApiSettings,
   isAuthError,
+  isUnavailable,
   resolveApiBase,
   saveApiSettings,
   statusIndex,
@@ -118,6 +119,21 @@ export function useWorkbenchLive(launchedHandles: ReadonlySet<string> = EMPTY_HA
       if (finished) setDetailTick((value) => value + 1)
     } catch (error) {
       if (!current()) return
+      if (isUnavailable(error)) {
+        setSnapshot((currentSnapshot) => {
+          if (
+            currentSnapshot.token === requestedToken &&
+            currentSnapshot.base === requestedBase &&
+            !currentSnapshot.error &&
+            !currentSnapshot.hasStatus &&
+            currentSnapshot.rows.length === 0
+          ) {
+            return currentSnapshot
+          }
+          return { token: requestedToken, base: requestedBase, rows: [], hasStatus: false, error: null }
+        })
+        return
+      }
       noteAuth(error)
       const message = errorText(error)
       setSnapshot((currentSnapshot) => ({
@@ -221,6 +237,10 @@ export function useWorkbenchLive(launchedHandles: ReadonlySet<string> = EMPTY_HA
         await holdChecking()
         checkingRef.current.delete(handleKey(handle))
         setChecking(new Set(checkingRef.current.keys()))
+        if (isUnavailable(error)) {
+          setActionError(null)
+          return
+        }
         noteAuth(error)
         setActionError(errorText(error))
       }

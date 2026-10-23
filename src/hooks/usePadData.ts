@@ -64,15 +64,26 @@ function liveBase(): string {
   }
 }
 
-async function fetchLiveCandidates(): Promise<unknown | null> {
+/** Bases whose /v1/radar/* routes 404. Later polls stay on the static Pages files. */
+const radarMissing = new Set<string>()
+
+async function fetchLiveRadar(path: string): Promise<unknown | null> {
   const base = liveBase().replace(/\/+$/, '')
   if (!base) return null
+  const key = `${base} ${path}`
+  if (radarMissing.has(key)) return null
   try {
-    const res = await fetch(`${base}/v1/radar/candidates`, {
+    const headers: Record<string, string> = {}
+    if (base.toLowerCase().includes('ngrok')) headers['ngrok-skip-browser-warning'] = '1'
+    const res = await fetch(`${base}${path}`, {
       cache: 'no-store',
-      headers: { 'ngrok-skip-browser-warning': '1' },
+      headers,
       signal: AbortSignal.timeout(8000),
     })
+    if (res.status === 404) {
+      radarMissing.add(key)
+      return null
+    }
     if (!res.ok) return null
     return await res.json()
   } catch {
@@ -80,36 +91,16 @@ async function fetchLiveCandidates(): Promise<unknown | null> {
   }
 }
 
-async function fetchLiveProjects(): Promise<unknown | null> {
-  const base = liveBase().replace(/\/+$/, '')
-  if (!base) return null
-  try {
-    const res = await fetch(`${base}/v1/radar/projects`, {
-      cache: 'no-store',
-      headers: { 'ngrok-skip-browser-warning': '1' },
-      signal: AbortSignal.timeout(8000),
-    })
-    if (!res.ok) return null
-    return await res.json()
-  } catch {
-    return null
-  }
+function fetchLiveCandidates(): Promise<unknown | null> {
+  return fetchLiveRadar('/v1/radar/candidates')
 }
 
-async function fetchLiveLaunched(): Promise<unknown | null> {
-  const base = liveBase().replace(/\/+$/, '')
-  if (!base) return null
-  try {
-    const res = await fetch(`${base}/v1/radar/launched`, {
-      cache: 'no-store',
-      headers: { 'ngrok-skip-browser-warning': '1' },
-      signal: AbortSignal.timeout(8000),
-    })
-    if (!res.ok) return null
-    return await res.json()
-  } catch {
-    return null
-  }
+function fetchLiveProjects(): Promise<unknown | null> {
+  return fetchLiveRadar('/v1/radar/projects')
+}
+
+function fetchLiveLaunched(): Promise<unknown | null> {
+  return fetchLiveRadar('/v1/radar/launched')
 }
 
 async function loadEvents(): Promise<{ events: MonitorEvent[]; note?: string; generatedAt?: string }> {
@@ -156,22 +147,17 @@ export function usePadData() {
     const soft = Boolean(opts?.soft)
     try {
       const liveCand = await fetchLiveCandidates()
+      const staticBoard = liveCand == null
       const [candidatesJson, monitor, listingTimesJson, launchedJson, projectsJson] = await Promise.all([
-        liveCand ? Promise.resolve(liveCand) : fetchJson(CANDIDATES_URL),
+        staticBoard ? fetchJson(CANDIDATES_URL) : Promise.resolve(liveCand),
         soft && events.length ? Promise.resolve({ events, note: eventsNote, generatedAt: eventsAt }) : loadEvents(),
-        soft && listingTimes.length
-          ? Promise.resolve(listingTimes)
-          : fetchOptional(LISTING_TIMES_URL),
-        liveCand
-          ? (await fetchLiveLaunched()) ?? (soft ? launched : await fetchOptional(LAUNCHED_URL))
-          : soft
-            ? Promise.resolve(null)
-            : fetchOptional(LAUNCHED_URL),
-        liveCand
-          ? (await fetchLiveProjects()) ?? (soft ? projects : await fetchOptional(PROJECTS_URL))
-          : soft
-            ? Promise.resolve(null)
-            : fetchOptional(PROJECTS_URL),
+        staticBoard || !soft || !listingTimes.length ? fetchOptional(LISTING_TIMES_URL) : Promise.resolve(null),
+        staticBoard
+          ? fetchOptional(LAUNCHED_URL)
+          : fetchLiveLaunched().then((live) => (live != null ? live : soft ? launched : fetchOptional(LAUNCHED_URL))),
+        staticBoard
+          ? fetchOptional(PROJECTS_URL)
+          : fetchLiveProjects().then((live) => (live != null ? live : soft ? projects : fetchOptional(PROJECTS_URL))),
       ])
 
       const nextPayload = parsePayload(candidatesJson)
@@ -192,9 +178,7 @@ export function usePadData() {
         setEventsNote(monitor.note)
         setEventsAt(monitor.generatedAt)
       }
-      if (!soft || !listingTimes.length) {
-        setListingTimes(readListingTimes(listingTimesJson))
-      }
+      if (listingTimesJson != null) setListingTimes(readListingTimes(listingTimesJson))
       if (launchedJson != null) setLaunched(readLaunched(launchedJson))
       if (projectsJson != null) setProjects(projectsJson)
       setLiveSource(liveCand ? 'api' : 'pages')
@@ -212,7 +196,7 @@ export function usePadData() {
     void loadDefault()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps -- mount once; polling below
 
-  // Soft poll: prefer live workbench API so new TG cards appear in ~20s without waiting for Pages CDN.
+  // Soft poll: prefer /v1/radar when that API exists. A 404 or network error reloads the static Pages JSON, including listing times.
   useEffect(() => {
     const tick = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return

@@ -6,6 +6,7 @@ import {
   errorText,
   fetchDetail,
   isAuthError,
+  isUnavailable,
   type FoundAddress,
   type WorkbenchDetail,
   type WorkbenchStatusItem,
@@ -95,6 +96,7 @@ export function WorkbenchDetailModal({
   useEffect(() => {
     if (!token || !item.handle) return
     let alive = true
+    let timer = 0
     const load = () => {
       setLoading(true)
       void fetchDetail(base, token, item.handle, chain)
@@ -106,6 +108,11 @@ export function WorkbenchDetailModal({
         })
         .catch((error: unknown) => {
           if (!alive) return
+          if (isUnavailable(error)) {
+            window.clearInterval(timer)
+            setDetailError(null)
+            return
+          }
           setDetailError(isAuthError(error) ? '令牌无效或缺失' : errorText(error))
         })
         .finally(() => {
@@ -113,7 +120,7 @@ export function WorkbenchDetailModal({
         })
     }
     load()
-    const timer = window.setInterval(() => {
+    timer = window.setInterval(() => {
       if (!document.hidden) load()
     }, 5000)
     return () => {

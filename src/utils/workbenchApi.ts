@@ -3,9 +3,10 @@ import { findByHandle } from './candidates'
 import { xProfileUrl } from './format'
 import { parsePinResponse, parseReviewResponse, type PinMergeState, type ReviewWire } from './syncMerge'
 import { handleKey, safeHttpUrl, type WorkbenchItem } from './workbench'
+import { FALLBACK_WORKBENCH_API_BASE, migratedWorkbenchApiBase } from './apiBase'
 
 /** Used when `VITE_WORKBENCH_API_BASE` is unset. The token is never stored here. */
-export const FALLBACK_WORKBENCH_API_BASE = 'https://dotted-disengage-awoke.ngrok-free.dev'
+export { FALLBACK_WORKBENCH_API_BASE }
 
 export const API_SETTINGS_KEY = 'pad-hunter.workbench.api'
 export const CLIENT_ID_KEY = 'pad-hunter.workbench.client'
@@ -224,10 +225,11 @@ function loadSettings(): ApiSettings {
   try {
     const row = asRecord(JSON.parse(raw))
     if (!row) return EMPTY_SETTINGS
-    return {
-      token: asString(row.token),
-      baseUrl: asString(row.baseUrl || row.base_url),
-    }
+    const token = asString(row.token)
+    const savedBase = asString(row.baseUrl || row.base_url)
+    const baseUrl = migratedWorkbenchApiBase(savedBase)
+    if (baseUrl !== savedBase) storageSet(API_SETTINGS_KEY, JSON.stringify({ token, baseUrl }))
+    return { token, baseUrl }
   } catch {
     return EMPTY_SETTINGS
   }
@@ -364,6 +366,30 @@ export function isNotFound(error: unknown): boolean {
   return Boolean(error && typeof error === 'object' && (error as ApiError).status === 404)
 }
 
+/** Status, detail, and check are absent on the sync worker. 401/404/network stay off the sync hint. */
+export function isUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+  const status = (error as ApiError).status
+  return status === 0 || status === 401 || status === 404
+}
+
+const unsupportedRoutes = new Set<string>()
+
+function unsupportedRouteKey(base: string, token: string, path: string): string {
+  return `${stripSlash(base)}\n${token}\n${path.split('?')[0]}`
+}
+
+function unsupportedRoute(base: string, token: string, path: string): ApiError | null {
+  if (!unsupportedRoutes.has(unsupportedRouteKey(base, token, path))) return null
+  return { status: 404, message: '监控接口错误 (404)' }
+}
+
+function rememberUnsupported(base: string, token: string, path: string, error: unknown): void {
+  if (!isUnavailable(error) || !error || typeof error !== 'object') return
+  const status = (error as ApiError).status
+  if (status === 401 || status === 404) unsupportedRoutes.add(unsupportedRouteKey(base, token, path))
+}
+
 export function errorText(error: unknown): string {
   if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message) {
     return error.message
@@ -372,9 +398,17 @@ export function errorText(error: unknown): string {
   return '无法连接监控接口'
 }
 
+function allowsNgrokBypass(base: string): boolean {
+  try {
+    return new URL(base).hostname.toLowerCase().includes('ngrok')
+  } catch {
+    return base.toLowerCase().includes('ngrok')
+  }
+}
+
 async function apiFetch(base: string, path: string, token: string, init?: RequestInit, timeoutMs = 10000): Promise<unknown> {
   const headers = new Headers(init?.headers)
-  headers.set('ngrok-skip-browser-warning', '1')
+  if (allowsNgrokBypass(base)) headers.set('ngrok-skip-browser-warning', '1')
   if (token) headers.set('X-Pad-Hunter-Token', token)
   if (init?.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json')
   let response: Response
@@ -532,16 +566,25 @@ export async function pushMergedReviewed(
 }
 
 export async function checkWorkbench(base: string, token: string, handle: string): Promise<boolean> {
-  const body = await apiFetch(
-    base,
-    '/v1/workbench/check',
-    token,
-    {
-      method: 'POST',
-      body: JSON.stringify({ handle }),
-    },
-    15000,
-  )
+  const path = '/v1/workbench/check'
+  const skipped = unsupportedRoute(base, token, path)
+  if (skipped) throw skipped
+  let body: unknown
+  try {
+    body = await apiFetch(
+      base,
+      path,
+      token,
+      {
+        method: 'POST',
+        body: JSON.stringify({ handle }),
+      },
+      15000,
+    )
+  } catch (error) {
+    rememberUnsupported(base, token, path, error)
+    throw error
+  }
   const queued = asRecord(body)?.queued
   if (queued === false || queued === 'false' || queued === 0) return false
   return true
@@ -633,8 +676,16 @@ export function parseStatusPayload(data: unknown): WorkbenchStatus {
 }
 
 export async function fetchStatus(base: string, token: string): Promise<WorkbenchStatus> {
-  const body = await apiFetch(base, '/v1/workbench/status', token)
-  return parseStatusPayload(body)
+  const path = '/v1/workbench/status'
+  const skipped = unsupportedRoute(base, token, path)
+  if (skipped) throw skipped
+  try {
+    const body = await apiFetch(base, path, token)
+    return parseStatusPayload(body)
+  } catch (error) {
+    rememberUnsupported(base, token, path, error)
+    throw error
+  }
 }
 
 function changeTone(text: string, kind: string): WorkbenchChange['tone'] {
@@ -749,8 +800,16 @@ function timeValue(iso: string): number {
 }
 
 export async function fetchDetail(base: string, token: string, handle: string, fallbackChain = ''): Promise<WorkbenchDetail> {
-  const body = await apiFetch(base, `/v1/workbench/detail?handle=${encodeURIComponent(handle)}`, token)
-  return parseDetailPayload(body, fallbackChain)
+  const path = '/v1/workbench/detail'
+  const skipped = unsupportedRoute(base, token, path)
+  if (skipped) throw skipped
+  try {
+    const body = await apiFetch(base, `${path}?handle=${encodeURIComponent(handle)}`, token)
+    return parseDetailPayload(body, fallbackChain)
+  } catch (error) {
+    rememberUnsupported(base, token, path, error)
+    throw error
+  }
 }
 
 export function parseLaunched(data: unknown): LaunchedIndex {
