@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-10-23T23:08:13+08:00",
+  "generated_at": "2026-10-23T23:38:19+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 53,
-  "token_ca_count": 4,
+  "count": 51,
+  "token_ca_count": 2,
   "wallet_count": 15,
-  "confirmed_count": 3,
-  "candidate_count": 1,
+  "confirmed_count": 2,
+  "candidate_count": 0,
   "status_counts": {
-    "confirmed": 3,
-    "candidate": 1,
+    "confirmed": 2,
+    "candidate": 0,
     "superseded": 0,
     "not_ca": 49
   },
@@ -531,55 +531,6 @@
       "ca_locked": false
     },
     {
-      "project": "Boost Pad",
-      "handle": "Boostpadsol",
-      "chain": "solana",
-      "address": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
-      "source": "x_post:https://x.com/Boostpadsol",
-      "evidence_url": "https://x.com/Boostpadsol",
-      "detected_at": "2026-10-23T22:51:11+08:00",
-      "confidence": "high",
-      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "x_post",
-          "detected_at": "2026-10-23T22:51:11+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "x_post:https://x.com/Boostpadsol",
-          "detected_at": "2026-10-23T22:51:11+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "solana",
-        "decimals": 6,
-        "note": "SPL mint verified (owner Tokenz…, dec=6)"
-      },
-      "ca_status": "confirmed",
-      "ca_status_zh": "已确认CA",
-      "provenance": "official_x",
-      "provenance_zh": "官推确认",
-      "official_x_confirmed": true,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": true,
-      "ca_locked": true,
-      "ca_locked_at": "2026-10-23T22:51:11+08:00",
-      "locked_by_official_x_url": null,
-      "locked_cas": [
-        "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump"
-      ],
-      "project_key": "boostpadsol",
-      "confirm_basis_zh": "官推确认"
-    },
-    {
       "project": "【NFT合约·非CA】TapeFoundry",
       "handle": "foundrytape",
       "chain": "bsc",
@@ -824,48 +775,6 @@
       "official_x_confirmed": true,
       "wallet_factory_confirmed": false,
       "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "VAULTR",
-      "handle": "VAULTRlol",
-      "chain": "solana",
-      "address": "6sdq3WwzhCtJhY2aoQAebYXhgQrZX8LHUNBcdKetpump",
-      "source": "site:https://x.com/VAULTRlol",
-      "evidence_url": "https://x.com/VAULTRlol",
-      "detected_at": "2026-10-23T22:45:02+08:00",
-      "confidence": "high",
-      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/VAULTRlol",
-          "detected_at": "2026-10-23T22:45:02+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/VAULTRlol",
-          "detected_at": "2026-10-23T22:45:02+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "solana",
-        "decimals": 6,
-        "note": "SPL mint verified (owner Tokenz…, dec=6)"
-      },
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
       "alert_ok": false,
       "ca_locked": false
     },
@@ -2949,8 +2858,89 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 75,
+  "launched_history_count": 77,
   "launched_history": [
+    {
+      "project": "Boost Pad",
+      "handle": "Boostpadsol",
+      "chain": "solana",
+      "address": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
+      "source": "x_post",
+      "evidence_url": null,
+      "detected_at": "2026-10-23T22:51:11+08:00",
+      "confidence": "medium",
+      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "x_post",
+          "detected_at": "2026-10-23T22:51:11+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "solana",
+        "decimals": 6,
+        "note": "SPL mint verified (owner Tokenz…, dec=6)"
+      },
+      "ca_status": "confirmed",
+      "ca_status_zh": "已确认CA",
+      "provenance": "official_x",
+      "provenance_zh": "官推确认",
+      "official_x_confirmed": true,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": true,
+      "ca_locked_at": "2026-10-23T22:51:11+08:00",
+      "locked_by_official_x_url": null,
+      "locked_cas": [
+        "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump"
+      ],
+      "project_key": "boostpadsol",
+      "confirm_basis_zh": "官推确认"
+    },
+    {
+      "project": "VAULTR",
+      "handle": "VAULTRlol",
+      "chain": "solana",
+      "address": "6sdq3WwzhCtJhY2aoQAebYXhgQrZX8LHUNBcdKetpump",
+      "source": "site:https://x.com/VAULTRlol",
+      "evidence_url": "https://x.com/VAULTRlol",
+      "detected_at": "2026-10-23T22:45:02+08:00",
+      "confidence": "high",
+      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=6)",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/VAULTRlol",
+          "detected_at": "2026-10-23T22:45:02+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "solana",
+        "decimals": 6,
+        "note": "SPL mint verified (owner Tokenz…, dec=6)"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【扫出钱包·非CA】ShieldX",
       "handle": "SX_Protocol",
@@ -6118,8 +6108,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 69,
+  "suspected_copycat_count": 70,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Lutra.hl",
+      "handle": "lutra_hl",
+      "chain": "base",
+      "address": "0xd2a6f768ee45aa6c2bf54f9ec2e6492d38b9fee1",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/lutra_hl",
+      "detected_at": "2026-10-23T23:38:18+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:LUTRA; deployer=0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b; token=LUTRA / lutra_hl; ca_gate: ERC20 verified: LUTRA dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T23:38:18+08:00",
+          "reason": "symbol:LUTRA",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "LUTRA",
+        "name": "lutra_hl",
+        "decimals": 18,
+        "code_bytes": 44,
+        "note": "ERC20 verified: LUTRA dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Wander Forest",
       "handle": "playwanderfores",
