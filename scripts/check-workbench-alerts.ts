@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { applyParsedAlertEvent, ALERT_HIGHLIGHT_MS, ALERT_POLL_MS, ALERT_UI, alertsByHandle, formatAlertAgo, isConfirmedCa, loadStoredWorkbenchAlerts, mergeAlertIncremental, normalizeAlertList, parseWorkbenchAlert, parseWorkbenchAlertsPayload, pickCa, planFreshAlert, presentCa, reminderViews, reminderVisibleText, remindersAllowed, shouldToastAlert, stripLeadName, WB_ALERTS_LIMIT, WB_ALERTS_STORAGE_KEY, WORKBENCH_ALERTS_PATH, type WorkbenchAlert } from '../src/utils/workbenchAlerts.ts'
+import { applyParsedAlertEvent, ALERT_HIGHLIGHT_MS, ALERT_POLL_MS, ALERT_UI, alertsByHandle, CONSOLE_LINE_LIMIT, consoleLines, consoleVisibleText, flashingAlertIds, flashingReminderCount, formatAlertAgo, isConfirmedCa, loadStoredWorkbenchAlerts, mergeAlertIncremental, normalizeAlertList, parseWorkbenchAlert, parseWorkbenchAlertsPayload, pickCa, planFreshAlert, presentCa, reminderCanFlash, reminderTitle, reminderViews, reminderVisibleText, remindersAllowed, rowAttentionTone, shouldToastAlert, stripLeadName, WB_ALERTS_LIMIT, WB_ALERTS_STORAGE_KEY, WORKBENCH_ALERTS_PATH, type WorkbenchAlert } from '../src/utils/workbenchAlerts.ts'
 import { parseSocketMessage } from '../src/utils/workbenchSocket.ts'
 
 function fail(message: string): never {
@@ -150,9 +150,16 @@ if (capped.length !== WB_ALERTS_LIMIT) fail(`cap ${capped.length}`)
 if (capped[0]?.id !== many[0]?.id) fail('cap should keep the newest')
 if (capped.some((alert) => alert.id === many[WB_ALERTS_LIMIT + 4]?.id)) fail('oldest should be dropped')
 
-const loaded = loadStoredWorkbenchAlerts(JSON.stringify({ alerts: [soon, soon, extra], unread: ['@CaravanRH', 'caravanrh'] }))
+const quiet = { ...soon, id: 'ddddddddddddddd1', handle: 'QuietProj', summary: '【QuietProj】保持安静' }
+const loaded = loadStoredWorkbenchAlerts(JSON.stringify({ alerts: [soon, soon, extra, quiet], unread: ['@CaravanRH', 'caravanrh'] }))
 if (loaded.alerts.filter((alert) => alert.id === soon.id).length !== 1) fail('storage dedupe')
 if (loaded.unread.join(',') !== 'caravanrh') fail(`unread ${loaded.unread.join(',')}`)
+if (loaded.readIds.includes(soon.id) || loaded.readIds.includes(extra.id)) fail('legacy unread handle must stay unread')
+if (!loaded.readIds.includes(quiet.id)) fail('other handles in an old blob should stay quiet')
+const backlog = loadStoredWorkbenchAlerts(JSON.stringify({ alerts: [soon] }))
+if (!backlog.seeded || !backlog.readIds.includes(soon.id)) fail('history without readIds should not start blinking')
+const explicit = loadStoredWorkbenchAlerts(JSON.stringify({ alerts: [soon], readIds: [] }))
+if (explicit.readIds.length !== 0) fail('an empty readIds list means nothing is acknowledged')
 
 const polled = parseWorkbenchAlertsPayload({
   updated_at: '2026-10-24T00:03:00+08:00',
@@ -191,10 +198,76 @@ for (const alert of parsed) {
 const ui = Object.values(ALERT_UI).join('\n')
 if (englishSentence.test(ui) || banned.test(ui)) fail(`ui copy ${ui}`)
 
+if (reminderCanFlash(baseline) || reminderCanFlash(nftAlert)) fail('baseline and 不算CA must not flash')
+const copycatAlert = parsed.find((alert) => alert.ca_status === 'suspected_copycat')
+if (!copycatAlert || reminderCanFlash(copycatAlert)) fail('copycat must not flash')
+if (!reminderCanFlash(soon) || !reminderCanFlash(confirmed)) fail('soon and confirmed CA should be able to flash')
+if (!caravanSoon?.urgent || caravanSoon.tone !== 'soon') fail('soon line tone')
+if (caravanCa?.tone !== 'ok' || !caravanCa.urgent) fail('confirmed line should be the green urgent tone')
+if (caravanChange?.tone !== 'change') fail('change tone')
+if (nft[0]?.urgent) fail('nft line must not be urgent')
+if (!falseOk[0]?.urgent || falseOk[0].tone !== 'warn') fail('pending CA can flash, but not as 已确认')
+if (rowAttentionTone(caravan, new Set()) !== 'soon') fail('a flashing 即将开始 line sets the row color')
+if (rowAttentionTone(nft, new Set()) !== 'muted') fail('不算CA row stays muted')
+
+const noneRead = new Set<string>()
+if (flashingReminderCount([soon, nftAlert, baseline], noneRead) !== 1) fail('only the urgent unread alert counts')
+if (flashingReminderCount([soon], new Set([soon.id])) !== 0) fail('a read id stops the count')
+if (flashingReminderCount([soon], noneRead, { pinned: new Set(['caravanrh']), launched: new Set(['caravanrh']) }) !== 0) {
+  fail('launched projects drop out of the count')
+}
+if (reminderTitle(3, '工作台 · 台子雷达', true) !== '(3) 新提醒') fail('tab title blink')
+if (reminderTitle(3, '工作台 · 台子雷达', false) !== '工作台 · 台子雷达') fail('tab title between blinks')
+if (reminderTitle(0, '工作台 · 台子雷达', true) !== '工作台 · 台子雷达') fail('quiet tab title')
+if (reminderTitle(3, '工作台 · 台子雷达', true, true) !== '(3) 新提醒 · 工作台 · 台子雷达') fail('reduced-motion title')
+
+const board = consoleLines(parsed, noneRead)
+const soonConsole = board.find((line) => line.id === soon.id)
+const nftConsole = board.find((line) => line.id === nftAlert.id)
+const baseConsole = board.find((line) => line.id === baseline.id)
+const confirmedConsole = board.find((line) => line.id === confirmed.id)
+if (!soonConsole?.flash || soonConsole.label !== '即将开始') fail('console soon line should blink')
+if (!confirmedConsole?.flash || confirmedConsole.label !== '已确认CA') fail('console confirmed line')
+if (!nftConsole || nftConsole.flash || !nftConsole.label.includes('不算CA') || nftConsole.label.includes('已确认')) {
+  fail('console 不算CA stays muted')
+}
+if (!baseConsole || baseConsole.flash) fail('console baseline stays quiet')
+if (board[0] && board[1] && Date.parse(board[0].ts) < Date.parse(board[1].ts) && board[0].flash === board[1].flash) {
+  fail('console keeps newest first within the same blink group')
+}
+const hiddenConsole = consoleLines([soon], noneRead, { pinned: new Set(['caravanrh']), launched: new Set(['caravanrh']) })
+if (hiddenConsole.length !== 0) fail('launched alerts stay out of the console')
+const readConsole = consoleLines([soon, confirmed], new Set([soon.id]))
+if (readConsole[0]?.id !== confirmed.id || readConsole[0]?.flash !== true || readConsole[1]?.flash !== false) {
+  fail('unread lines lead the console')
+}
+const consoleText = consoleVisibleText(board)
+for (const alert of parsed) {
+  const checked = prose(consoleText, alert)
+  if (englishSentence.test(checked)) fail(`console english sentence: ${checked}`)
+  if (banned.test(checked)) fail(`console english token: ${checked}`)
+}
+if (flashingAlertIds([soon, nftAlert], noneRead).join(',') !== soon.id) fail('flash ids skip 不算CA')
+
+const overflow: WorkbenchAlert[] = []
+for (let index = 0; index < CONSOLE_LINE_LIMIT + 5; index += 1) {
+  overflow.push({
+    ...baseline,
+    id: index.toString(16).padStart(16, 'b'),
+    baseline: true,
+    ts: new Date(now - index * 60_000).toISOString(),
+  })
+}
+overflow.push({ ...soon, id: 'eeeeeeeeeeeeeee2', ts: new Date(now - 86_400_000).toISOString() })
+const windowed = consoleLines(overflow, noneRead)
+if (windowed.length !== CONSOLE_LINE_LIMIT) fail(`console window ${windowed.length}`)
+if (windowed[0]?.id !== 'eeeeeeeeeeeeeee2' || !windowed[0]?.flash) fail('an older unread line stays at the top of the console')
+
 for (const file of [
   '../src/utils/workbenchAlerts.ts',
   '../src/utils/workbenchAlertStore.ts',
   '../src/components/WorkbenchReminders.tsx',
+  '../src/components/WorkbenchAlertConsole.tsx',
   '../src/components/WorkbenchAlertToasts.tsx',
   '../src/hooks/useWorkbenchAlerts.ts',
 ]) {
@@ -204,5 +277,21 @@ for (const file of [
 
 const api = readFileSync(new URL('../src/utils/workbenchApi.ts', import.meta.url), 'utf8')
 if (!api.includes('X-Pad-Hunter-Token') || !api.includes('WORKBENCH_ALERTS_PATH')) fail('alerts GET must use the token header')
+
+const css = readFileSync(new URL('../src/index.css', import.meta.url), 'utf8')
+if (!css.includes('prefers-reduced-motion') || !css.includes('wb-row-flash') || !css.includes('wb-console') || !css.includes('wb-dot-flash')) {
+  fail('flash styles missing')
+}
+const consoleSource = readFileSync(new URL('../src/components/WorkbenchAlertConsole.tsx', import.meta.url), 'utf8')
+if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('consoleTitle')) fail('console must ack on click')
+const reminderSource = readFileSync(new URL('../src/components/WorkbenchReminders.tsx', import.meta.url), 'utf8')
+if (!reminderSource.includes('bg-emerald-600') || !reminderSource.includes('bg-orange-600') || !reminderSource.includes('bg-sky-600') || !reminderSource.includes('bg-amber-400')) {
+  fail('solid reminder pills')
+}
+if (reminderSource.includes('bg-emerald-50')) fail('confirmed badge is still pale')
+const pageSource = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import.meta.url), 'utf8')
+if (!pageSource.includes('wb-row-flash') || !pageSource.includes('WorkbenchAlertConsole')) fail('rows and console')
+const headerSource = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8')
+if (!headerSource.includes('条未读提醒')) fail('nav unread count')
 
 console.log(`workbench alert checks ok (${parsed.length} fixture rows)`)

@@ -1,4 +1,5 @@
 import type { CaFind } from '../types'
+import { reminderTitle } from './workbenchAlerts'
 import { alertableFinds, caAddressId, displayProjectName } from './caFinds'
 import { handleKey } from './workbench'
 import type { FoundAddress, WorkbenchStatusItem } from './workbenchApi'
@@ -412,15 +413,56 @@ function notifyDesktop(items: CaSighting[]) {
   }
 }
 
+let reminderCount = 0
+let reminderOn = true
+let reminderTimer = 0
+
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function paintTitle() {
+  if (typeof document === 'undefined') return
+  const base = flashing && flashOn ? `【新CA】${baseTitle}` : baseTitle
+  document.title = reminderTitle(reminderCount, base, reminderOn, prefersReducedMotion())
+}
+
+function syncReminderTimer() {
+  if (typeof window === 'undefined') return
+  if (reminderCount <= 0 || prefersReducedMotion()) {
+    window.clearInterval(reminderTimer)
+    reminderTimer = 0
+    reminderOn = true
+    return
+  }
+  if (reminderTimer) return
+  reminderOn = true
+  reminderTimer = window.setInterval(() => {
+    reminderOn = !reminderOn
+    paintTitle()
+  }, 1000)
+}
+
+/** Blink the tab between the page title and `(n) 新提醒` while workbench alerts are unread. */
+export function setWorkbenchReminderCount(count: number) {
+  const next = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0
+  if (next === reminderCount && (next === 0 || reminderTimer || prefersReducedMotion())) {
+    paintTitle()
+    return
+  }
+  reminderCount = next
+  syncReminderTimer()
+  paintTitle()
+}
+
 export function setBaseDocumentTitle(title: string) {
   baseTitle = title
-  if (typeof document === 'undefined') return
-  if (!flashing) document.title = title
-  else document.title = flashOn ? `【新CA】${title}` : title
+  paintTitle()
 }
 
 function applyFlashTitle() {
-  document.title = flashOn ? `【新CA】${baseTitle}` : baseTitle
+  paintTitle()
 }
 
 function startTitleFlash() {
@@ -445,7 +487,7 @@ function stopTitleFlash() {
   flashOn = false
   window.clearInterval(flashTimer)
   flashTimer = 0
-  if (typeof document !== 'undefined') document.title = baseTitle
+  paintTitle()
 }
 
 function armTitleFlash() {
@@ -476,4 +518,12 @@ export function workbenchLiveCovering(): boolean {
 
 if (typeof document !== 'undefined') {
   document.addEventListener('visibilitychange', onVisibility)
+}
+
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  motion.addEventListener?.('change', () => {
+    syncReminderTimer()
+    paintTitle()
+  })
 }

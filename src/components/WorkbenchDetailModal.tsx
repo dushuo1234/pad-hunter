@@ -19,9 +19,9 @@ import { ReviewedMark } from './ReviewedMark'
 import { WorkbenchReminders } from './WorkbenchReminders'
 import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
 import { markWorkbenchAlertsRead } from '../utils/workbenchAlertStore'
-import { ALERT_UI, alertsForHandle, remindersAllowed } from '../utils/workbenchAlerts'
+import { ALERT_UI, alertsForHandle, reminderViews, remindersAllowed } from '../utils/workbenchAlerts'
 import { observeWorkbenchDetail } from '../utils/caAlert'
-import { handleKey, setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
+import { setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
 import {
   catalogListing,
   chainLabel,
@@ -75,7 +75,9 @@ export function WorkbenchDetailModal({
   const alertFeed = useWorkbenchAlerts()
   const projectAlerts = useMemo(() => alertsForHandle(alertFeed.alerts, item.handle), [alertFeed.alerts, item.handle])
   const showReminders = remindersAllowed({ pinned: Boolean(item.handle.trim()), launched })
-  const unread = showReminders && alertFeed.unread.has(handleKey(item.handle))
+  const unread =
+    showReminders &&
+    reminderViews(projectAlerts, now).some((view) => view.urgent && !alertFeed.readIds.has(view.id))
 
   const chain = chainLabel(item, candidate)
   const url = displayUrl(item, candidate, status)
@@ -182,13 +184,20 @@ export function WorkbenchDetailModal({
                 {item.name}
               </h2>
               {unread && (
-                <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] font-semibold text-rose-600" aria-label="新提醒">
-                  <span className="h-1.5 w-1.5 rounded-full bg-rose-600" aria-hidden="true" />
+                <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold text-rose-600" aria-label="新提醒">
+                  <span className="wb-dot-flash h-2 w-2 rounded-full bg-rose-600" aria-hidden="true" />
                   {ALERT_UI.fresh}
                 </span>
               )}
             </div>
-            {showReminders && <WorkbenchReminders alerts={projectAlerts} now={now} />}
+            {showReminders && (
+              <WorkbenchReminders
+                alerts={projectAlerts}
+                now={now}
+                readIds={alertFeed.readIds}
+                onAcknowledge={() => markWorkbenchAlertsRead(item.handle)}
+              />
+            )}
             <div className="mt-2 flex flex-wrap gap-1.5">
               <ReviewedMark
                 handle={item.handle}

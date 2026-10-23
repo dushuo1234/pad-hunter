@@ -12,6 +12,7 @@ import {
   mergeAlertIncremental,
   normalizeAlertList,
   planFreshAlert,
+  reminderCanFlash,
   toastSummary,
   WB_ALERTS_STORAGE_KEY,
   type WorkbenchAlert,
@@ -27,6 +28,8 @@ export interface WorkbenchToast {
 
 export interface WorkbenchAlertSnapshot {
   alerts: readonly WorkbenchAlert[]
+  readIds: ReadonlySet<string>
+  /** Handles that still have at least one blinking alert. */
   unread: ReadonlySet<string>
   highlightUntil: Readonly<Record<string, number>>
   toasts: readonly WorkbenchToast[]
@@ -35,15 +38,19 @@ export interface WorkbenchAlertSnapshot {
 const TOAST_MS = 12_000
 const TOAST_LIMIT = 4
 
+const READ_ID_LIMIT = 500
+
 const EMPTY_SNAPSHOT: WorkbenchAlertSnapshot = {
   alerts: [],
+  readIds: new Set<string>(),
   unread: new Set<string>(),
   highlightUntil: {},
   toasts: [],
 }
 
 let alerts: WorkbenchAlert[] = []
-let unread = new Set<string>()
+let readIds = new Set<string>()
+let backlogQuiet = false
 let highlightUntil: Record<string, number> = {}
 let toasts: WorkbenchToast[] = []
 let snapshot: WorkbenchAlertSnapshot = EMPTY_SNAPSHOT
@@ -75,14 +82,50 @@ function storageSet(value: string) {
   }
 }
 
+function unreadHandles(): Set<string> {
+  const next = new Set<string>()
+  for (const alert of alerts) {
+    if (!alert.id || readIds.has(alert.id) || !reminderCanFlash(alert)) continue
+    const key = handleKey(alert.handle)
+    if (key) next.add(key)
+  }
+  return next
+}
+
+function trimReadIds() {
+  if (readIds.size <= READ_ID_LIMIT) return
+  const live = new Set(alerts.map((alert) => alert.id))
+  const kept: string[] = []
+  const extra: string[] = []
+  for (const id of readIds) {
+    if (live.has(id)) kept.push(id)
+    else extra.push(id)
+  }
+  const room = Math.max(0, READ_ID_LIMIT - Math.min(kept.length, READ_ID_LIMIT))
+  readIds = new Set([...kept.slice(-READ_ID_LIMIT), ...extra.slice(-room)])
+}
+
+function rememberRead(ids: Iterable<string>): boolean {
+  let changed = false
+  for (const id of ids) {
+    if (!id || readIds.has(id)) continue
+    readIds.add(id)
+    changed = true
+  }
+  if (!changed) return false
+  trimReadIds()
+  return true
+}
+
 function persist() {
-  storageSet(JSON.stringify({ alerts, unread: [...unread] }))
+  storageSet(JSON.stringify({ alerts, readIds: [...readIds] }))
 }
 
 function publish() {
   snapshot = {
     alerts,
-    unread: new Set(unread),
+    readIds: new Set(readIds),
+    unread: unreadHandles(),
     highlightUntil: { ...highlightUntil },
     toasts,
   }
@@ -92,7 +135,8 @@ function publish() {
 function hydrate() {
   const stored = loadStoredWorkbenchAlerts(storageGet())
   alerts = stored.alerts
-  unread = new Set(stored.unread)
+  readIds = new Set(stored.readIds)
+  backlogQuiet = stored.seeded
   publish()
 }
 
@@ -117,7 +161,6 @@ function noteFresh(alert: WorkbenchAlert, now: number) {
   if (!plan.unread) return
   const key = handleKey(alert.handle)
   if (!key) return
-  unread.add(key)
   highlightUntil = { ...highlightUntil, [key]: plan.highlightUntil }
   if (!plan.toast) return
   const pinned = getWorkbenchItems().some((item) => handleKey(item.handle) === key)
@@ -134,7 +177,15 @@ function noteFresh(alert: WorkbenchAlert, now: number) {
 }
 
 function replaceAlerts(next: readonly WorkbenchAlert[]) {
-  alerts = normalizeAlertList(next)
+  const normalized = normalizeAlertList(next)
+  if (!backlogQuiet) {
+    for (const alert of normalized) {
+      if (alert.id) readIds.add(alert.id)
+    }
+    backlogQuiet = true
+  }
+  alerts = normalized
+  trimReadIds()
   persist()
   publish()
 }
@@ -155,8 +206,21 @@ export function ingestWorkbenchSocketEvent(event: SocketEvent) {
 
 export function markWorkbenchAlertsRead(handle: string) {
   const key = handleKey(handle)
-  if (!key || !unread.has(key)) return
-  unread.delete(key)
+  if (!key) return
+  const ids = alerts.filter((alert) => handleKey(alert.handle) === key).map((alert) => alert.id)
+  if (!rememberRead(ids)) return
+  if (highlightUntil[key] != null) {
+    const next = { ...highlightUntil }
+    delete next[key]
+    highlightUntil = next
+  }
+  persist()
+  publish()
+}
+
+/** Stop blinking for these alert ids. A click on the console passes every flashing id. */
+export function markWorkbenchAlertIdsRead(ids: readonly string[]) {
+  if (!rememberRead(ids)) return
   persist()
   publish()
 }
@@ -196,7 +260,8 @@ function onStorage(event: StorageEvent) {
   if (event.key != null && event.key !== WB_ALERTS_STORAGE_KEY) return
   const stored = loadStoredWorkbenchAlerts(storageGet())
   alerts = stored.alerts
-  unread = new Set(stored.unread)
+  readIds = new Set(stored.readIds)
+  if (stored.seeded) backlogQuiet = true
   publish()
 }
 

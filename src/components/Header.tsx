@@ -8,12 +8,13 @@ interface HeaderProps {
   route: AppRoute
   todayCount: number | null
   launchedCount: number | null
+  workbenchUnread: number
   onToggleTheme: () => void
   onUpload: (file: File) => void
   onRefresh: () => void
 }
 
-export function Header({ theme, route, todayCount, launchedCount, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
+export function Header({ theme, route, todayCount, launchedCount, workbenchUnread, onToggleTheme, onUpload, onRefresh }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-cream)_88%,transparent)] backdrop-blur-md dark:border-[var(--color-night-line)] dark:bg-[color-mix(in_srgb,var(--color-night)_88%,transparent)]">
       <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-2 sm:px-6">
@@ -46,6 +47,16 @@ export function Header({ theme, route, todayCount, launchedCount, onToggleTheme,
             </NavLink>
             <NavLink href={appPath('workbench')} active={route.name === 'workbench'}>
               工作台
+              {workbenchUnread > 0 && (
+                <span
+                  className={`wb-dot-flash inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none ${
+                    route.name === 'workbench' ? 'bg-white text-rose-600' : 'bg-rose-600 text-white'
+                  }`}
+                  aria-label={`${workbenchUnread} 条未读提醒`}
+                >
+                  {workbenchUnread > 99 ? '99+' : workbenchUnread}
+                </span>
+              )}
             </NavLink>
           </nav>
         </div>
