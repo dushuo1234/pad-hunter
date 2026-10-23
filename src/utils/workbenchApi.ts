@@ -3,6 +3,7 @@ import { findByHandle } from './candidates'
 import { xProfileUrl } from './format'
 import { parsePinResponse, parseReviewResponse, type PinMergeState, type ReviewWire } from './syncMerge'
 import { handleKey, safeHttpUrl, type WorkbenchItem } from './workbench'
+import { parseWorkbenchAlertsPayload, WORKBENCH_ALERTS_PATH, type WorkbenchAlert } from './workbenchAlerts'
 import { FALLBACK_WORKBENCH_API_BASE, migratedWorkbenchApiBase } from './apiBase'
 
 /** Used when `VITE_WORKBENCH_API_BASE` is unset. The token is never stored here. */
@@ -672,6 +673,19 @@ export function parseStatusPayload(data: unknown): WorkbenchStatus {
     pollerAlive: row ? asBool(row.poller_alive) : null,
     pollerTargetMode: row ? asString(row.poller_target_mode) : '',
     items,
+  }
+}
+
+export async function fetchWorkbenchAlerts(base: string, token: string): Promise<WorkbenchAlert[]> {
+  const path = WORKBENCH_ALERTS_PATH
+  const skipped = unsupportedRoute(base, token, path)
+  if (skipped) throw skipped
+  try {
+    const body = await apiFetch(base, path, token)
+    return parseWorkbenchAlertsPayload(body)
+  } catch (error) {
+    rememberUnsupported(base, token, path, error)
+    throw error
   }
 }
 

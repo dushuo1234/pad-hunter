@@ -48,6 +48,13 @@ import {
   type ReviewWire,
 } from './syncMerge'
 import {
+  ingestWorkbenchSocketEvent,
+  noteWorkbenchAlertSettingsChanged,
+  setWorkbenchAlertsSocketOpen,
+  startWorkbenchAlertPolling,
+  stopWorkbenchAlertPolling,
+} from './workbenchAlertStore'
+import {
   isSocketAuthClose,
   parseSocketMessage,
   pinsSyncFrame,
@@ -660,6 +667,10 @@ function onSocketMessage(raw: unknown) {
     socketSend(pongFrame())
     return
   }
+  if (message.kind === 'alerts_snapshot' || message.kind === 'alerts_incremental') {
+    ingestWorkbenchSocketEvent(message)
+    return
+  }
   if (message.kind === 'pins') applySocketPins(message.state, message.originClientId)
   else if (message.kind === 'reviewed') applySocketReviews(message.marks, message.originClientId)
 }
@@ -667,6 +678,7 @@ function onSocketMessage(raw: unknown) {
 function closeSocket() {
   socketGen += 1
   wsOpen = false
+  setWorkbenchAlertsSocketOpen(false)
   pinInflight = 0
   pendingPins = null
   pendingReviews = null
@@ -737,6 +749,7 @@ function openSocket() {
   ws.onopen = () => {
     if (gen !== socketGen) return
     wsOpen = true
+    setWorkbenchAlertsSocketOpen(true)
     wsAttempt = 0
     authFailed = false
     pinError = null
@@ -755,6 +768,7 @@ function openSocket() {
     if (gen !== socketGen) return
     if (socket === ws) socket = null
     wsOpen = false
+    setWorkbenchAlertsSocketOpen(false)
     if (isSocketAuthClose(event.code)) {
       markSocketAuthFailure()
       restartPollInterval()
@@ -812,6 +826,7 @@ function schedulePull(delay: number, quiet: boolean) {
 
 function onSettings() {
   resetProbe()
+  noteWorkbenchAlertSettingsChanged()
   wsAuthBlocked = false
   wsAttempt = 0
   pendingPins = null
@@ -852,6 +867,7 @@ function arm() {
   document.addEventListener('visibilitychange', onWake)
   window.addEventListener('online', onOnline)
   restartPollInterval()
+  startWorkbenchAlertPolling()
   if (currentAuth().token) {
     openSocket()
     schedulePull(0, false)
@@ -860,6 +876,7 @@ function arm() {
 
 function disarm() {
   session += 1
+  stopWorkbenchAlertPolling()
   window.clearTimeout(pinTimer)
   window.clearTimeout(reviewTimer)
   window.clearTimeout(pullTimer)

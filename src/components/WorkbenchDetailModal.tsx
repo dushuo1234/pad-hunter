@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { categoryOf } from '../utils/categories'
 import { shortAddr, xProfileUrl } from '../utils/format'
@@ -15,8 +15,12 @@ import type { WorkbenchItem } from '../utils/workbench'
 import { reviewSnapshot } from '../utils/reviewed'
 import { PushDate } from './PushDate'
 import { ReviewedMark } from './ReviewedMark'
+import { WorkbenchReminders } from './WorkbenchReminders'
+import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
+import { markWorkbenchAlertsRead } from '../utils/workbenchAlertStore'
+import { ALERT_UI, alertsForHandle, remindersAllowed } from '../utils/workbenchAlerts'
 import { observeWorkbenchDetail } from '../utils/caAlert'
-import { setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
+import { handleKey, setWorkbenchPush, updateWorkbenchNotes } from '../utils/workbench'
 import {
   catalogListing,
   chainLabel,
@@ -67,6 +71,10 @@ export function WorkbenchDetailModal({
   const [detailError, setDetailError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState('')
+  const alertFeed = useWorkbenchAlerts()
+  const projectAlerts = useMemo(() => alertsForHandle(alertFeed.alerts, item.handle), [alertFeed.alerts, item.handle])
+  const showReminders = remindersAllowed({ pinned: Boolean(item.handle.trim()), launched })
+  const unread = showReminders && alertFeed.unread.has(handleKey(item.handle))
 
   const chain = chainLabel(item, candidate)
   const url = displayUrl(item, candidate, status)
@@ -79,6 +87,10 @@ export function WorkbenchDetailModal({
   const interval = formatInterval(status?.intervalS ?? null)
   const checked = formatShanghaiFull(status?.lastCheckAt)
   const latency = formatMs(status?.lastLatencyMs ?? null)
+
+  useEffect(() => {
+    markWorkbenchAlertsRead(item.handle)
+  }, [item.handle])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -164,9 +176,18 @@ export function WorkbenchDetailModal({
       >
         <div className="flex items-start justify-between gap-3 border-b border-[var(--color-line)] px-4 py-3 dark:border-[var(--color-night-line)]">
           <div className="min-w-0">
-            <h2 id="workbench-detail-title" className="truncate text-lg font-bold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
-              {item.name}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 id="workbench-detail-title" className="truncate text-lg font-bold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
+                {item.name}
+              </h2>
+              {unread && (
+                <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] font-semibold text-rose-600" aria-label="新提醒">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-600" aria-hidden="true" />
+                  {ALERT_UI.fresh}
+                </span>
+              )}
+            </div>
+            {showReminders && <WorkbenchReminders alerts={projectAlerts} now={now} />}
             <div className="mt-2 flex flex-wrap gap-1.5">
               <ReviewedMark
                 handle={item.handle}
