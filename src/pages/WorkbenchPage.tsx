@@ -8,6 +8,7 @@ import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
 import { isLaunchedHandle } from '../utils/launched'
+import { comparePushDateRecords } from '../utils/pushDate'
 import {
   handleKey,
   isHandlePinned,
@@ -71,17 +72,28 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const [detailId, setDetailId] = useState<string | null>(null)
   const closeDetail = useCallback(() => setDetailId(null), [])
 
-  const matches = useMemo(() => searchCatalog(candidates, query), [candidates, query])
+  const openCandidates = useMemo(
+    () => candidates.filter((candidate) => !isLaunchedHandle(launchedHandles, candidate.handle)),
+    [candidates, launchedHandles],
+  )
+  const matches = useMemo(() => searchCatalog(openCandidates, query), [openCandidates, query])
   const needle = tableQuery.trim().toLowerCase()
   const visible = useMemo(() => {
-    if (!needle) return items
-    return items.filter((item) => {
-      const candidate = candidateFor(item, candidates)
-      const status = live.statusByHandle.get(handleKey(item.handle))
-      const url = displayUrl(item, candidate, status)
-      const hay = `${item.name} ${item.handle} ${url} ${introFor(candidate)}`.toLowerCase()
-      return hay.includes(needle)
-    })
+    const rows = !needle
+      ? items
+      : items.filter((item) => {
+          const candidate = candidateFor(item, candidates)
+          const status = live.statusByHandle.get(handleKey(item.handle))
+          const url = displayUrl(item, candidate, status)
+          const hay = `${item.name} ${item.handle} ${url} ${introFor(candidate)}`.toLowerCase()
+          return hay.includes(needle)
+        })
+    return [...rows].sort((a, b) =>
+      comparePushDateRecords(
+        { records: [candidateFor(a, candidates)], name: a.name },
+        { records: [candidateFor(b, candidates)], name: b.name },
+      ),
+    )
   }, [candidates, items, live.statusByHandle, needle])
 
   const summary = countSummary(
@@ -563,13 +575,23 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       {introFor(candidate) && (
                         <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">{introFor(candidate)}</p>
                       )}
-                      <button
-                        type="button"
-                        onClick={() => setNotesOpen((current) => (current === item.id ? null : item.id))}
-                        className="mt-1 text-[11px] text-[var(--color-orange)] hover:underline"
-                      >
-                        {item.notes ? '备注' : '写备注'}
-                      </button>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setNotesOpen((current) => (current === item.id ? null : item.id))}
+                          className="text-[11px] text-[var(--color-orange)] hover:underline"
+                        >
+                          {item.notes ? '备注' : '写备注'}
+                        </button>
+                        {!launched && (
+                          <ConfirmLaunchedButton
+                            handle={item.handle}
+                            name={item.name}
+                            candidate={candidate}
+                            variant="compact"
+                          />
+                        )}
+                      </div>
                       {notesOpen === item.id && (
                         <textarea
                           aria-label={`${item.name} 备注`}
@@ -672,13 +694,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       >
                         详情
                       </button>
-                      <ConfirmLaunchedButton
-                        handle={item.handle}
-                        name={item.name}
-                        candidate={candidate}
-                        variant="link"
-                        className="ml-3"
-                      />
                     </td>
                   </tr>
                 )

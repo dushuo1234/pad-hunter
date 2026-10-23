@@ -41,14 +41,16 @@ import {
   applyServerBlocks,
   handlesFromMarks,
   ingestBlocked,
+  ingestLaunchNotice,
   parseBlocklist,
   parseLaunchedMarkPayload,
   parseLaunchedRecent,
   readBlockEntry,
+  releaseBlocked,
   restoreBlockEntry,
 } from './launchedMark'
 import { pushNotice } from './notices'
-import { applyRadarDelta, applyRadarSnapshot } from './radarLive'
+import { applyRadarDelta, applyRadarSnapshot, forgetRadarHandles } from './radarLive'
 import {
   mergePins,
   mergeReviewed,
@@ -698,8 +700,10 @@ function applyLaunchedPayload(data: unknown) {
   const recent = parseLaunchedRecent(data)
   const marks = [...(parsed?.marks ?? []), ...(recent ?? [])]
   if (marks.length > 0) {
-    ingestBlocked(marks, false)
-    dropBlocked(handlesFromMarks(marks))
+    ingestLaunchNotice(marks)
+    const handles = handlesFromMarks(marks)
+    dropBlocked(handles)
+    forgetRadarHandles(handles)
   }
   if (parsed?.pins != null) applyPinsPayload(parsed.pins)
 }
@@ -707,8 +711,9 @@ function applyLaunchedPayload(data: unknown) {
 function applyBlocklistPayload(data: unknown) {
   const parsed = parseBlocklist(data)
   if (!parsed || parsed.marks.length === 0) return
-  ingestBlocked(parsed.marks, false)
+  ingestLaunchNotice(parsed.marks)
   dropBlocked(parsed.handles)
+  forgetRadarHandles(parsed.handles)
 }
 
 function onSocketMessage(raw: unknown) {
@@ -723,6 +728,7 @@ function onSocketMessage(raw: unknown) {
   else if (message.kind === 'radar_delta') applyRadarDelta(message.cards)
   else if (message.kind === 'launched_mark') applyLaunchedPayload(message.payload)
   else if (message.kind === 'launched_unmark') {
+    releaseBlocked(message.handle)
     const { token, base } = currentAuth()
     if (token) void pullLaunchFilters(session, token, base)
   }
@@ -751,7 +757,9 @@ export async function confirmManualLaunch(input: { handle: string; name?: string
     const body = await postLaunchedMark(base, token, { handle, name: input.name, at })
     applyLaunchedPayload(body)
     dropWorkbenchByHandle(handle)
+    forgetRadarHandles([handle])
     pushNotice('已移入已开盘')
+    schedulePull(0, true)
     return null
   } catch (error) {
     restoreBlockEntry(key, previous)
