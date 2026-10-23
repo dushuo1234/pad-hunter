@@ -124,4 +124,33 @@ if (blocked.kind !== 'blocklist') fail('blocklist kind')
 const helloWith = parseSocketMessage({ type: 'hello', version: '1', launched: { marks: [] }, blocklist: { handles: [] } })
 if (helloWith.kind !== 'hello' || helloWith.kind === 'hello' && helloWith.launched == null) fail('hello carries launched')
 
+const dryRun = parseSocketMessage({
+  type: 'workbench_alert',
+  dry_run: true,
+  origin_client_id: 'box-workbench-soon',
+  alerts: [{ id: 'deadbeefdeadbeef', handle: 'CaravanRH', kind: 'ca', ca_status: 'confirmed', alert_ok: true }],
+})
+if (dryRun.kind !== 'ignore') fail('dry_run alert must be ignored')
+
+const helloAlerts = parseSocketMessage({
+  type: 'workbench_alerts',
+  event: 'hello',
+  state: {
+    updated_at: '2026-10-24T00:01:00+08:00',
+    count: 1,
+    items: [{ id: 'aaaaaaaaaaaaaaa1', handle: '@CaravanRH', kind: 'x_post', ts: '2026-10-24T00:01:00+08:00', summary: '【甲】即将开始' }],
+  },
+})
+if (helloAlerts.kind !== 'alerts_snapshot') fail('workbench_alerts hello')
+if (helloAlerts.kind === 'alerts_snapshot' && (helloAlerts.alerts.length !== 1 || helloAlerts.alerts[0]?.handle !== 'CaravanRH')) {
+  fail('hello alert handle')
+}
+
+const incremental = parseSocketMessage({
+  type: 'workbench_alert',
+  dry_run: false,
+  alerts: [{ id: 'bbbbbbbbbbbbbbb1', handle: 'NftProj', kind: 'ca', ca_status: 'nft', alert_ok: false, summary: '不算' }],
+})
+if (incremental.kind !== 'alerts_incremental') fail('workbench_alert incremental')
+
 console.log('workbench socket checks ok')

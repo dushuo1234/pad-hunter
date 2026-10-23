@@ -1,9 +1,12 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
+import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
+import { WorkbenchReminders } from '../components/WorkbenchReminders'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
 import { useBoardSyncStatus } from '../hooks/useBoardSync'
+import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
@@ -41,6 +44,14 @@ import {
   type PillTone,
 } from '../utils/workbenchView'
 import { reviewSnapshot } from '../utils/reviewed'
+import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } from '../utils/workbenchAlertStore'
+import {
+  ALERT_HIGHLIGHT_MS,
+  ALERT_UI,
+  alertsByHandle,
+  remindersAllowed,
+  workbenchRowDomId,
+} from '../utils/workbenchAlerts'
 
 interface WorkbenchPageProps {
   candidates: Candidate[]
@@ -56,6 +67,8 @@ const FIELD =
 export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
   const live = useWorkbenchLive(launchedHandles)
   const board = useBoardSyncStatus()
+  const alertFeed = useWorkbenchAlerts()
+  const alertsByProject = useMemo(() => alertsByHandle(alertFeed.alerts), [alertFeed.alerts])
   const items = live.items
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [manualOpen, setManualOpen] = useState(false)
@@ -184,6 +197,24 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const healthLabel =
     live.healthState === 'online' ? '在线' : live.healthState === 'offline' ? '离线' : '连接中'
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
+  const alertToasts = alertFeed.toasts.filter((toast) => {
+    const match = items.find((item) => handleKey(item.handle) === handleKey(toast.handle))
+    if (!match) return false
+    const launched = isLaunchedHandle(launchedHandles, match.handle) || rowLaunched(live.launched, match)
+    return remindersAllowed({ pinned: true, launched })
+  })
+  const openAlert = (toast: WorkbenchToast) => {
+    dismissWorkbenchToast(toast.id)
+    const key = handleKey(toast.handle)
+    const match = items.find((item) => handleKey(item.handle) === key)
+    if (!match) return
+    setTableQuery('')
+    setDetailId(match.id)
+    markWorkbenchAlertsRead(match.handle)
+    window.requestAnimationFrame(() => {
+      document.getElementById(workbenchRowDomId(match.handle))?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+  }
 
   return (
     <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6">
@@ -545,8 +576,24 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const pace = [formatInterval(status?.intervalS ?? null), formatMs(status?.lastLatencyMs ?? null)].filter(Boolean).join(' · ')
                 const launched = isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)
                 const listing = catalogListing(candidate, status, new Date(live.now))
+                const projectKey = handleKey(item.handle)
+                const projectAlerts = projectKey ? alertsByProject.get(projectKey) ?? [] : []
+                const showReminders = remindersAllowed({ pinned: Boolean(projectKey), launched })
+                const unread = showReminders && alertFeed.unread.has(projectKey)
+                const highlightUntil = projectKey ? alertFeed.highlightUntil[projectKey] ?? 0 : 0
+                const highlightRemain = highlightUntil - live.now
+                const hot = showReminders && highlightRemain > 0
                 return (
-                  <tr key={item.id} className="border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)]">
+                  <tr
+                    key={item.id}
+                    id={workbenchRowDomId(item.handle) || undefined}
+                    className={`border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)] ${hot ? 'wb-alert-hot' : ''}`}
+                    style={
+                      hot
+                        ? { backgroundColor: `rgba(250, 204, 21, ${0.18 + 0.42 * (highlightRemain / ALERT_HIGHLIGHT_MS)})` }
+                        : undefined
+                    }
+                  >
                     <td className="px-3 py-3">
                       <input
                         type="checkbox"
@@ -555,9 +602,24 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         onChange={() => toggleSelected(item.id)}
                       />
                     </td>
-                    <td className="max-w-[240px] px-2 py-3">
+                    <td className="max-w-[360px] px-2 py-3">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
+                        {unread && (
+                          <span className="inline-flex items-center gap-1">
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-rose-600" aria-label="新提醒">
+                              <span className="h-1.5 w-1.5 rounded-full bg-rose-600" aria-hidden="true" />
+                              {ALERT_UI.fresh}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => markWorkbenchAlertsRead(item.handle)}
+                              className="text-[10px] text-[var(--color-ink-muted)] hover:underline"
+                            >
+                              {ALERT_UI.read}
+                            </button>
+                          </span>
+                        )}
                         <ReviewedMark
                           handle={item.handle}
                           name={item.name}
@@ -572,6 +634,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         {urlProtocol(url) && <Pill tone="muted">{urlProtocol(url)}</Pill>}
                         {launched && <Pill tone="ok">已开盘</Pill>}
                       </div>
+                      {showReminders && <WorkbenchReminders alerts={projectAlerts} now={live.now} />}
                       {introFor(candidate) && (
                         <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">{introFor(candidate)}</p>
                       )}
@@ -702,6 +765,8 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </table>
         </div>
       )}
+
+      <WorkbenchAlertToasts toasts={alertToasts} onOpen={openAlert} onDismiss={dismissWorkbenchToast} />
 
       {detailItem && (
         <WorkbenchDetailModal

@@ -5,6 +5,7 @@
  */
 
 import { parsePinResponse, parseReviewResponse, type PinMergeState, type ReviewWire } from './syncMerge.ts'
+import { parseWorkbenchAlertList, type WorkbenchAlert } from './workbenchAlerts.ts'
 
 export const SOCKET_AUTH_CLOSE = 4401
 /** Worker restarted. Reconnect on a short backoff instead of the normal 1s series. */
@@ -14,6 +15,8 @@ export type SocketEvent =
   | { kind: 'hello'; version: string; serverTime: string; launched: unknown; blocklist: unknown }
   | { kind: 'pins'; state: PinMergeState; originClientId: string }
   | { kind: 'reviewed'; marks: Record<string, ReviewWire>; originClientId: string }
+  | { kind: 'alerts_snapshot'; alerts: WorkbenchAlert[] }
+  | { kind: 'alerts_incremental'; alerts: WorkbenchAlert[] }
   | { kind: 'radar'; cards: unknown[]; syncedAt: string; originClientId: string; event: string }
   | { kind: 'radar_delta'; cards: unknown[]; originClientId: string }
   | { kind: 'launched_mark'; payload: unknown; originClientId: string }
@@ -134,6 +137,16 @@ export function parseSocketMessage(raw: unknown): SocketEvent {
     const parsed = parseReviewResponse(row.state)
     if (!parsed) return { kind: 'ignore' }
     return { kind: 'reviewed', marks: parsed.marks, originClientId }
+  }
+  if ((type === 'workbench_alerts' || type === 'workbench_alert') && row.dry_run === true) {
+    return { kind: 'ignore' }
+  }
+  if (type === 'workbench_alerts') {
+    const state = asRecord(row.state) ?? row
+    return { kind: 'alerts_snapshot', alerts: parseWorkbenchAlertList(state) }
+  }
+  if (type === 'workbench_alert') {
+    return { kind: 'alerts_incremental', alerts: parseWorkbenchAlertList(row) }
   }
   return { kind: 'ignore' }
 }
