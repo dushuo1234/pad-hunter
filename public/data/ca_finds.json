@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T19:49:01+08:00",
+  "generated_at": "2026-10-23T19:49:49+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 42,
@@ -5601,12 +5601,19 @@
       "evidence_url": "https://x.com/CryptoPlanesRH",
       "detected_at": "2026-10-23T19:49:00+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via symbol:CRYPTO; deployer=0x61e697835cb1bc6f0d3e7fccb83e6b819c066f1e; token=Crypto / Crypto; ca_gate: ERC20 verified: Crypto dec=18",
+      "note": "onchain_lock medium via symbol:CRYPTO; deployer=0x61e697835cb1bc6f0d3e7fccb83e6b819c066f1e; token=Crypto / Crypto; onchain_lock medium via symbol:CRYPTO; deployer=0x852faed52d0ae80bc786dfc630a677f0a60b4ec1; token=Crypto / Crypto; ca_gate: ERC20 verified: Crypto dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
           "detected_at": "2026-10-23T19:49:00+08:00",
+          "reason": "symbol:CRYPTO",
+          "via": "factory:univ4_pm_base:Initialize"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T19:49:47+08:00",
           "reason": "symbol:CRYPTO",
           "via": "factory:univ4_pm_base:Initialize"
         }
