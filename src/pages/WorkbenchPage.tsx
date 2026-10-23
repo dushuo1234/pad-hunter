@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useCallback, useMemo, useState, type ReactNode } from 'react'
 import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
@@ -545,7 +545,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </p>
         </div>
       ) : (
-        <div className="mt-3 overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
+        <div className="wb-board-scroll mt-3 overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
           <table className="w-full min-w-[1320px] border-collapse text-left">
             <caption className="sr-only">工作台钉选项目</caption>
             <thead className="bg-[var(--color-cream-2)] text-[11px] text-[var(--color-ink-muted)] dark:bg-[var(--color-night-2)]">
@@ -602,8 +602,8 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const unread = showReminders && flashingAlertIds(projectAlerts, alertFeed.readIds).length > 0
                 const attentionClass = unread ? 'wb-row-flash' : tone ? 'wb-row-accent' : ''
                 return (
+                  <Fragment key={item.id}>
                   <tr
-                    key={item.id}
                     id={workbenchRowDomId(item.handle) || undefined}
                     data-alert-tone={tone ?? undefined}
                     title={unread ? ALERT_UI.consoleStop : undefined}
@@ -664,14 +664,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                           now={live.now}
                           readIds={alertFeed.readIds}
                           onAcknowledge={() => markWorkbenchAlertsRead(item.handle)}
-                        />
-                      )}
-                      {showReminders && (
-                        <WorkbenchAlertConsole
-                          alerts={projectAlerts}
-                          readIds={alertFeed.readIds}
-                          name={item.name}
-                          handle={item.handle}
                         />
                       )}
                       {introFor(candidate) && (
@@ -798,6 +790,21 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       </button>
                     </td>
                   </tr>
+                  {showReminders && (
+                    <tr className="wb-console-slot">
+                      <td colSpan={13} className="p-0">
+                        <div className="wb-console-span">
+                          <WorkbenchAlertConsole
+                            alerts={projectAlerts}
+                            readIds={alertFeed.readIds}
+                            name={item.name}
+                            handle={item.handle}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  </Fragment>
                 )
               })}
             </tbody>
