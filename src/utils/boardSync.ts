@@ -1,7 +1,9 @@
 /**
  * Cross-device sync for workbench pins and 「已看」 marks.
- * With a token: pull on connect, every 25s, and when the window is focused,
- * merge last-write-wins, then push local edits. A 404 means the old backend:
+ * With a token: pull on connect, on focus, and on a timer, then merge last-write-wins.
+ * A live socket at /v1/workbench/ws applies the same snapshots immediately and is
+ * the preferred push path. HTTP polling stays at 25s while the socket is down and
+ * slows to 60s while it is open. A 404 on the pin GET means the old backend:
  * pins fall back to a non-empty full replace, and reviewed marks stay on this device.
  */
 
@@ -15,6 +17,7 @@ import {
   getApiSettings,
   isAuthError,
   isNotFound,
+  getClientId,
   pushMergedPins,
   pushMergedReviewed,
   resolveApiBase,
@@ -45,6 +48,15 @@ import {
   type ReviewWire,
 } from './syncMerge'
 import {
+  isSocketAuthClose,
+  parseSocketMessage,
+  pinsSyncFrame,
+  pongFrame,
+  reviewedSyncFrame,
+  workbenchWsUrl,
+  wsBackoffMs,
+} from './workbenchSocket'
+import {
   applyIntegratedPins,
   getWorkbenchItems,
   getWorkbenchTombstones,
@@ -59,12 +71,14 @@ import {
 } from './workbench'
 
 const PULL_MS = 25_000
+const PULL_SLOW_MS = 60_000
 const PUSH_MS = 500
+const PUSH_FAST_MS = 150
 
 export interface BoardSyncStatus {
   phase: 'idle' | 'syncing' | 'ok' | 'error'
   message: string | null
-  hint: '' | '已同步' | '同步失败，仅本机'
+  hint: '' | '实时同步中' | '已同步' | '同步失败，仅本机'
   authError: boolean
 }
 
@@ -104,6 +118,17 @@ let pinLock: Promise<void> = Promise.resolve()
 let reviewLock: Promise<void> = Promise.resolve()
 let unsubs: Array<() => void> = []
 let onWake: (() => void) | null = null
+let onOnline: (() => void) | null = null
+
+let socket: WebSocket | null = null
+let socketGen = 0
+let wsOpen = false
+let wsAttempt = 0
+let wsTimer = 0
+let wsAuthBlocked = false
+let pendingPins: PinMergeState | null = null
+let pendingReviews: Record<string, ReviewWire> | null = null
+let pinInflight = 0
 
 export function getBoardSyncStatus(): BoardSyncStatus {
   return status
@@ -137,7 +162,8 @@ export function startBoardSync(): () => void {
 function publishStatus() {
   const token = currentAuth().token
   let hint: BoardSyncStatus['hint'] = ''
-  if (token && (pinError || reviewError)) hint = '同步失败，仅本机'
+  if (token && (wsAuthBlocked || pinError || reviewError)) hint = '同步失败，仅本机'
+  else if (token && wsOpen) hint = '实时同步中'
   else if (token && (pinOk || reviewOk)) hint = '已同步'
   const phase: BoardSyncStatus['phase'] = !token
     ? 'idle'
@@ -336,6 +362,7 @@ function deferPinPush(): boolean {
 
 function noteFailure(error: unknown, kind: 'pin' | 'review') {
   if (isAuthError(error)) authFailed = true
+  else if (wsOpen) return
   const message = errorText(error)
   if (kind === 'pin') {
     pinError = message
@@ -380,7 +407,7 @@ async function pushPinsBody() {
   const id = session
   const { token, base } = currentAuth()
   if (!sessionAlive(id) || !token) return
-  if (!pinsProbed) {
+  if (!pinsProbed && !wsOpen) {
     await pullPinsBody(id, token, base, false)
     return
   }
@@ -415,6 +442,7 @@ async function pushPinsBody() {
   const sent = currentPinState()
   if (lastRemotePins && !pinsNeedPush(sent, lastRemotePins)) return
   if (sent.items.length === 0 && sent.removed.length === 0) return
+  if (sendPinsOverSocket(sent)) return
   begin(false)
   try {
     const response = await pushMergedPins(base, token, sent)
@@ -518,7 +546,7 @@ async function pushReviewsBody() {
   const id = session
   const { token, base } = currentAuth()
   if (!sessionAlive(id) || !token) return
-  if (!reviewedProbed) {
+  if (!reviewedProbed && !wsOpen) {
     await pullReviewsBody(id, token, base, false)
     return
   }
@@ -526,6 +554,7 @@ async function pushReviewsBody() {
   const sent = currentReviewState()
   if (lastRemoteReviews && !reviewsNeedPush(sent, lastRemoteReviews)) return
   if (!lastRemoteReviews && Object.keys(sent).length === 0) return
+  if (sendReviewsOverSocket(sent)) return
   begin(false)
   try {
     const returned = await pushMergedReviewed(base, token, sent)
@@ -553,12 +582,204 @@ async function pushReviewsBody() {
   }
 }
 
+function pushDelay(): number {
+  return wsOpen ? PUSH_FAST_MS : PUSH_MS
+}
+
+function socketSend(data: unknown): boolean {
+  if (!socket || socket.readyState !== WebSocket.OPEN) return false
+  try {
+    socket.send(JSON.stringify(data))
+    return true
+  } catch {
+    return false
+  }
+}
+
+function sendPinsOverSocket(sent: PinMergeState): boolean {
+  if (pinsLegacy || !socketSend(pinsSyncFrame(getClientId(), sent))) return false
+  pinInflight += 1
+  pendingPins = sent
+  lastRemotePins = sent
+  authFailed = false
+  pinError = null
+  pinOk = true
+  pinCount = sent.items.length
+  publishStatus()
+  return true
+}
+
+function sendReviewsOverSocket(sent: Record<string, ReviewWire>): boolean {
+  if (reviewedLegacy || !socketSend(reviewedSyncFrame(getClientId(), sent))) return false
+  pendingReviews = sent
+  lastRemoteReviews = sent
+  authFailed = false
+  reviewError = null
+  reviewOk = true
+  publishStatus()
+  return true
+}
+
+function applySocketPins(state: PinMergeState, originClientId: string) {
+  pinsLegacy = false
+  pinsProbed = true
+  authFailed = false
+  pinError = null
+  let remote = state
+  if (originClientId && originClientId === getClientId()) {
+    // The socket is ordered, but a local edit can send again before the first
+    // echo. Only the echo that settles the latest send may invent tombstones.
+    pinInflight = Math.max(0, pinInflight - 1)
+    if (pinInflight === 0 && pendingPins) {
+      remote = withDroppedHandles(pendingPins, state, nowIso())
+      pendingPins = null
+    }
+  }
+  const needsPush = integrateRemotePins(remote)
+  pinCount = getWorkbenchItems().filter((item) => handleKey(item.handle)).length
+  pinOk = true
+  publishStatus()
+  if (needsPush) schedulePinPush()
+}
+
+function applySocketReviews(marks: Record<string, ReviewWire>, originClientId: string) {
+  reviewedLegacy = false
+  reviewedProbed = true
+  authFailed = false
+  reviewError = null
+  if (pendingReviews && originClientId && originClientId === getClientId()) pendingReviews = null
+  const needsPush = integrateRemoteReviews(marks)
+  reviewOk = true
+  publishStatus()
+  if (needsPush) scheduleReviewPush()
+}
+
+function onSocketMessage(raw: unknown) {
+  const message = parseSocketMessage(raw)
+  if (message.kind === 'ping') {
+    socketSend(pongFrame())
+    return
+  }
+  if (message.kind === 'pins') applySocketPins(message.state, message.originClientId)
+  else if (message.kind === 'reviewed') applySocketReviews(message.marks, message.originClientId)
+}
+
+function closeSocket() {
+  socketGen += 1
+  wsOpen = false
+  pinInflight = 0
+  pendingPins = null
+  pendingReviews = null
+  const current = socket
+  socket = null
+  if (!current) return
+  current.onopen = null
+  current.onmessage = null
+  current.onerror = null
+  current.onclose = null
+  try {
+    current.close()
+  } catch {
+    // Already closing.
+  }
+}
+
+function restartPollInterval() {
+  window.clearInterval(interval)
+  interval = 0
+  if (users === 0) return
+  interval = window.setInterval(() => {
+    if (document.visibilityState === 'hidden') return
+    schedulePull(0, true)
+  }, wsOpen ? PULL_SLOW_MS : PULL_MS)
+}
+
+function markSocketAuthFailure() {
+  wsAuthBlocked = true
+  authFailed = true
+  pinError = '令牌无效或缺失'
+  wsOpen = false
+  publishStatus()
+}
+
+function scheduleSocketReconnect() {
+  if (users === 0 || wsAuthBlocked || !currentAuth().token) return
+  window.clearTimeout(wsTimer)
+  const delay = wsBackoffMs(wsAttempt)
+  wsAttempt = Math.min(wsAttempt + 1, 8)
+  wsTimer = window.setTimeout(() => {
+    if (users === 0 || wsAuthBlocked) return
+    openSocket()
+  }, delay)
+}
+
+function openSocket() {
+  if (users === 0 || wsAuthBlocked) return
+  window.clearTimeout(wsTimer)
+  const { token, base } = currentAuth()
+  if (!token || typeof WebSocket === 'undefined') return
+  let url = ''
+  try {
+    url = workbenchWsUrl(base, token)
+  } catch {
+    return
+  }
+  closeSocket()
+  const gen = socketGen
+  let ws: WebSocket
+  try {
+    ws = new WebSocket(url)
+  } catch {
+    scheduleSocketReconnect()
+    return
+  }
+  socket = ws
+  ws.onopen = () => {
+    if (gen !== socketGen) return
+    wsOpen = true
+    wsAttempt = 0
+    authFailed = false
+    pinError = null
+    reviewError = null
+    restartPollInterval()
+    publishStatus()
+  }
+  ws.onmessage = (event) => {
+    if (gen !== socketGen) return
+    onSocketMessage(event.data)
+  }
+  ws.onerror = () => {
+    // onclose follows and decides whether to reconnect.
+  }
+  ws.onclose = (event) => {
+    if (gen !== socketGen) return
+    if (socket === ws) socket = null
+    wsOpen = false
+    if (isSocketAuthClose(event.code)) {
+      markSocketAuthFailure()
+      restartPollInterval()
+      return
+    }
+    restartPollInterval()
+    publishStatus()
+    scheduleSocketReconnect()
+  }
+}
+
+function wakeSocket() {
+  if (users === 0 || wsAuthBlocked || !currentAuth().token) return
+  if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return
+  wsAttempt = 0
+  window.clearTimeout(wsTimer)
+  openSocket()
+}
+
 function schedulePinPush() {
   if (users === 0) return
   window.clearTimeout(pinTimer)
   pinTimer = window.setTimeout(() => {
     void runLocked('pin', () => pushPinsBody())
-  }, PUSH_MS)
+  }, pushDelay())
 }
 
 function scheduleReviewPush() {
@@ -566,7 +787,7 @@ function scheduleReviewPush() {
   window.clearTimeout(reviewTimer)
   reviewTimer = window.setTimeout(() => {
     void runLocked('review', () => pushReviewsBody())
-  }, PUSH_MS)
+  }, pushDelay())
 }
 
 function schedulePull(delay: number, quiet: boolean) {
@@ -591,14 +812,29 @@ function schedulePull(delay: number, quiet: boolean) {
 
 function onSettings() {
   resetProbe()
+  wsAuthBlocked = false
+  wsAttempt = 0
+  pendingPins = null
+  pendingReviews = null
+  if (currentAuth().token) {
+    openSocket()
+    schedulePull(0, false)
+  } else {
+    closeSocket()
+    restartPollInterval()
+  }
   publishStatus()
-  if (currentAuth().token) schedulePull(0, false)
 }
 
 function arm() {
   session += 1
   onWake = () => {
     if (document.visibilityState === 'hidden') return
+    wakeSocket()
+    schedulePull(200, true)
+  }
+  onOnline = () => {
+    wakeSocket()
     schedulePull(200, true)
   }
   unsubs = [
@@ -614,12 +850,12 @@ function arm() {
   ]
   window.addEventListener('focus', onWake)
   document.addEventListener('visibilitychange', onWake)
-  interval = window.setInterval(() => {
-    if (document.visibilityState === 'hidden') return
-    schedulePull(0, true)
-  }, PULL_MS)
-  if (currentAuth().token) schedulePull(0, false)
-  else publishStatus()
+  window.addEventListener('online', onOnline)
+  restartPollInterval()
+  if (currentAuth().token) {
+    openSocket()
+    schedulePull(0, false)
+  } else publishStatus()
 }
 
 function disarm() {
@@ -627,16 +863,22 @@ function disarm() {
   window.clearTimeout(pinTimer)
   window.clearTimeout(reviewTimer)
   window.clearTimeout(pullTimer)
-  window.clearInterval(interval)
-  interval = 0
+  window.clearTimeout(wsTimer)
+  closeSocket()
+  restartPollInterval()
   if (onWake) {
     window.removeEventListener('focus', onWake)
     document.removeEventListener('visibilitychange', onWake)
     onWake = null
   }
+  if (onOnline) {
+    window.removeEventListener('online', onOnline)
+    onOnline = null
+  }
   for (const unsub of unsubs) unsub()
   unsubs = []
   loud = 0
   pullQuiet = true
+  wsOpen = false
   publishStatus()
 }
