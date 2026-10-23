@@ -1,11 +1,13 @@
 import {
   isSocketAuthClose,
+  isSocketRedeployClose,
   parseSocketMessage,
   pinsSyncFrame,
   pongFrame,
   reviewedSyncFrame,
   workbenchWsUrl,
   wsBackoffMs,
+  wsRedeployBackoffMs,
 } from '../src/utils/workbenchSocket.ts'
 
 function fail(message: string): never {
@@ -84,6 +86,43 @@ if (reviewFrame.type !== 'reviewed_sync' || reviewFrame.body.client_id !== 'me' 
 
 if (!isSocketAuthClose(4401)) fail('4401 is the bad-token close')
 if (isSocketAuthClose(1006)) fail('network close is not an auth failure')
+if (!isSocketRedeployClose(1012)) fail('1012 is a worker redeploy')
+if (isSocketRedeployClose(1000) || isSocketRedeployClose(1006) || isSocketRedeployClose(4401)) fail('only 1012 is a redeploy close')
+if (wsRedeployBackoffMs(0, 0) !== 500) fail(`redeploy backoff 0 ${wsRedeployBackoffMs(0, 0)}`)
+if (wsRedeployBackoffMs(1, 0) !== 1000) fail(`redeploy backoff 1 ${wsRedeployBackoffMs(1, 0)}`)
+if (wsRedeployBackoffMs(2, 0) !== 2000) fail(`redeploy backoff 2 ${wsRedeployBackoffMs(2, 0)}`)
+if (wsRedeployBackoffMs(0, 1) !== 600) fail(`redeploy jitter ${wsRedeployBackoffMs(0, 1)}`)
+if (wsRedeployBackoffMs(8, 1) !== 30_000) fail('redeploy backoff must not exceed 30s')
+
+const radar = parseSocketMessage({
+  type: 'radar',
+  origin_client_id: 'box',
+  event: 'upsert',
+  state: { synced_at: '2026-10-23T09:00:00.000Z', cards: [{ handle: 'NewOne', name: '新' }] },
+})
+if (radar.kind !== 'radar') fail('radar kind')
+if (radar.kind === 'radar') {
+  if (radar.cards.length !== 1 || radar.event !== 'upsert' || radar.syncedAt !== '2026-10-23T09:00:00.000Z') fail('radar payload')
+  if (radar.originClientId !== 'box') fail('radar origin')
+}
+const delta = parseSocketMessage({ type: 'radar_delta', cards: [{ handle: 'NewTwo' }], origin_client_id: 'box' })
+if (delta.kind !== 'radar_delta' || delta.kind === 'radar_delta' && delta.cards.length !== 1) fail('radar_delta')
+const launched = parseSocketMessage({
+  type: 'launched_mark',
+  origin_client_id: 'site-abc',
+  mark: { handle: 'NewOne', name: '新', reason: 'manual' },
+})
+if (launched.kind !== 'launched_mark') fail('launched_mark kind')
+const unmark = parseSocketMessage({ type: 'launched_unmark', handle: '@SomeHandle', origin_client_id: 'site-abc' })
+if (unmark.kind !== 'launched_unmark') fail('launched_unmark kind')
+if (unmark.kind === 'launched_unmark' && (unmark.handle !== '@SomeHandle' || unmark.originClientId !== 'site-abc')) fail('launched_unmark handle')
+const unmarkState = parseSocketMessage({ type: 'launched_unmark', state: { handle: 'Beta' } })
+if (unmarkState.kind !== 'launched_unmark' || unmarkState.kind === 'launched_unmark' && unmarkState.handle !== 'Beta') fail('launched_unmark state handle')
+if (parseSocketMessage({ type: 'launched_unmark' }).kind !== 'ignore') fail('launched_unmark needs a handle')
+const blocked = parseSocketMessage({ type: 'blocklist', state: { handles: ['NewOne'], manual_count: 1 } })
+if (blocked.kind !== 'blocklist') fail('blocklist kind')
+const helloWith = parseSocketMessage({ type: 'hello', version: '1', launched: { marks: [] }, blocklist: { handles: [] } })
+if (helloWith.kind !== 'hello' || helloWith.kind === 'hello' && helloWith.launched == null) fail('hello carries launched')
 
 const dryRun = parseSocketMessage({
   type: 'workbench_alert',

@@ -13,6 +13,7 @@ import {
 } from '../utils/workbenchApi'
 import type { WorkbenchItem } from '../utils/workbench'
 import { reviewSnapshot } from '../utils/reviewed'
+import { ConfirmLaunchedButton } from './ConfirmLaunchedButton'
 import { PushDate } from './PushDate'
 import { ReviewedMark } from './ReviewedMark'
 import { WorkbenchReminders } from './WorkbenchReminders'
@@ -350,6 +351,9 @@ export function WorkbenchDetailModal({
             >
               移出工作台
             </button>
+            {!launched && (
+              <ConfirmLaunchedButton handle={item.handle} name={item.name} candidate={candidate} />
+            )}
           </div>
 
           {!token && <p className="mt-3 text-xs text-[var(--color-ink-muted)]">填写监控接口令牌后可查看变更和抓取历史。</p>}

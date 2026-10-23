@@ -1,4 +1,4 @@
-import { formatPushDate, pushDateText, resolvePushDate, withProjectPushDates } from '../src/utils/pushDate.ts'
+import { comparePushDateRecords, formatPushDate, pushDateText, resolvePushDate, withProjectPushDates } from '../src/utils/pushDate.ts'
 
 function fail(message: string): never {
   throw new Error(message)
@@ -52,5 +52,16 @@ const kept = withProjectPushDates(
 )
 if (resolvePushDate(kept)?.field !== 'date_iso') fail('existing candidate timestamp wins over an older snapshot when both exist')
 if (kept[0].date_iso !== '2026-10-22T13:14:21+00:00') fail('candidate date_iso changed')
+
+const newerFirst = comparePushDateRecords(
+  { records: [{ push_date: '2026-10-01T00:00:00Z' }], name: '旧' },
+  { records: [{ push_date: '2026-10-20T00:00:00Z' }], name: '新' },
+)
+if (newerFirst <= 0) fail('newer 推送日期 should sort first')
+const missingLast = comparePushDateRecords(
+  { records: [{ removed_at: '2026-10-23T00:00:00Z' }], name: '无' },
+  { records: [{ push_date: '2026-10-01T00:00:00Z' }], name: '有' },
+)
+if (missingLast <= 0) fail('missing 推送日期 should sort last, and 移出时间 is not a push date')
 
 console.log('push date checks ok')

@@ -21,6 +21,7 @@ import {
   type WorkbenchStatusItem,
 } from '../utils/workbenchApi'
 import { observeWorkbenchStatus, retainWorkbenchLive } from '../utils/caAlert'
+import { isLocalLaunchHold } from '../utils/launchedMark'
 import { getAutoRemoveMessage, handleKey, removeLaunchedWorkbenchItems, subscribeAutoRemoveMessage } from '../utils/workbench'
 import { useWorkbenchItems } from './useWorkbench'
 
@@ -64,7 +65,8 @@ export function useWorkbenchLive(launchedHandles: ReadonlySet<string> = EMPTY_HA
     const keys = new Set<string>()
     for (const handle of launchedHandles) {
       const key = handleKey(handle)
-      if (key) keys.add(key)
+      // A confirm that has not finished POST stays on the workbench until it succeeds.
+      if (key && !isLocalLaunchHold(key)) keys.add(key)
     }
     for (const handle of launched.handles) {
       const key = handleKey(handle)

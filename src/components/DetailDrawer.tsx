@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
+import { ConfirmLaunchedButton } from './ConfirmLaunchedButton'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { ReviewedMark } from './ReviewedMark'
 import { SourceBadge } from './SourceBadge'
@@ -130,6 +131,7 @@ export function DetailDrawer({ candidate, onClose }: DetailDrawerProps) {
 
         <div className="space-y-2 border-t border-[var(--color-line)] px-5 py-4 dark:border-[var(--color-night-line)]">
           <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
+          <ConfirmLaunchedButton candidate={c} className="w-full" />
           <div className="flex gap-2">
           <a
             href={monitorPath(c.handle)}

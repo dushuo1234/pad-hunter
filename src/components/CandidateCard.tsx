@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Candidate } from '../types'
 import { monitorPath } from '../router'
+import { ConfirmLaunchedButton } from './ConfirmLaunchedButton'
 import { PinWorkbenchButton } from './PinWorkbenchButton'
 import { ReviewedMark } from './ReviewedMark'
 import { SourceBadge } from './SourceBadge'
@@ -140,8 +141,9 @@ export function CandidateCard({ candidate: c, onOpen, compact = false }: Candida
         </span>
       </div>
 
-      <div className="mt-3 border-t border-[var(--color-line)] pt-3 dark:border-[var(--color-night-line)]">
+      <div className="mt-3 space-y-2 border-t border-[var(--color-line)] pt-3 dark:border-[var(--color-night-line)]">
         <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
+        <ConfirmLaunchedButton candidate={c} className="w-full" />
       </div>
     </article>
   )

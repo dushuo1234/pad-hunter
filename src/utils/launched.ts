@@ -1,5 +1,6 @@
 import type { Candidate } from '../types'
 import { launchTimeText, structuredLaunch } from './launch'
+import { comparePushDateRecords } from './pushDate'
 
 export interface LaunchedItem {
   project: string
@@ -85,9 +86,21 @@ export function readLaunched(data: unknown): LaunchedDocument {
       ...pushFields(item),
     })
   }
-  items.sort((a, b) => (Date.parse(b.removedAt) || 0) - (Date.parse(a.removedAt) || 0))
   const generatedAt = asString(record.generated_at || record.generatedAt) || undefined
-  return { generatedAt, count: items.length, items }
+  return { generatedAt, count: items.length, items: sortLaunchedItems(items) }
+}
+
+/** Newest 推送日期 first. Rows with no push date stay last. Does not use 移出时间. */
+export function sortLaunchedItems(
+  items: readonly LaunchedItem[],
+  recordsFor: (item: LaunchedItem) => readonly unknown[] = (item) => [item],
+): LaunchedItem[] {
+  return [...items].sort((a, b) =>
+    comparePushDateRecords(
+      { records: recordsFor(a), name: a.project || a.handle },
+      { records: recordsFor(b), name: b.project || b.handle },
+    ),
+  )
 }
 
 export function launchedHandleSet(items: LaunchedItem[]): Set<string> {

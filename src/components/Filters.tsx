@@ -15,7 +15,7 @@ interface FiltersProps {
 }
 
 const SORTS: [SortKey, string][] = [
-  ['date', '最新'],
+  ['date', '推送日期（最新）'],
   ['score', '评分'],
   ['followers', '粉丝'],
   ['kol_followers', 'KOL'],

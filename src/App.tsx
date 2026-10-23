@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { CaAlertToasts } from './components/CaAlert'
+import { LiveToasts } from './components/LiveToasts'
 import { Header } from './components/Header'
 import { useBoardSync } from './hooks/useBoardSync'
 import { useCaAlertWatcher } from './hooks/useCaAlertWatcher'
@@ -110,6 +111,7 @@ export default function App() {
       )}
 
       <CaAlertToasts />
+      <LiveToasts />
 
       <footer className="border-t border-[var(--color-line)] py-8 text-center dark:border-[var(--color-night-line)]">
         <p className="font-mono text-[11px] text-[var(--color-ink-muted)]">

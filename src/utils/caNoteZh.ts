@@ -8,31 +8,32 @@ type Replacer = (match: string, ...groups: string[]) => string
 
 const PHRASES: Array<[RegExp, string | Replacer]> = [
   [
-    /ca_gate:\s*ERC20 verified:\s*(\S+)\s*dec=(\d+)/gi,
-    (_match, symbol, decimals) => `核验：已确认 ERC20（符号 ${symbol}，精度 ${decimals}）`,
+    // On-chain symbols are free text and may contain spaces. Stop at dec=.
+    /(?:ca_gate:\s*)?ERC20 verified:\s*(.+?)\s*dec=(\d+)/gi,
+    (_match, symbol, decimals) => `核验：已确认 ERC20（符号 ${symbol.trim()}，精度 ${decimals}）`,
   ],
   [
-    /ca_gate:\s*NFT contract \(([^)]+)\)\s*[—–-]+\s*not a token CA/gi,
+    /(?:ca_gate:\s*)?NFT contract \(([^)]+)\)\s*[—–-]+\s*not a token CA/gi,
     (_match, standard) => `核验：NFT 合约（${standard}），不是代币 CA`,
   ],
   [
-    /ca_gate:\s*SPL mint verified \(([^)]*)\)/gi,
+    /(?:ca_gate:\s*)?SPL mint verified \(([^)]*)\)/gi,
     (_match, inner) => `核验：已确认 SPL mint（${translateSplInner(inner)}）`,
   ],
   [
-    /ca_gate:\s*eth_getCode empty\s*\/\s*7702\s*(?:→|->)\s*EOA wallet/gi,
+    /(?:ca_gate:\s*)?eth_getCode empty\s*\/\s*7702\s*(?:→|->)\s*EOA wallet/gi,
     '核验：eth_getCode 为空或为 7702，判定为 EOA 钱包',
   ],
-  [/ca_gate:\s*not a valid Solana pubkey/gi, '核验：不是有效的 Solana 公钥'],
+  [/(?:ca_gate:\s*)?not a valid Solana pubkey/gi, '核验：不是有效的 Solana 公钥'],
   [
-    /ca_gate:\s*hex string \(hash\s*\/\s*git SHA\),?\s*not a Solana address/gi,
+    /(?:ca_gate:\s*)?hex string \(hash\s*\/\s*git SHA\),?\s*not a Solana address/gi,
     '核验：是十六进制字符串（哈希 / git SHA），不是 Solana 地址',
   ],
   [
-    /ca_gate:\s*contract bytecode but no ERC20 decimals\/symbol\s*[—–-]+\s*not a token CA/gi,
+    /(?:ca_gate:\s*)?contract bytecode but no ERC20 decimals\/symbol\s*[—–-]+\s*not a token CA/gi,
     '核验：有合约字节码，但没有 ERC20 精度或符号，不是代币 CA',
   ],
-  [/ca_gate:\s*account does not exist on Solana mainnet/gi, '核验：Solana 主网上不存在该账户'],
+  [/(?:ca_gate:\s*)?account does not exist on Solana mainnet/gi, '核验：Solana 主网上不存在该账户'],
   [
     /low confidence:\s*feed-style site that embeds third-party token icons\/posts/gi,
     '低置信：信息流站点嵌入第三方代币图标/帖子',
@@ -66,6 +67,9 @@ const PHRASES: Array<[RegExp, string | Replacer]> = [
   [/deployer=(0x[a-fA-F0-9]+)/g, (_match, address) => `部署者 ${address}`],
   [/creator=(0x[a-fA-F0-9]+)/g, (_match, address) => `创建者 ${address}`],
   [/tx=(0x[a-fA-F0-9]+)/g, (_match, hash) => `交易 ${hash}`],
+  [/deployer=(?:none|null)/gi, ''],
+  [/creator=(?:none|null)/gi, ''],
+  [/tx=(?:none|null)/gi, ''],
   [/superseded_by=(0x[a-fA-F0-9]+)/gi, (_match, address) => `已被取代，现用 ${address}`],
   [/token=([^;；]+)/gi, (_match, token) => `代币 ${token.trim()}`],
   [/via\s+x:(@?\S+)/gi, (_match, handle) => `来源官推 ${handle.startsWith('@') ? handle : `@${handle}`}`],
