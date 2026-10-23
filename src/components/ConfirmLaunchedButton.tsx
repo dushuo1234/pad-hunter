@@ -10,7 +10,7 @@ interface ConfirmLaunchedButtonProps {
   candidate?: Candidate | null
   handle?: string
   name?: string
-  variant?: 'button' | 'link'
+  variant?: 'button' | 'compact' | 'link'
   className?: string
 }
 
@@ -60,14 +60,16 @@ export function ConfirmLaunchedButton({
   const buttonClass =
     variant === 'link'
       ? `text-xs font-medium text-[var(--color-orange)] hover:underline disabled:cursor-not-allowed disabled:opacity-60 disabled:no-underline ${className}`
-      : `inline-flex items-center justify-center rounded-lg border border-[var(--color-line)] px-3 py-2 text-sm font-medium text-[var(--color-ink-soft)] hover:border-[var(--color-orange)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--color-night-line)] dark:text-[var(--color-night-soft)] ${className}`
+      : variant === 'compact'
+        ? `inline-flex items-center justify-center rounded-md border border-[var(--color-line)] bg-[var(--color-card)] px-2 py-1 text-[11px] font-medium text-[var(--color-ink)] hover:border-[var(--color-orange)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-ink)] ${className}`
+        : `inline-flex items-center justify-center rounded-lg border border-[var(--color-line)] px-3 py-2 text-sm font-medium text-[var(--color-ink-soft)] hover:border-[var(--color-orange)] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[var(--color-night-line)] dark:text-[var(--color-night-soft)] ${className}`
 
   return (
     <>
       <button
         type="button"
         disabled={!token || pending}
-        title={token ? '确认已开盘并移出正在追踪的列表' : hint}
+        title={token ? '确认已开盘，并从其他分组移入已开盘' : hint}
         onClick={ask}
         onKeyDown={(event) => event.stopPropagation()}
         className={buttonClass}
@@ -96,7 +98,7 @@ export function ConfirmLaunchedButton({
               确认已开盘并移除？
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-              「{resolvedName}」会从正在追踪的列表消失，并记入已开盘。
+              「{resolvedName}」会离开工作台，并从即将开盘、项目推送和其他分组里移出，记入已开盘。其他打开的页面会一起更新。
             </p>
             {error && <p className="mt-2 text-xs text-rose-700 dark:text-rose-300">{error}</p>}
             <div className="mt-4 flex justify-end gap-2">

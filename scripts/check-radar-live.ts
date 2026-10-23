@@ -1,7 +1,7 @@
 import { compareCandidates } from '../src/utils/candidates.ts'
 import { upcomingLaunches } from '../src/utils/launch.ts'
 import { pushDateMillis } from '../src/utils/pushDate.ts'
-import { applyRadarDelta, applyRadarSnapshot, coerceRadarCard, getRadarOverlay, mergeRadarCards, readRadarCards } from '../src/utils/radarLive.ts'
+import { applyRadarDelta, applyRadarSnapshot, coerceRadarCard, forgetRadarHandles, getRadarOverlay, mergeRadarCards, readRadarCards } from '../src/utils/radarLive.ts'
 import type { Candidate } from '../src/types/index.ts'
 
 function fail(message: string): never {
@@ -66,6 +66,9 @@ applyRadarSnapshot([{ handle: 'snap', name: '快照', pushed_at: '2026-10-23T01:
 applyRadarDelta([{ handle: 'delta', name: '增量', pushed_at: '2026-10-23T02:00:00Z' }])
 const overlay = getRadarOverlay().map((item) => item.handle.toLowerCase())
 if (overlay.join(',') !== 'snap,delta') fail(`overlay ${overlay.join(',')}`)
+forgetRadarHandles(['@Snap'])
+const forgotten = getRadarOverlay().map((item) => item.handle.toLowerCase())
+if (forgotten.join(',') !== 'delta') fail(`forget launched handle ${forgotten.join(',')}`)
 
 const now = new Date('2026-10-22T08:00:00+08:00')
 const tie = upcomingLaunches(

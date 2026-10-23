@@ -28,7 +28,7 @@ export function LaunchedPage({ items, catalog, generatedAt, loading }: LaunchedP
         已开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        监控确认已经开盘的项目会从主列表移出，记在这里。按移出时间从新到旧排列。开盘时间没有记录时显示「未知」。
+        监控确认已经开盘，或在工作台点「确认已开盘」的项目，会从正在追踪的列表移出，记在这里。按推送日期从新到旧排列，没有推送日期的放在最后。开盘时间没有记录时显示「未知」。
         {generatedAt ? ` 归档时间 ${formatRemovedAt(generatedAt)}。` : ''}
       </p>
 
@@ -108,19 +108,17 @@ function LaunchedCard({ item, catalog }: { item: LaunchedItem; catalog: Candidat
           </p>
         </div>
         <div className="text-right">
-          <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">移出时间</div>
-          <time className="font-mono text-xs text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]" dateTime={item.removedAt || undefined}>
-            {formatRemovedAt(item.removedAt)}
-          </time>
+          <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">推送日期</div>
+          <div className="font-mono text-xs text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
+            <PushDate records={[item, pushedFrom]} variant="value" />
+          </div>
         </div>
       </div>
 
       <dl className="mt-4 grid gap-3 sm:grid-cols-2">
         <div className="min-w-0">
-          <dt className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">推送日期</dt>
-          <dd className="mt-1">
-            <PushDate records={[item, pushedFrom]} variant="value" />
-          </dd>
+          <dt className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">移出时间</dt>
+          <dd className="mt-1 text-sm text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{formatRemovedAt(item.removedAt)}</dd>
         </div>
         <Field label="开盘时间" value={when} />
         <div>

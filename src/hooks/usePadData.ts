@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Candidate, CandidatesPayload, MonitorEvent } from '../types'
 import { isWorkbenchSocketOpen, subscribeBoardSync } from '../utils/boardSync'
-import { withSourceFallback } from '../utils/candidates'
+import { findByHandle, withSourceFallback } from '../utils/candidates'
 import { getBlockSnapshot, getServerBlockSnapshot, subscribeBlocklist, withManualLaunched } from '../utils/launchedMark'
 import { withProjectPushDates } from '../utils/pushDate'
 import { applyListingTimes, readListingTimes, type ListingTimeEntry } from '../utils/launch'
-import { launchedHandleSet, readLaunched, withoutLaunched, type LaunchedDocument } from '../utils/launched'
+import { launchedHandleSet, readLaunched, sortLaunchedItems, withoutLaunched, type LaunchedDocument } from '../utils/launched'
 import { collectMonitorEvents, listedMonitorFiles, readMonitorDocument } from '../utils/monitor'
 import { getRadarOverlay, getServerRadarOverlay, mergeRadarCards, readRadarCards, subscribeRadar } from '../utils/radarLive'
 import { defaultApiBase, fetchRadarRecent, resolveApiBase, getApiSettings } from '../utils/workbenchApi'
@@ -194,7 +194,13 @@ export function usePadData() {
     () => withProjectPushDates(applyListingTimes(baseCandidates, listingTimes), projects),
     [baseCandidates, listingTimes, projects],
   )
-  const launchedView = useMemo(() => withManualLaunched(launched, blocked.manual), [launched, blocked])
+  const launchedView = useMemo(() => {
+    const merged = withManualLaunched(launched, blocked.manual)
+    return {
+      ...merged,
+      items: sortLaunchedItems(merged.items, (item) => [item, item.handle ? findByHandle(allCandidates, item.handle) : undefined]),
+    }
+  }, [launched, blocked, allCandidates])
   const launchedHandles = useMemo(() => {
     const set = launchedHandleSet(launchedView.items)
     for (const handle of blocked.handles) set.add(handle)

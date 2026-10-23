@@ -1,4 +1,5 @@
-import { applyServerBlocks, getBlockSnapshot, ingestBlocked, launchedMarkBody, parseBlocklist, parseLaunchedMarkPayload, parseLaunchedRecent, siteClientIdFrom, withManualLaunched } from '../src/utils/launchedMark.ts'
+import { applyServerBlocks, getBlockSnapshot, ingestBlocked, ingestLaunchNotice, launchedMarkBody, parseBlocklist, parseLaunchedMarkPayload, parseLaunchedRecent, releaseBlocked, siteClientIdFrom, withManualLaunched } from '../src/utils/launchedMark.ts'
+import { sortLaunchedItems, type LaunchedItem } from '../src/utils/launched.ts'
 import { retryAfterMs } from '../src/utils/workbenchApi.ts'
 
 function fail(message: string): never {
@@ -99,5 +100,54 @@ applyServerBlocks({ recent: [], block: [] })
 const cleared = getBlockSnapshot()
 if (cleared.handles.includes('stayblock') || cleared.handles.includes('unmarkme')) fail('empty server lists clear server-sourced blocks')
 if (!cleared.handles.includes('localonly')) fail('local mark still waits on POST')
+
+ingestLaunchNotice([{ handle: '@SocketMark', name: '甲', reason: 'manual', at: '2026-10-23T05:00:00.000Z' }])
+applyServerBlocks({ recent: [], block: [] })
+const held = getBlockSnapshot()
+if (!held.handles.includes('socketmark')) fail('socket mark waits for a list echo')
+if (!held.manual.some((mark) => mark.handle === 'socketmark')) fail('socket manual mark is on 已开盘 before echo')
+applyServerBlocks({
+  recent: [{ handle: 'socketmark', name: '甲', reason: 'manual', at: '2026-10-23T05:00:00.000Z' }],
+  block: [],
+})
+applyServerBlocks({ recent: [], block: [] })
+if (getBlockSnapshot().handles.includes('socketmark')) fail('echoed mark leaves when the server list drops it')
+
+ingestBlocked([{ handle: 'gone', name: '走', reason: 'manual', at: '2026-10-23T06:00:00.000Z' }], true, 'local')
+releaseBlocked('@Gone')
+if (getBlockSnapshot().handles.includes('gone')) fail('unmark drops the handle before refetch')
+
+function launchedRow(partial: Partial<LaunchedItem> & Pick<LaunchedItem, 'handle' | 'project'>): LaunchedItem {
+  return {
+    chain: '',
+    category: '',
+    xUrl: '',
+    sites: [],
+    listingAt: null,
+    ca: null,
+    caChain: null,
+    reason: '',
+    evidence: '',
+    removedAt: '',
+    ...partial,
+  }
+}
+
+const byPush = sortLaunchedItems([
+  launchedRow({ handle: 'old', project: '旧', push_date: '2026-10-01T00:00:00Z', removedAt: '2026-10-23T00:00:00Z' }),
+  launchedRow({ handle: 'fresh', project: '新', push_date: '2026-10-20T00:00:00Z', removedAt: '2026-10-02T00:00:00Z' }),
+  launchedRow({ handle: 'blank', project: '无', removedAt: '2026-10-22T00:00:00Z' }),
+])
+if (byPush.map((item) => item.handle).join(',') !== 'fresh,old,blank') {
+  fail(`launched order follows 推送日期, got ${byPush.map((item) => item.handle).join(',')}`)
+}
+const joined = sortLaunchedItems(
+  [
+    launchedRow({ handle: 'blank', project: '无', removedAt: '2026-10-23T00:00:00Z' }),
+    launchedRow({ handle: 'fresh', project: '新', removedAt: '2026-01-01T00:00:00Z' }),
+  ],
+  (item) => [item, item.handle === 'blank' ? { push_date: '2026-10-21T00:00:00Z' } : undefined],
+)
+if (joined.map((item) => item.handle).join(',') !== 'blank,fresh') fail('catalog push date places a manual row')
 
 console.log('launched mark checks ok')

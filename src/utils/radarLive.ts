@@ -212,6 +212,13 @@ export function applyRadarSnapshot(raw: unknown[], opts?: { announce?: boolean }
   if (opts?.announce) announce(cards, previous)
 }
 
+/** Drop live TG cards for handles that just moved to 已开盘. */
+export function forgetRadarHandles(handles: readonly string[]): void {
+  const drop = new Set(handles.map((handle) => radarHandleKey(handle)).filter(Boolean))
+  if (drop.size === 0 || overlay.length === 0) return
+  publish(overlay.filter((card) => !drop.has(radarHandleKey(card.handle))))
+}
+
 export function applyRadarDelta(raw: unknown[]): void {
   const cards = readRadarCards(raw)
   if (cards.length === 0) return

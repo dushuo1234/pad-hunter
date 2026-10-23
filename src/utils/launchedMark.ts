@@ -1,4 +1,4 @@
-import type { LaunchedDocument, LaunchedItem } from './launched'
+import { sortLaunchedItems, type LaunchedDocument, type LaunchedItem } from './launched'
 import { pinHandleKey } from './syncMerge'
 
 export interface ManualMark {
@@ -257,6 +257,12 @@ export function subscribeBlocklist(listener: () => void): () => void {
   }
 }
 
+/** True while a confirm or socket notice is waiting for GET to echo it. */
+export function isLocalLaunchHold(handle: string): boolean {
+  const entry = readBlockEntry(handle)
+  return Boolean(entry && !entry.fromRecent && !entry.fromBlock)
+}
+
 export function readBlockEntry(handle: string): BlockEntry | null {
   const key = pinHandleKey(handle)
   if (!key) return null
@@ -269,6 +275,30 @@ export function restoreBlockEntry(handle: string, previous: BlockEntry | null): 
   if (!key) return
   if (previous) entries.set(key, { ...previous, handle: key })
   else entries.delete(key)
+  publish()
+}
+
+/**
+ * A socket or POST notice. Marks the server lists have not echoed yet stay local,
+ * so an older poll cannot put the project back on 即将开盘, 项目推送, or the workbench.
+ * A mark already echoed by GET keeps its server flags.
+ */
+export function ingestLaunchNotice(marks: readonly ManualMark[]): void {
+  const fresh: ManualMark[] = []
+  const echoed: ManualMark[] = []
+  for (const mark of marks) {
+    const prev = readBlockEntry(mark.handle)
+    if (prev && (prev.fromRecent || prev.fromBlock)) echoed.push(mark)
+    else fresh.push(mark)
+  }
+  if (fresh.length > 0) ingestBlocked(fresh, false, 'local')
+  if (echoed.length > 0) ingestBlocked(echoed, false, 'block')
+}
+
+/** Drop one handle immediately. Used by `launched_unmark` before the list refetch. */
+export function releaseBlocked(handle: string): void {
+  const key = pinHandleKey(handle)
+  if (!key || !entries.delete(key)) return
   publish()
 }
 
@@ -367,7 +397,6 @@ export function withManualLaunched(doc: LaunchedDocument, marks: readonly Manual
       removedAt: mark.at,
     })
   }
-  if (extra.length === 0) return doc
-  const items = [...extra, ...doc.items].sort((a, b) => (Date.parse(b.removedAt) || 0) - (Date.parse(a.removedAt) || 0))
-  return { ...doc, count: items.length, items }
+  if (extra.length === 0) return { ...doc, items: sortLaunchedItems(doc.items) }
+  return { ...doc, count: doc.items.length + extra.length, items: sortLaunchedItems([...extra, ...doc.items]) }
 }

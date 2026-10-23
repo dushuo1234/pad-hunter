@@ -1,5 +1,6 @@
 import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from './candidates'
+import { comparePushDateRecords } from './pushDate'
 import { eventsForHandle, snapshotForCandidate, summarizeEvents, type MonitorSnapshot } from './monitor'
 import { nowIso, timestampMs, type PinWire } from './syncMerge'
 
@@ -648,8 +649,8 @@ export function progressForItem(item: WorkbenchItem, candidates: Candidate[], ev
 export function searchCatalog(candidates: Candidate[], query: string): Candidate[] {
   const q = query.trim().toLowerCase().replace(/^@/, '')
   if (!q) return []
-  const sorted = [...candidates].sort(
-    (a, b) => (Date.parse(b.date_iso || '') || 0) - (Date.parse(a.date_iso || '') || 0),
+  const sorted = [...candidates].sort((a, b) =>
+    comparePushDateRecords({ records: [a], name: a.name }, { records: [b], name: b.name }),
   )
   const seen = new Set<string>()
   const matches: Candidate[] = []
