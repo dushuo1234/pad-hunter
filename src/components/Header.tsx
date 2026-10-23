@@ -61,7 +61,7 @@ export function Header({ theme, route, todayCount, launchedCount, workbenchUnrea
           </nav>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex max-w-full min-w-0 flex-wrap items-center gap-2">
           <SoundAlertControls />
           <button
             type="button"

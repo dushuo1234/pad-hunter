@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useMemo, useState, type ReactNode, type UIEvent } from 'react'
 import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
@@ -66,6 +66,38 @@ interface WorkbenchPageProps {
 
 const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
+
+const BOARD_FRAME =
+  'wb-h-scroll w-full min-w-0 max-w-full overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]'
+
+/** Keep header and project rows aligned without letting that scroll widen the page or the consoles. */
+function syncBoardScroll(event: UIEvent<HTMLDivElement>) {
+  const left = event.currentTarget.scrollLeft
+  const nodes = event.currentTarget.ownerDocument.querySelectorAll<HTMLElement>('.wb-h-scroll')
+  for (const node of nodes) {
+    if (node !== event.currentTarget && node.scrollLeft !== left) node.scrollLeft = left
+  }
+}
+
+function BoardColumns() {
+  return (
+    <colgroup>
+      <col className="wb-board-col-check" />
+      <col className="wb-board-col-name" />
+      <col className="wb-board-col-date" />
+      <col className="wb-board-col-url" />
+      <col className="wb-board-col-x" />
+      <col className="wb-board-col-launch" />
+      <col className="wb-board-col-site" />
+      <col className="wb-board-col-checkat" />
+      <col className="wb-board-col-changes" />
+      <col className="wb-board-col-addr" />
+      <col className="wb-board-col-listing" />
+      <col className="wb-board-col-push" />
+      <col className="wb-board-col-ops" />
+    </colgroup>
+  )
+}
 
 export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
   const live = useWorkbenchLive(launchedHandles)
@@ -545,9 +577,11 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </p>
         </div>
       ) : (
-        <div className="wb-board-scroll mt-3 overflow-x-auto rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
-          <table className="w-full min-w-[1320px] border-collapse text-left">
+        <div className="mt-3 w-full min-w-0 max-w-full space-y-3">
+          <div className={BOARD_FRAME} onScroll={syncBoardScroll}>
+          <table className="wb-board-table">
             <caption className="sr-only">工作台钉选项目</caption>
+            <BoardColumns />
             <thead className="bg-[var(--color-cream-2)] text-[11px] text-[var(--color-ink-muted)] dark:bg-[var(--color-night-2)]">
               <tr>
                 <th scope="col" className="w-10 px-3 py-2">
@@ -575,15 +609,18 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 <th scope="col" className="px-3 py-2 font-medium">操作</th>
               </tr>
             </thead>
-            <tbody>
-              {visible.length === 0 && (
+            {visible.length === 0 && (
+              <tbody>
                 <tr>
                   <td colSpan={13} className="px-4 py-8 text-center text-sm text-[var(--color-ink-muted)]">
                     没有匹配的目标
                   </td>
                 </tr>
-              )}
-              {visible.map((item) => {
+              </tbody>
+            )}
+          </table>
+          </div>
+          {visible.map((item) => {
                 const candidate = candidateFor(item, candidates)
                 const status = item.handle ? live.statusByHandle.get(handleKey(item.handle)) : undefined
                 const url = displayUrl(item, candidate, status)
@@ -602,7 +639,11 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const unread = showReminders && flashingAlertIds(projectAlerts, alertFeed.readIds).length > 0
                 const attentionClass = unread ? 'wb-row-flash' : tone ? 'wb-row-accent' : ''
                 return (
-                  <Fragment key={item.id}>
+                  <div key={item.id} className="wb-project w-full min-w-0 max-w-full">
+                  <div className={BOARD_FRAME} onScroll={syncBoardScroll}>
+                  <table className="wb-board-table">
+                    <BoardColumns />
+                    <tbody>
                   <tr
                     id={workbenchRowDomId(item.handle) || undefined}
                     data-alert-tone={tone ?? undefined}
@@ -625,7 +666,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                     </td>
                     <td
                       data-alert-tone={tone ?? undefined}
-                      className={`max-w-[28rem] px-2 py-3 ${attentionClass}`}
+                      className={`px-2 py-3 ${attentionClass}`}
                     >
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
@@ -790,25 +831,20 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       </button>
                     </td>
                   </tr>
+                    </tbody>
+                  </table>
+                  </div>
                   {showReminders && (
-                    <tr className="wb-console-slot">
-                      <td colSpan={13} className="p-0">
-                        <div className="wb-console-span">
-                          <WorkbenchAlertConsole
-                            alerts={projectAlerts}
-                            readIds={alertFeed.readIds}
-                            name={item.name}
-                            handle={item.handle}
-                          />
-                        </div>
-                      </td>
-                    </tr>
+                    <WorkbenchAlertConsole
+                      alerts={projectAlerts}
+                      readIds={alertFeed.readIds}
+                      name={item.name}
+                      handle={item.handle}
+                    />
                   )}
-                  </Fragment>
+                  </div>
                 )
               })}
-            </tbody>
-          </table>
         </div>
       )}
 
