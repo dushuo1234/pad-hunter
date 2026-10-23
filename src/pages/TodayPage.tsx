@@ -9,6 +9,7 @@ import { monitorPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, shortAddr } from '../utils/format'
+import { localizeTimelineText } from '../utils/timelineZh'
 import {
   launchTimeText,
   listingSourceLabel,
@@ -187,7 +188,7 @@ function TodayRow({ row }: { row: UpcomingRow }) {
 
         <div className="min-w-0 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
           <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">最近信号</div>
-          <p className="line-clamp-2">{signal ? decodeSnippet(signal) : '无'}</p>
+          <p className="line-clamp-2">{signal ? localizeTimelineText(decodeSnippet(signal)) : '无'}</p>
         </div>
 
         <a
