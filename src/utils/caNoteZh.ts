@@ -8,8 +8,9 @@ type Replacer = (match: string, ...groups: string[]) => string
 
 const PHRASES: Array<[RegExp, string | Replacer]> = [
   [
-    /(?:ca_gate:\s*)?ERC20 verified:\s*(\S+)\s*dec=(\d+)/gi,
-    (_match, symbol, decimals) => `核验：已确认 ERC20（符号 ${symbol}，精度 ${decimals}）`,
+    // On-chain symbols are free text and may contain spaces. Stop at dec=.
+    /(?:ca_gate:\s*)?ERC20 verified:\s*(.+?)\s*dec=(\d+)/gi,
+    (_match, symbol, decimals) => `核验：已确认 ERC20（符号 ${symbol.trim()}，精度 ${decimals}）`,
   ],
   [
     /(?:ca_gate:\s*)?NFT contract \(([^)]+)\)\s*[—–-]+\s*not a token CA/gi,

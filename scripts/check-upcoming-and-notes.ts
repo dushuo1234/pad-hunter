@@ -206,6 +206,13 @@ const bonerExpected =
   '低置信：信息流站点嵌入第三方代币图标/帖子；多半不是本项目自有 CA；来自页面代币图标 URL（可能是第三方）；核验：已确认 ERC20（符号 BONER，精度 18）'
 if (bonerZh !== bonerExpected) fail(`boner\n${bonerZh}`)
 
+const colorful =
+  'onchain_lock low via name_fuzzy:color; deployer=0x501ef174b66883ba40f92e6fb24bfb49331d4d4c; token=Vibrant Alpine Village Beneath a Colorful Sky / Vibrant Alpine Village Beneath a Colorful Sky; ca_gate: ERC20 verified: Vibrant Alpine Village Beneath a Colorful Sky dec=18'
+const colorfulZh = localizeMachineNote(colorful)
+const colorfulExpected =
+  '链上锁定：低置信，依据名称模糊匹配 color；部署者 0x501ef174b66883ba40f92e6fb24bfb49331d4d4c；代币 Vibrant Alpine Village Beneath a Colorful Sky / Vibrant Alpine Village Beneath a Colorful Sky；核验：已确认 ERC20（符号 Vibrant Alpine Village Beneath a Colorful Sky，精度 18）'
+if (colorfulZh !== colorfulExpected) fail(`colorful\n${colorfulZh}`)
+
 const samples = [
   'ca_gate: ERC20 verified: HYDRA dec=18',
   'ca_gate: NFT contract (ERC721) — not a token CA',
