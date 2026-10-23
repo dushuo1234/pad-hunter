@@ -13,6 +13,7 @@ export const ALERT_HIGHLIGHT_MS = 30_000
 export const SOON_TOAST_MS = 24 * 60 * 60 * 1000
 export const WORKBENCH_ALERTS_PATH = '/v1/workbench/alerts'
 export const CONSOLE_LINE_LIMIT = 40
+export const FORTUNE_CHIME_DEBOUNCE_MS = 1000
 
 export const ALERT_UI = {
   soon: '即将开始',
@@ -28,6 +29,7 @@ export const ALERT_UI = {
   consoleReady: '就绪',
   consoleStop: '点击停止闪烁',
   consoleCount: '条新提醒',
+  fortune: '要发财啦',
   confirmed: '已确认CA',
   pending: '待核验',
   nft: 'NFT 合约·不算CA',
@@ -672,6 +674,68 @@ export function rowAttentionTone(views: readonly ReminderView[], readIds: Readon
     if (pool.some((view) => view.tone === tone)) return tone
   }
   return pool[0]?.tone ?? null
+}
+
+/** Console-visible fields. A new id or a change here is one chime, not one per line. */
+export function alertContentSignature(alert: WorkbenchAlert): string {
+  return [
+    alert.kind,
+    alert.summary,
+    alert.start_at_display,
+    alert.is_delay ? '1' : '0',
+    alert.address,
+    alert.chain,
+    alert.ca_status,
+    alert.alert_ok ? '1' : '0',
+    alert.name,
+    alert.ts,
+  ].join('\u001f')
+}
+
+export function alertFeedChanged(previous: readonly WorkbenchAlert[], next: readonly WorkbenchAlert[]): boolean {
+  const before = new Map(previous.map((alert) => [alert.id, alertContentSignature(alert)]))
+  for (const alert of next) {
+    if (!alert.id) continue
+    const prior = before.get(alert.id)
+    if (prior == null || prior !== alertContentSignature(alert)) return true
+  }
+  return false
+}
+
+/** True when this moment is outside the last chime, so a burst collapses to one play. */
+export function shouldPlayChime(lastPlayedAt: number, now: number, debounceMs = FORTUNE_CHIME_DEBOUNCE_MS): boolean {
+  return now - lastPlayedAt >= debounceMs
+}
+
+export interface FortuneVoice {
+  lang: string
+  name: string
+  voiceURI?: string
+}
+
+/** Higher score is a closer match to a zh-CN girl voice. Pitch still lifts adult voices. */
+export function fortuneVoiceScore(voice: FortuneVoice): number {
+  const lang = voice.lang.toLowerCase()
+  const blob = `${voice.lang} ${voice.name} ${voice.voiceURI ?? ''}`.toLowerCase()
+  let score = 0
+  if (lang.startsWith('zh')) score += 4
+  if (lang.includes('cn') || lang.includes('hans')) score += 2
+  if (/xiaoxiao|xiaoyi|xiaohan|xiaomeng|tingting|yaoyao|female|girl|child|女/.test(blob)) score += 3
+  if (/male|男/.test(blob) && !/female|女/.test(blob)) score -= 2
+  return score
+}
+
+export function pickFortuneVoice<T extends FortuneVoice>(voices: readonly T[]): T | null {
+  let best: T | null = null
+  let bestScore = 0
+  for (const voice of voices) {
+    const score = fortuneVoiceScore(voice)
+    if (score > bestScore) {
+      best = voice
+      bestScore = score
+    }
+  }
+  return best
 }
 
 /** Tab title while unread reminders are waiting. Reduced motion keeps the count beside the normal title. */
