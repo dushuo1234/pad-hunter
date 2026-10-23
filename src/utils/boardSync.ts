@@ -12,12 +12,15 @@ import { findByHandle } from './candidates'
 import {
   chainForPin,
   errorText,
+  fetchBlocklist,
+  fetchLaunchedRecent,
   fetchPins,
   fetchReviewed,
   getApiSettings,
   isAuthError,
   isNotFound,
   getClientId,
+  postLaunchedMark,
   pushMergedPins,
   pushMergedReviewed,
   resolveApiBase,
@@ -35,9 +38,22 @@ import {
   type ReviewMark,
 } from './reviewed'
 import {
+  applyServerBlocks,
+  handlesFromMarks,
+  ingestBlocked,
+  parseBlocklist,
+  parseLaunchedMarkPayload,
+  parseLaunchedRecent,
+  readBlockEntry,
+  restoreBlockEntry,
+} from './launchedMark'
+import { pushNotice } from './notices'
+import { applyRadarDelta, applyRadarSnapshot } from './radarLive'
+import {
   mergePins,
   mergeReviewed,
   nowIso,
+  parsePinResponse,
   pinHandleKey,
   pinsNeedPush,
   reviewsNeedPush,
@@ -49,15 +65,18 @@ import {
 } from './syncMerge'
 import {
   isSocketAuthClose,
+  isSocketRedeployClose,
   parseSocketMessage,
   pinsSyncFrame,
   pongFrame,
   reviewedSyncFrame,
   workbenchWsUrl,
   wsBackoffMs,
+  wsRedeployBackoffMs,
 } from './workbenchSocket'
 import {
   applyIntegratedPins,
+  dropWorkbenchByHandle,
   getWorkbenchItems,
   getWorkbenchTombstones,
   handleKey,
@@ -141,6 +160,10 @@ export function getBoardSyncServerStatus(): BoardSyncStatus {
 export function subscribeBoardSync(listener: () => void): () => void {
   listeners.add(listener)
   return () => listeners.delete(listener)
+}
+
+export function isWorkbenchSocketOpen(): boolean {
+  return wsOpen
 }
 
 export function setBoardSyncCatalog(next: Candidate[], ready: boolean): void {
@@ -654,6 +677,40 @@ function applySocketReviews(marks: Record<string, ReviewWire>, originClientId: s
   if (needsPush) scheduleReviewPush()
 }
 
+function applyPinsPayload(pins: unknown) {
+  const direct = parsePinResponse(pins)
+  const nested = direct ? null : parsePinResponse(asRecord(pins)?.state)
+  const parsed = direct ?? nested
+  if (!parsed) return
+  const needsPush = integrateRemotePins(parsed.state)
+  pinOk = true
+  pinCount = getWorkbenchItems().filter((item) => handleKey(item.handle)).length
+  publishStatus()
+  if (needsPush) schedulePinPush()
+}
+
+function dropBlocked(handles: readonly string[]) {
+  for (const handle of handles) dropWorkbenchByHandle(handle)
+}
+
+function applyLaunchedPayload(data: unknown) {
+  const parsed = parseLaunchedMarkPayload(data)
+  const recent = parseLaunchedRecent(data)
+  const marks = [...(parsed?.marks ?? []), ...(recent ?? [])]
+  if (marks.length > 0) {
+    ingestBlocked(marks, false)
+    dropBlocked(handlesFromMarks(marks))
+  }
+  if (parsed?.pins != null) applyPinsPayload(parsed.pins)
+}
+
+function applyBlocklistPayload(data: unknown) {
+  const parsed = parseBlocklist(data)
+  if (!parsed || parsed.marks.length === 0) return
+  ingestBlocked(parsed.marks, false)
+  dropBlocked(parsed.handles)
+}
+
 function onSocketMessage(raw: unknown) {
   const message = parseSocketMessage(raw)
   if (message.kind === 'ping') {
@@ -662,6 +719,67 @@ function onSocketMessage(raw: unknown) {
   }
   if (message.kind === 'pins') applySocketPins(message.state, message.originClientId)
   else if (message.kind === 'reviewed') applySocketReviews(message.marks, message.originClientId)
+  else if (message.kind === 'radar') applyRadarSnapshot(message.cards, { announce: message.event === 'upsert' })
+  else if (message.kind === 'radar_delta') applyRadarDelta(message.cards)
+  else if (message.kind === 'launched_mark') applyLaunchedPayload(message.payload)
+  else if (message.kind === 'launched_unmark') {
+    const { token, base } = currentAuth()
+    if (token) void pullLaunchFilters(session, token, base)
+  }
+  else if (message.kind === 'blocklist') applyBlocklistPayload(message.payload)
+  else if (message.kind === 'hello') {
+    if (message.launched != null) applyLaunchedPayload(message.launched)
+    if (message.blocklist != null) applyBlocklistPayload(message.blocklist)
+  }
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  return value as Record<string, unknown>
+}
+
+export async function confirmManualLaunch(input: { handle: string; name?: string }): Promise<string | null> {
+  const handle = input.handle.replace(/^@/, '').trim()
+  const key = pinHandleKey(handle)
+  if (!key) return '没有 X 账号，无法标记已开盘'
+  const { token, base } = currentAuth()
+  if (!token) return '请先设置同步口令'
+  const previous = readBlockEntry(key)
+  const at = nowIso()
+  ingestBlocked([{ handle: key, name: input.name?.trim() || handle, reason: 'manual', at }], true, 'local')
+  try {
+    const body = await postLaunchedMark(base, token, { handle, name: input.name, at })
+    applyLaunchedPayload(body)
+    dropWorkbenchByHandle(handle)
+    pushNotice('已移入已开盘')
+    return null
+  } catch (error) {
+    restoreBlockEntry(key, previous)
+    if (isAuthError(error)) {
+      authFailed = true
+      publishStatus()
+    }
+    return errorText(error)
+  }
+}
+
+async function pullLaunchFilters(id: number, token: string, base: string) {
+  try {
+    const [recent, block] = await Promise.all([fetchLaunchedRecent(base, token), fetchBlocklist(base, token)])
+    if (!sessionAlive(id) || authChanged(token, base)) return
+    const recentMarks = recent != null ? parseLaunchedRecent(recent) : null
+    const blockMarks = block != null ? parseBlocklist(block)?.marks ?? null : null
+    if (recentMarks != null || blockMarks != null) {
+      applyServerBlocks({ recent: recentMarks, block: blockMarks })
+      dropBlocked(handlesFromMarks([...(recentMarks ?? []), ...(blockMarks ?? [])]))
+    }
+  } catch (error) {
+    if (!sessionAlive(id) || authChanged(token, base)) return
+    if (isAuthError(error)) {
+      authFailed = true
+      publishStatus()
+    }
+  }
 }
 
 function closeSocket() {
@@ -702,10 +820,10 @@ function markSocketAuthFailure() {
   publishStatus()
 }
 
-function scheduleSocketReconnect() {
+function scheduleSocketReconnect(redeploy = false) {
   if (users === 0 || wsAuthBlocked || !currentAuth().token) return
   window.clearTimeout(wsTimer)
-  const delay = wsBackoffMs(wsAttempt)
+  const delay = (redeploy ? wsRedeployBackoffMs : wsBackoffMs)(wsAttempt)
   wsAttempt = Math.min(wsAttempt + 1, 8)
   wsTimer = window.setTimeout(() => {
     if (users === 0 || wsAuthBlocked) return
@@ -762,7 +880,7 @@ function openSocket() {
     }
     restartPollInterval()
     publishStatus()
-    scheduleSocketReconnect()
+    scheduleSocketReconnect(isSocketRedeployClose(event.code))
   }
 }
 
@@ -806,6 +924,7 @@ function schedulePull(delay: number, quiet: boolean) {
     void Promise.all([
       runLocked('pin', () => pullPinsBody(id, token, base, quietPull)),
       runLocked('review', () => pullReviewsBody(id, token, base, quietPull)),
+      pullLaunchFilters(id, token, base),
     ])
   }, delay)
 }

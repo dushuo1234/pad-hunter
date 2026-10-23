@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test": "node --experimental-strip-types scripts/check-sync-merge.ts && node --experimental-strip-types scripts/check-workbench-socket.ts && node --experimental-strip-types scripts/check-api-base.ts",
+    "test": "node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-sync-merge.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-workbench-socket.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-api-base.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-radar-live.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-launched-mark.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-timeline-zh.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-push-date.ts && node --experimental-strip-types --import ./scripts/resolve-ts.mjs scripts/check-upcoming-and-notes.ts",
     "preview": "vite preview"
   },
   "dependencies": {

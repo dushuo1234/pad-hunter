@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
@@ -671,6 +672,13 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       >
                         详情
                       </button>
+                      <ConfirmLaunchedButton
+                        handle={item.handle}
+                        name={item.name}
+                        candidate={candidate}
+                        variant="link"
+                        className="ml-3"
+                      />
                     </td>
                   </tr>
                 )

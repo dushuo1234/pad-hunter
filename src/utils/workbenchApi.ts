@@ -1,6 +1,7 @@
 import type { Candidate } from '../types'
 import { findByHandle } from './candidates'
 import { xProfileUrl } from './format'
+import { launchedMarkBody, siteClientIdFrom } from './launchedMark'
 import { parsePinResponse, parseReviewResponse, type PinMergeState, type ReviewWire } from './syncMerge'
 import { handleKey, safeHttpUrl, type WorkbenchItem } from './workbench'
 import { FALLBACK_WORKBENCH_API_BASE, migratedWorkbenchApiBase } from './apiBase'
@@ -291,6 +292,11 @@ export function getClientId(): string {
   return created
 }
 
+/** `site-<deviceId>` sent on `POST /v1/launched/mark`. Pin sync keeps the raw device id. */
+export function siteClientId(): string {
+  return siteClientIdFrom(getClientId())
+}
+
 function candidateRecord(candidate: Candidate | undefined): Record<string, unknown> | null {
   if (!candidate) return null
   return candidate as unknown as Record<string, unknown>
@@ -406,7 +412,18 @@ function allowsNgrokBypass(base: string): boolean {
   }
 }
 
-async function apiFetch(base: string, path: string, token: string, init?: RequestInit, timeoutMs = 10000): Promise<unknown> {
+/** `Retry-After` as a delay. A bare `1` is one second. Missing or unreadable values wait 1s. */
+export function retryAfterMs(header: string | null, now = Date.now()): number {
+  const text = header?.trim() ?? ''
+  if (!text) return 1000
+  const seconds = Number(text)
+  if (Number.isFinite(seconds) && seconds >= 0) return Math.min(30_000, Math.round(seconds * 1000))
+  const at = Date.parse(text)
+  if (Number.isFinite(at)) return Math.min(30_000, Math.max(0, at - now))
+  return 1000
+}
+
+async function apiFetch(base: string, path: string, token: string, init?: RequestInit, timeoutMs = 10000, retried = false): Promise<unknown> {
   const headers = new Headers(init?.headers)
   if (allowsNgrokBypass(base)) headers.set('ngrok-skip-browser-warning', '1')
   if (token) headers.set('X-Pad-Hunter-Token', token)
@@ -437,6 +454,10 @@ async function apiFetch(base: string, path: string, token: string, init?: Reques
     }
   }
   if (!response.ok) {
+    if (response.status === 503 && !retried) {
+      await new Promise((resolve) => setTimeout(resolve, retryAfterMs(response.headers.get('Retry-After'))))
+      return apiFetch(base, path, token, init, timeoutMs, true)
+    }
     const failure: ApiError = { status: response.status, message: errorMessage(response.status, body), body }
     throw failure
   }
@@ -865,6 +886,50 @@ export async function fetchLaunched(): Promise<LaunchedIndex> {
     return parseLaunched(await response.json())
   } catch {
     return emptyLaunched()
+  }
+}
+
+export async function postLaunchedMark(
+  base: string,
+  token: string,
+  input: { handle: string; name?: string; at?: string },
+): Promise<unknown> {
+  return apiFetch(
+    base,
+    '/v1/launched/mark',
+    token,
+    {
+      method: 'POST',
+      body: JSON.stringify(launchedMarkBody({ ...input, clientId: siteClientId() })),
+    },
+    15000,
+  )
+}
+
+export async function fetchLaunchedRecent(base: string, token: string): Promise<unknown | null> {
+  try {
+    return await apiFetch(base, '/v1/launched/recent', token, undefined, 8000)
+  } catch (error) {
+    if (isAuthError(error)) throw error
+    return null
+  }
+}
+
+export async function fetchBlocklist(base: string, token: string): Promise<unknown | null> {
+  try {
+    return await apiFetch(base, '/v1/workbench/blocklist', token, undefined, 8000)
+  } catch (error) {
+    if (isAuthError(error)) throw error
+    return null
+  }
+}
+
+/** Recent radar cards. Public for the github.io origin; a saved token is sent when present. */
+export async function fetchRadarRecent(base: string, token: string): Promise<unknown | null> {
+  try {
+    return await apiFetch(base, '/v1/radar/recent', token, undefined, 8000)
+  } catch {
+    return null
   }
 }
 

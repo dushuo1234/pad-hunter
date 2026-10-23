@@ -558,6 +558,15 @@ export function removeWorkbenchItem(id: string): void {
   removeWorkbenchItems([id])
 }
 
+/** Tombstone one handle the same way as 移出. No auto-remove toast. */
+export function dropWorkbenchByHandle(handle: string): void {
+  const key = handleKey(handle)
+  if (!key) return
+  const ids = items.filter((item) => handleKey(item.handle) === key).map((item) => item.id)
+  if (ids.length === 0) return
+  removeWorkbenchItems(ids)
+}
+
 export function removeWorkbenchItems(ids: Iterable<string>): void {
   const drop = new Set(ids)
   if (drop.size === 0) return

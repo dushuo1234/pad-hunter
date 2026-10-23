@@ -1,6 +1,7 @@
 import type { Candidate, Filters } from '../types'
 import { categoryOf } from './categories'
 import { followerCount, sourceChannel } from './format'
+import { pushDateMillis } from './pushDate'
 
 export const SOURCE_ORDER = ['telegram:项目推送监控', 'telegram:项目推送']
 
@@ -59,8 +60,8 @@ export function compareCandidates(sort: Filters['sort']) {
     if (sort === 'followers') return followerCount(b.followers) - followerCount(a.followers)
     if (sort === 'kol_followers') return (b.kol_followers || 0) - (a.kol_followers || 0)
     if (sort === 'score') return (b.score || 0) - (a.score || 0) || a.rank - b.rank
-    const ta = Date.parse(a.date_iso || '') || 0
-    const tb = Date.parse(b.date_iso || '') || 0
+    const ta = pushDateMillis([a])
+    const tb = pushDateMillis([b])
     if (tb !== ta) return tb - ta
     return a.rank - b.rank
   }

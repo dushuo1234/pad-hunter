@@ -1,5 +1,6 @@
 import type { Candidate, MonitorEvent } from '../types'
 import { snapshotForCandidate, type MonitorSnapshot } from './monitor'
+import { pushDateMillis } from './pushDate'
 import { isAlreadyOpened } from './opening'
 import {
   completionFacets,
@@ -166,8 +167,7 @@ export function indexListingTimes(entries: ListingTimeEntry[]): Map<string, List
 }
 
 function postedAt(candidate: Candidate): number {
-  const time = Date.parse(candidate.date_iso || '')
-  return Number.isNaN(time) ? 0 : time
+  return pushDateMillis([candidate])
 }
 
 /**
@@ -177,7 +177,8 @@ function postedAt(candidate: Candidate): number {
  * 2. Otherwise, only when there is no resolved listing time: status or listing signal
  *    「即将启动」 (or an equivalent about-to-start phrase), or high completion of the
  *    project / contract code / game code from site, JS, or is-file scrape fields.
- *    Those show no invented time. Newest `date_iso` first, then name.
+ *    Those show no invented time. Newest 推送日期 first, then name.
+ *    Rows that share a listing time break the tie by 推送日期, newest first.
  *
  * A resolved listing time outside the window stays off this list.
  * Already-open wording and `already_listed` are excluded. Callers also drop `launched.json`.
@@ -212,10 +213,9 @@ export function upcomingLaunches(
   rows.sort((a, b) => {
     if (Boolean(a.launch) !== Boolean(b.launch)) return a.launch ? -1 : 1
     if (a.launch && b.launch) {
-      return (
-        Date.parse(a.launch.at) - Date.parse(b.launch.at) ||
-        a.candidate.name.localeCompare(b.candidate.name, 'zh')
-      )
+      const byListing = Date.parse(a.launch.at) - Date.parse(b.launch.at)
+      if (byListing) return byListing
+      return postedAt(b.candidate) - postedAt(a.candidate) || a.candidate.name.localeCompare(b.candidate.name, 'zh')
     }
     return postedAt(b.candidate) - postedAt(a.candidate) || a.candidate.name.localeCompare(b.candidate.name, 'zh')
   })

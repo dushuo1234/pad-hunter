@@ -38,6 +38,14 @@ export function HomePage({ payload, candidates, loading, error, uploadNote, onRe
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  useEffect(() => {
+    if (!selected) return
+    const key = selected.handle.replace(/^@/, '').trim().toLowerCase()
+    if (!key || !candidates.some((candidate) => candidate.handle.replace(/^@/, '').trim().toLowerCase() === key)) {
+      setSelected(null)
+    }
+  }, [candidates, selected])
+
   const chains = useMemo(
     () => sortChains(new Set(candidates.map((c) => c.chain).filter(Boolean))),
     [candidates],
