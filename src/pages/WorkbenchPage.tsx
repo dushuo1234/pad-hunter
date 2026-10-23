@@ -49,6 +49,7 @@ import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } f
 import {
   ALERT_UI,
   alertsByHandle,
+  flashingAlertIds,
   reminderViews,
   remindersAllowed,
   rowAttentionTone,
@@ -199,14 +200,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const healthLabel =
     live.healthState === 'online' ? '在线' : live.healthState === 'offline' ? '离线' : '连接中'
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
-  const pinnedKeys = new Set<string>()
-  const launchedKeys = new Set<string>()
-  for (const item of items) {
-    const key = handleKey(item.handle)
-    if (!key) continue
-    if (isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)) launchedKeys.add(key)
-    else pinnedKeys.add(key)
-  }
   const alertToasts = alertFeed.toasts.filter((toast) => {
     const match = items.find((item) => handleKey(item.handle) === handleKey(toast.handle))
     if (!match) return false
@@ -258,13 +251,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </span>
         </div>
       </div>
-
-      <WorkbenchAlertConsole
-        alerts={alertFeed.alerts}
-        readIds={alertFeed.readIds}
-        pinned={pinnedKeys}
-        launched={launchedKeys}
-      />
 
       {!live.token && (
         <button
@@ -598,7 +584,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const showReminders = remindersAllowed({ pinned: Boolean(projectKey), launched })
                 const views = showReminders ? reminderViews(projectAlerts, live.now) : []
                 const tone = rowAttentionTone(views, alertFeed.readIds)
-                const unread = views.some((view) => view.urgent && !alertFeed.readIds.has(view.id))
+                const unread = showReminders && flashingAlertIds(projectAlerts, alertFeed.readIds).length > 0
                 const attentionClass = unread ? 'wb-row-flash' : tone ? 'wb-row-accent' : ''
                 return (
                   <tr
@@ -624,7 +610,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                     </td>
                     <td
                       data-alert-tone={tone ?? undefined}
-                      className={`max-w-[360px] px-2 py-3 ${attentionClass}`}
+                      className={`max-w-[28rem] px-2 py-3 ${attentionClass}`}
                     >
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
@@ -663,6 +649,14 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                           now={live.now}
                           readIds={alertFeed.readIds}
                           onAcknowledge={() => markWorkbenchAlertsRead(item.handle)}
+                        />
+                      )}
+                      {showReminders && (
+                        <WorkbenchAlertConsole
+                          alerts={projectAlerts}
+                          readIds={alertFeed.readIds}
+                          name={item.name}
+                          handle={item.handle}
                         />
                       )}
                       {introFor(candidate) && (

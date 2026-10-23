@@ -1,53 +1,59 @@
 import { useMemo } from 'react'
-import { markWorkbenchAlertIdsRead } from '../utils/workbenchAlertStore'
-import {
-  ALERT_UI,
-  consoleLines,
-  flashingAlertIds,
-  type WorkbenchAlert,
-} from '../utils/workbenchAlerts'
+import { handleKey } from '../utils/workbench'
+import { markWorkbenchAlertsRead } from '../utils/workbenchAlertStore'
+import { ALERT_UI, consoleLines, type WorkbenchAlert } from '../utils/workbenchAlerts'
 
+/** One project's command-line log. A click stops the blink for this project only. */
 export function WorkbenchAlertConsole({
   alerts,
   readIds,
-  pinned,
-  launched,
+  name,
+  handle,
 }: {
   alerts: readonly WorkbenchAlert[]
   readIds: ReadonlySet<string>
-  pinned: ReadonlySet<string>
-  launched: ReadonlySet<string>
+  name: string
+  handle: string
 }) {
-  const visible = useMemo(() => ({ pinned, launched }), [pinned, launched])
-  const lines = consoleLines(alerts, readIds, visible)
-  const flashingIds = flashingAlertIds(alerts, readIds, visible)
-  const flashing = flashingIds.length > 0
+  const key = handleKey(handle)
+  const mine = useMemo(
+    () => alerts.filter((alert) => handleKey(alert.handle) === key),
+    [alerts, key],
+  )
+  const lines = consoleLines(mine, readIds)
+  const flashingCount = lines.filter((line) => line.flash).length
+  const flashing = flashingCount > 0
+  const title = name.trim() || handle
 
   const stop = () => {
-    if (flashingIds.length === 0) return
-    markWorkbenchAlertIdsRead(flashingIds)
+    if (!key || !flashing) return
+    markWorkbenchAlertsRead(handle)
   }
 
   return (
     <section
-      className={`wb-console mt-4 ${flashing ? 'cursor-pointer' : ''}`}
-      aria-label={flashing ? `${ALERT_UI.consoleTitle}，${ALERT_UI.consoleStop}` : ALERT_UI.consoleTitle}
-      onClick={stop}
+      className={`wb-console ${flashing ? 'cursor-pointer' : ''}`}
+      aria-label={flashing ? `${title}，${ALERT_UI.consoleStop}` : `${title} ${ALERT_UI.consoleTitle}`}
+      onClick={(event) => {
+        event.stopPropagation()
+        stop()
+      }}
       onKeyDown={(event) => {
         if (!flashing) return
         if (event.key !== 'Enter' && event.key !== ' ') return
         event.preventDefault()
+        event.stopPropagation()
         stop()
       }}
       tabIndex={flashing ? 0 : undefined}
     >
       <div className="wb-console-bar">
-        <span>工作台:~$ {ALERT_UI.consoleTitle}</span>
-        <span>
+        <span className="min-w-0 truncate">{title}:~$</span>
+        <span className="shrink-0">
           {flashing ? (
             <>
               <span className="wb-dot-flash mr-1 inline-block h-2 w-2 rounded-full bg-amber-300 align-middle" aria-hidden="true" />
-              {flashingIds.length} {ALERT_UI.consoleCount} · {ALERT_UI.consoleStop}
+              {flashingCount} {ALERT_UI.consoleCount}
             </>
           ) : (
             ALERT_UI.consoleReady
@@ -60,14 +66,13 @@ export function WorkbenchAlertConsole({
         ) : (
           lines.map((line) => (
             <p
-              key={line.id || `${line.handle}-${line.ts}`}
+              key={line.id || `${line.ts}-${line.label}`}
               className={`wb-console-line${line.flash ? ' wb-line-flash' : ''}`}
               data-alert-tone={line.tone}
             >
               <span className="wb-console-stamp">{line.stamp || '—'}</span>
               <span aria-hidden="true">{line.mark}</span>
               <span className="wb-console-label">{line.label}</span>
-              <span className="wb-console-name">{line.name || line.handle}</span>
               {line.text && <span className="wb-console-text">{line.text}</span>}
             </p>
           ))
