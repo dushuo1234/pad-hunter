@@ -200,6 +200,13 @@ td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.28), 0 14px 36px rgba(0, 0, 0, 0.28);
 }
+.wb-console-project {
+  width: 100%;
+  min-width: 0;
+  margin-top: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.22);
+}
 .wb-console-bar {
   display: flex;
   flex-wrap: wrap;
@@ -213,12 +220,23 @@ td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
   font-size: 12px;
   font-weight: 700;
 }
+.wb-console-project .wb-console-bar,
+.wb-console-project .wb-console-prompt {
+  padding: 4px 8px;
+  font-size: 11px;
+}
 .wb-console-log {
   max-height: 240px;
   overflow: auto;
   padding: 8px 12px;
   font-size: 13px;
   line-height: 1.6;
+}
+.wb-console-project .wb-console-log {
+  max-height: 7.5rem;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 .wb-console-line {
   display: flex;

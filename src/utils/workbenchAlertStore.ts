@@ -8,6 +8,7 @@ import { getWorkbenchItems, handleKey } from './workbench'
 import {
   ALERT_POLL_MS,
   ALERT_UI,
+  alertFeedChanged,
   loadStoredWorkbenchAlerts,
   mergeAlertIncremental,
   normalizeAlertList,
@@ -17,6 +18,7 @@ import {
   WB_ALERTS_STORAGE_KEY,
   type WorkbenchAlert,
 } from './workbenchAlerts'
+import { noteWorkbenchAlertChime } from './workbenchChime'
 import { fetchWorkbenchAlerts, getApiSettings, isAuthError, resolveApiBase } from './workbenchApi'
 import type { SocketEvent } from './workbenchSocket'
 
@@ -176,8 +178,15 @@ function noteFresh(alert: WorkbenchAlert, now: number) {
   )
 }
 
+function chimeIfContentChanged(previous: readonly WorkbenchAlert[], next: readonly WorkbenchAlert[], live: boolean) {
+  if (!live) return
+  if (alertFeedChanged(previous, next)) noteWorkbenchAlertChime()
+}
+
 function replaceAlerts(next: readonly WorkbenchAlert[]) {
   const normalized = normalizeAlertList(next)
+  const previous = alerts
+  const live = backlogQuiet
   if (!backlogQuiet) {
     for (const alert of normalized) {
       if (alert.id) readIds.add(alert.id)
@@ -188,6 +197,7 @@ function replaceAlerts(next: readonly WorkbenchAlert[]) {
   trimReadIds()
   persist()
   publish()
+  chimeIfContentChanged(previous, alerts, live)
 }
 
 export function ingestWorkbenchSocketEvent(event: SocketEvent) {
@@ -196,12 +206,14 @@ export function ingestWorkbenchSocketEvent(event: SocketEvent) {
     return
   }
   if (event.kind !== 'alerts_incremental') return
+  const previous = alerts
   const merged = mergeAlertIncremental(alerts, event.alerts)
   alerts = merged.alerts
   const now = Date.now()
   for (const alert of merged.added) noteFresh(alert, now)
   persist()
   publish()
+  chimeIfContentChanged(previous, alerts, true)
 }
 
 export function markWorkbenchAlertsRead(handle: string) {
@@ -258,11 +270,14 @@ async function pull() {
 
 function onStorage(event: StorageEvent) {
   if (event.key != null && event.key !== WB_ALERTS_STORAGE_KEY) return
+  const previous = alerts
   const stored = loadStoredWorkbenchAlerts(storageGet())
+  const live = backlogQuiet || stored.seeded
   alerts = stored.alerts
   readIds = new Set(stored.readIds)
   if (stored.seeded) backlogQuiet = true
   publish()
+  chimeIfContentChanged(previous, alerts, live)
 }
 
 export function setWorkbenchAlertsSocketOpen(open: boolean) {

@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import { applyParsedAlertEvent, ALERT_HIGHLIGHT_MS, ALERT_POLL_MS, ALERT_UI, alertsByHandle, CONSOLE_LINE_LIMIT, consoleLines, consoleVisibleText, flashingAlertIds, flashingReminderCount, formatAlertAgo, isConfirmedCa, loadStoredWorkbenchAlerts, mergeAlertIncremental, normalizeAlertList, parseWorkbenchAlert, parseWorkbenchAlertsPayload, pickCa, planFreshAlert, presentCa, reminderCanFlash, reminderTitle, reminderViews, reminderVisibleText, remindersAllowed, rowAttentionTone, shouldToastAlert, stripLeadName, WB_ALERTS_LIMIT, WB_ALERTS_STORAGE_KEY, WORKBENCH_ALERTS_PATH, type WorkbenchAlert } from '../src/utils/workbenchAlerts.ts'
+import { applyParsedAlertEvent, ALERT_HIGHLIGHT_MS, ALERT_POLL_MS, ALERT_UI, alertFeedChanged, alertsByHandle, CONSOLE_LINE_LIMIT, consoleLines, consoleVisibleText, flashingAlertIds, flashingReminderCount, formatAlertAgo, FORTUNE_CHIME_DEBOUNCE_MS, isConfirmedCa, loadStoredWorkbenchAlerts, mergeAlertIncremental, normalizeAlertList, parseWorkbenchAlert, parseWorkbenchAlertsPayload, pickCa, pickFortuneVoice, planFreshAlert, presentCa, reminderCanFlash, reminderTitle, reminderViews, reminderVisibleText, remindersAllowed, rowAttentionTone, shouldPlayChime, shouldToastAlert, stripLeadName, WB_ALERTS_LIMIT, WB_ALERTS_STORAGE_KEY, WORKBENCH_ALERTS_PATH, type WorkbenchAlert } from '../src/utils/workbenchAlerts.ts'
 import { parseSocketMessage } from '../src/utils/workbenchSocket.ts'
 
 function fail(message: string): never {
@@ -237,6 +237,12 @@ if (board[0] && board[1] && Date.parse(board[0].ts) < Date.parse(board[1].ts) &&
 }
 const hiddenConsole = consoleLines([soon], noneRead, { pinned: new Set(['caravanrh']), launched: new Set(['caravanrh']) })
 if (hiddenConsole.length !== 0) fail('launched alerts stay out of the console')
+const perProject = consoleLines([soon, nftAlert], noneRead, {
+  pinned: new Set(['caravanrh', 'nftproj']),
+  launched: new Set(),
+  handle: '@CaravanRH',
+})
+if (perProject.length !== 1 || perProject[0]?.id !== soon.id) fail('a project console must only list that project')
 const readConsole = consoleLines([soon, confirmed], new Set([soon.id]))
 if (readConsole[0]?.id !== confirmed.id || readConsole[0]?.flash !== true || readConsole[1]?.flash !== false) {
   fail('unread lines lead the console')
@@ -266,6 +272,7 @@ if (windowed[0]?.id !== 'eeeeeeeeeeeeeee2' || !windowed[0]?.flash) fail('an olde
 for (const file of [
   '../src/utils/workbenchAlerts.ts',
   '../src/utils/workbenchAlertStore.ts',
+  '../src/utils/workbenchChime.ts',
   '../src/components/WorkbenchReminders.tsx',
   '../src/components/WorkbenchAlertConsole.tsx',
   '../src/components/WorkbenchAlertToasts.tsx',
@@ -283,15 +290,54 @@ if (!css.includes('prefers-reduced-motion') || !css.includes('wb-row-flash') || 
   fail('flash styles missing')
 }
 const consoleSource = readFileSync(new URL('../src/components/WorkbenchAlertConsole.tsx', import.meta.url), 'utf8')
-if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('consoleTitle')) fail('console must ack on click')
+if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('工作台:~$')) fail('shared console must ack every flashing id')
+if (!consoleSource.includes('handle')) fail('per-project console missing')
 const reminderSource = readFileSync(new URL('../src/components/WorkbenchReminders.tsx', import.meta.url), 'utf8')
 if (!reminderSource.includes('bg-emerald-600') || !reminderSource.includes('bg-orange-600') || !reminderSource.includes('bg-sky-600') || !reminderSource.includes('bg-amber-400')) {
   fail('solid reminder pills')
 }
 if (reminderSource.includes('bg-emerald-50')) fail('confirmed badge is still pale')
 const pageSource = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import.meta.url), 'utf8')
-if (!pageSource.includes('wb-row-flash') || !pageSource.includes('WorkbenchAlertConsole')) fail('rows and console')
+const tableAt = pageSource.indexOf('<table')
+const sharedAt = pageSource.indexOf('<WorkbenchAlertConsole')
+const projectAt = pageSource.indexOf('<WorkbenchAlertConsole', sharedAt + 1)
+if (!pageSource.includes('wb-row-flash') || sharedAt < 0 || projectAt < 0 || tableAt < 0 || sharedAt > tableAt || projectAt < tableAt) {
+  fail('need the shared console above the list and a console inside each row')
+}
+if (!pageSource.includes('pinned={pinnedKeys}') || !pageSource.includes('handle={item.handle}')) {
+  fail('shared console and per-project console must both be wired')
+}
 const headerSource = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8')
 if (!headerSource.includes('条未读提醒')) fail('nav unread count')
+
+if (ALERT_UI.fortune !== '要发财啦') fail('fortune phrase')
+if (!shouldPlayChime(0, FORTUNE_CHIME_DEBOUNCE_MS)) fail('a chime is due once the debounce window has elapsed')
+if (shouldPlayChime(1000, 1000 + FORTUNE_CHIME_DEBOUNCE_MS - 1)) fail('a burst inside the debounce window stays quiet')
+if (!shouldPlayChime(1000, 1000 + FORTUNE_CHIME_DEBOUNCE_MS)) fail('the next burst after the window may play')
+if (alertFeedChanged([soon], [soon])) fail('identical alerts are not a new chime')
+if (!alertFeedChanged([soon], [soon, confirmed])) fail('a new alert id is a chime')
+if (!alertFeedChanged([soon], [{ ...soon, summary: `${soon.summary}更` }])) fail('changed alert content is a chime')
+if (alertFeedChanged([soon, confirmed], [soon])) fail('removing an alert without new content stays quiet')
+const girl = pickFortuneVoice([
+  { lang: 'en-US', name: 'David', voiceURI: 'David male' },
+  { lang: 'zh-CN', name: 'Microsoft Xiaoxiao Online', voiceURI: 'Xiaoxiao' },
+  { lang: 'zh-CN', name: 'Microsoft Yunyang', voiceURI: 'Yunyang' },
+])
+if (girl?.name !== 'Microsoft Xiaoxiao Online') fail('zh-CN girl voice wins')
+if (pickFortuneVoice([{ lang: 'en-US', name: 'David', voiceURI: 'male' }]) != null) fail('a non-Chinese voice is not a fortune voice')
+
+const chimeSource = readFileSync(new URL('../src/utils/workbenchChime.ts', import.meta.url), 'utf8')
+if (!chimeSource.includes('speechSynthesis') || !chimeSource.includes('pointerdown') || !chimeSource.includes('keydown')) {
+  fail('chime must unlock on a gesture and speak with speechSynthesis')
+}
+if (!chimeSource.includes('ALERT_UI.fortune') || chimeSource.includes('.cancel(')) fail('chime speaks the fortune phrase without cutting other speech')
+const storeSource = readFileSync(new URL('../src/utils/workbenchAlertStore.ts', import.meta.url), 'utf8')
+if (!storeSource.includes('noteWorkbenchAlertChime') || !storeSource.includes('chimeIfContentChanged')) fail('store must chime when alert content changes')
+const ackStart = storeSource.indexOf('export function markWorkbenchAlertsRead')
+const ackEnd = storeSource.indexOf('export function getWorkbenchAlertSnapshot')
+const ackSlice = storeSource.slice(ackStart, ackEnd)
+if (ackStart < 0 || ackEnd < 0 || ackSlice.includes('noteWorkbenchAlertChime') || ackSlice.includes('chimeIfContentChanged')) {
+  fail('acknowledging an alert must not play the chime')
+}
 
 console.log(`workbench alert checks ok (${parsed.length} fixture rows)`)

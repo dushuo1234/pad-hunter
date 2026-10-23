@@ -7,21 +7,35 @@ import {
   type WorkbenchAlert,
 } from '../utils/workbenchAlerts'
 
+/**
+ * Command-line alert log.
+ * Without `handle`, this is the shared 提醒控制台 for every pinned project.
+ * With `handle`, it is that project's box and a click acks only those ids.
+ */
 export function WorkbenchAlertConsole({
   alerts,
   readIds,
   pinned,
   launched,
+  name,
+  handle,
 }: {
   alerts: readonly WorkbenchAlert[]
   readIds: ReadonlySet<string>
-  pinned: ReadonlySet<string>
-  launched: ReadonlySet<string>
+  pinned?: ReadonlySet<string>
+  launched?: ReadonlySet<string>
+  name?: string
+  handle?: string
 }) {
-  const visible = useMemo(() => ({ pinned, launched }), [pinned, launched])
+  const project = Boolean(handle)
+  const visible = useMemo(
+    () => (project ? { handle } : { pinned, launched }),
+    [project, handle, pinned, launched],
+  )
   const lines = consoleLines(alerts, readIds, visible)
   const flashingIds = flashingAlertIds(alerts, readIds, visible)
   const flashing = flashingIds.length > 0
+  const title = (name ?? '').trim() || handle || ''
 
   const stop = () => {
     if (flashingIds.length === 0) return
@@ -30,24 +44,37 @@ export function WorkbenchAlertConsole({
 
   return (
     <section
-      className={`wb-console mt-4 ${flashing ? 'cursor-pointer' : ''}`}
-      aria-label={flashing ? `${ALERT_UI.consoleTitle}，${ALERT_UI.consoleStop}` : ALERT_UI.consoleTitle}
-      onClick={stop}
+      className={`wb-console ${project ? 'wb-console-project' : 'mt-4'} ${flashing ? 'cursor-pointer' : ''}`}
+      aria-label={
+        project
+          ? flashing
+            ? `${title}，${ALERT_UI.consoleStop}`
+            : `${title} ${ALERT_UI.consoleTitle}`
+          : flashing
+            ? `${ALERT_UI.consoleTitle}，${ALERT_UI.consoleStop}`
+            : ALERT_UI.consoleTitle
+      }
+      onClick={(event) => {
+        event.stopPropagation()
+        stop()
+      }}
       onKeyDown={(event) => {
         if (!flashing) return
         if (event.key !== 'Enter' && event.key !== ' ') return
         event.preventDefault()
+        event.stopPropagation()
         stop()
       }}
       tabIndex={flashing ? 0 : undefined}
     >
       <div className="wb-console-bar">
-        <span>工作台:~$ {ALERT_UI.consoleTitle}</span>
-        <span>
+        <span className="min-w-0 truncate">{project ? `${title}:~$` : `工作台:~$ ${ALERT_UI.consoleTitle}`}</span>
+        <span className="shrink-0">
           {flashing ? (
             <>
               <span className="wb-dot-flash mr-1 inline-block h-2 w-2 rounded-full bg-amber-300 align-middle" aria-hidden="true" />
-              {flashingIds.length} {ALERT_UI.consoleCount} · {ALERT_UI.consoleStop}
+              {flashingIds.length} {ALERT_UI.consoleCount}
+              {project ? '' : ` · ${ALERT_UI.consoleStop}`}
             </>
           ) : (
             ALERT_UI.consoleReady
@@ -67,7 +94,7 @@ export function WorkbenchAlertConsole({
               <span className="wb-console-stamp">{line.stamp || '—'}</span>
               <span aria-hidden="true">{line.mark}</span>
               <span className="wb-console-label">{line.label}</span>
-              <span className="wb-console-name">{line.name || line.handle}</span>
+              {!project && <span className="wb-console-name">{line.name || line.handle}</span>}
               {line.text && <span className="wb-console-text">{line.text}</span>}
             </p>
           ))
