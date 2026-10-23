@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import type { Candidate } from '../types'
 import {
   checkWorkbench,
   clearApiToken,
   defaultApiBase,
-  droppedLaunchedHandles,
   emptyLaunched,
   errorText,
   fetchHealth,
@@ -16,8 +14,6 @@ import {
   saveApiSettings,
   statusIndex,
   subscribeApiSettings,
-  syncItemsFromPins,
-  syncWorkbench,
   type ApiSettings,
   type HealthInfo,
   type LaunchedIndex,
@@ -31,17 +27,12 @@ const SERVER_SETTINGS: ApiSettings = { token: '', baseUrl: '' }
 const EMPTY_ROWS: WorkbenchStatusItem[] = []
 const EMPTY_HANDLES: ReadonlySet<string> = new Set()
 
-function errorBody(error: unknown): unknown {
-  if (!error || typeof error !== 'object' || !('body' in error)) return null
-  return (error as { body?: unknown }).body
-}
-
 interface CheckingMeta {
   since: number
   previousCheckAt: string
 }
 
-export function useWorkbenchLive(candidates: Candidate[], launchedHandles: ReadonlySet<string> = EMPTY_HANDLES) {
+export function useWorkbenchLive(launchedHandles: ReadonlySet<string> = EMPTY_HANDLES) {
   const items = useWorkbenchItems()
   const settings = useSyncExternalStore(subscribeApiSettings, getApiSettings, () => SERVER_SETTINGS)
   const token = settings.token.trim()
@@ -60,8 +51,6 @@ export function useWorkbenchLive(candidates: Candidate[], launchedHandles: Reado
   const rows = fresh ? snapshot.rows : EMPTY_ROWS
   const hasStatus = fresh && snapshot.hasStatus
   const statusError = fresh ? snapshot.error : null
-  const [syncState, setSyncState] = useState<'idle' | 'syncing' | 'ok' | 'error'>('idle')
-  const [syncMessage, setSyncMessage] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
   const [authFor, setAuthFor] = useState('')
   const [launched, setLaunched] = useState<LaunchedIndex>(() => emptyLaunched())
@@ -82,17 +71,6 @@ export function useWorkbenchLive(candidates: Candidate[], launchedHandles: Reado
     }
     return keys
   }, [launched, launchedHandles])
-  const syncItems = useMemo(() => {
-    const active =
-      launchedKeys.size === 0
-        ? items
-        : items.filter((item) => {
-            const key = handleKey(item.handle)
-            return !key || !launchedKeys.has(key)
-          })
-    return syncItemsFromPins(active, candidates)
-  }, [items, candidates, launchedKeys])
-
   const checkingRef = useRef<Map<string, CheckingMeta>>(new Map())
   const sessionRef = useRef({ token, base })
 
@@ -165,34 +143,6 @@ export function useWorkbenchLive(candidates: Candidate[], launchedHandles: Reado
   useLayoutEffect(() => {
     removeLaunchedWorkbenchItems(launchedKeys)
   }, [items, launchedKeys])
-
-  useEffect(() => {
-    if (!token) return
-    let cancelled = false
-    const timer = window.setTimeout(() => {
-      void (async () => {
-        setSyncState('syncing')
-        try {
-          const result = await syncWorkbench(base, token, syncItems)
-          removeLaunchedWorkbenchItems(result.droppedLaunched)
-          if (cancelled) return
-          setAuthFor((current) => (current === token ? '' : current))
-          setSyncState('ok')
-          setSyncMessage(`已同步 ${result.count} 个目标`)
-        } catch (error) {
-          removeLaunchedWorkbenchItems(droppedLaunchedHandles(errorBody(error)))
-          if (cancelled) return
-          noteAuth(error)
-          setSyncState('error')
-          setSyncMessage(errorText(error))
-        }
-      })()
-    }, 500)
-    return () => {
-      cancelled = true
-      window.clearTimeout(timer)
-    }
-  }, [syncItems, token, base, noteAuth])
 
   useEffect(() => {
     let alive = true
@@ -292,8 +242,6 @@ export function useWorkbenchLive(candidates: Candidate[], launchedHandles: Reado
     healthState,
     statusByHandle: useMemo(() => statusIndex(token ? rows : []), [rows, token]),
     hasStatus: Boolean(token) && hasStatus,
-    syncState: token ? syncState : 'idle',
-    syncMessage: token ? syncMessage : null,
     autoRemoveMessage,
     statusError: token ? statusError : null,
     actionError,

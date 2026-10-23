@@ -1,6 +1,7 @@
 import type { Candidate } from '../types'
 import { findByHandle } from './candidates'
 import { xProfileUrl } from './format'
+import { parsePinResponse, parseReviewResponse, type PinMergeState, type ReviewWire } from './syncMerge'
 import { handleKey, safeHttpUrl, type WorkbenchItem } from './workbench'
 
 /** Used when `VITE_WORKBENCH_API_BASE` is unset. The token is never stored here. */
@@ -359,6 +360,10 @@ export function isAuthError(error: unknown): boolean {
   return Boolean(error && typeof error === 'object' && (error as ApiError).status === 401)
 }
 
+export function isNotFound(error: unknown): boolean {
+  return Boolean(error && typeof error === 'object' && (error as ApiError).status === 404)
+}
+
 export function errorText(error: unknown): string {
   if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string' && error.message) {
     return error.message
@@ -461,6 +466,69 @@ export async function syncWorkbench(base: string, token: string, items: SyncItem
     count: count ?? items.length,
     droppedLaunched: droppedLaunchedHandles(body),
   }
+}
+
+export async function fetchPins(base: string, token: string): Promise<{ syncedAt: string; state: PinMergeState }> {
+  const body = await apiFetch(base, '/v1/workbench/pins', token)
+  const parsed = parsePinResponse(body)
+  if (!parsed) {
+    const failure: ApiError = { status: 200, message: '接口返回的不是钉选列表' }
+    throw failure
+  }
+  return { syncedAt: parsed.syncedAt, state: parsed.state }
+}
+
+export async function pushMergedPins(
+  base: string,
+  token: string,
+  state: PinMergeState,
+): Promise<{ state: PinMergeState | null; droppedLaunched: string[] }> {
+  const body = await apiFetch(
+    base,
+    '/v1/workbench/sync',
+    token,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        client_id: getClientId(),
+        items: state.items,
+        removed: state.removed,
+      }),
+    },
+    15000,
+  )
+  return {
+    state: parsePinResponse(body)?.state ?? null,
+    droppedLaunched: droppedLaunchedHandles(body),
+  }
+}
+
+export async function fetchReviewed(base: string, token: string): Promise<{ syncedAt: string; marks: Record<string, ReviewWire> }> {
+  const body = await apiFetch(base, '/v1/workbench/reviewed', token)
+  const parsed = parseReviewResponse(body)
+  if (!parsed) {
+    const failure: ApiError = { status: 200, message: '接口返回的不是已看记录' }
+    throw failure
+  }
+  return parsed
+}
+
+export async function pushMergedReviewed(
+  base: string,
+  token: string,
+  marks: Record<string, ReviewWire>,
+): Promise<Record<string, ReviewWire> | null> {
+  const body = await apiFetch(
+    base,
+    '/v1/workbench/reviewed/sync',
+    token,
+    {
+      method: 'POST',
+      body: JSON.stringify({ client_id: getClientId(), marks }),
+    },
+    15000,
+  )
+  return parseReviewResponse(body)?.marks ?? null
 }
 
 export async function checkWorkbench(base: string, token: string, handle: string): Promise<boolean> {

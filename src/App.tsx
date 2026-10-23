@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { CaAlertToasts } from './components/CaAlert'
 import { Header } from './components/Header'
+import { useBoardSync } from './hooks/useBoardSync'
 import { useCaAlertWatcher } from './hooks/useCaAlertWatcher'
 import { usePadData } from './hooks/usePadData'
 import { useTheme } from './hooks/useTheme'
@@ -18,6 +19,7 @@ export default function App() {
   const { theme, toggle } = useTheme()
   const route = useRoute()
   const data = usePadData()
+  useBoardSync(data.allCandidates, data.loading)
   useCaAlertWatcher()
   const todayCount = useMemo(
     () =>
