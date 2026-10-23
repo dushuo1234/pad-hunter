@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T02:31:15+08:00",
+  "generated_at": "2026-10-24T02:31:38+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 52,
@@ -6302,8 +6302,104 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 70,
+  "suspected_copycat_count": 72,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Bitcoin PulseX",
+      "handle": "BitcoinPulseX",
+      "chain": "bsc",
+      "address": "0x2767ea2b303ce8bcf682e944ac75bf6a2e69ffff",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/BitcoinPulseX",
+      "detected_at": "2026-10-24T02:31:34+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:BITCOIN; deployer=0x5c3b46b91935f4d68be19cf3eeaedcba5d946615; token=BITCOIN / bitcoin is dead; ca_gate: ERC20 verified: BITCOIN dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T02:31:34+08:00",
+          "reason": "symbol:BITCOIN",
+          "via": "factory:fourmeme_tm2_bsc:TokenCreate"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x5c3b46b91935f4d68be19cf3eeaedcba5d946615",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "BITCOIN",
+        "name": "bitcoin is dead",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: BITCOIN dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x5c3b46b91935f4d68be19cf3eeaedcba5d946615",
+      "creator_watched": false
+    },
+    {
+      "project": "【疑似山寨·同名未确认】Bitcoin PulseX",
+      "handle": "BitcoinPulseX",
+      "chain": "bsc",
+      "address": "0x6699a54a9f92df80b06456156b9b420bfd0effff",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/BitcoinPulseX",
+      "detected_at": "2026-10-24T02:31:30+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:BITCOIN; deployer=0x8ad0cfa0f170d5b63826fd56bf318478b0f000e0; token=BITCOIN / bitcoin is dead; ca_gate: ERC20 verified: BITCOIN dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T02:31:30+08:00",
+          "reason": "symbol:BITCOIN",
+          "via": "factory:fourmeme_tm2_bsc:TokenCreate"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x8ad0cfa0f170d5b63826fd56bf318478b0f000e0",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "BITCOIN",
+        "name": "bitcoin is dead",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: BITCOIN dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x8ad0cfa0f170d5b63826fd56bf318478b0f000e0",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Shift",
       "handle": "shift_hl",
