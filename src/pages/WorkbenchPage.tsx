@@ -200,6 +200,14 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const healthLabel =
     live.healthState === 'online' ? '在线' : live.healthState === 'offline' ? '离线' : '连接中'
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
+  const pinnedKeys = new Set<string>()
+  const launchedKeys = new Set<string>()
+  for (const item of items) {
+    const key = handleKey(item.handle)
+    if (!key) continue
+    if (isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)) launchedKeys.add(key)
+    else pinnedKeys.add(key)
+  }
   const alertToasts = alertFeed.toasts.filter((toast) => {
     const match = items.find((item) => handleKey(item.handle) === handleKey(toast.handle))
     if (!match) return false
@@ -251,6 +259,13 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </span>
         </div>
       </div>
+
+      <WorkbenchAlertConsole
+        alerts={alertFeed.alerts}
+        readIds={alertFeed.readIds}
+        pinned={pinnedKeys}
+        launched={launchedKeys}
+      />
 
       {!live.token && (
         <button

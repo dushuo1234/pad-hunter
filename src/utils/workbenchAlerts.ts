@@ -592,20 +592,20 @@ function consoleParts(alert: WorkbenchAlert): Pick<ConsoleLine, 'mark' | 'label'
 
 function passesVisibility(
   alert: WorkbenchAlert,
-  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string>; handle?: string },
+  visible?: { pinned?: ReadonlySet<string>; launched?: ReadonlySet<string>; handle?: string },
 ): boolean {
   const key = handleKey(alert.handle)
   if (!key) return false
   if (visible?.handle && handleKey(visible.handle) !== key) return false
   if (!visible?.pinned) return true
-  return visible.pinned.has(key) && !visible.launched.has(key)
+  return visible.pinned.has(key) && !visible.launched?.has(key)
 }
 
 /** Unread, non-baseline alerts that are allowed to blink. 不算CA and baseline stay out. */
 export function flashingAlertIds(
   alerts: readonly WorkbenchAlert[],
   readIds: ReadonlySet<string>,
-  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string>; handle?: string },
+  visible?: { pinned?: ReadonlySet<string>; launched?: ReadonlySet<string>; handle?: string },
 ): string[] {
   const ids: string[] = []
   for (const alert of alerts) {
@@ -620,7 +620,7 @@ export function flashingAlertIds(
 export function flashingReminderCount(
   alerts: readonly WorkbenchAlert[],
   readIds: ReadonlySet<string>,
-  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string>; handle?: string },
+  visible?: { pinned?: ReadonlySet<string>; launched?: ReadonlySet<string>; handle?: string },
 ): number {
   return flashingAlertIds(alerts, readIds, visible).length
 }
@@ -632,7 +632,7 @@ export function flashingReminderCount(
 export function consoleLines(
   alerts: readonly WorkbenchAlert[],
   readIds: ReadonlySet<string>,
-  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string>; handle?: string },
+  visible?: { pinned?: ReadonlySet<string>; launched?: ReadonlySet<string>; handle?: string },
 ): ConsoleLine[] {
   const ranked = alerts.map((alert, index) => ({ alert, index })).filter(({ alert }) => passesVisibility(alert, visible))
   ranked.sort((a, b) => {
