@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T22:34:34+08:00",
+  "generated_at": "2026-10-23T22:49:37+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 43,
@@ -5664,8 +5664,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 67,
+  "suspected_copycat_count": 68,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】RaidLords",
+      "handle": "RaidLords",
+      "chain": "robinhood",
+      "address": "0xd52d825aac313d3324db4652ea3d37b6fabb0ccf",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/RaidLords",
+      "detected_at": "2026-10-23T22:49:35+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via name:raidlords; deployer=0xca0e112d584fa67d647fe23f909f40fec893ae20; token=RAID / RaidLords; ca_gate: ERC20 verified: RAID dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T22:49:35+08:00",
+          "reason": "name:raidlords",
+          "via": "factory:univ4_pm_rh:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xca0e112d584fa67d647fe23f909f40fec893ae20",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "RAID",
+        "name": "RaidLords",
+        "decimals": 18,
+        "code_bytes": 1770,
+        "note": "ERC20 verified: RAID dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xca0e112d584fa67d647fe23f909f40fec893ae20",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】evmbot",
       "handle": "evmbot",
