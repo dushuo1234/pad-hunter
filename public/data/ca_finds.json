@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T22:24:47+08:00",
+  "generated_at": "2026-10-23T22:30:18+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 43,
@@ -5664,8 +5664,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 65,
+  "suspected_copycat_count": 66,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Alpha",
+      "handle": "alpha_ai",
+      "chain": "base",
+      "address": "0xb2000000000000000000002d0ba3164cc74f58b7",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/alpha_ai",
+      "detected_at": "2026-10-23T22:30:12+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:alpha; deployer=0x04ff8883b023d634abaab6e1a8c02dc7c26fe48b; token=GOOGLc / Alphabet Inc.; ca_gate: ERC20 verified: GOOGLc dec=8",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T22:30:12+08:00",
+          "reason": "name_fuzzy:alpha",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x04ff8883b023d634abaab6e1a8c02dc7c26fe48b",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "GOOGLc",
+        "name": "Alphabet Inc.",
+        "decimals": 8,
+        "code_bytes": 1,
+        "note": "ERC20 verified: GOOGLc dec=8"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x04ff8883b023d634abaab6e1a8c02dc7c26fe48b",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Gazbi.fun",
       "handle": "GazbiFun",
