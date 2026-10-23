@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T22:05:48+08:00",
+  "generated_at": "2026-10-23T22:07:23+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 43,
@@ -5650,8 +5650,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 64,
+  "suspected_copycat_count": 65,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Gazbi.fun",
+      "handle": "GazbiFun",
+      "chain": "base",
+      "address": "0xb20000000000000000000055120ba3f6dcecd6f2",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/GazbiFun",
+      "detected_at": "2026-10-23T22:07:21+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:KAS; deployer=0xc324a14f2e84761a72e8a60c4c4e65f3908e6dd2; token=KAS / KaspaDollar; ca_gate: ERC20 verified: KAS dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T22:07:21+08:00",
+          "reason": "symbol:KAS",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc324a14f2e84761a72e8a60c4c4e65f3908e6dd2",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "KAS",
+        "name": "KaspaDollar",
+        "decimals": 18,
+        "code_bytes": 1,
+        "note": "ERC20 verified: KAS dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0xc324a14f2e84761a72e8a60c4c4e65f3908e6dd2",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】2109618897930305536",
       "handle": "2109618897930305536",
