@@ -307,6 +307,11 @@ if (!pageSource.includes('wb-row-flash') || sharedAt < 0 || projectAt < 0 || tab
 if (!pageSource.includes('pinned={pinnedKeys}') || !pageSource.includes('handle={item.handle}')) {
   fail('shared console and per-project console must both be wired')
 }
+const nameCellAt = pageSource.indexOf('max-w-[28rem]')
+const nameCell = pageSource.slice(nameCellAt, nameCellAt + 900)
+if (nameCellAt < 0 || nameCell.includes('<WorkbenchAlertConsole')) fail('project console must leave the narrow name cell')
+if (!pageSource.includes('wb-console-span') || !pageSource.includes('colSpan={13}')) fail('project console must span the board')
+if (!css.includes('100cqw') || !css.includes('.wb-console-span')) fail('consoles must use the content column width')
 const headerSource = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8')
 if (!headerSource.includes('条未读提醒')) fail('nav unread count')
 

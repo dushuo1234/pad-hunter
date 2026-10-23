@@ -44,7 +44,7 @@ export function WorkbenchAlertConsole({
 
   return (
     <section
-      className={`wb-console ${project ? 'wb-console-project' : 'mt-4'} ${flashing ? 'cursor-pointer' : ''}`}
+      className={`wb-console w-full ${project ? 'wb-console-project' : 'mt-4'} ${flashing ? 'cursor-pointer' : ''}`}
       aria-label={
         project
           ? flashing
