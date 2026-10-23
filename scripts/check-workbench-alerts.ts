@@ -237,6 +237,12 @@ if (board[0] && board[1] && Date.parse(board[0].ts) < Date.parse(board[1].ts) &&
 }
 const hiddenConsole = consoleLines([soon], noneRead, { pinned: new Set(['caravanrh']), launched: new Set(['caravanrh']) })
 if (hiddenConsole.length !== 0) fail('launched alerts stay out of the console')
+const perProject = consoleLines([soon, nftAlert], noneRead, {
+  pinned: new Set(['caravanrh', 'nftproj']),
+  launched: new Set(),
+  handle: '@CaravanRH',
+})
+if (perProject.length !== 1 || perProject[0]?.id !== soon.id) fail('a project console must only list that project')
 const readConsole = consoleLines([soon, confirmed], new Set([soon.id]))
 if (readConsole[0]?.id !== confirmed.id || readConsole[0]?.flash !== true || readConsole[1]?.flash !== false) {
   fail('unread lines lead the console')
@@ -283,14 +289,23 @@ if (!css.includes('prefers-reduced-motion') || !css.includes('wb-row-flash') || 
   fail('flash styles missing')
 }
 const consoleSource = readFileSync(new URL('../src/components/WorkbenchAlertConsole.tsx', import.meta.url), 'utf8')
-if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('consoleTitle')) fail('console must ack on click')
+if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('工作台:~$')) fail('shared console must ack every flashing id')
+if (!consoleSource.includes('handle')) fail('per-project console missing')
 const reminderSource = readFileSync(new URL('../src/components/WorkbenchReminders.tsx', import.meta.url), 'utf8')
 if (!reminderSource.includes('bg-emerald-600') || !reminderSource.includes('bg-orange-600') || !reminderSource.includes('bg-sky-600') || !reminderSource.includes('bg-amber-400')) {
   fail('solid reminder pills')
 }
 if (reminderSource.includes('bg-emerald-50')) fail('confirmed badge is still pale')
 const pageSource = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import.meta.url), 'utf8')
-if (!pageSource.includes('wb-row-flash') || !pageSource.includes('WorkbenchAlertConsole')) fail('rows and console')
+const tableAt = pageSource.indexOf('<table')
+const sharedAt = pageSource.indexOf('<WorkbenchAlertConsole')
+const projectAt = pageSource.indexOf('<WorkbenchAlertConsole', sharedAt + 1)
+if (!pageSource.includes('wb-row-flash') || sharedAt < 0 || projectAt < 0 || tableAt < 0 || sharedAt > tableAt || projectAt < tableAt) {
+  fail('need the shared console above the list and a console inside each row')
+}
+if (!pageSource.includes('pinned={pinnedKeys}') || !pageSource.includes('handle={item.handle}')) {
+  fail('shared console and per-project console must both be wired')
+}
 const headerSource = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8')
 if (!headerSource.includes('条未读提醒')) fail('nav unread count')
 
