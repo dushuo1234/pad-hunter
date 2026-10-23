@@ -259,7 +259,7 @@ TapeRobot 的教训：同名山寨会被自动当成 CA。真正的官方晶体�
 本地换默认接口：
 
 ```bash
-VITE_WORKBENCH_API_BASE=https://example.ngrok-free.dev npm run dev
+VITE_WORKBENCH_API_BASE=https://api.adualpha.win npm run dev
 ```
 
 `launched.json` 可以是 handle 字符串数组，或带 `handle` / `name` 的对象列表（也认 `projects`、`items`、`launched` 这些字段）。没有这个文件时不显示「已开盘」。

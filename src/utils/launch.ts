@@ -233,16 +233,22 @@ export function countUpcoming(
 
 export function readListingTimes(data: unknown): ListingTimeEntry[] {
   if (!data || typeof data !== 'object') return []
-  const times = (data as { times?: unknown }).times
-  if (!Array.isArray(times)) return []
+  const record = data as { times?: unknown; items?: unknown }
+  const times = Array.isArray(record.times) ? record.times : Array.isArray(record.items) ? record.items : null
+  if (!times) return []
   const entries: ListingTimeEntry[] = []
   for (const row of times) {
     if (!row || typeof row !== 'object') continue
-    const record = row as Record<string, unknown>
-    const handle = typeof record.handle === 'string' ? record.handle.trim() : ''
-    const listingAt = typeof record.listing_at === 'string' ? record.listing_at.trim() : ''
+    const item = row as Record<string, unknown>
+    const handle = typeof item.handle === 'string' ? item.handle.trim() : ''
+    const listingAt = typeof item.listing_at === 'string' ? item.listing_at.trim() : ''
     if (!handle || !listingAt) continue
-    const source = typeof record.listing_at_source === 'string' ? record.listing_at_source : undefined
+    const source =
+      typeof item.listing_at_source === 'string'
+        ? item.listing_at_source
+        : typeof item.source === 'string'
+          ? item.source
+          : undefined
     entries.push({ handle, listing_at: listingAt, listing_at_source: source })
   }
   return entries

@@ -1,12 +1,14 @@
 /**
  * Manual 「已看」 marks. Keyed by X handle (lowercase, without @).
- * A project with no handle falls back to its normalized name.
+ * A project with no handle falls back to its normalized name (`name:…`).
  *
- * Stored only in localStorage (`pad-hunter.reviewed.v1`). The workbench
- * sync endpoint posts monitor pins (handle, sites, notes, push) and has
- * no reviewed field; writing marks there would pin those projects into
- * the monitor. Marks stay on this browser and survive the 20s data poll.
+ * localStorage (`pad-hunter.reviewed.v1`) is the offline cache. With a token,
+ * marks also merge through `/v1/workbench/reviewed`. Turning a mark off writes
+ * `clearedAt` instead of deleting the key, so another device can learn the unmark.
+ * A key is shown as reviewed only while `at` is newer than or equal to `clearedAt`.
  */
+
+import { isReviewedActive, nowIso } from './syncMerge'
 
 export const REVIEWED_STORAGE_KEY = 'pad-hunter.reviewed.v1'
 
@@ -20,6 +22,8 @@ export interface ReviewSnapshot {
 export interface ReviewMark {
   at: string
   snapshot: ReviewSnapshot
+  /** Set when the mark was turned off. Newer than `at` means unmarked. */
+  clearedAt?: string
 }
 
 export interface ReviewFields {
@@ -37,8 +41,10 @@ interface StoredMarks {
 
 const EMPTY_MARKS: Record<string, ReviewMark> = {}
 
-let marks: Record<string, ReviewMark> = loadMarks()
+let stored: Record<string, ReviewMark> = EMPTY_MARKS
+let active: Record<string, ReviewMark> = EMPTY_MARKS
 const listeners = new Set<() => void>()
+let silentReviewed = 0
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
@@ -81,12 +87,24 @@ function sameInstant(prev: string, next: string): boolean {
 }
 
 /** True when the live row has newer listing time, status, listing, or CA than the mark. */
-export function reviewHasUpdate(stored: ReviewSnapshot, current: ReviewSnapshot): boolean {
-  if (current.listingAt && !sameInstant(stored.listingAt, current.listingAt)) return true
-  if (current.status && stored.status && current.status !== stored.status) return true
-  if (current.listing && stored.listing && current.listing !== stored.listing) return true
-  if (current.ca && current.ca !== stored.ca) return true
+export function reviewHasUpdate(storedSnapshot: ReviewSnapshot, current: ReviewSnapshot): boolean {
+  if (current.listingAt && !sameInstant(storedSnapshot.listingAt, current.listingAt)) return true
+  if (current.status && storedSnapshot.status && current.status !== storedSnapshot.status) return true
+  if (current.listing && storedSnapshot.listing && current.listing !== storedSnapshot.listing) return true
+  if (current.ca && current.ca !== storedSnapshot.ca) return true
   return false
+}
+
+function markIsActive(mark: ReviewMark): boolean {
+  return isReviewedActive({ at: mark.at, clearedAt: mark.clearedAt })
+}
+
+function projectActive(all: Record<string, ReviewMark>): Record<string, ReviewMark> {
+  const next: Record<string, ReviewMark> = {}
+  for (const [key, mark] of Object.entries(all)) {
+    if (markIsActive(mark)) next[key] = mark
+  }
+  return Object.keys(next).length > 0 ? next : EMPTY_MARKS
 }
 
 function normalizeMark(raw: unknown): ReviewMark | null {
@@ -94,18 +112,21 @@ function normalizeMark(raw: unknown): ReviewMark | null {
   if (!row) return null
   const snapshot = asRecord(row.snapshot) ?? {}
   const at = asString(row.at).trim()
+  const clearedAt = asString(row.clearedAt || row.cleared_at).trim()
+  if (!at && !clearedAt) return null
   return {
     at: at || new Date(0).toISOString(),
     snapshot: {
-      listingAt: asString(snapshot.listingAt).trim(),
+      listingAt: asString(snapshot.listingAt || snapshot.listing_at).trim(),
       status: asString(snapshot.status).trim(),
       listing: asString(snapshot.listing).trim(),
       ca: normalizeCa(asString(snapshot.ca)),
     },
+    ...(clearedAt ? { clearedAt } : {}),
   }
 }
 
-function loadMarks(): Record<string, ReviewMark> {
+function loadStored(): Record<string, ReviewMark> {
   if (typeof localStorage === 'undefined') return EMPTY_MARKS
   try {
     const raw = localStorage.getItem(REVIEWED_STORAGE_KEY)
@@ -126,19 +147,33 @@ function loadMarks(): Record<string, ReviewMark> {
   }
 }
 
+stored = loadStored()
+active = projectActive(stored)
+
+/** Active marks only. Cleared keys are absent so existing 「已看」 checks keep working. */
 export function getReviewedMarks(): Record<string, ReviewMark> {
-  return marks
+  return active
+}
+
+/** Full cache, including tombstones, for the sync client. */
+export function getReviewedSyncMarks(): Record<string, ReviewMark> {
+  return stored
 }
 
 export function getReviewedServerMarks(): Record<string, ReviewMark> {
   return EMPTY_MARKS
 }
 
+export function isReviewedWriteSuppressed(): boolean {
+  return silentReviewed > 0
+}
+
 export function subscribeReviewed(onStoreChange: () => void): () => void {
   listeners.add(onStoreChange)
   const onStorage = (event: StorageEvent) => {
     if (event.key != null && event.key !== REVIEWED_STORAGE_KEY) return
-    marks = loadMarks()
+    stored = loadStored()
+    active = projectActive(stored)
     onStoreChange()
   }
   if (typeof window !== 'undefined') window.addEventListener('storage', onStorage)
@@ -148,10 +183,34 @@ export function subscribeReviewed(onStoreChange: () => void): () => void {
   }
 }
 
-function commit(next: Record<string, ReviewMark>) {
-  marks = next
+function sameStored(left: Record<string, ReviewMark>, right: Record<string, ReviewMark>): boolean {
+  const leftKeys = Object.keys(left)
+  const rightKeys = Object.keys(right)
+  if (leftKeys.length !== rightKeys.length) return false
+  for (const key of leftKeys) {
+    const a = left[key]
+    const b = right[key]
+    if (!a || !b) return false
+    if (a.at !== b.at || (a.clearedAt ?? '') !== (b.clearedAt ?? '')) return false
+    if (
+      a.snapshot.listingAt !== b.snapshot.listingAt ||
+      a.snapshot.status !== b.snapshot.status ||
+      a.snapshot.listing !== b.snapshot.listing ||
+      a.snapshot.ca !== b.snapshot.ca
+    ) {
+      return false
+    }
+  }
+  return true
+}
+
+function publish(next: Record<string, ReviewMark>) {
+  const normalized = Object.keys(next).length > 0 ? next : EMPTY_MARKS
+  if (sameStored(stored, normalized)) return
+  stored = normalized
+  active = projectActive(stored)
   try {
-    const payload: StoredMarks = { version: 1, marks: next }
+    const payload: StoredMarks = { version: 1, marks: stored }
     localStorage.setItem(REVIEWED_STORAGE_KEY, JSON.stringify(payload))
   } catch {
     // Keep the in-memory marks if the browser refuses the write.
@@ -159,19 +218,35 @@ function commit(next: Record<string, ReviewMark>) {
   for (const listener of listeners) listener()
 }
 
+/** Replace the cache from a merged sync snapshot without scheduling another push. */
+export function replaceReviewedMarks(next: Record<string, ReviewMark>): void {
+  silentReviewed += 1
+  try {
+    publish(next)
+  } finally {
+    silentReviewed -= 1
+  }
+}
+
 /** Returns the next marked state. No-op when there is no stable id. */
 export function toggleReviewed(key: string, snapshot: ReviewSnapshot): boolean {
   const id = key.trim().toLowerCase()
   if (!id) return false
-  if (marks[id]) {
-    const next = { ...marks }
-    delete next[id]
-    commit(Object.keys(next).length > 0 ? next : EMPTY_MARKS)
+  const current = stored[id]
+  if (current && markIsActive(current)) {
+    publish({
+      ...stored,
+      [id]: { ...current, clearedAt: nowIso() },
+    })
     return false
   }
-  commit({
-    ...marks,
-    [id]: { at: new Date().toISOString(), snapshot },
+  publish({
+    ...stored,
+    [id]: {
+      at: nowIso(),
+      snapshot,
+      ...(current?.clearedAt ? { clearedAt: current.clearedAt } : {}),
+    },
   })
   return true
 }

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
+import { useBoardSyncStatus } from '../hooks/useBoardSync'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai } from '../utils/format'
@@ -51,7 +52,8 @@ const FIELD =
   'h-10 w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-3 text-sm outline-none transition focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]'
 
 export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
-  const live = useWorkbenchLive(candidates, launchedHandles)
+  const live = useWorkbenchLive(launchedHandles)
+  const board = useBoardSyncStatus()
   const items = live.items
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [manualOpen, setManualOpen] = useState(false)
@@ -213,7 +215,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           请填写监控接口令牌
         </button>
       )}
-      {live.authError && (
+      {(live.authError || board.authError) && (
         <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-100" role="status">
           令牌无效或缺失
         </p>
@@ -226,7 +228,20 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           onClick={() => (settingsOpen ? setSettingsOpen(false) : openSettings())}
           className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
         >
-          <span className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">监控接口</span>
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="text-sm font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">监控接口</span>
+            {live.token && board.hint ? (
+              <span
+                className={`truncate font-mono text-[11px] ${
+                  board.hint === '同步失败，仅本机'
+                    ? 'text-rose-700 dark:text-rose-300'
+                    : 'text-emerald-700 dark:text-emerald-300'
+                }`}
+              >
+                {board.hint}
+              </span>
+            ) : null}
+          </span>
           <span className="font-mono text-[11px] text-[var(--color-ink-muted)]">{settingsOpen ? '收起' : '设置令牌'}</span>
         </button>
         {settingsOpen && (
@@ -288,9 +303,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         )}
       </section>
 
-      {(message || live.autoRemoveMessage || live.syncState === 'syncing' || live.syncMessage || live.statusError || live.actionError) && (
+      {(message || live.autoRemoveMessage || board.phase === 'syncing' || board.message || live.statusError || live.actionError) && (
         <p className="mt-3 font-mono text-xs text-[var(--color-ink-muted)]" role="status">
-          {[message, live.autoRemoveMessage, live.syncState === 'syncing' ? '正在同步…' : live.syncMessage, live.statusError, live.actionError]
+          {[message, live.autoRemoveMessage, board.phase === 'syncing' ? '正在同步…' : board.message, live.statusError, live.actionError]
             .filter(Boolean)
             .join(' · ')}
         </p>
@@ -464,7 +479,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         <div className="mt-4 rounded-2xl border border-dashed border-[var(--color-line)] px-4 py-14 text-center dark:border-[var(--color-night-line)]">
           <p className="text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">工作台还是空的。</p>
           <p className="mx-auto mt-2 max-w-lg text-xs leading-relaxed text-[var(--color-ink-muted)]">
-            从候选列表搜索名称或 X 账号加入，或手动填一个项目。钉选、备注和推送开关保存在这台浏览器。填了令牌之后才会同步到监控接口。
+            从候选列表搜索名称或 X 账号加入，或手动填一个项目。钉选、备注和推送开关先留在这台浏览器；填了令牌之后，会按时间和其他设备合并同步。
           </p>
         </div>
       ) : (
@@ -559,7 +574,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                           aria-label={`${item.name} 备注`}
                           value={item.notes}
                           rows={3}
-                          placeholder="写下你自己的观察。输入后即保存在这台浏览器。"
+                          placeholder="写下你自己的观察。有令牌时会同步到其他设备。"
                           onChange={(event) => updateWorkbenchNotes(item.id, event.target.value)}
                           className="mt-1.5 w-full min-w-48 resize-y rounded-lg border border-[var(--color-line)] bg-[var(--color-cream)] px-2 py-1.5 text-xs leading-relaxed outline-none focus:border-[var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-2)] dark:text-[var(--color-night-ink)]"
                         />
