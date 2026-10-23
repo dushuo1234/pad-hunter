@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-10-23T16:01:16+08:00",
+  "generated_at": "2026-10-23T16:17:11+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 64,
+  "count": 52,
   "token_ca_count": 3,
-  "wallet_count": 23,
+  "wallet_count": 11,
   "confirmed_count": 3,
   "candidate_count": 0,
   "status_counts": {
     "confirmed": 3,
     "candidate": 0,
     "superseded": 0,
-    "not_ca": 61
+    "not_ca": 49
   },
   "finds": [
     {
@@ -812,112 +812,6 @@
       "ca_locked": false
     },
     {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0xF52bA6C070ADF61598db2ea4Ce171f5a17F276C8",
-      "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CLSH59HS.js",
-      "detected_at": "2026-10-23T14:18:29+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
-          "detected_at": "2026-10-23T14:18:29+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x63aBA7eCe8813fe067f9097eaCA06F16E04ec09b",
-      "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-Dg02ROao.js",
-      "detected_at": "2026-10-23T12:26:42+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
-          "detected_at": "2026-10-23T12:26:42+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
       "project": "Gearz",
       "handle": "gearzfun",
       "chain": "bsc",
@@ -1281,59 +1175,6 @@
       "ca_locked": false
     },
     {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x0e380edcd112f37fef4a38dda4a485d1cd57b6c1",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:27+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:27+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
       "project": "ETHERIIS PROTOCOL",
       "handle": "etheriisprotoco",
       "chain": "ethereum",
@@ -1555,528 +1396,6 @@
       "alert_ok": true,
       "ca_locked": false,
       "confirm_basis_zh": "官推确认"
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0xE45526A5997E16465A9d4cd5Bea776C3332EaCdC",
-      "source": "html:https://shieldxl.xyz/",
-      "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "watchlist.scanned_wallets",
-          "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "页面 HTML 中的地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0xc1c442fed92829635A8eDB066A8B24F7292E9f8C",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x227F7D5Bdc6d90069eDD513DEFce9E1BBF561776",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x0c78df1331ce743db6d51901e4ae65b359e22922",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x69c27e9e98749643C9a03774966D8BdD14300ED1",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x20875e1B7C6cF032DE71Ca5B63940c64D2e917DB",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x00447aF883f0488E6Ef88dC731e9Fe7eC76Fb03B",
-      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0x7C50ea664eeeC867574D31eb427362b9906BA9c9",
-      "source": "html:https://shieldxl.xyz/",
-      "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "页面 HTML 中的地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
-    },
-    {
-      "project": "【扫出钱包·非CA】ShieldX",
-      "handle": "SX_Protocol",
-      "chain": "ethereum",
-      "address": "0xFC4c8FFA1A93eC42A26750CDc4Fd8Ff1b133d0B7",
-      "source": "html:https://shieldxl.xyz/",
-      "evidence_url": "https://shieldxl.xyz/",
-      "detected_at": "2026-10-22T23:26:07+08:00",
-      "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
-      "sources": [
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-22T23:26:07+08:00"
-        },
-        {
-          "origin": "js_factory_events",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T05:46:59+08:00"
-        },
-        {
-          "origin": "js_factory_scan_latest",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:53:22+08:00"
-        },
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:45:36+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "html:https://shieldxl.xyz/",
-          "detected_at": "2026-10-23T15:58:43+08:00"
-        }
-      ],
-      "kind": "wallet",
-      "label_zh": "扫出钱包",
-      "note_zh": "页面 HTML 中的地址",
-      "addr_kind": "wallet",
-      "is_token": false,
-      "verify": {
-        "kind": "wallet",
-        "chain": "ethereum",
-        "code_bytes": 0,
-        "note": "eth_getCode empty / 7702 → EOA wallet"
-      },
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "ca_locked": false
     },
     {
       "project": "【非地址·非CA】EmberWorld",
@@ -2550,8 +1869,13 @@
       "evidence_url": "https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
       "detected_at": "2026-10-22T09:04:55+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "detected_at": "2026-10-23T16:17:11+08:00"
+        },
         {
           "origin": "js_factory_events",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
@@ -2580,7 +1904,7 @@
       ],
       "kind": "wallet",
       "label_zh": "扫出钱包",
-      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "note_zh": "扫出钱包; eth_getCode empty / 7702 → EOA wallet",
       "addr_kind": "wallet",
       "is_token": false,
       "verify": {
@@ -3520,8 +2844,727 @@
       "ca_locked": false
     }
   ],
-  "launched_history_count": 60,
+  "launched_history_count": 73,
   "launched_history": [
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0xF52bA6C070ADF61598db2ea4Ce171f5a17F276C8",
+      "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CLSH59HS.js",
+      "detected_at": "2026-10-23T14:18:29+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
+          "detected_at": "2026-10-23T14:18:29+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CLSH59HS.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "Ptah.trade",
+      "handle": "ptahtrade",
+      "chain": "bsc",
+      "address": "0x0b364c0fea56bd7570a9dd7638f83d47ec80ffff",
+      "source": "onchain_lock",
+      "evidence_url": null,
+      "detected_at": "2026-10-23T13:45:54+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via symbol:PT; deployer=0x9c247611ed978801043d826e96e55ffb91c3e1b6; token=PT / PathTrade; ca_gate: ERC20 verified: PT dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T13:45:54+08:00",
+          "reason": "symbol:PT",
+          "via": "factory:fourmeme_tm2_bsc:TokenCreate"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "traced_from": "0x9c247611ed978801043d826e96e55ffb91c3e1b6",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "PT",
+        "name": "PathTrade",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: PT dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x63aBA7eCe8813fe067f9097eaCA06F16E04ec09b",
+      "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-Dg02ROao.js",
+      "detected_at": "2026-10-23T12:26:42+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
+          "detected_at": "2026-10-23T12:26:42+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-Dg02ROao.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x0e380edcd112f37fef4a38dda4a485d1cd57b6c1",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:27+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:27+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0xE45526A5997E16465A9d4cd5Bea776C3332EaCdC",
+      "source": "html:https://shieldxl.xyz/",
+      "evidence_url": "https://shieldxl.xyz/",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "页面 HTML 中的地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0xc1c442fed92829635A8eDB066A8B24F7292E9f8C",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x227F7D5Bdc6d90069eDD513DEFce9E1BBF561776",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x0c78df1331ce743db6d51901e4ae65b359e22922",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x69c27e9e98749643C9a03774966D8BdD14300ED1",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x20875e1B7C6cF032DE71Ca5B63940c64D2e917DB",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x00447aF883f0488E6Ef88dC731e9Fe7eC76Fb03B",
+      "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "evidence_url": "https://shieldxl.xyz/assets/index-CtdBORG5.js",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "js:https://shieldxl.xyz/assets/index-CVtw0LZh.js",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "js:https://shieldxl.xyz/assets/index-Dmlh3CAH.js",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://shieldxl.xyz/assets/index-CtdBORG5.js",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "代码/配置键或浏览器链接中的项目地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0x7C50ea664eeeC867574D31eb427362b9906BA9c9",
+      "source": "html:https://shieldxl.xyz/",
+      "evidence_url": "https://shieldxl.xyz/",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "页面 HTML 中的地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】ShieldX",
+      "handle": "SX_Protocol",
+      "chain": "ethereum",
+      "address": "0xFC4c8FFA1A93eC42A26750CDc4Fd8Ff1b133d0B7",
+      "source": "html:https://shieldxl.xyz/",
+      "evidence_url": "https://shieldxl.xyz/",
+      "detected_at": "2026-10-22T23:26:07+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-22T23:26:07+08:00"
+        },
+        {
+          "origin": "js_factory_events",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T05:46:59+08:00"
+        },
+        {
+          "origin": "js_factory_scan_latest",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:53:22+08:00"
+        },
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:45:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "html:https://shieldxl.xyz/",
+          "detected_at": "2026-10-23T15:58:43+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "页面 HTML 中的地址",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【合约(非代币)·非CA】Gang",
       "handle": "gangfunmeme",
@@ -6007,7 +6050,7 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 55,
+  "suspected_copycat_count": 54,
   "suspected_copycats": [
     {
       "project": "【疑似山寨·同名未确认】Drakhen",
@@ -6247,54 +6290,6 @@
       "official": false,
       "status": "name_match_unconfirmed",
       "creator": "0x3bcd53b331b6054b4c0e45a26ad58a142d910ade",
-      "creator_watched": false
-    },
-    {
-      "project": "【疑似山寨·同名未确认】Ptah.trade",
-      "handle": "ptahtrade",
-      "chain": "bsc",
-      "address": "0x0b364c0fea56bd7570a9dd7638f83d47ec80ffff",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/Ptahtrade",
-      "detected_at": "2026-10-23T13:45:54+08:00",
-      "confidence": "low",
-      "note": "onchain_lock low via symbol:PT; deployer=0x9c247611ed978801043d826e96e55ffb91c3e1b6; token=PT / PathTrade; ca_gate: ERC20 verified: PT dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-23T13:45:54+08:00",
-          "reason": "symbol:PT",
-          "via": "factory:fourmeme_tm2_bsc:TokenCreate"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "疑似山寨·同名未确认",
-      "traced_from": "0x9c247611ed978801043d826e96e55ffb91c3e1b6",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "bsc",
-        "symbol": "PT",
-        "name": "PathTrade",
-        "decimals": 18,
-        "code_bytes": 45,
-        "note": "ERC20 verified: PT dec=18"
-      },
-      "ca_status": "suspected_copycat",
-      "ca_status_zh": "疑似山寨",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "ca_locked": false,
-      "suspected_copycat": true,
-      "official": false,
-      "status": "name_match_unconfirmed",
-      "creator": "0x9c247611ed978801043d826e96e55ffb91c3e1b6",
       "creator_watched": false
     },
     {
