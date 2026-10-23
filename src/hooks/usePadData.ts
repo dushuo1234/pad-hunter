@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import type { Candidate, CandidatesPayload, MonitorEvent } from '../types'
+import { isWorkbenchSocketOpen, subscribeBoardSync } from '../utils/boardSync'
 import { withSourceFallback } from '../utils/candidates'
+import { getBlockSnapshot, getServerBlockSnapshot, subscribeBlocklist, withManualLaunched } from '../utils/launchedMark'
 import { withProjectPushDates } from '../utils/pushDate'
 import { applyListingTimes, readListingTimes, type ListingTimeEntry } from '../utils/launch'
 import { launchedHandleSet, readLaunched, withoutLaunched, type LaunchedDocument } from '../utils/launched'
 import { collectMonitorEvents, listedMonitorFiles, readMonitorDocument } from '../utils/monitor'
-import { defaultApiBase, resolveApiBase, getApiSettings } from '../utils/workbenchApi'
+import { getRadarOverlay, getServerRadarOverlay, mergeRadarCards, readRadarCards, subscribeRadar } from '../utils/radarLive'
+import { defaultApiBase, fetchRadarRecent, resolveApiBase, getApiSettings } from '../utils/workbenchApi'
 
 const CANDIDATES_URL = `${import.meta.env.BASE_URL}data/candidates.json`
 const EVENTS_URL = `${import.meta.env.BASE_URL}data/monitor_events.json`
@@ -13,8 +16,9 @@ const LISTING_TIMES_URL = `${import.meta.env.BASE_URL}data/listing_times.json`
 const LAUNCHED_URL = `${import.meta.env.BASE_URL}data/launched.json`
 const PROJECTS_URL = `${import.meta.env.BASE_URL}data/projects.json`
 
-/** Poll interval for new Telegram cards (Pages CDN can lag; live API is preferred). */
+/** Safety-net poll. Slows while the workbench socket is delivering radar cards. */
 const POLL_MS = 20_000
+const POLL_SLOW_MS = 60_000
 
 const EMPTY_LAUNCHED: LaunchedDocument = { count: 0, items: [] }
 const EMPTY_CANDIDATES: Candidate[] = []
@@ -56,51 +60,15 @@ async function fetchOptional(url: string): Promise<unknown | null> {
   }
 }
 
-function liveBase(): string {
+async function fetchRecentCards(): Promise<Candidate[]> {
   try {
-    return resolveApiBase(getApiSettings().baseUrl || '') || defaultApiBase()
+    const settings = getApiSettings()
+    const base = resolveApiBase(settings.baseUrl || '') || defaultApiBase()
+    const body = await fetchRadarRecent(base, settings.token.trim())
+    return readRadarCards(body)
   } catch {
-    return defaultApiBase()
+    return []
   }
-}
-
-/** Bases whose /v1/radar/* routes 404. Later polls stay on the static Pages files. */
-const radarMissing = new Set<string>()
-
-async function fetchLiveRadar(path: string): Promise<unknown | null> {
-  const base = liveBase().replace(/\/+$/, '')
-  if (!base) return null
-  const key = `${base} ${path}`
-  if (radarMissing.has(key)) return null
-  try {
-    const headers: Record<string, string> = {}
-    if (base.toLowerCase().includes('ngrok')) headers['ngrok-skip-browser-warning'] = '1'
-    const res = await fetch(`${base}${path}`, {
-      cache: 'no-store',
-      headers,
-      signal: AbortSignal.timeout(8000),
-    })
-    if (res.status === 404) {
-      radarMissing.add(key)
-      return null
-    }
-    if (!res.ok) return null
-    return await res.json()
-  } catch {
-    return null
-  }
-}
-
-function fetchLiveCandidates(): Promise<unknown | null> {
-  return fetchLiveRadar('/v1/radar/candidates')
-}
-
-function fetchLiveProjects(): Promise<unknown | null> {
-  return fetchLiveRadar('/v1/radar/projects')
-}
-
-function fetchLiveLaunched(): Promise<unknown | null> {
-  return fetchLiveRadar('/v1/radar/launched')
 }
 
 async function loadEvents(): Promise<{ events: MonitorEvent[]; note?: string; generatedAt?: string }> {
@@ -139,40 +107,29 @@ export function usePadData() {
   const [loading, setLoading] = useState(true)
   const [uploadNote, setUploadNote] = useState<string | null>(null)
   const [liveSource, setLiveSource] = useState<'api' | 'pages' | null>(null)
+  const [httpRecent, setHttpRecent] = useState<Candidate[]>([])
   const inflight = useRef(false)
+  const socketOpen = useSyncExternalStore(subscribeBoardSync, isWorkbenchSocketOpen, () => false)
+  const radarOverlay = useSyncExternalStore(subscribeRadar, getRadarOverlay, getServerRadarOverlay)
+  const blocked = useSyncExternalStore(subscribeBlocklist, getBlockSnapshot, getServerBlockSnapshot)
 
   const loadDefault = useCallback(async (opts?: { soft?: boolean }) => {
     if (inflight.current) return
     inflight.current = true
     const soft = Boolean(opts?.soft)
     try {
-      const liveCand = await fetchLiveCandidates()
-      const staticBoard = liveCand == null
-      const [candidatesJson, monitor, listingTimesJson, launchedJson, projectsJson] = await Promise.all([
-        staticBoard ? fetchJson(CANDIDATES_URL) : Promise.resolve(liveCand),
+      const [candidatesJson, recentCards, monitor, listingTimesJson, launchedJson, projectsJson] = await Promise.all([
+        fetchJson(CANDIDATES_URL),
+        fetchRecentCards(),
         soft && events.length ? Promise.resolve({ events, note: eventsNote, generatedAt: eventsAt }) : loadEvents(),
-        staticBoard || !soft || !listingTimes.length ? fetchOptional(LISTING_TIMES_URL) : Promise.resolve(null),
-        staticBoard
-          ? fetchOptional(LAUNCHED_URL)
-          : fetchLiveLaunched().then((live) => (live != null ? live : soft ? launched : fetchOptional(LAUNCHED_URL))),
-        staticBoard
-          ? fetchOptional(PROJECTS_URL)
-          : fetchLiveProjects().then((live) => (live != null ? live : soft ? projects : fetchOptional(PROJECTS_URL))),
+        fetchOptional(LISTING_TIMES_URL),
+        fetchOptional(LAUNCHED_URL),
+        fetchOptional(PROJECTS_URL),
       ])
 
       const nextPayload = parsePayload(candidatesJson)
-      // Skip React update when the board fingerprint is unchanged (soft polls).
-      const nextFp = `${nextPayload.candidates.length}:${nextPayload.generated_at_utc || ''}:${(candidatesJson as { updated_at?: string })?.updated_at || ''}:${(candidatesJson as { live_at?: string })?.live_at || ''}`
-      setPayload((prev) => {
-        const prevFp = prev
-          ? `${prev.candidates.length}:${prev.generated_at_utc || ''}`
-          : ''
-        if (soft && prev && prevFp === `${nextPayload.candidates.length}:${nextPayload.generated_at_utc || ''}`) {
-          // still apply if updated_at / live_at moved — fall through by returning next
-        }
-        void nextFp
-        return nextPayload
-      })
+      setPayload(nextPayload)
+      setHttpRecent(recentCards)
       if (!soft || !events.length) {
         setEvents(monitor.events)
         setEventsNote(monitor.note)
@@ -181,7 +138,7 @@ export function usePadData() {
       if (listingTimesJson != null) setListingTimes(readListingTimes(listingTimesJson))
       if (launchedJson != null) setLaunched(readLaunched(launchedJson))
       if (projectsJson != null) setProjects(projectsJson)
-      setLiveSource(liveCand ? 'api' : 'pages')
+      setLiveSource(recentCards.length > 0 ? 'api' : 'pages')
       if (!soft) setUploadNote(null)
       setError(null)
     } catch (e) {
@@ -190,19 +147,20 @@ export function usePadData() {
       setLoading(false)
       inflight.current = false
     }
-  }, [events, eventsAt, eventsNote, launched, listingTimes, projects])
+  }, [events, eventsAt, eventsNote])
 
   useEffect(() => {
     void loadDefault()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps -- mount once; polling below
 
-  // Soft poll: prefer /v1/radar when that API exists. A 404 or network error reloads the static Pages JSON, including listing times.
+  // Static Pages JSON stays the full list. /v1/radar/recent and the socket are merged on top.
+  // While the socket is open this safety net slows from 20s to 60s.
   useEffect(() => {
     const tick = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
       void loadDefault({ soft: true })
     }
-    const id = window.setInterval(tick, POLL_MS)
+    const id = window.setInterval(tick, socketOpen ? POLL_SLOW_MS : POLL_MS)
     const onFocus = () => void loadDefault({ soft: true })
     const onVis = () => {
       if (document.visibilityState === 'visible') void loadDefault({ soft: true })
@@ -214,7 +172,7 @@ export function usePadData() {
       window.removeEventListener('focus', onFocus)
       document.removeEventListener('visibilitychange', onVis)
     }
-  }, [loadDefault])
+  }, [loadDefault, socketOpen])
 
   const handleUpload = async (file: File) => {
     try {
@@ -228,15 +186,20 @@ export function usePadData() {
     }
   }
 
-  const allCandidates = useMemo(
-    () =>
-      withProjectPushDates(
-        applyListingTimes(payload?.candidates ?? EMPTY_CANDIDATES, listingTimes),
-        projects,
-      ),
-    [payload, listingTimes, projects],
+  const baseCandidates = useMemo(
+    () => mergeRadarCards(mergeRadarCards(payload?.candidates ?? EMPTY_CANDIDATES, httpRecent), radarOverlay),
+    [payload, httpRecent, radarOverlay],
   )
-  const launchedHandles = useMemo(() => launchedHandleSet(launched.items), [launched])
+  const allCandidates = useMemo(
+    () => withProjectPushDates(applyListingTimes(baseCandidates, listingTimes), projects),
+    [baseCandidates, listingTimes, projects],
+  )
+  const launchedView = useMemo(() => withManualLaunched(launched, blocked.manual), [launched, blocked])
+  const launchedHandles = useMemo(() => {
+    const set = launchedHandleSet(launchedView.items)
+    for (const handle of blocked.handles) set.add(handle)
+    return set
+  }, [launchedView, blocked])
   const candidates = useMemo(
     () => withoutLaunched(allCandidates, launchedHandles),
     [allCandidates, launchedHandles],
@@ -248,7 +211,7 @@ export function usePadData() {
     eventsNote,
     eventsAt,
     listingTimes,
-    launched,
+    launched: launchedView,
     launchedHandles,
     error,
     loading,

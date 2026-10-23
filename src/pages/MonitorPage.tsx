@@ -1,5 +1,6 @@
 import { useCaFinds } from '../hooks/useCaFinds'
 import { appPath } from '../router'
+import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
@@ -7,10 +8,18 @@ import { SourceBadge } from '../components/SourceBadge'
 import type { Candidate, MonitorEvent } from '../types'
 import { findByHandle } from '../utils/candidates'
 import { categoryOf } from '../utils/categories'
-import { decodeSnippet, formatLatency, formatShanghai, xProfileUrl } from '../utils/format'
+import { decodeSnippet, formatShanghai, xProfileUrl } from '../utils/format'
 import { lockForHandle, safeEvidenceUrl } from '../utils/caFinds'
 import { eventsForHandle, siteHealth, snapshotForCandidate } from '../utils/monitor'
 import { reviewSnapshot } from '../utils/reviewed'
+import {
+  localizeEventsNote,
+  localizeProbeError,
+  localizeTimelineText,
+  timelineHealthLabel,
+  timelineLatency,
+  timelineSourceLabel,
+} from '../utils/timelineZh'
 
 interface MonitorPageProps {
   handle: string
@@ -75,8 +84,9 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
           锁定只停掉后续非官方 CA 推送。下面的监控钱包和站点动态照常显示。
         </p>
       )}
-      <div className="mt-4">
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
         <PinWorkbenchButton candidate={candidate} name={name} handle={handle} variant="button" />
+        <ConfirmLaunchedButton candidate={candidate} name={name} handle={handle} />
       </div>
 
       {!candidate && timeline.length === 0 && (
@@ -106,7 +116,7 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
               value={
                 snap?.lastSite
                   ? `${snap.lastSite.status === 'up' ? '可用' : snap.lastSite.status === 'down' ? '不可用' : '已探测'}${
-                      snap.lastSite.timeS != null ? ` · ${formatLatency(snap.lastSite.timeS)}` : ''
+                      snap.lastSite.timeS != null ? ` · 耗时 ${timelineLatency(snap.lastSite.timeS)}` : ''
                     }`
                   : candidate.sites?.length
                     ? '尚未探测'
@@ -117,7 +127,7 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
           </div>
           {candidate.onchain_notes && (
             <p className="mt-4 rounded-xl border border-[var(--color-line)] bg-[var(--color-card)] px-3 py-3 text-sm text-[var(--color-ink-soft)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)] dark:text-[var(--color-night-soft)]">
-              {candidate.onchain_notes}
+              {localizeTimelineText(candidate.onchain_notes)}
             </p>
           )}
           <div className="mt-4 flex flex-wrap gap-3 text-sm">
@@ -144,8 +154,7 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
           <div className="rounded-2xl border border-dashed border-[var(--color-line)] px-4 py-12 text-center dark:border-[var(--color-night-line)]">
             <p className="text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">暂无监控事件</p>
             <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-[var(--color-ink-muted)]">
-              站点上下线、延迟、开盘信号、合约发现和工厂部署会按时间出现在这里。把记录写入 public/data/monitor_events.json
-              后刷新即可。
+              站点上下线、延迟、开盘信号、合约发现和工厂部署会按时间出现在这里。监控脚本写入事件后，刷新即可看到。
             </p>
           </div>
         ) : (
@@ -164,7 +173,7 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
                   )}
                   {event.at && (
                     <time className="font-mono text-[11px] text-[var(--color-ink-muted)]" dateTime={event.at}>
-                      {formatShanghai(event.at)}
+                      时间 {formatShanghai(event.at)}
                     </time>
                   )}
                 </div>
@@ -173,7 +182,9 @@ export function MonitorPage({ handle, candidates, events, eventsNote, eventsAt }
             ))}
           </ol>
         )}
-        {eventsNote && <p className="mt-4 text-xs leading-relaxed text-[var(--color-ink-muted)]">{eventsNote}</p>}
+        {eventsNote && (
+          <p className="mt-4 text-xs leading-relaxed text-[var(--color-ink-muted)]">{localizeEventsNote(eventsNote)}</p>
+        )}
       </section>
     </main>
   )
@@ -194,66 +205,69 @@ function eventTitle(event: MonitorEvent): string {
 function EventBody({ event }: { event: MonitorEvent }) {
   if (event.kind === 'site' && event.site) {
     const health = siteHealth(event.site)
+    const latency = timelineLatency(event.site.time_s)
     return (
       <div className="mt-1 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
         <a href={event.site.url} target="_blank" rel="noreferrer" className="break-all text-[var(--color-orange)] hover:underline">
           {event.site.final_url || event.site.url}
         </a>
         <p className="mt-1 font-mono text-[11px] text-[var(--color-ink-muted)]">
-          {health === 'up' ? 'up' : health === 'down' ? 'down' : event.site.status || 'checked'}
+          状态 {timelineHealthLabel(health, event.site.status)}
           {event.site.http_code ? ` · HTTP ${event.site.http_code}` : ''}
-          {event.site.time_s != null ? ` · ${formatLatency(event.site.time_s)}` : ''}
+          {latency ? ` · 耗时 ${latency}` : ''}
         </p>
         {event.site.error && (
           <p className="mt-2 rounded-lg bg-[var(--color-orange-soft)] px-2 py-2 text-xs text-[var(--color-orange-deep)] dark:bg-[rgba(232,135,58,0.12)] dark:text-[var(--color-orange)]">
-            {event.site.error}
+            {localizeProbeError(event.site.error)}
           </p>
         )}
       </div>
     )
   }
   if (event.kind === 'listing_signal' && event.listing_signal) {
+    const signal = event.listing_signal
+    const bits = [
+      signal.keyword ? `关键词 ${localizeTimelineText(signal.keyword)}` : '',
+      signal.source ? `来源 ${timelineSourceLabel(signal.source)}` : '',
+      signal.prev ? `先前 ${localizeTimelineText(decodeSnippet(signal.prev))}` : '',
+    ].filter(Boolean)
     return (
       <div className="mt-1 text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        <p>{decodeSnippet(event.listing_signal.signal)}</p>
-        {(event.listing_signal.keyword || event.listing_signal.source || event.listing_signal.prev) && (
-          <p className="mt-1 font-mono text-[11px] text-[var(--color-ink-muted)]">
-            {event.listing_signal.keyword ? `keyword ${event.listing_signal.keyword}` : ''}
-            {event.listing_signal.source ? ` · ${event.listing_signal.source}` : ''}
-            {event.listing_signal.prev ? ` · prev ${event.listing_signal.prev}` : ''}
-          </p>
-        )}
+        <p>{localizeTimelineText(decodeSnippet(signal.signal))}</p>
+        {bits.length > 0 && <p className="mt-1 font-mono text-[11px] text-[var(--color-ink-muted)]">{bits.join(' · ')}</p>}
       </div>
     )
   }
   if (event.kind === 'ca') {
+    const source = event.ca_source ? timelineSourceLabel(event.ca_source) : ''
+    const chain = event.ca_chain ? `链 ${event.ca_chain}` : ''
     return (
       <div className="mt-1 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
         <p className="break-all font-mono text-xs">{event.ca}</p>
         <p className="mt-1 font-mono text-[11px] text-[var(--color-ink-muted)]">
-          {[event.ca_chain, event.ca_source].filter(Boolean).join(' · ') || '链 / 来源未标注'}
+          {[chain, source ? `来源 ${source}` : ''].filter(Boolean).join(' · ') || '链和来源未标注'}
         </p>
-        {event.note && <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{event.note}</p>}
+        {event.note && <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{localizeTimelineText(event.note)}</p>}
       </div>
     )
   }
   const deploy = event.factory_deploy
-  if (!deploy) return null
+  if (!deploy) return event.note ? <p className="mt-1 text-xs text-[var(--color-ink-muted)]">{localizeTimelineText(event.note)}</p> : null
   return (
     <div className="mt-1 space-y-1 text-sm text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-      {deploy.notes && <p>{deploy.notes}</p>}
+      {deploy.notes && <p>{localizeTimelineText(deploy.notes)}</p>}
       <p className="break-all font-mono text-[11px] text-[var(--color-ink-muted)]">
         {[
-          deploy.chain && `chain ${deploy.chain}`,
-          deploy.factory && `factory ${deploy.factory}`,
-          deploy.token && `token ${deploy.token}`,
-          deploy.tx && `tx ${deploy.tx}`,
-          deploy.block != null && `block ${deploy.block}`,
+          deploy.chain && `链 ${deploy.chain}`,
+          deploy.factory && `工厂 ${deploy.factory}`,
+          deploy.token && `代币 ${deploy.token}`,
+          deploy.tx && `交易 ${deploy.tx}`,
+          deploy.block != null && `区块 ${deploy.block}`,
         ]
           .filter(Boolean)
           .join(' · ')}
       </p>
-      {event.note && <p className="text-xs text-[var(--color-ink-muted)]">{event.note}</p>}
+      {event.note && <p className="text-xs text-[var(--color-ink-muted)]">{localizeTimelineText(event.note)}</p>}
     </div>
   )
 }

@@ -134,6 +134,14 @@ export function pushDateText(records: readonly unknown[]): string {
   return formatPushDate(resolvePushDate(records)) || UNKNOWN_PUSH_DATE
 }
 
+/** Milliseconds of the displayed 推送日期. `0` when the card has no push date. */
+export function pushDateMillis(records: readonly unknown[]): number {
+  const stamp = resolvePushDate(records)
+  if (!stamp) return 0
+  const ms = Date.parse(stamp.at)
+  return Number.isFinite(ms) ? ms : 0
+}
+
 function handleKey(record: unknown): string {
   if (!record || typeof record !== 'object') return ''
   const obj = record as Record<string, unknown>

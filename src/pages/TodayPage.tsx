@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { PinWorkbenchButton } from '../components/PinWorkbenchButton'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
@@ -8,6 +9,7 @@ import { monitorPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
 import { categoryOf } from '../utils/categories'
 import { decodeSnippet, formatLatency, formatShanghai, shortAddr } from '../utils/format'
+import { localizeTimelineText } from '../utils/timelineZh'
 import {
   launchTimeText,
   listingSourceLabel,
@@ -49,7 +51,7 @@ export function TodayPage({ candidates, events, listingTimes, loading }: TodayPa
         即将开盘
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
-        尚未开盘的项目。开盘时间已经确定、并且落在上海时间今天到第 3 天（含两端）的，按时间从近到远排在前面。没有具体时间，但状态或开盘信号是「即将启动」，或者站点 / JS / is 文件显示项目、合约代码或游戏代码完成度高的，也列在这里，时间写「未知」，不编造时间。已开盘和已开盘归档不会出现。没有时间的按推送从新到旧，再按名称排。
+        尚未开盘的项目。开盘时间已经确定、并且落在上海时间今天到第 3 天（含两端）的，按时间从近到远排在前面；开盘时间相同的，再按推送日期从新到旧。没有具体时间，但状态或开盘信号是「即将启动」，或者站点 / JS / is 文件显示项目、合约代码或游戏代码完成度高的，也列在这里，时间写「未知」，不编造时间。已开盘和已开盘归档不会出现。没有开盘时间的按推送日期从新到旧，没有推送日期的放在最后，再按名称排。
       </p>
 
       {loading && candidates.length === 0 ? (
@@ -186,7 +188,7 @@ function TodayRow({ row }: { row: UpcomingRow }) {
 
         <div className="min-w-0 text-xs leading-relaxed text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
           <div className="font-mono text-[10px] uppercase tracking-wider text-[var(--color-ink-muted)]">最近信号</div>
-          <p className="line-clamp-2">{signal ? decodeSnippet(signal) : '无'}</p>
+          <p className="line-clamp-2">{signal ? localizeTimelineText(decodeSnippet(signal)) : '无'}</p>
         </div>
 
         <a
@@ -196,8 +198,9 @@ function TodayRow({ row }: { row: UpcomingRow }) {
           监控详情
         </a>
       </div>
-      <div className="mt-3">
+      <div className="mt-3 space-y-2">
         <PinWorkbenchButton candidate={c} variant="button" className="w-full" />
+        <ConfirmLaunchedButton candidate={c} className="w-full" />
       </div>
     </li>
   )
