@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T21:54:40+08:00",
+  "generated_at": "2026-10-23T22:02:55+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 43,
@@ -5650,8 +5650,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 61,
+  "suspected_copycat_count": 62,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】influence.fun",
+      "handle": "influencedotfun",
+      "chain": "bsc",
+      "address": "0x3d21fc59ea2b44b7143fa9375c7c16f72866ffff",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/influencedotfun",
+      "detected_at": "2026-10-23T22:02:53+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via symbol:IF; deployer=0x052bc1f056027b4e19866cd32be2f9ab777fe481; token=IF / ID FUN; ca_gate: ERC20 verified: IF dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-23T22:02:53+08:00",
+          "reason": "symbol:IF",
+          "via": "factory:fourmeme_tm2_bsc:TokenCreate"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x052bc1f056027b4e19866cd32be2f9ab777fe481",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "IF",
+        "name": "ID FUN",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: IF dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x052bc1f056027b4e19866cd32be2f9ab777fe481",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Grok Pot",
       "handle": "GrokPotPaid",
