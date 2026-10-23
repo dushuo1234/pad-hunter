@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
+import { WorkbenchAlertConsole } from '../components/WorkbenchAlertConsole'
 import { WorkbenchReminders } from '../components/WorkbenchReminders'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
@@ -46,10 +47,11 @@ import {
 import { reviewSnapshot } from '../utils/reviewed'
 import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } from '../utils/workbenchAlertStore'
 import {
-  ALERT_HIGHLIGHT_MS,
   ALERT_UI,
   alertsByHandle,
+  reminderViews,
   remindersAllowed,
+  rowAttentionTone,
   workbenchRowDomId,
 } from '../utils/workbenchAlerts'
 
@@ -197,6 +199,14 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const healthLabel =
     live.healthState === 'online' ? '在线' : live.healthState === 'offline' ? '离线' : '连接中'
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
+  const pinnedKeys = new Set<string>()
+  const launchedKeys = new Set<string>()
+  for (const item of items) {
+    const key = handleKey(item.handle)
+    if (!key) continue
+    if (isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)) launchedKeys.add(key)
+    else pinnedKeys.add(key)
+  }
   const alertToasts = alertFeed.toasts.filter((toast) => {
     const match = items.find((item) => handleKey(item.handle) === handleKey(toast.handle))
     if (!match) return false
@@ -248,6 +258,13 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </span>
         </div>
       </div>
+
+      <WorkbenchAlertConsole
+        alerts={alertFeed.alerts}
+        readIds={alertFeed.readIds}
+        pinned={pinnedKeys}
+        launched={launchedKeys}
+      />
 
       {!live.token && (
         <button
@@ -579,20 +596,23 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const projectKey = handleKey(item.handle)
                 const projectAlerts = projectKey ? alertsByProject.get(projectKey) ?? [] : []
                 const showReminders = remindersAllowed({ pinned: Boolean(projectKey), launched })
-                const unread = showReminders && alertFeed.unread.has(projectKey)
-                const highlightUntil = projectKey ? alertFeed.highlightUntil[projectKey] ?? 0 : 0
-                const highlightRemain = highlightUntil - live.now
-                const hot = showReminders && highlightRemain > 0
+                const views = showReminders ? reminderViews(projectAlerts, live.now) : []
+                const tone = rowAttentionTone(views, alertFeed.readIds)
+                const unread = views.some((view) => view.urgent && !alertFeed.readIds.has(view.id))
+                const attentionClass = unread ? 'wb-row-flash' : tone ? 'wb-row-accent' : ''
                 return (
                   <tr
                     key={item.id}
                     id={workbenchRowDomId(item.handle) || undefined}
-                    className={`border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)] ${hot ? 'wb-alert-hot' : ''}`}
-                    style={
-                      hot
-                        ? { backgroundColor: `rgba(250, 204, 21, ${0.18 + 0.42 * (highlightRemain / ALERT_HIGHLIGHT_MS)})` }
-                        : undefined
-                    }
+                    data-alert-tone={tone ?? undefined}
+                    title={unread ? ALERT_UI.consoleStop : undefined}
+                    onClick={(event) => {
+                      if (!unread) return
+                      const target = event.target
+                      if (target instanceof Element && target.closest('a, button, input, textarea, select, label')) return
+                      markWorkbenchAlertsRead(item.handle)
+                    }}
+                    className={`border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)] ${attentionClass} ${unread ? 'cursor-pointer' : ''}`}
                   >
                     <td className="px-3 py-3">
                       <input
@@ -602,13 +622,16 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         onChange={() => toggleSelected(item.id)}
                       />
                     </td>
-                    <td className="max-w-[360px] px-2 py-3">
+                    <td
+                      data-alert-tone={tone ?? undefined}
+                      className={`max-w-[360px] px-2 py-3 ${attentionClass}`}
+                    >
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
                         {unread && (
                           <span className="inline-flex items-center gap-1">
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-rose-600" aria-label="新提醒">
-                              <span className="h-1.5 w-1.5 rounded-full bg-rose-600" aria-hidden="true" />
+                            <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-600" aria-label="新提醒">
+                              <span className="wb-dot-flash h-2 w-2 rounded-full bg-rose-600" aria-hidden="true" />
                               {ALERT_UI.fresh}
                             </span>
                             <button
@@ -634,7 +657,14 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         {urlProtocol(url) && <Pill tone="muted">{urlProtocol(url)}</Pill>}
                         {launched && <Pill tone="ok">已开盘</Pill>}
                       </div>
-                      {showReminders && <WorkbenchReminders alerts={projectAlerts} now={live.now} />}
+                      {showReminders && (
+                        <WorkbenchReminders
+                          alerts={projectAlerts}
+                          now={live.now}
+                          readIds={alertFeed.readIds}
+                          onAcknowledge={() => markWorkbenchAlertsRead(item.handle)}
+                        />
+                      )}
                       {introFor(candidate) && (
                         <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">{introFor(candidate)}</p>
                       )}

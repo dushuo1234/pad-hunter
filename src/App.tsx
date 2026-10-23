@@ -12,7 +12,8 @@ import { LaunchedPage } from './pages/LaunchedPage'
 import { MonitorPage } from './pages/MonitorPage'
 import { TodayPage } from './pages/TodayPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
-import { setBaseDocumentTitle } from './utils/caAlert'
+import { useWorkbenchAttention } from './hooks/useWorkbenchAttention'
+import { setBaseDocumentTitle, setWorkbenchReminderCount } from './utils/caAlert'
 import { countUpcoming } from './utils/launch'
 import { appPath, useRoute } from './router'
 
@@ -29,6 +30,12 @@ export default function App() {
         : countUpcoming(data.candidates, data.events, data.listingTimes),
     [data.candidates, data.events, data.listingTimes, data.loading],
   )
+
+  const workbenchUnread = useWorkbenchAttention(data.launchedHandles)
+
+  useEffect(() => {
+    setWorkbenchReminderCount(workbenchUnread)
+  }, [workbenchUnread])
 
   useEffect(() => {
     const titles: Record<typeof route.name, string> = {
@@ -50,6 +57,7 @@ export default function App() {
         route={route}
         todayCount={todayCount}
         launchedCount={data.loading && data.launched.items.length === 0 ? null : data.launched.count}
+        workbenchUnread={workbenchUnread}
         onToggleTheme={toggle}
         onUpload={(file) => void data.handleUpload(file)}
         onRefresh={() => void data.loadDefault()}

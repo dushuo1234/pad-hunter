@@ -113,6 +113,197 @@ summary::-webkit-details-marker {
   transition: background-color 1s linear;
 }
 
+@keyframes wb-row-soon {
+  0%, 100% { background-color: rgba(234, 88, 12, 0.08); }
+  50% { background-color: rgba(220, 38, 38, 0.26); }
+}
+@keyframes wb-row-ok {
+  0%, 100% { background-color: rgba(5, 150, 105, 0.08); }
+  50% { background-color: rgba(5, 150, 105, 0.24); }
+}
+@keyframes wb-row-warn {
+  0%, 100% { background-color: rgba(217, 119, 6, 0.1); }
+  50% { background-color: rgba(217, 119, 6, 0.28); }
+}
+@keyframes wb-row-change {
+  0%, 100% { background-color: rgba(2, 132, 199, 0.08); }
+  50% { background-color: rgba(2, 132, 199, 0.24); }
+}
+@keyframes wb-row-muted {
+  0%, 100% { background-color: rgba(115, 115, 115, 0.06); }
+  50% { background-color: rgba(115, 115, 115, 0.18); }
+}
+@keyframes wb-line-soon {
+  0%, 100% { background-color: rgba(234, 88, 12, 0.1); }
+  50% { background-color: rgba(220, 38, 38, 0.24); }
+}
+@keyframes wb-line-ok {
+  0%, 100% { background-color: rgba(5, 150, 105, 0.1); }
+  50% { background-color: rgba(5, 150, 105, 0.28); }
+}
+@keyframes wb-line-warn {
+  0%, 100% { background-color: rgba(217, 119, 6, 0.12); }
+  50% { background-color: rgba(250, 204, 21, 0.34); }
+}
+@keyframes wb-line-change {
+  0%, 100% { background-color: rgba(2, 132, 199, 0.1); }
+  50% { background-color: rgba(2, 132, 199, 0.28); }
+}
+@keyframes wb-line-muted {
+  0%, 100% { background-color: rgba(115, 115, 115, 0.08); }
+  50% { background-color: rgba(115, 115, 115, 0.2); }
+}
+@keyframes wb-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(0.82); }
+}
+@keyframes wb-console-blink {
+  0%, 45% { opacity: 1; background-color: rgba(251, 191, 36, 0.05); }
+  50%, 100% { opacity: 0.35; background-color: rgba(251, 191, 36, 0.22); }
+}
+
+tr.wb-row-flash[data-alert-tone="soon"] { animation: wb-row-soon 1s ease-in-out infinite; }
+tr.wb-row-flash[data-alert-tone="ok"] { animation: wb-row-ok 1s ease-in-out infinite; }
+tr.wb-row-flash[data-alert-tone="warn"] { animation: wb-row-warn 1s ease-in-out infinite; }
+tr.wb-row-flash[data-alert-tone="change"] { animation: wb-row-change 1s ease-in-out infinite; }
+tr.wb-row-flash[data-alert-tone="muted"] { animation: wb-row-muted 1s ease-in-out infinite; }
+tr.wb-row-accent[data-alert-tone="soon"] { background-color: rgba(234, 88, 12, 0.06); }
+tr.wb-row-accent[data-alert-tone="ok"] { background-color: rgba(5, 150, 105, 0.06); }
+tr.wb-row-accent[data-alert-tone="warn"] { background-color: rgba(217, 119, 6, 0.07); }
+tr.wb-row-accent[data-alert-tone="change"] { background-color: rgba(2, 132, 199, 0.06); }
+tr.wb-row-accent[data-alert-tone="muted"] { background-color: rgba(115, 115, 115, 0.06); }
+
+td.wb-row-flash[data-alert-tone="soon"],
+td.wb-row-accent[data-alert-tone="soon"] { box-shadow: inset 5px 0 0 #ea580c; }
+td.wb-row-flash[data-alert-tone="ok"],
+td.wb-row-accent[data-alert-tone="ok"] { box-shadow: inset 5px 0 0 #059669; }
+td.wb-row-flash[data-alert-tone="warn"],
+td.wb-row-accent[data-alert-tone="warn"] { box-shadow: inset 5px 0 0 #d97706; }
+td.wb-row-flash[data-alert-tone="change"],
+td.wb-row-accent[data-alert-tone="change"] { box-shadow: inset 5px 0 0 #0284c7; }
+td.wb-row-flash[data-alert-tone="muted"],
+td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
+
+.wb-line-flash { border-radius: 0.5rem; animation: wb-line-soon 1s ease-in-out infinite; }
+.wb-line-flash[data-alert-tone="ok"] { animation-name: wb-line-ok; }
+.wb-line-flash[data-alert-tone="warn"] { animation-name: wb-line-warn; }
+.wb-line-flash[data-alert-tone="change"] { animation-name: wb-line-change; }
+.wb-line-flash[data-alert-tone="muted"] { animation-name: wb-line-muted; }
+.wb-dot-flash { animation: wb-dot-pulse 1s ease-in-out infinite; }
+
+.wb-console {
+  overflow: hidden;
+  border: 1px solid #14532d;
+  border-radius: 12px;
+  background: #070b09;
+  color: #86efac;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.28), 0 14px 36px rgba(0, 0, 0, 0.28);
+}
+.wb-console-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid #14532d;
+  background: #0c1410;
+  padding: 8px 12px;
+  color: #bbf7d0;
+  font-size: 12px;
+  font-weight: 700;
+}
+.wb-console-log {
+  max-height: 240px;
+  overflow: auto;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.wb-console-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+.wb-console-line[data-alert-tone="soon"] { color: #fbbf24; }
+.wb-console-line[data-alert-tone="ok"] { color: #4ade80; }
+.wb-console-line[data-alert-tone="warn"] { color: #facc15; }
+.wb-console-line[data-alert-tone="change"] { color: #67e8f9; }
+.wb-console-line[data-alert-tone="muted"] { color: #737373; }
+.wb-console-stamp { color: #6ee7b7; }
+.wb-console-label { font-weight: 700; }
+.wb-console-name { color: #d1fae5; }
+.wb-console-line[data-alert-tone="muted"] .wb-console-name { color: #a3a3a3; }
+.wb-console-text { min-width: 0; overflow-wrap: anywhere; }
+.wb-console-quiet,
+.wb-console-prompt {
+  color: #86efac;
+  font-size: 12px;
+}
+.wb-console-prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 10px;
+}
+.wb-console-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.95em;
+  background: #86efac;
+}
+.wb-console-line.wb-line-flash {
+  animation: wb-console-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  tr.wb-row-flash,
+  .wb-line-flash,
+  .wb-console-line.wb-line-flash,
+  .wb-dot-flash {
+    animation: none !important;
+  }
+  tr.wb-row-flash[data-alert-tone="soon"] { background-color: rgba(220, 38, 38, 0.18); }
+  tr.wb-row-flash[data-alert-tone="ok"] { background-color: rgba(5, 150, 105, 0.2); }
+  tr.wb-row-flash[data-alert-tone="warn"] { background-color: rgba(217, 119, 6, 0.22); }
+  tr.wb-row-flash[data-alert-tone="change"] { background-color: rgba(2, 132, 199, 0.2); }
+  tr.wb-row-flash[data-alert-tone="muted"] { background-color: rgba(115, 115, 115, 0.18); }
+  td.wb-row-flash[data-alert-tone="soon"] { box-shadow: inset 5px 0 0 #dc2626; }
+  .wb-line-flash {
+    outline: 2px solid rgba(220, 38, 38, 0.8);
+    background-color: rgba(220, 38, 38, 0.14);
+  }
+  .wb-line-flash[data-alert-tone="ok"] {
+    outline-color: #059669;
+    background-color: rgba(5, 150, 105, 0.16);
+  }
+  .wb-line-flash[data-alert-tone="warn"] {
+    outline-color: #d97706;
+    background-color: rgba(217, 119, 6, 0.18);
+  }
+  .wb-line-flash[data-alert-tone="change"] {
+    outline-color: #0284c7;
+    background-color: rgba(2, 132, 199, 0.16);
+  }
+  .wb-line-flash[data-alert-tone="muted"] {
+    outline-color: #737373;
+    background-color: rgba(115, 115, 115, 0.16);
+  }
+  .wb-console-line.wb-line-flash {
+    outline: 1px solid #fbbf24;
+    background-color: rgba(251, 191, 36, 0.18);
+    opacity: 1;
+  }
+  .wb-dot-flash {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.55);
+  }
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }

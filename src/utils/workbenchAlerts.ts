@@ -4,12 +4,15 @@
  * Confirmed CA copy is gated on ca_status=confirmed and alert_ok===true.
  */
 
+import { formatShanghai } from './format'
+
 export const WB_ALERTS_STORAGE_KEY = 'ph.wbAlerts.v1'
 export const WB_ALERTS_LIMIT = 200
 export const ALERT_POLL_MS = 60_000
 export const ALERT_HIGHLIGHT_MS = 30_000
 export const SOON_TOAST_MS = 24 * 60 * 60 * 1000
 export const WORKBENCH_ALERTS_PATH = '/v1/workbench/alerts'
+export const CONSOLE_LINE_LIMIT = 40
 
 export const ALERT_UI = {
   soon: '即将开始',
@@ -20,6 +23,11 @@ export const ALERT_UI = {
   copied: '已复制',
   fresh: '新',
   read: '已读',
+  consoleTitle: '提醒控制台',
+  consoleWait: '等待新提醒',
+  consoleReady: '就绪',
+  consoleStop: '点击停止闪烁',
+  consoleCount: '条新提醒',
   confirmed: '已确认CA',
   pending: '待核验',
   nft: 'NFT 合约·不算CA',
@@ -77,12 +85,18 @@ export interface CaPresentation {
   confirmed: boolean
 }
 
+export type ReminderTone = 'soon' | 'ok' | 'warn' | 'muted' | 'change'
+
 export interface ReminderView {
   key: 'soon' | 'ca' | 'change'
+  id: string
   mark: '⏰' | '🪙' | '🔧'
   label: string
   body: string
   badge: CaPresentation | null
+  tone: ReminderTone
+  /** Non-baseline and not a 不算CA row. Still needs to be unread before it blinks. */
+  urgent: boolean
   delay: boolean
   ago: string
   quote: string
@@ -91,6 +105,13 @@ export interface ReminderView {
   chain: string
   copyable: boolean
   ts: string
+}
+
+export interface StoredWorkbenchAlerts {
+  alerts: WorkbenchAlert[]
+  readIds: string[]
+  unread: string[]
+  seeded: boolean
 }
 
 function normalizeHandle(handle: string): string {
@@ -296,6 +317,21 @@ export function isConfirmedCa(alert: Pick<WorkbenchAlert, 'ca_status' | 'alert_o
   return alert.ca_status === 'confirmed' && alert.alert_ok === true
 }
 
+/** Baseline stays quiet. NFT and copycat stay muted and never blink as a confirmed CA. */
+export function reminderCanFlash(alert: Pick<WorkbenchAlert, 'baseline' | 'ca_status'>): boolean {
+  if (alert.baseline) return false
+  if (alert.ca_status === 'nft' || alert.ca_status === 'suspected_copycat') return false
+  return true
+}
+
+function lineTone(key: ReminderView['key'], badge: CaPresentation | null): ReminderTone {
+  if (key === 'soon') return 'soon'
+  if (key === 'change') return 'change'
+  if (badge?.tone === 'ok') return 'ok'
+  if (badge?.tone === 'warn') return 'warn'
+  return 'muted'
+}
+
 export function presentCa(alert: WorkbenchAlert): CaPresentation {
   if (isConfirmedCa(alert)) {
     return { label: ALERT_UI.confirmed, tone: 'ok', confirmed: true }
@@ -396,10 +432,13 @@ function viewFrom(key: ReminderView['key'], alert: WorkbenchAlert, now: number):
   const confirmed = badge?.confirmed === true
   return {
     key,
+    id: alert.id,
     mark: key === 'soon' ? '⏰' : key === 'ca' ? '🪙' : '🔧',
     label: key === 'soon' ? ALERT_UI.soon : key === 'change' ? ALERT_UI.change : '',
     body: key === 'soon' ? soonBody(alert) : key === 'change' ? changeBody(alert) : '',
     badge,
+    tone: lineTone(key, badge),
+    urgent: reminderCanFlash(alert),
     delay: key === 'soon' && alert.is_delay === true,
     ago: formatAlertAgo(alert.ts, now),
     quote: alert.quote,
@@ -464,18 +503,180 @@ export function alertsForHandle(alerts: readonly WorkbenchAlert[], handle: strin
   return alerts.filter((alert) => handleKey(alert.handle) === key)
 }
 
-export function loadStoredWorkbenchAlerts(raw: string | null): { alerts: WorkbenchAlert[]; unread: string[] } {
-  if (!raw) return { alerts: [], unread: [] }
+const READ_ID_LIMIT = 500
+const TONE_RANK: ReminderTone[] = ['soon', 'ok', 'warn', 'change', 'muted']
+
+function cleanReadIds(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  const ids: string[] = []
+  const seen = new Set<string>()
+  for (const entry of value) {
+    const id = asString(entry)
+    if (!id || seen.has(id)) continue
+    seen.add(id)
+    ids.push(id)
+  }
+  return ids.slice(-READ_ID_LIMIT)
+}
+
+export function loadStoredWorkbenchAlerts(raw: string | null): StoredWorkbenchAlerts {
+  const empty: StoredWorkbenchAlerts = { alerts: [], readIds: [], unread: [], seeded: false }
+  if (!raw) return empty
   try {
     const parsed: unknown = JSON.parse(raw)
-    if (Array.isArray(parsed)) return { alerts: normalizeAlertList(parseWorkbenchAlertList(parsed)), unread: [] }
+    if (Array.isArray(parsed)) {
+      const alerts = normalizeAlertList(parseWorkbenchAlertList(parsed))
+      return { alerts, readIds: alerts.map((alert) => alert.id), unread: [], seeded: true }
+    }
     const row = asRecord(parsed)
-    if (!row) return { alerts: [], unread: [] }
+    if (!row) return empty
+    const alerts = parseWorkbenchAlertsPayload(row.alerts ?? row)
     const unread = Array.isArray(row.unread)
-      ? row.unread.map((entry) => handleKey(asString(entry))).filter(Boolean)
+      ? [...new Set(row.unread.map((entry) => handleKey(asString(entry))).filter(Boolean))]
       : []
-    return { alerts: parseWorkbenchAlertsPayload(row.alerts ?? row), unread: [...new Set(unread)] }
+    let readIds: string[]
+    if (Array.isArray(row.readIds)) readIds = cleanReadIds(row.readIds)
+    else if (unread.length > 0) {
+      const pending = new Set(unread)
+      readIds = alerts.filter((alert) => !pending.has(handleKey(alert.handle))).map((alert) => alert.id)
+    } else readIds = alerts.map((alert) => alert.id)
+    return { alerts, readIds, unread, seeded: true }
   } catch {
-    return { alerts: [], unread: [] }
+    return empty
   }
+}
+
+export interface ConsoleLine {
+  id: string
+  handle: string
+  name: string
+  ts: string
+  stamp: string
+  mark: '⏰' | '🪙' | '🔧' | '·'
+  label: string
+  text: string
+  tone: ReminderTone
+  flash: boolean
+}
+
+function consoleParts(alert: WorkbenchAlert): Pick<ConsoleLine, 'mark' | 'label' | 'text' | 'tone'> {
+  if (alert.kind === 'x_post' || alert.kind === 'site_time') {
+    const body = soonBody(alert)
+    return {
+      mark: '⏰',
+      label: ALERT_UI.soon,
+      tone: 'soon',
+      text: alert.is_delay ? `${ALERT_UI.delay} ${body}` : body,
+    }
+  }
+  if (alert.kind === 'site_change' || alert.kind === 'js_change') {
+    return { mark: '🔧', label: ALERT_UI.change, tone: 'change', text: changeBody(alert) }
+  }
+  if (alert.kind === 'ca' || alert.kind === 'ca_signal' || alert.kind === 'js_address') {
+    const badge = presentCa(alert)
+    const tone: ReminderTone = badge.tone === 'ok' ? 'ok' : badge.tone === 'warn' ? 'warn' : 'muted'
+    return {
+      mark: '🪙',
+      label: badge.label,
+      tone,
+      text: [alert.address, alert.chain].filter(Boolean).join(' '),
+    }
+  }
+  return {
+    mark: '·',
+    label: '其他',
+    tone: 'muted',
+    text: stripLeadName(alert.summary) || ALERT_UI.fallbackToast,
+  }
+}
+
+function passesVisibility(
+  alert: WorkbenchAlert,
+  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string> },
+): boolean {
+  const key = handleKey(alert.handle)
+  if (!key) return false
+  if (!visible) return true
+  return visible.pinned.has(key) && !visible.launched.has(key)
+}
+
+/** Unread, non-baseline alerts that are allowed to blink. 不算CA and baseline stay out. */
+export function flashingAlertIds(
+  alerts: readonly WorkbenchAlert[],
+  readIds: ReadonlySet<string>,
+  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string> },
+): string[] {
+  const ids: string[] = []
+  for (const alert of alerts) {
+    if (!alert.id || readIds.has(alert.id) || !reminderCanFlash(alert)) continue
+    if (!passesVisibility(alert, visible)) continue
+    ids.push(alert.id)
+  }
+  return ids
+}
+
+/** How many alerts are still blinking. Launched and unpinned projects are skipped when a filter is passed. */
+export function flashingReminderCount(
+  alerts: readonly WorkbenchAlert[],
+  readIds: ReadonlySet<string>,
+  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string> },
+): number {
+  return flashingAlertIds(alerts, readIds, visible).length
+}
+
+/**
+ * Command-line log. Newest unread lines stay at the top so a new blink is in view.
+ * Quiet history follows, capped so the panel stays a window.
+ */
+export function consoleLines(
+  alerts: readonly WorkbenchAlert[],
+  readIds: ReadonlySet<string>,
+  visible?: { pinned: ReadonlySet<string>; launched: ReadonlySet<string> },
+): ConsoleLine[] {
+  const ranked = alerts.map((alert, index) => ({ alert, index })).filter(({ alert }) => passesVisibility(alert, visible))
+  ranked.sort((a, b) => {
+    const delta = timeValue(b.alert.ts) - timeValue(a.alert.ts)
+    if (delta !== 0) return delta
+    return a.index - b.index
+  })
+  const flashing: ConsoleLine[] = []
+  const quiet: ConsoleLine[] = []
+  for (const { alert } of ranked) {
+    const parts = consoleParts(alert)
+    const line: ConsoleLine = {
+      id: alert.id,
+      handle: alert.handle,
+      name: alert.name,
+      ts: alert.ts,
+      stamp: formatShanghai(alert.ts),
+      ...parts,
+      flash: Boolean(alert.id) && reminderCanFlash(alert) && !readIds.has(alert.id),
+    }
+    if (line.flash) flashing.push(line)
+    else quiet.push(line)
+  }
+  return [...flashing, ...quiet].slice(0, CONSOLE_LINE_LIMIT)
+}
+
+export function consoleVisibleText(lines: readonly ConsoleLine[]): string {
+  return lines.map((line) => [line.stamp, line.mark, line.label, line.text].filter(Boolean).join(' ')).join('\n')
+}
+
+/** Border color for a row. A blinking line wins over a quiet one, and 即将开始 wins over the other tones. */
+export function rowAttentionTone(views: readonly ReminderView[], readIds: ReadonlySet<string>): ReminderTone | null {
+  if (views.length === 0) return null
+  const flashing = views.filter((view) => view.urgent && view.id && !readIds.has(view.id))
+  const pool = flashing.length > 0 ? flashing : views
+  for (const tone of TONE_RANK) {
+    if (pool.some((view) => view.tone === tone)) return tone
+  }
+  return pool[0]?.tone ?? null
+}
+
+/** Tab title while unread reminders are waiting. Reduced motion keeps the count beside the normal title. */
+export function reminderTitle(count: number, base: string, blinkOn: boolean, reduceMotion = false): string {
+  if (count <= 0) return base
+  const badge = `(${count}) 新提醒`
+  if (reduceMotion) return `${badge} · ${base}`
+  return blinkOn ? badge : base
 }
