@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-24T11:46:20+08:00",
+  "generated_at": "2026-10-24T14:42:03+08:00",
   "timezone": "Asia/Shanghai",
-  "count": 232,
-  "parseable_count": 22,
-  "within_next_3_days_count": 0,
+  "count": 233,
+  "parseable_count": 23,
+  "within_next_3_days_count": 1,
   "already_listed_count": 19,
   "items": [
     {
@@ -2491,7 +2491,7 @@
     },
     {
       "project": "Elysium Orbit",
-      "handle": "elysiumorbit",
+      "handle": "ElysiumOrbit",
       "listing_at": null,
       "listing_at_display": "未知",
       "listing_at_raw": "",
@@ -2504,7 +2504,7 @@
     },
     {
       "project": "TapeFoundry",
-      "handle": "foundrytape",
+      "handle": "FoundryTape",
       "listing_at": "2026-10-23T08:00:00+08:00",
       "listing_at_display": "2026-10-23T08:00:00+08:00",
       "listing_at_raw": "At 30% sold The vote opens: holders choose which circuits the next stage is drawn from — one card, one vote. — Every day A number opens at 00:00 UTC. Hold a card, solve it, and the season board keeps the record. Try toda",
@@ -2556,7 +2556,7 @@
     },
     {
       "project": "MARS MIND 🪐",
-      "handle": "marsmindgame",
+      "handle": "MarsMindGame",
       "listing_at": "2026-10-23T00:20:35+08:00",
       "listing_at_display": "2026-10-23T00:20:35+08:00",
       "listing_at_raw": "Launch in 2 hours Open your $MARS reward box 📦 https://t.co/z8l7oBHftZ",
@@ -2569,7 +2569,7 @@
     },
     {
       "project": "Shielded-NakaPunks 中文社区",
-      "handle": "shieldednakacn",
+      "handle": "ShieldedNakaCN",
       "listing_at": null,
       "listing_at_display": "未知",
       "listing_at_raw": "",
@@ -2804,14 +2804,14 @@
     {
       "project": "ZardLabs",
       "handle": "ZardlabsPro",
-      "listing_at": null,
-      "listing_at_display": "未知",
-      "listing_at_raw": "",
-      "source": "",
-      "evidence_url": "",
-      "confidence": "low",
+      "listing_at": "2026-10-25T00:00:00+08:00",
+      "listing_at_display": "2026-10-25T00:00:00+08:00",
+      "listing_at_raw": "It's official. $ZARD launches today, Saturday, October 24 · 4 PM UTC. Launch tokens on @ponsdotfamily Mainnet will go live at the same time. https://t.co/Ta",
+      "source": "x",
+      "evidence_url": "https://x.com/ZardlabsPro/status/2113880115096785317",
+      "confidence": "high",
       "already_listed": false,
-      "within_next_3_days": false,
+      "within_next_3_days": true,
       "note": ""
     },
     {
@@ -3021,8 +3021,31 @@
       "already_listed": false,
       "within_next_3_days": false,
       "note": ""
+    },
+    {
+      "project": "Matthaus",
+      "handle": "matthausagent",
+      "listing_at": null,
+      "listing_at_display": "未知",
+      "listing_at_raw": "",
+      "source": "",
+      "evidence_url": "",
+      "confidence": "low",
+      "already_listed": false,
+      "within_next_3_days": false,
+      "note": ""
     }
   ],
-  "within_next_3_days": [],
+  "within_next_3_days": [
+    {
+      "project": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "listing_at": "2026-10-25T00:00:00+08:00",
+      "source": "x",
+      "confidence": "high",
+      "listing_at_raw": "It's official. $ZARD launches today, Saturday, October 24 · 4 PM UTC. Launch tokens on @ponsdotfamily Mainnet will go live at the same time. https://t.co/Ta",
+      "evidence_url": "https://x.com/ZardlabsPro/status/2113880115096785317"
+    }
+  ],
   "sticky_rule": "fill-forward: never wipe listing_at to null/未知 once set; missing this run keeps previous; listing_at_display=未知 only when listing_at is null; exception: AMA/Space/直播 evidence clears sticky false positives (note=rejected:ama_space)"
 }
