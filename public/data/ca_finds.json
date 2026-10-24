@@ -1,19 +1,59 @@
 {
-  "generated_at": "2026-10-24T12:05:03+08:00",
+  "generated_at": "2026-10-24T12:14:37+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 55,
-  "token_ca_count": 3,
+  "count": 56,
+  "token_ca_count": 4,
   "wallet_count": 15,
   "confirmed_count": 2,
-  "candidate_count": 1,
+  "candidate_count": 2,
   "status_counts": {
     "confirmed": 2,
-    "candidate": 1,
+    "candidate": 2,
     "superseded": 0,
     "not_ca": 52
   },
   "finds": [
+    {
+      "project": "ptah",
+      "handle": "https://x.com/Ptahtrade",
+      "chain": "bsc",
+      "address": "0x999980fb8dff1799c7e9d7f71bca899e43d39999",
+      "source": "inline:https://ptah.trade/market",
+      "evidence_url": "https://ptah.trade/market",
+      "detected_at": "2026-10-24T12:14:33+08:00",
+      "confidence": "high",
+      "note": "ERC20 verified: PTAH dec=18; ca_gate: ERC20 verified: PTAH dec=18",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "inline:https://ptah.trade/market",
+          "detected_at": "2026-10-24T12:14:33+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "PTAH",
+        "name": "Ptah",
+        "decimals": 18,
+        "code_bytes": 1502,
+        "note": "ERC20 verified: PTAH dec=18"
+      },
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【非地址·非CA】TapeFoundry",
       "handle": "foundrytape",
