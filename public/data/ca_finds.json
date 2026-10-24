@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T17:04:36+08:00",
+  "generated_at": "2026-10-24T17:42:42+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 57,
@@ -8536,7 +8536,7 @@
       "evidence_url": "https://x.com/InkDaddynft",
       "detected_at": "2026-10-24T16:59:42+08:00",
       "confidence": "low",
-      "note": "onchain_lock low via symbol:ID; deployer=0xc5138c6d9b62d8c79b3d391c6c1fefdf561b384d; token=币安 ID / 币安 ID; onchain_lock low via symbol:ID; deployer=0xcb64c94301e0c8ed303e375030f1577d5b2172f1; token=币安 ID / 币安 ID; ca_gate: ERC20 verified: 币安 ID dec=18",
+      "note": "onchain_lock low via symbol:ID; deployer=0xc5138c6d9b62d8c79b3d391c6c1fefdf561b384d; token=币安 ID / 币安 ID; onchain_lock low via symbol:ID; deployer=0xcb64c94301e0c8ed303e375030f1577d5b2172f1; token=币安 ID / 币安 ID; onchain_lock low via symbol:ID; deployer=0xa63f613ad6e83ba8666b869d56e87ab0998558e6; token=币安 ID / 币安 ID; ca_gate: ERC20 verified: 币安 ID dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -8549,6 +8549,13 @@
           "origin": "onchain_lock",
           "source": "onchain_lock",
           "detected_at": "2026-10-24T17:00:24+08:00",
+          "reason": "symbol:ID",
+          "via": "factory:fourmeme_tm2_bsc:Unknown"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T17:42:22+08:00",
           "reason": "symbol:ID",
           "via": "factory:fourmeme_tm2_bsc:Unknown"
         }
