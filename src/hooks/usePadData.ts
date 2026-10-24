@@ -150,6 +150,8 @@ export function usePadData() {
   }, [events, eventsAt, eventsNote])
 
   useEffect(() => {
+    // State is only set after the fetches resolve, not synchronously in the effect.
+    // oxlint-disable-next-line react/set-state-in-effect
     void loadDefault()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps -- mount once; polling below
 

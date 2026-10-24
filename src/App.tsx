@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { Suspense, lazy, useEffect, useMemo } from 'react'
 import { CaAlertToasts } from './components/CaAlert'
 import { LiveToasts } from './components/LiveToasts'
 import { Header } from './components/Header'
@@ -6,16 +6,22 @@ import { useBoardSync } from './hooks/useBoardSync'
 import { useCaAlertWatcher } from './hooks/useCaAlertWatcher'
 import { usePadData } from './hooks/usePadData'
 import { useTheme } from './hooks/useTheme'
-import { CaPage } from './pages/CaPage'
 import { HomePage } from './pages/HomePage'
-import { LaunchedPage } from './pages/LaunchedPage'
-import { MonitorPage } from './pages/MonitorPage'
-import { TodayPage } from './pages/TodayPage'
-import { WorkbenchPage } from './pages/WorkbenchPage'
 import { useWorkbenchAttention } from './hooks/useWorkbenchAttention'
 import { setBaseDocumentTitle, setWorkbenchReminderCount } from './utils/caAlert'
 import { countUpcoming } from './utils/launch'
 import { appPath, useRoute } from './router'
+
+// The home list ships in the main bundle; other pages load on first visit.
+const CaPage = lazy(() => import('./pages/CaPage').then((m) => ({ default: m.CaPage })))
+const LaunchedPage = lazy(() => import('./pages/LaunchedPage').then((m) => ({ default: m.LaunchedPage })))
+const MonitorPage = lazy(() => import('./pages/MonitorPage').then((m) => ({ default: m.MonitorPage })))
+const TodayPage = lazy(() => import('./pages/TodayPage').then((m) => ({ default: m.TodayPage })))
+const WorkbenchPage = lazy(() => import('./pages/WorkbenchPage').then((m) => ({ default: m.WorkbenchPage })))
+
+function PageFallback() {
+  return <main className="mx-auto max-w-3xl px-4 py-16 text-center text-sm text-[var(--color-ink-muted)] sm:px-6">正在加载…</main>
+}
 
 export default function App() {
   const { theme, toggle } = useTheme()
@@ -63,6 +69,7 @@ export default function App() {
         onRefresh={() => void data.loadDefault()}
       />
 
+      <Suspense fallback={<PageFallback />}>
       {route.name === 'home' && (
         <HomePage
           key={data.uploadNote ?? 'site'}
@@ -117,6 +124,7 @@ export default function App() {
           </a>
         </main>
       )}
+      </Suspense>
 
       <CaAlertToasts />
       <LiveToasts />

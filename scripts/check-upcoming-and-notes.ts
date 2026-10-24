@@ -222,6 +222,7 @@ const samples = [
   'ca_gate: not a valid Solana pubkey',
   'ca_gate: hex string (hash / git SHA), not a Solana address',
   'ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA',
+  'ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA',
   'ca_gate: account does not exist on Solana mainnet',
   'classified as EOA/wallet via eth_getCode',
   'classified as contract (3248 bytes)',
@@ -275,6 +276,10 @@ for (const sample of samples) {
   }
 }
 
+// Live automation data changes every few minutes. An untranslated phrase there is reported,
+// but only blocks CI with STRICT_LIVE_DATA=1 so a new upstream wording cannot stop deploys.
+const strictLive = process.env.STRICT_LIVE_DATA === '1'
+const liveIssues: string[] = []
 const live = JSON.parse(readFileSync(new URL('../public/data/ca_finds.json', import.meta.url), 'utf8')) as {
   finds?: Array<Record<string, unknown>>
   suspected_copycats?: Array<Record<string, unknown>>
@@ -293,9 +298,13 @@ for (const row of liveRows) {
     if (typeof raw !== 'string' || !raw.trim()) continue
     const zh = localizeMachineNote(raw)
     for (const pattern of banned) {
-      if (pattern.test(zh)) fail(`${key} still english ${pattern} :: ${zh}`)
+      if (pattern.test(zh)) liveIssues.push(`${key} still english ${pattern} :: ${zh}`)
     }
   }
+}
+if (liveIssues.length > 0) {
+  if (strictLive) fail(liveIssues[0])
+  for (const issue of liveIssues) console.warn(`warning: live ca note ${issue}`)
 }
 
 const kept = localizeMachineNote('同名非官方：创建者 0xabc 不在监控钱包内，官推未确认')

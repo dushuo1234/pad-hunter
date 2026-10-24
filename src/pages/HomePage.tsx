@@ -38,12 +38,14 @@ export function HomePage({ payload, candidates, loading, error, uploadNote, onRe
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  useEffect(() => {
-    if (!selected) return
+  // Close the drawer when a refresh drops the selected project.
+  const openCandidate = useMemo(() => {
+    if (!selected) return null
     const key = selected.handle.replace(/^@/, '').trim().toLowerCase()
     if (!key || !candidates.some((candidate) => candidate.handle.replace(/^@/, '').trim().toLowerCase() === key)) {
-      setSelected(null)
+      return null
     }
+    return selected
   }, [candidates, selected])
 
   const chains = useMemo(
@@ -171,7 +173,7 @@ export function HomePage({ payload, candidates, loading, error, uploadNote, onRe
         )}
       </main>
 
-      <DetailDrawer candidate={selected} onClose={() => setSelected(null)} />
+      <DetailDrawer candidate={openCandidate} onClose={() => setSelected(null)} />
     </>
   )
 }
