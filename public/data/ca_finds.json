@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T10:15:16+08:00",
+  "generated_at": "2026-10-24T10:15:24+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 55,
@@ -3462,12 +3462,17 @@
       "evidence_url": "https://zeta.fun/",
       "detected_at": "2026-10-24T10:15:07+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://zeta.fun/",
           "detected_at": "2026-10-24T10:15:07+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "live_queue",
+          "detected_at": "2026-10-24T10:15:23+08:00"
         }
       ],
       "kind": "wallet",
@@ -3500,17 +3505,12 @@
       "evidence_url": "https://zeta.fun/",
       "detected_at": "2026-10-24T10:15:01+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://zeta.fun/",
           "detected_at": "2026-10-24T10:15:01+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "live_queue",
-          "detected_at": "2026-10-24T10:15:15+08:00"
         }
       ],
       "kind": "wallet",
