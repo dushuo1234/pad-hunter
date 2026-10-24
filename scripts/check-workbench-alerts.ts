@@ -227,10 +227,13 @@ const nftConsole = board.find((line) => line.id === nftAlert.id)
 const baseConsole = board.find((line) => line.id === baseline.id)
 const confirmedConsole = board.find((line) => line.id === confirmed.id)
 if (!soonConsole?.flash || soonConsole.label !== '即将开始') fail('console soon line should blink')
+if (soonConsole.evidenceUrl !== soon.evidence_url || soonConsole.quote !== soon.quote) fail('console keeps the source quote and link')
 if (!confirmedConsole?.flash || confirmedConsole.label !== '已确认CA') fail('console confirmed line')
+if (!confirmedConsole.copyAddress.startsWith('0x1111')) fail('confirmed CA stays copyable in the console')
 if (!nftConsole || nftConsole.flash || !nftConsole.label.includes('不算CA') || nftConsole.label.includes('已确认')) {
   fail('console 不算CA stays muted')
 }
+if (nftConsole.copyAddress) fail('不算CA is not copyable from the console')
 if (!baseConsole || baseConsole.flash) fail('console baseline stays quiet')
 if (board[0] && board[1] && Date.parse(board[0].ts) < Date.parse(board[1].ts) && board[0].flash === board[1].flash) {
   fail('console keeps newest first within the same blink group')
@@ -301,8 +304,14 @@ const pageSource = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import
 const tableAt = pageSource.indexOf('<table')
 const sharedAt = pageSource.indexOf('<WorkbenchAlertConsole')
 const projectAt = pageSource.indexOf('<WorkbenchAlertConsole', sharedAt + 1)
-if (!pageSource.includes('wb-row-flash') || sharedAt < 0 || projectAt < 0 || tableAt < 0 || sharedAt > tableAt || projectAt < tableAt) {
+if (sharedAt < 0 || projectAt < 0 || tableAt < 0 || sharedAt > tableAt || projectAt < tableAt) {
   fail('need the shared console above the list and a console inside each row')
+}
+if (pageSource.includes('<WorkbenchReminders') || pageSource.includes('wb-row-flash') || pageSource.includes('ALERT_UI.fresh')) {
+  fail('realtime lines and flashing chips must not sit on the project row')
+}
+if (!pageSource.includes('简介') || !pageSource.includes('官网') || !pageSource.includes('X ')) {
+  fail('project row keeps 简介, 官网, and X outside the console')
 }
 if (!pageSource.includes('pinned={pinnedKeys}') || !pageSource.includes('handle={item.handle}')) {
   fail('shared console and per-project console must both be wired')

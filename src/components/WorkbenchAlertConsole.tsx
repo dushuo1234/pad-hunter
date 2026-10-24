@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { markWorkbenchAlertIdsRead } from '../utils/workbenchAlertStore'
 import {
   ALERT_UI,
   consoleLines,
   flashingAlertIds,
+  type ConsoleLine,
   type WorkbenchAlert,
 } from '../utils/workbenchAlerts'
 
@@ -37,9 +38,25 @@ export function WorkbenchAlertConsole({
   const flashing = flashingIds.length > 0
   const title = (name ?? '').trim() || handle || ''
 
+  const [copied, setCopied] = useState('')
   const stop = () => {
     if (flashingIds.length === 0) return
     markWorkbenchAlertIdsRead(flashingIds)
+  }
+  const copyAddress = async (address: string) => {
+    try {
+      await navigator.clipboard.writeText(address)
+    } catch {
+      const input = document.createElement('textarea')
+      input.value = address
+      input.setAttribute('readonly', '')
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      input.remove()
+    }
+    setCopied(address)
+    window.setTimeout(() => setCopied((current) => (current === address ? '' : current)), 1500)
   }
 
   return (
@@ -86,17 +103,13 @@ export function WorkbenchAlertConsole({
           <p className="wb-console-quiet">{ALERT_UI.consoleWait}</p>
         ) : (
           lines.map((line) => (
-            <p
+            <div
               key={line.id || `${line.handle}-${line.ts}`}
               className={`wb-console-line${line.flash ? ' wb-line-flash' : ''}`}
               data-alert-tone={line.tone}
             >
-              <span className="wb-console-stamp">{line.stamp || '—'}</span>
-              <span aria-hidden="true">{line.mark}</span>
-              <span className="wb-console-label">{line.label}</span>
-              {!project && <span className="wb-console-name">{line.name || line.handle}</span>}
-              {line.text && <span className="wb-console-text">{line.text}</span>}
-            </p>
+              <ConsoleLineBody line={line} project={project} copied={copied} onCopy={copyAddress} />
+            </div>
           ))
         )}
       </div>
@@ -106,5 +119,51 @@ export function WorkbenchAlertConsole({
         <span className={`wb-console-cursor${flashing ? ' wb-dot-flash' : ''}`} aria-hidden="true" />
       </p>
     </section>
+  )
+}
+
+function ConsoleLineBody({
+  line,
+  project,
+  copied,
+  onCopy,
+}: {
+  line: ConsoleLine
+  project: boolean
+  copied: string
+  onCopy: (address: string) => void
+}) {
+  return (
+    <>
+      <span className="wb-console-stamp">{line.stamp || '—'}</span>
+      <span aria-hidden="true">{line.mark}</span>
+      <span className="wb-console-label">{line.label}</span>
+      {!project && <span className="wb-console-name">{line.name || line.handle}</span>}
+      {line.text && <span className="wb-console-text">{line.text}</span>}
+      {line.quote && <span className="wb-console-quote">{line.quote}</span>}
+      {line.copyAddress && (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation()
+            void onCopy(line.copyAddress)
+          }}
+          className="wb-console-link"
+        >
+          {copied === line.copyAddress ? ALERT_UI.copied : ALERT_UI.copy}
+        </button>
+      )}
+      {line.evidenceUrl && (
+        <a
+          href={line.evidenceUrl}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(event) => event.stopPropagation()}
+          className="wb-console-link"
+        >
+          {ALERT_UI.source}
+        </a>
+      )}
+    </>
   )
 }

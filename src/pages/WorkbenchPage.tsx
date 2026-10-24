@@ -3,14 +3,13 @@ import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
 import { WorkbenchAlertConsole } from '../components/WorkbenchAlertConsole'
-import { WorkbenchReminders } from '../components/WorkbenchReminders'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
 import { useBoardSyncStatus } from '../hooks/useBoardSync'
 import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
 import type { Candidate, MonitorEvent } from '../types'
-import { formatShanghai } from '../utils/format'
+import { formatShanghai, xProfileUrl } from '../utils/format'
 import { isLaunchedHandle } from '../utils/launched'
 import { comparePushDateRecords } from '../utils/pushDate'
 import {
@@ -46,15 +45,7 @@ import {
 } from '../utils/workbenchView'
 import { reviewSnapshot } from '../utils/reviewed'
 import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } from '../utils/workbenchAlertStore'
-import {
-  ALERT_UI,
-  alertsByHandle,
-  flashingAlertIds,
-  reminderViews,
-  remindersAllowed,
-  rowAttentionTone,
-  workbenchRowDomId,
-} from '../utils/workbenchAlerts'
+import { alertsByHandle, remindersAllowed, workbenchRowDomId } from '../utils/workbenchAlerts'
 
 interface WorkbenchPageProps {
   candidates: Candidate[]
@@ -634,10 +625,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 const projectKey = handleKey(item.handle)
                 const projectAlerts = projectKey ? alertsByProject.get(projectKey) ?? [] : []
                 const showReminders = remindersAllowed({ pinned: Boolean(projectKey), launched })
-                const views = showReminders ? reminderViews(projectAlerts, live.now) : []
-                const tone = rowAttentionTone(views, alertFeed.readIds)
-                const unread = showReminders && flashingAlertIds(projectAlerts, alertFeed.readIds).length > 0
-                const attentionClass = unread ? 'wb-row-flash' : tone ? 'wb-row-accent' : ''
+                const intro = introFor(candidate)
+                const xHref = item.xUrl || (item.handle.trim() ? xProfileUrl(item.handle) : '')
+                const xLabel = item.handle.trim() ? `@${item.handle.replace(/^@/, '')}` : ''
                 return (
                   <div key={item.id} className="wb-project w-full min-w-0 max-w-full">
                   <div className={BOARD_FRAME} onScroll={syncBoardScroll}>
@@ -646,15 +636,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                     <tbody>
                   <tr
                     id={workbenchRowDomId(item.handle) || undefined}
-                    data-alert-tone={tone ?? undefined}
-                    title={unread ? ALERT_UI.consoleStop : undefined}
-                    onClick={(event) => {
-                      if (!unread) return
-                      const target = event.target
-                      if (target instanceof Element && target.closest('a, button, input, textarea, select, label')) return
-                      markWorkbenchAlertsRead(item.handle)
-                    }}
-                    className={`border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)] ${attentionClass} ${unread ? 'cursor-pointer' : ''}`}
+                    className="border-t border-[var(--color-line)] align-top dark:border-[var(--color-night-line)]"
                   >
                     <td className="px-3 py-3">
                       <input
@@ -664,27 +646,9 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         onChange={() => toggleSelected(item.id)}
                       />
                     </td>
-                    <td
-                      data-alert-tone={tone ?? undefined}
-                      className={`px-2 py-3 ${attentionClass}`}
-                    >
+                    <td className="px-2 py-3">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-semibold text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">{item.name}</span>
-                        {unread && (
-                          <span className="inline-flex items-center gap-1">
-                            <span className="inline-flex items-center gap-1 text-xs font-bold text-rose-600" aria-label="新提醒">
-                              <span className="wb-dot-flash h-2 w-2 rounded-full bg-rose-600" aria-hidden="true" />
-                              {ALERT_UI.fresh}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => markWorkbenchAlertsRead(item.handle)}
-                              className="text-[10px] text-[var(--color-ink-muted)] hover:underline"
-                            >
-                              {ALERT_UI.read}
-                            </button>
-                          </span>
-                        )}
                         <ReviewedMark
                           handle={item.handle}
                           name={item.name}
@@ -699,16 +663,40 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         {urlProtocol(url) && <Pill tone="muted">{urlProtocol(url)}</Pill>}
                         {launched && <Pill tone="ok">已开盘</Pill>}
                       </div>
-                      {showReminders && (
-                        <WorkbenchReminders
-                          alerts={projectAlerts}
-                          now={live.now}
-                          readIds={alertFeed.readIds}
-                          onAcknowledge={() => markWorkbenchAlertsRead(item.handle)}
-                        />
-                      )}
-                      {introFor(candidate) && (
-                        <p className="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-ink-muted)]">{introFor(candidate)}</p>
+                      {(intro || url || xHref) && (
+                        <div className="mt-1 space-y-0.5 text-[11px] leading-relaxed">
+                          {intro && (
+                            <p className="line-clamp-2 text-[var(--color-ink-muted)]">
+                              <span className="mr-1 font-medium text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">简介</span>
+                              {intro}
+                            </p>
+                          )}
+                          {(url || xHref) && (
+                            <p className="flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                              {url ? (
+                                <a
+                                  href={url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title={url}
+                                  className="max-w-full truncate text-[var(--color-orange)] hover:underline"
+                                >
+                                  官网 {hostLabel(url)}
+                                </a>
+                              ) : null}
+                              {xHref ? (
+                                <a
+                                  href={xHref}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="font-mono text-[var(--color-orange)] hover:underline"
+                                >
+                                  {xLabel ? `X ${xLabel}` : 'X'}
+                                </a>
+                              ) : null}
+                            </p>
+                          )}
+                        </div>
                       )}
                       <div className="mt-1.5 flex flex-wrap items-center gap-2">
                         <button
