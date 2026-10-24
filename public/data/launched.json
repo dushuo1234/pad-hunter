@@ -18,7 +18,13 @@
       "launched_reason": "token_live_with_ca",
       "evidence": "The $ZONE is live via @ponsdotfamily CA: 0x23e3681865a2d7b83ace7976a27e7b1b3462a540",
       "evidence_url": "https://x.com/evmdotzone/status/2114059501804347727",
-      "removed_at": "2026-10-25T02:45:10+08:00"
+      "removed_at": "2026-10-25T02:45:10+08:00",
+      "alternate_cas": [
+        "0x4863fD830A5b5230702ED548430A21802d77B1f4"
+      ],
+      "ca_conflict": true,
+      "ca_conflict_note": "X CoinGecko listing post CA 0x4863… (ZONE) vs pons live CA 0x23e368… (EVMZONE); both ERC20 verified on robinhood",
+      "conflict_updated_at": "2026-10-25T02:49:07+08:00"
     },
     {
       "project": "evmbot",
@@ -50,13 +56,15 @@
         "https://x.com/ZardlabsPro"
       ],
       "listing_at": "2026-10-25T00:03:25+08:00",
-      "ca": null,
-      "ca_chain": null,
+      "ca": "0x3da03597426fa6926e10891c2d55a61dfb131a9d",
+      "ca_chain": "robinhood",
       "reason": "manual",
       "launched_reason": "manual",
-      "evidence": "手动确认已开盘",
-      "evidence_url": "https://x.com/ZardlabsPro",
-      "removed_at": "2026-10-24T16:10:20.067Z"
+      "evidence": "手动确认已开盘 | CA from @ZardlabsPro LIVE post",
+      "evidence_url": "https://x.com/ZardlabsPro/status/2114024977406251291",
+      "removed_at": "2026-10-24T16:10:20.067Z",
+      "ca_source": "x_official",
+      "ca_updated_at": "2026-10-25T02:49:07+08:00"
     },
     {
       "project": "CozyGolem",
@@ -1240,5 +1248,6 @@
       "evidence_url": "https://ballast.exchange/",
       "removed_at": "2026-10-20T16:35:35+08:00"
     }
-  ]
+  ],
+  "updated_at": "2026-10-25T02:49:07+08:00"
 }
