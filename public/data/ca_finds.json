@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T11:37:54+08:00",
+  "generated_at": "2026-10-24T11:39:24+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 55,
@@ -8182,12 +8182,19 @@
       "evidence_url": "https://x.com/InkDaddynft",
       "detected_at": "2026-10-24T11:37:44+08:00",
       "confidence": "low",
-      "note": "onchain_lock low via symbol:ID; deployer=0x2062d37f6f9b333f577c8de7a4c5e05f57c6a845; token=币安 ID / 币安 ID; ca_gate: ERC20 verified: 币安 ID dec=18",
+      "note": "onchain_lock low via symbol:ID; deployer=0x2062d37f6f9b333f577c8de7a4c5e05f57c6a845; token=币安 ID / 币安 ID; onchain_lock low via symbol:ID; deployer=0xb8eceb79b9af7c4a1dbb8c0020b66eb82376f3a1; token=币安 ID / 币安 ID; ca_gate: ERC20 verified: 币安 ID dec=18",
       "sources": [
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
           "detected_at": "2026-10-24T11:37:44+08:00",
+          "reason": "symbol:ID",
+          "via": "factory:fourmeme_tm2_bsc:Unknown"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T11:39:16+08:00",
           "reason": "symbol:ID",
           "via": "factory:fourmeme_tm2_bsc:Unknown"
         }
