@@ -280,6 +280,17 @@ td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
 .wb-console-name { color: #d1fae5; }
 .wb-console-line[data-alert-tone="muted"] .wb-console-name { color: #a3a3a3; }
 .wb-console-text { min-width: 0; overflow-wrap: anywhere; }
+.wb-console-quote { min-width: 0; overflow-wrap: anywhere; color: #a7f3d0; }
+.wb-console-link {
+  color: #fde68a;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .wb-console-quiet,
 .wb-console-prompt {
   color: #86efac;

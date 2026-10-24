@@ -559,6 +559,11 @@ export interface ConsoleLine {
   text: string
   tone: ReminderTone
   flash: boolean
+  /** Source page or post. Empty when the alert has no http(s) evidence. */
+  evidenceUrl: string
+  quote: string
+  /** Full address when this line is a confirmed CA the user can copy. */
+  copyAddress: string
 }
 
 function consoleParts(alert: WorkbenchAlert): Pick<ConsoleLine, 'mark' | 'label' | 'text' | 'tone'> {
@@ -654,6 +659,9 @@ export function consoleLines(
       stamp: formatShanghai(alert.ts),
       ...parts,
       flash: Boolean(alert.id) && reminderCanFlash(alert) && !readIds.has(alert.id),
+      evidenceUrl: alert.evidence_url,
+      quote: alert.quote.trim(),
+      copyAddress: isConfirmedCa(alert) && alert.address.trim() ? alert.address.trim() : '',
     }
     if (line.flash) flashing.push(line)
     else quiet.push(line)
