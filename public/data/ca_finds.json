@@ -1,19 +1,138 @@
 {
-  "generated_at": "2026-10-24T10:13:00+08:00",
+  "generated_at": "2026-10-24T10:13:21+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 67,
+  "count": 70,
   "token_ca_count": 3,
-  "wallet_count": 27,
+  "wallet_count": 30,
   "confirmed_count": 2,
   "candidate_count": 1,
   "status_counts": {
     "confirmed": 2,
     "candidate": 1,
     "superseded": 0,
-    "not_ca": 64
+    "not_ca": 67
   },
   "finds": [
+    {
+      "project": "【扫出钱包·非CA】Zeta",
+      "handle": "zetadotfun",
+      "chain": "ethereum",
+      "address": "0xba6aab4baea0a48d180e0000994bdc3b9317cb5f",
+      "source": "inline:https://zeta.fun/",
+      "evidence_url": "https://zeta.fun/",
+      "detected_at": "2026-10-24T10:13:16+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "inline:https://zeta.fun/",
+          "detected_at": "2026-10-24T10:13:16+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "扫出钱包; eth_getCode empty / 7702 → EOA wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】Zeta",
+      "handle": "zetadotfun",
+      "chain": "ethereum",
+      "address": "0x50caeee640ff0a9de0d986e7e5f2373b9b83f164",
+      "source": "inline:https://zeta.fun/",
+      "evidence_url": "https://zeta.fun/",
+      "detected_at": "2026-10-24T10:13:10+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "inline:https://zeta.fun/",
+          "detected_at": "2026-10-24T10:13:10+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "扫出钱包; eth_getCode empty / 7702 → EOA wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
+    {
+      "project": "【扫出钱包·非CA】Zeta",
+      "handle": "zetadotfun",
+      "chain": "ethereum",
+      "address": "0x1c2536a2f37cb19593c1ab4b78fc5075781dec9e",
+      "source": "inline:https://zeta.fun/",
+      "evidence_url": "https://zeta.fun/",
+      "detected_at": "2026-10-24T10:13:04+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "inline:https://zeta.fun/",
+          "detected_at": "2026-10-24T10:13:04+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "live_queue",
+          "detected_at": "2026-10-24T10:13:20+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "扫出钱包; eth_getCode empty / 7702 → EOA wallet",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "ca_locked": false
+    },
     {
       "project": "【扫出钱包·非CA】Zeta",
       "handle": "zetadotfun",
@@ -99,17 +218,12 @@
       "evidence_url": "https://zeta.fun/",
       "detected_at": "2026-10-24T10:12:44+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://zeta.fun/",
           "detected_at": "2026-10-24T10:12:44+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "inline:https://zeta.fun/",
-          "detected_at": "2026-10-24T10:12:59+08:00"
         }
       ],
       "kind": "wallet",
