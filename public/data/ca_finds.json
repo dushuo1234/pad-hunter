@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T21:10:53+08:00",
+  "generated_at": "2026-10-24T21:55:48+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 59,
@@ -8769,8 +8769,56 @@
       "ca_locked": false
     }
   ],
-  "suspected_copycat_count": 89,
+  "suspected_copycat_count": 90,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】evm.zone",
+      "handle": "evmdotzone",
+      "chain": "ethereum",
+      "address": "0xe51a1e57e3c1f037bfc0154918000419636fb1f0",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/evmdotzone",
+      "detected_at": "2026-10-24T21:55:31+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via name:evmzone; deployer=0x5cb7528224b4705e0b53f9f28e7a2b231fa908d7; token=EVMZONE / evmzone; ca_gate: ERC20 verified: EVMZONE dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T21:55:31+08:00",
+          "reason": "name:evmzone",
+          "via": "factory:univ4_pm_eth:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x5cb7528224b4705e0b53f9f28e7a2b231fa908d7",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "EVMZONE",
+        "name": "evmzone",
+        "decimals": 18,
+        "code_bytes": 3580,
+        "note": "ERC20 verified: EVMZONE dec=18"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": "0x5cb7528224b4705e0b53f9f28e7a2b231fa908d7",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】evm.zone",
       "handle": "evmdotzone",
