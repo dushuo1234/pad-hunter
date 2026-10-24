@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-25T02:47:58+08:00",
+  "generated_at": "2026-10-25T02:51:42+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 46,
@@ -7909,10 +7909,14 @@
       "conflict_note_zh": "同一项目同一角色（token）出现多个有证据的 CA，已标冲突，请人工确认",
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
+      "first_buy_time": "2026-10-23T17:37:11+08:00",
       "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_buy_tx": "0xbe29ed76507ea324c9250affdba001136b8a7986878a06444bd0186409f68d3a",
+      "first_external_buy_time": "2026-10-23T17:37:11+08:00",
+      "first_external_buy_tx": "0xbe29ed76507ea324c9250affdba001136b8a7986878a06444bd0186409f68d3a",
+      "listing_time": "2026-10-23T17:37:11+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
       "lead_seconds": null
     },
     {
@@ -11606,6 +11610,21 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0xf19f11dee16a341671e6ed3e209b704c1bbc3e57",
+        "to": "0x3a08520042b20604c10ca225c40fd224d2244535",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x691250641a65bda90c90fe00927c6781b29fe393352d29a02622201d1051bdce",
+        "amount": "0.0005",
+        "asset": "ETH",
+        "funded_at": "2026-10-07T02:19:13+08:00",
+        "deployed_at": "2026-10-24T15:11:09+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -11620,6 +11639,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x3a08520042b20604c10ca225c40fd224d2244535",
       "ca_locked": false,
       "suspected_copycat": true,
