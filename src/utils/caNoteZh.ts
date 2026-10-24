@@ -33,6 +33,10 @@ const PHRASES: Array<[RegExp, string | Replacer]> = [
     /(?:ca_gate:\s*)?contract bytecode but no ERC20 decimals\/symbol\s*[—–-]+\s*not a token CA/gi,
     '核验：有合约字节码，但没有 ERC20 精度或符号，不是代币 CA',
   ],
+  [
+    /(?:ca_gate:\s*)?contract has decimals\/symbol but missing ERC20 ([\w/]+) path\s*[—–-]+\s*not a token CA/gi,
+    (_match, methods) => `核验：有 ERC20 精度和符号，但缺少 ${methods} 接口，不是代币 CA`,
+  ],
   [/(?:ca_gate:\s*)?account does not exist on Solana mainnet/gi, '核验：Solana 主网上不存在该账户'],
   [
     /low confidence:\s*feed-style site that embeds third-party token icons\/posts/gi,
@@ -78,6 +82,9 @@ const PHRASES: Array<[RegExp, string | Replacer]> = [
     (_match, factory) => `来源工厂 ${factory}（创建者在监控钱包）`,
   ],
   [/(^|[^\u4e00-\u9fff])Processor\b/g, (_match, prefix) => `${prefix}处理器`],
+  // Fallback for new machine phrasings: at least the verdict reads in Chinese.
+  [/\s*[—–-]+\s*likely a wallet, not a token CA/gi, '，多半是钱包而不是代币 CA'],
+  [/\s*[—–-]+\s*not a token CA/gi, '，不是代币 CA'],
   [/ca_gate:\s*/gi, '核验：'],
 ]
 
