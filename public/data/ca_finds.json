@@ -1,19 +1,564 @@
 {
-  "generated_at": "2026-10-25T19:49:41+08:00",
+  "generated_at": "2026-10-25T19:53:22+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 49,
+  "count": 59,
   "token_ca_count": 3,
-  "wallet_count": 17,
+  "wallet_count": 27,
   "confirmed_count": 2,
   "candidate_count": 9,
   "status_counts": {
     "confirmed": 2,
     "candidate": 9,
     "superseded": 0,
-    "not_ca": 38
+    "not_ca": 48
   },
   "finds": [
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "hyperevm",
+      "address": "0x2000000000000000000000000000000000000002",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:59+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:59+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "hyperevm",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xe00000000000000000000000000000000000000e",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:53+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:53+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0x1111111111111111111111111111111111111111",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:47+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:47+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "live_queue",
+          "detected_at": "2026-10-25T19:49:22+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xd00000000000000000000000000000000000000d",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:41+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:41+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xc00000000000000000000000000000000000000c",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:22+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:22+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0x3000000000000000000000000000000000000003",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:16+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:16+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0x4000000000000000000000000000000000000004",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:10+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:10+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xac45fe7e42b8a0a44c02f9c8a507e137322cff7a",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:48:03+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:48:03+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xb00000000000000000000000000000000000000b",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:47:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:47:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】asppila",
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "address": "0xf00000000000000000000000000000000000000f",
+      "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "detected_at": "2026-10-25T19:47:49+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-25T19:47:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
     {
       "project": "【扫出钱包·非CA】asppila",
       "handle": "https://x.com/squeekchain",
@@ -77,17 +622,12 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T18:59:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T18:59:20+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "live_queue",
-          "detected_at": "2026-10-25T18:59:30+08:00"
         }
       ],
       "kind": "wallet",
@@ -17871,7 +18411,7 @@
     "taperobot_bsc",
     "zardlabspro"
   ],
-  "watched_wallet_count": 18,
+  "watched_wallet_count": 28,
   "watched_wallets": [
     {
       "handle": "0_0city",
@@ -17966,6 +18506,36 @@
     {
       "handle": "https://x.com/squeekchain",
       "chain": "ethereum",
+      "wallet": "0x1111111111111111111111111111111111111111",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:47+08:00",
+      "expires_at": "2026-11-24T19:48:47+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0x3000000000000000000000000000000000000003",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:16+08:00",
+      "expires_at": "2026-11-24T19:48:16+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0x4000000000000000000000000000000000000004",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:10+08:00",
+      "expires_at": "2026-11-24T19:48:10+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
       "wallet": "0x68a6e74277697cb7a881f9e1bc5166a86b545cbd",
       "source": "site",
       "confidence": "low",
@@ -17982,6 +18552,76 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "added_at": "2026-10-25T18:59:24+08:00",
       "expires_at": "2026-11-24T18:59:24+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xac45fe7e42b8a0a44c02f9c8a507e137322cff7a",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:03+08:00",
+      "expires_at": "2026-11-24T19:48:03+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xb00000000000000000000000000000000000000b",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:47:56+08:00",
+      "expires_at": "2026-11-24T19:47:56+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xc00000000000000000000000000000000000000c",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:22+08:00",
+      "expires_at": "2026-11-24T19:48:22+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xd00000000000000000000000000000000000000d",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:41+08:00",
+      "expires_at": "2026-11-24T19:48:41+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xe00000000000000000000000000000000000000e",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:53+08:00",
+      "expires_at": "2026-11-24T19:48:53+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "ethereum",
+      "wallet": "0xf00000000000000000000000000000000000000f",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:47:49+08:00",
+      "expires_at": "2026-11-24T19:47:49+08:00"
+    },
+    {
+      "handle": "https://x.com/squeekchain",
+      "chain": "hyperevm",
+      "wallet": "0x2000000000000000000000000000000000000002",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+      "added_at": "2026-10-25T19:48:59+08:00",
+      "expires_at": "2026-11-24T19:48:59+08:00"
     },
     {
       "handle": "kilnpad",
