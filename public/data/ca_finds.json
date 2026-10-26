@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T05:22:52+08:00",
+  "generated_at": "2026-10-27T05:24:17+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 64,
@@ -13557,10 +13557,14 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_buy_time": "2026-09-30T04:19:22+08:00",
+      "first_buy_in_creation_tx": true,
+      "first_buy_tx": "0x2359968ccb69b74451e2cf8acff805b7c5723e621978982eb4a5c3aa2de3ac8f",
+      "first_external_buy_time": "2026-09-30T04:19:23+08:00",
+      "first_external_buy_tx": "0x1615496c0265e34a14011d26ae6d8dc7d14f840a79c09d780c845c6cca1a8a7f",
+      "listing_time": "2026-09-30T04:19:23+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）；创建交易内另有开发者买入已排除；判定为启发式（买入来自未登记的合约池子）",
       "lead_seconds": null
     },
     {
@@ -14885,8 +14889,89 @@
       "lead_seconds": null
     }
   ],
-  "suspected_copycat_count": 125,
+  "suspected_copycat_count": 126,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Trench",
+      "handle": "trench_agents",
+      "chain": "base",
+      "address": "0x1ef84bbe757664579637e499eb8a639509f041d0",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/trench_agents",
+      "detected_at": "2026-10-27T05:22:31+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:trench; deployer=0xc31bf78d363d1438341af8dad1302b69e474dad7; token=TRENCHORS / 8453 Trenchors; ca_gate: ERC20 verified: TRENCHORS dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-27T05:22:31+08:00",
+          "reason": "name_fuzzy:trench",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xc31bf78d363d1438341af8dad1302b69e474dad7",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "TRENCHORS",
+        "name": "8453 Trenchors",
+        "decimals": 18,
+        "code_bytes": 4844,
+        "note": "ERC20 verified: TRENCHORS dec=18"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "funding_link": {
+        "from": "0xf4ff6e743dc6c4acb91c98ffaa578ebb5cfc27db",
+        "to": "0xc31bf78d363d1438341af8dad1302b69e474dad7",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x0c7f30227651e5c9ff176e14cc221441699a5f7c67697a506f142bdf4daa8111",
+        "amount": "0.83165759",
+        "asset": "ETH",
+        "funded_at": "2026-10-27T05:21:31+08:00",
+        "deployed_at": "2026-10-27T05:22:31+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
+      "creator": "0xc31bf78d363d1438341af8dad1302b69e474dad7",
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】PennyStock",
       "handle": "PennyStock_sol",
@@ -15010,21 +15095,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-10-27T05:07:08+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15039,13 +15109,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15093,21 +15156,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xb00dbc5a0bda5becaba2b663d4690de7411c67eb",
-        "to": "0x059493821f6d7acd6683745fffadf287e5dbc64f",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xc0d8a1c382740eec0d98fb45e7048eba2c340af862aea0de75c45ca9b2bbbf62",
-        "amount": "0.00004928",
-        "asset": "ETH",
-        "funded_at": "2026-10-27T04:30:07+08:00",
-        "deployed_at": "2026-10-27T04:30:29+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15122,13 +15170,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x059493821f6d7acd6683745fffadf287e5dbc64f",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15174,21 +15215,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x5523d3c98809dddb82c686e152f5c58b1b0fb59e",
-        "to": "0x02f4a6d26445b773a90a180b8e46fb8d305130b5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xe6a740c263353b945d1b8f6cf47d58dbca5d03e68f24c07642c9e341be61bfd8",
-        "amount": "0.50130325",
-        "asset": "ETH",
-        "funded_at": "2024-07-17T10:07:05+08:00",
-        "deployed_at": "2026-10-27T04:23:01+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15203,13 +15229,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x02f4a6d26445b773a90a180b8e46fb8d305130b5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15257,21 +15276,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x387029440cb7e4068e3dd06bbcd9c6416be83031",
-        "to": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85e71d3da66a441b2097109be6952cbeb709df5bc509fa6c17e3f7646e0f0533",
-        "amount": "0.02682144",
-        "asset": "ETH",
-        "funded_at": "2026-08-03T23:23:01+08:00",
-        "deployed_at": "2026-10-27T04:13:30+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15286,13 +15290,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15338,21 +15335,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xf4ff6e743dc6c4acb91c98ffaa578ebb5cfc27db",
-        "to": "0xdcdd32029a2eb482a3da18bdd7d09ba5f69a0bfb",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xd939d45bda34ef620296ba30b54109a9a625ef704bf0668c3711975a8ba2b1dc",
-        "amount": "0.85298932",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T22:36:23+08:00",
-        "deployed_at": "2026-10-27T03:56:01+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15367,13 +15349,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xdcdd32029a2eb482a3da18bdd7d09ba5f69a0bfb",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15421,22 +15396,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-27T02:16:05+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15451,13 +15410,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15505,21 +15457,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x92b9a7955e0940821500e37bccfb4009d1e6f4c6",
-        "to": "0x99fbc305278185b2d446c667f4845b7018e5a56e",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xeb1fe256583128a32db9fd98feb0865d2c94407bf9f993f662fa4ca093ffabef",
-        "amount": "0.0002",
-        "asset": "ETH",
-        "funded_at": "2026-10-22T00:10:51+08:00",
-        "deployed_at": "2026-10-27T01:55:58+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15534,13 +15471,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x99fbc305278185b2d446c667f4845b7018e5a56e",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15586,20 +15516,6 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
-        "to": "0xea0c09445856b7a4f32dea32a5a52b2b8f6def49",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x2bc2081f0d749459c65c19e5780e8ed0c7a24518d3ae3795b6c0aca2bfca9bc3",
-        "amount": "0.003131",
-        "asset": "ETH",
-        "funded_at": "2026-10-22T20:01:51+08:00",
-        "deployed_at": "2026-10-27T01:52:23+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Coinbase Hot",
-        "chain": "base"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15614,14 +15530,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
-          "excluded_reason": "public_funder:exchange:Coinbase Hot"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
       "creator": "0xea0c09445856b7a4f32dea32a5a52b2b8f6def49",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15667,21 +15575,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x89996dfd17d46a84f5b9688e6ae797ef9a39d9a6",
-        "to": "0x48245147fe9b805efd599521d66a36f30c187328",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5e7a2930226908206316b5ab5b4f584edb63eee18faeb41c1013cc3cf1105b13",
-        "amount": "0.00084606",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T07:12:07+08:00",
-        "deployed_at": "2026-10-27T00:01:14+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15696,13 +15589,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x48245147fe9b805efd599521d66a36f30c187328",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15750,21 +15636,6 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x387029440cb7e4068e3dd06bbcd9c6416be83031",
-        "to": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85e71d3da66a441b2097109be6952cbeb709df5bc509fa6c17e3f7646e0f0533",
-        "amount": "0.02682144",
-        "asset": "ETH",
-        "funded_at": "2026-08-03T23:23:01+08:00",
-        "deployed_at": "2026-10-27T04:13:30+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15779,13 +15650,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15831,21 +15695,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x0780b1456d5e60cf26c8cd6541b85e805c8c05f2",
-        "to": "0xe2a4a8b9d77080c57799a94ba8edeb2dd6e0ac10",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x7c3eacb20f087063c48af66088056632176f5a711da71e314c315f4f1fceca19",
-        "amount": "0.0005",
-        "asset": "ETH",
-        "funded_at": "2026-04-23T21:35:35+08:00",
-        "deployed_at": "2026-10-26T23:39:00+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15860,13 +15709,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xe2a4a8b9d77080c57799a94ba8edeb2dd6e0ac10",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15912,21 +15754,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd1ec8245c8850a151843ce8a3afdca3b19747706",
-        "to": "0x3cc4f0ca3476996815cb5d6f86b97e83ab74578d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xe6292eef6f367dbae70b684d96153086faf7d4d1b4110ac5192f717fbbe74c22",
-        "amount": "0.11",
-        "asset": "ETH",
-        "funded_at": "2026-08-11T23:26:29+08:00",
-        "deployed_at": "2026-10-26T23:14:32+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -15941,13 +15768,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x3cc4f0ca3476996815cb5d6f86b97e83ab74578d",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -15993,21 +15813,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x21519d5e6973703d850b89ecf0ce75feced5e2e7",
-        "to": "0x11413372f98604cd0589062bbb5e16e2de8f3114",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xfeea888f2ec072d6d0de0a3a573c7da3c81a0436bc237446437f53f48b1b5c0b",
-        "amount": "0.00000002",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T22:07:47+08:00",
-        "deployed_at": "2026-10-26T22:08:00+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16022,13 +15827,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x11413372f98604cd0589062bbb5e16e2de8f3114",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16076,21 +15874,6 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x387029440cb7e4068e3dd06bbcd9c6416be83031",
-        "to": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85e71d3da66a441b2097109be6952cbeb709df5bc509fa6c17e3f7646e0f0533",
-        "amount": "0.02682144",
-        "asset": "ETH",
-        "funded_at": "2026-08-03T23:23:01+08:00",
-        "deployed_at": "2026-10-27T04:13:30+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16105,13 +15888,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16159,22 +15935,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16189,13 +15949,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16241,21 +15994,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16270,13 +16008,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16444,22 +16175,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-27T02:16:05+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16474,13 +16189,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16589,21 +16297,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-10-27T05:07:08+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16618,13 +16311,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16672,22 +16358,6 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16702,13 +16372,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -16920,21 +16583,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16949,13 +16597,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -19394,21 +19035,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x387029440cb7e4068e3dd06bbcd9c6416be83031",
-        "to": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85e71d3da66a441b2097109be6952cbeb709df5bc509fa6c17e3f7646e0f0533",
-        "amount": "0.02682144",
-        "asset": "ETH",
-        "funded_at": "2026-08-03T23:23:01+08:00",
-        "deployed_at": "2026-10-27T04:13:30+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -19423,13 +19049,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -19477,21 +19096,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x387029440cb7e4068e3dd06bbcd9c6416be83031",
-        "to": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85e71d3da66a441b2097109be6952cbeb709df5bc509fa6c17e3f7646e0f0533",
-        "amount": "0.02682144",
-        "asset": "ETH",
-        "funded_at": "2026-08-03T23:23:01+08:00",
-        "deployed_at": "2026-10-27T04:13:30+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -19506,13 +19110,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c4b5bb3aee821ff68e3d31a9890c7410c75ac0b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -20368,22 +19965,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-27T02:16:05+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -20398,13 +19979,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -20959,22 +20533,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -20989,13 +20547,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -21122,21 +20673,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -21151,13 +20687,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -21503,21 +21032,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -21532,13 +21046,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -21702,21 +21209,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -21731,13 +21223,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -22023,21 +21508,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -22052,13 +21522,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -22106,22 +21569,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -22136,13 +21583,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -22536,21 +21976,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x93620a4a7d45a770ff2e801eb84b03a7630ae8b6",
-        "to": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x209570b182bb7ac0618a326642f82f75367040c60b25a00b22a666dd36e45b13",
-        "amount": "0.00062597",
-        "asset": "ETH",
-        "funded_at": "2026-10-26T21:13:15+08:00",
-        "deployed_at": "2026-10-26T21:37:40+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -22565,13 +21990,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5d22a7d5b203164bfa6479d72de9297cff19bf5",
       "ca_locked": false,
       "suspected_copycat": true,
