@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-10-27T05:13:55+08:00",
+  "generated_at": "2026-10-27T05:16:19+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 65,
-  "token_ca_count": 4,
+  "count": 64,
+  "token_ca_count": 3,
   "wallet_count": 28,
   "confirmed_count": 1,
-  "candidate_count": 13,
+  "candidate_count": 12,
   "status_counts": {
     "confirmed": 1,
-    "candidate": 13,
+    "candidate": 12,
     "superseded": 0,
     "not_ca": 51
   },
@@ -23,19 +23,24 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261025002639",
       "detected_at": "2026-10-27T05:04:58+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
       "kind": "contract",
+      "label_zh": "合约(非代币)",
       "addr_kind": "contract",
       "is_token": false,
-      "label_zh": "合约(非代币)",
       "verify": {
         "kind": "contract",
         "chain": "bsc",
@@ -81,19 +86,24 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261025002639",
       "detected_at": "2026-10-27T05:04:58+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
       "kind": "contract",
+      "label_zh": "合约(非代币)",
       "addr_kind": "contract",
       "is_token": false,
-      "label_zh": "合约(非代币)",
       "verify": {
         "kind": "contract",
         "chain": "bsc",
@@ -139,19 +149,24 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261025002639",
       "detected_at": "2026-10-27T05:04:58+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "【NFT合约·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as contract (8903 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "verify": {
         "kind": "nft",
         "chain": "bsc",
@@ -189,64 +204,6 @@
       "lead_seconds": null
     },
     {
-      "project": "Matthaus",
-      "handle": "matthausagent",
-      "chain": "solana",
-      "address": "7mZg3YN1yi4Fwvd2bCCaVhdUpwnkYnjqUmU7JxbLwpRn",
-      "source": "site:https://x.com/Matthausagent",
-      "evidence_url": "https://x.com/Matthausagent",
-      "detected_at": "2026-10-27T04:59:36+08:00",
-      "confidence": "high",
-      "note": "ca_gate: SPL mint verified (owner Tokenz…, dec=9)",
-      "sources": [
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/Matthausagent",
-          "detected_at": "2026-10-27T04:59:36+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "solana",
-        "decimals": 9,
-        "note": "SPL mint verified (owner Tokenz…, dec=9)"
-      },
-      "categories": [
-        "其他"
-      ],
-      "strategy": "其他",
-      "watch_promoted": false,
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": "2026-10-27T03:05:00+08:00",
-      "listing_time_estimate_source": "listing_times.json",
-      "listing_time_estimate_note_zh": "预告开盘时间（仅估计，不是链上首笔外部买入，不参与提前量计算）",
-      "first_buy_time": "2026-10-27T02:58:52+08:00",
-      "first_buy_in_creation_tx": false,
-      "first_external_buy_time": "2026-10-27T02:58:52+08:00",
-      "first_external_buy_tx": null,
-      "listing_time": "2026-10-27T02:58:52+08:00",
-      "listing_time_source": "first_external_buy_onchain",
-      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
-      "lead_seconds": null
-    },
-    {
       "project": "Fishesrh",
       "handle": "fishesrh",
       "chain": "robinhood",
@@ -255,18 +212,23 @@
       "evidence_url": "https://x.com/Fishesrh",
       "detected_at": "2026-10-27T04:59:36+08:00",
       "confidence": "high",
-      "note": "ca_gate: ERC20 verified: FISHESRH dec=18",
+      "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: FISHESRH dec=18",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/Fishesrh",
           "detected_at": "2026-10-27T04:59:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/Fishesrh",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
+      "label_zh": "合约CA",
       "addr_kind": "contract",
       "is_token": true,
-      "label_zh": "合约CA",
       "verify": {
         "kind": "token",
         "chain": "robinhood",
@@ -367,7 +329,7 @@
       "evidence_url": "https://tapefoundry.xyz/",
       "detected_at": "2026-10-27T04:58:44+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
@@ -383,13 +345,18 @@
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
           "detected_at": "2026-10-27T04:58:44+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "html:https://tapefoundry.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "verify": {
         "kind": "nft",
         "chain": "bsc",
@@ -437,7 +404,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-27T04:58:44+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC1155) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
@@ -453,13 +420,18 @@
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
           "detected_at": "2026-10-27T04:58:44+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "verify": {
         "kind": "nft",
         "chain": "bsc",
@@ -505,7 +477,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-27T04:58:44+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (3228 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
@@ -521,13 +493,18 @@
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
           "detected_at": "2026-10-27T04:58:44+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
       "kind": "contract",
+      "label_zh": "合约(非代币)",
       "addr_kind": "contract",
       "is_token": false,
-      "label_zh": "合约(非代币)",
       "verify": {
         "kind": "contract",
         "chain": "bsc",
@@ -571,7 +548,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-27T04:58:44+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
@@ -587,13 +564,18 @@
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
           "detected_at": "2026-10-27T04:58:44+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "verify": {
         "kind": "nft",
         "chain": "bsc",
@@ -639,7 +621,7 @@
       "evidence_url": "https://x.com/RealHappyBlock",
       "detected_at": "2026-10-27T04:58:37+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
@@ -655,6 +637,11 @@
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
           "detected_at": "2026-10-27T04:59:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "x_post:https://x.com/RealHappyBlock",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -711,18 +698,23 @@
       "evidence_url": "https://x.com/swornbyswarm",
       "detected_at": "2026-10-27T04:58:33+08:00",
       "confidence": "low",
-      "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "【NFT合约·非CA】 classified as contract (21015 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/swornbyswarm",
           "detected_at": "2026-10-27T04:58:33+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/swornbyswarm",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "note_zh": "NFT合约（非代币），不作为CA",
       "verify": {
         "kind": "nft",
@@ -767,7 +759,7 @@
       "evidence_url": "https://x.com/swaydotfamily",
       "detected_at": "2026-10-27T04:58:08+08:00",
       "confidence": "high",
-      "note": "ca_gate: ERC20 verified: SWAY dec=18",
+      "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: SWAY dec=18",
       "sources": [
         {
           "origin": "listing_scan_latest",
@@ -778,12 +770,17 @@
           "origin": "watchlist.ca",
           "source": "site:https://x.com/swaydotfamily",
           "detected_at": "2026-10-27T04:59:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "site:https://x.com/swaydotfamily",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
+      "label_zh": "合约CA",
       "addr_kind": "contract",
       "is_token": true,
-      "label_zh": "合约CA",
       "verify": {
         "kind": "token",
         "chain": "robinhood",
@@ -832,7 +829,7 @@
       "evidence_url": "https://x.com/LifeOneFun",
       "detected_at": "2026-10-26T16:16:13+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (1697 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -843,6 +840,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://lifeone.fun/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -891,7 +893,7 @@
       "evidence_url": "https://x.com/LifeOneFun",
       "detected_at": "2026-10-26T16:16:11+08:00",
       "confidence": "medium",
-      "note": "页面 HTML 中的地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "页面 HTML 中的地址; classified as contract (14369 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -902,6 +904,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://lifeone.fun/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -952,7 +959,7 @@
       "evidence_url": "https://x.com/LifeOneFun",
       "detected_at": "2026-10-26T16:16:11+08:00",
       "confidence": "medium",
-      "note": "页面 HTML 中的地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "页面 HTML 中的地址; classified as contract (8756 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -963,6 +970,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://lifeone.fun/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -1013,7 +1025,7 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-26T16:16:08+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1024,6 +1036,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1072,12 +1089,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:59+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:59+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1126,12 +1148,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:53+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:53+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1180,12 +1207,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:47+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:47+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1234,12 +1266,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:41+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:41+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1288,12 +1325,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:22+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:22+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1342,12 +1384,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:16+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:16+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1396,12 +1443,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:10+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:10+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1450,12 +1502,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:48:03+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:48:03+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1504,12 +1561,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:47:56+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:47:56+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1558,12 +1620,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T19:47:49+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T19:47:49+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1612,12 +1679,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T18:59:24+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T18:59:24+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1666,12 +1738,17 @@
       "evidence_url": "https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
       "detected_at": "2026-10-25T18:59:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
           "detected_at": "2026-10-25T18:59:20+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1720,7 +1797,7 @@
       "evidence_url": "https://1-2-300.tapeoutscan.io/",
       "detected_at": "2026-10-24T16:54:57+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1731,6 +1808,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://1-2-300.tapeoutscan.io/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1779,7 +1861,7 @@
       "evidence_url": "https://1-2-300.tapeoutscan.io/",
       "detected_at": "2026-10-24T16:54:50+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1790,6 +1872,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://1-2-300.tapeoutscan.io/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1838,7 +1925,7 @@
       "evidence_url": "https://x.com/hashgentic",
       "detected_at": "2026-10-23T22:59:11+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (9571 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1849,6 +1936,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/contracts",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/contracts",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -1907,7 +1999,7 @@
       "evidence_url": "https://x.com/hashgentic",
       "detected_at": "2026-10-23T22:59:10+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1918,6 +2010,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/contracts",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/contracts",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -1972,10 +2069,10 @@
       "chain": "bsc",
       "address": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
       "source": "config:https://hashgentic.work/api/config",
-      "evidence_url": "https://x.com/hashgentic",
+      "evidence_url": "https://bscscan.com/address/0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
       "detected_at": "2026-10-23T22:59:08+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; CREATE address for wallet nonce=1 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (4248 bytes); CREATE address for wallet nonce=1 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -1986,6 +2083,16 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
+        },
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -2469,7 +2576,7 @@
       "evidence_url": "https://x.com/hashgentic",
       "detected_at": "2026-10-23T22:59:08+08:00",
       "confidence": "medium",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (8756 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -2480,6 +2587,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -2529,10 +2641,10 @@
       "chain": "bsc",
       "address": "0x7d948882756270c20ce0983fb1ef58673984249d",
       "source": "config:https://hashgentic.work/api/config",
-      "evidence_url": "https://x.com/hashgentic",
+      "evidence_url": "https://bscscan.com/address/0x7d948882756270c20ce0983fb1ef58673984249d",
       "detected_at": "2026-10-23T22:59:07+08:00",
       "confidence": "medium",
-      "note": "代码/配置键或浏览器链接中的项目地址; CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (8218 bytes); CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -2543,6 +2655,16 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
+        },
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -3025,10 +3147,10 @@
       "chain": "bsc",
       "address": "0x35770ad303ec19c186789e413535ad96ca382f66",
       "source": "config:https://hashgentic.work/api/config",
-      "evidence_url": "https://x.com/hashgentic",
+      "evidence_url": "https://bscscan.com/address/0x35770ad303ec19c186789e413535ad96ca382f66",
       "detected_at": "2026-10-23T22:59:06+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; CREATE address for wallet nonce=6 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (5898 bytes); CREATE address for wallet nonce=6 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -3039,6 +3161,16 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
+        },
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -3519,10 +3651,10 @@
       "chain": "bsc",
       "address": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
       "source": "config:https://hashgentic.work/api/config",
-      "evidence_url": "https://x.com/hashgentic",
+      "evidence_url": "https://bscscan.com/address/0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
       "detected_at": "2026-10-23T22:59:06+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8578 bytes); CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -3533,6 +3665,16 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
+        },
+        {
+          "origin": "wallet_trace",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -4016,7 +4158,7 @@
       "evidence_url": "https://x.com/hashgentic",
       "detected_at": "2026-10-23T22:59:05+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4027,6 +4169,11 @@
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "config:https://hashgentic.work/api/config",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4077,12 +4224,17 @@
       "evidence_url": "https://circuitpay.cc/",
       "detected_at": "2026-10-23T01:21:19+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://circuitpay.cc/",
           "detected_at": "2026-10-23T01:21:19+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://circuitpay.cc/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4133,7 +4285,7 @@
       "evidence_url": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
       "detected_at": "2026-10-22T23:26:07+08:00",
       "confidence": "high",
-      "note": "官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; ca_gate: ERC20 verified: ETHRS dec=18",
+      "note": "官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as contract (6011 bytes); ca_gate: ERC20 verified: ETHRS dec=18",
       "sources": [
         {
           "origin": "x_official",
@@ -4161,6 +4313,11 @@
           "origin": "watchlist.ca",
           "source": "x_official:https://x.com/ETHERIISPROTOCO",
           "detected_at": "2026-10-27T04:59:36+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4230,7 +4387,7 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261022121627B",
       "detected_at": "2026-10-22T20:26:27+08:00",
       "confidence": "medium",
-      "note": "小型同站 JS 包中的地址赋值（中等置信）; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "小型同站 JS 包中的地址赋值（中等置信）; classified as contract (8903 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4241,6 +4398,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261022121627B",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -4293,7 +4455,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-CcvheEWL.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -4309,6 +4471,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4357,7 +4524,7 @@
       "evidence_url": "https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4368,6 +4535,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4418,7 +4590,7 @@
       "evidence_url": "https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
       "detected_at": "2026-10-22T09:05:20+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4429,6 +4601,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4479,7 +4656,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-CcvheEWL.js",
       "detected_at": "2026-10-22T09:05:12+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -4495,6 +4672,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4543,7 +4725,7 @@
       "evidence_url": "https://kilnpad.xyz/assets/index-CcvheEWL.js",
       "detected_at": "2026-10-22T09:05:04+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -4559,6 +4741,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4607,7 +4794,7 @@
       "evidence_url": "https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
       "detected_at": "2026-10-22T09:04:55+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -4633,6 +4820,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4690,7 +4882,7 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261021235752A",
       "detected_at": "2026-10-22T09:04:47+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4706,6 +4898,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4758,7 +4955,7 @@
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261021235752A",
       "detected_at": "2026-10-22T09:04:46+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4774,6 +4971,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4826,7 +5028,7 @@
       "evidence_url": "https://www.newspad.fun/assets/index-B6TUyJ-k.js",
       "detected_at": "2026-10-22T09:04:28+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (10455 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4837,6 +5039,11 @@
           "origin": "js_factory_events",
           "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
           "detected_at": "2026-10-24T03:48:03+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -4885,7 +5092,7 @@
       "evidence_url": "https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
       "detected_at": "2026-10-22T09:04:14+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -4906,6 +5113,11 @@
           "origin": "js_factory_events",
           "source": "js:https://0-0.city/_next/static/chunks/79ac5043d187a769.js",
           "detected_at": "2026-10-26T16:15:57+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -4961,7 +5173,7 @@
       "evidence_url": "https://tapefoundry.xyz/",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "medium",
-      "note": "NFT contract (ERC721) — not a token CA; 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "NFT contract (ERC721) — not a token CA; 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -4977,6 +5189,11 @@
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "html:https://tapefoundry.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -5031,7 +5248,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "medium",
-      "note": "NFT contract (ERC1155) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "note": "NFT contract (ERC1155) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC1155) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -5047,6 +5264,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -5099,7 +5321,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "low",
-      "note": "【合约(非代币)·非CA】 contract bytecode but no ERC20 decimals/symbol — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "note": "【合约(非代币)·非CA】 contract bytecode but no ERC20 decimals/symbol — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (3228 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -5115,6 +5337,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "contract",
@@ -5164,7 +5391,7 @@
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
       "detected_at": "2026-10-22T07:13:24+08:00",
       "confidence": "medium",
-      "note": "NFT contract (ERC721) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "NFT contract (ERC721) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -5180,6 +5407,11 @@
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261025002639",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
@@ -5289,12 +5521,17 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "detected_at": "2026-10-21T17:16:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-21T17:16:20+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -5359,6 +5596,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -5418,6 +5660,11 @@
           "origin": "js_factory_events",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-20T22:46:27+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -5482,6 +5729,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://elysiumnameservice.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "wallet",
@@ -5637,7 +5889,7 @@
       "evidence_url": "https://ink-daddy.com/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "代码/配置键或浏览器链接中的项目地址; ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (45 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -5653,6 +5905,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://ink-daddy.com/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "label_zh": "NFT合约",
@@ -5705,7 +5962,7 @@
       "evidence_url": "https://www.superboard.xyz/",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "js_factory_events",
@@ -5761,6 +6018,11 @@
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
           "detected_at": "2026-10-27T05:04:58+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://www.superboard.xyz/",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
@@ -5809,18 +6071,23 @@
       "evidence_url": "https://thetimecard.xyz",
       "detected_at": "2026-10-20T14:05:53+08:00",
       "confidence": "medium",
-      "note": "ca_gate: NFT contract (ERC721) — not a token CA",
+      "note": "classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_events",
           "source": "inline:https://thetimecard.xyz",
           "detected_at": "2026-10-20T14:05:53+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "inline:https://thetimecard.xyz",
+          "detected_at": "2026-10-27T05:13:48+08:00"
         }
       ],
       "kind": "nft",
+      "label_zh": "NFT合约",
       "addr_kind": "nft",
       "is_token": false,
-      "label_zh": "NFT合约",
       "note_zh": "核验：NFT 合约（项目铸造合约）",
       "verify": {
         "kind": "nft",
@@ -5859,7 +6126,7 @@
       "lead_seconds": null
     }
   ],
-  "launched_history_count": 143,
+  "launched_history_count": 142,
   "launched_history": [
     {
       "project": "【扫出钱包·非CA】Pitch",
@@ -5870,17 +6137,12 @@
       "evidence_url": "https://pump.fun/",
       "detected_at": "2026-10-27T05:09:42+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "inline:https://pump.fun/",
           "detected_at": "2026-10-27T05:09:42+08:00"
-        },
-        {
-          "origin": "wallet_trace.classify",
-          "source": "live_queue",
-          "detected_at": "2026-10-27T05:09:52+08:00"
         }
       ],
       "kind": "wallet",
@@ -5895,9 +6157,9 @@
         "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
@@ -5951,9 +6213,9 @@
         "note": "ERC20 verified: GUY dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6013,9 +6275,9 @@
         "proxy_type": "minimal_clone"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6069,9 +6331,9 @@
         "note": "ERC20 verified: ROBIN dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6129,9 +6391,9 @@
         "note": "ERC20 verified: BLUF dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6191,9 +6453,9 @@
         "proxy_type": "eip1967"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6251,9 +6513,9 @@
         "note": "ERC20 verified: PAPER dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6307,9 +6569,9 @@
         "note": "ERC20 verified: LOAN dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6367,9 +6629,9 @@
         "note": "ERC20 verified: SM dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6421,9 +6683,9 @@
         "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
@@ -6477,9 +6739,9 @@
         "note": "ERC20 verified: GMECHAIN dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6533,9 +6795,9 @@
         "note": "ERC20 verified: SHRUB dec=9"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6594,9 +6856,9 @@
         "note": "ERC20 verified: 果蝇 dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6657,9 +6919,9 @@
         "note": "ERC20 verified: BinanceTown dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6713,9 +6975,9 @@
         "note": "ERC20 verified: HIKIKOMORI dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6773,9 +7035,9 @@
         "note": "ERC20 verified: SCALPERS dec=9"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6833,9 +7095,9 @@
         "note": "ERC20 verified: 4Stock dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6889,9 +7151,9 @@
         "note": "ERC20 verified: Sue dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -6945,9 +7207,9 @@
         "note": "ERC20 verified: KEYV dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -7005,9 +7267,9 @@
         "note": "ERC20 verified: MAX dec=9"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -7061,9 +7323,9 @@
         "note": "ERC20 verified: BNC dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -7118,9 +7380,9 @@
         "note": "ERC20 verified: 果蝇 dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -7181,9 +7443,9 @@
         "note": "ERC20 verified: SI dec=18"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -7789,72 +8051,6 @@
       "listing_time_source": "first_external_buy_onchain",
       "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）；创建交易内另有开发者买入已排除；判定为启发式（买入来自未登记的合约池子）",
       "lead_seconds": -1009
-    },
-    {
-      "project": "Pitch",
-      "handle": "pitchonchain",
-      "chain": "base",
-      "address": "0xf9172fcbe5ea6e4a5d6813c919194e8591bb9957",
-      "source": "onchain_lock",
-      "evidence_url": "https://x.com/pitchonchain",
-      "detected_at": "2026-10-24T23:32:57+08:00",
-      "confidence": "medium",
-      "note": "onchain_lock medium via symbol:PITCH; deployer=0xf18117a591518379c75d64cacb8679fdfd3dbac2; token=PITCH / Pitch World Cup; ca_gate: ERC20 verified: PITCH dec=18",
-      "sources": [
-        {
-          "origin": "onchain_lock",
-          "source": "onchain_lock",
-          "detected_at": "2026-10-24T23:32:57+08:00",
-          "reason": "symbol:PITCH",
-          "via": "factory:univ4_pm_base:Initialize"
-        }
-      ],
-      "kind": "contract",
-      "label_zh": "合约CA",
-      "traced_from": "0xf18117a591518379c75d64cacb8679fdfd3dbac2",
-      "addr_kind": "contract",
-      "is_token": true,
-      "verify": {
-        "kind": "token",
-        "chain": "base",
-        "symbol": "PITCH",
-        "name": "Pitch World Cup",
-        "decimals": 18,
-        "code_bytes": 2964,
-        "note": "ERC20 verified: PITCH dec=18"
-      },
-      "categories": [
-        "Meme币"
-      ],
-      "strategy": "Meme币",
-      "watch_promoted": false,
-      "ca_status": "suspected_copycat",
-      "ca_status_zh": "疑似山寨",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [
-        "name_match"
-      ],
-      "creator": "0xf18117a591518379c75d64cacb8679fdfd3dbac2",
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": "2026-10-24T23:32:17+08:00",
-      "first_buy_in_creation_tx": false,
-      "first_buy_tx": "0xb98716374fca53e5ce72746a194b26bb734f4774078649466264507e5fd0dc91",
-      "first_external_buy_time": "2026-10-24T23:32:17+08:00",
-      "first_external_buy_tx": "0xb98716374fca53e5ce72746a194b26bb734f4774078649466264507e5fd0dc91",
-      "listing_time": "2026-10-24T23:32:17+08:00",
-      "listing_time_source": "first_external_buy_onchain",
-      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
-      "lead_seconds": null
     },
     {
       "project": "ptah",
@@ -12140,7 +12336,7 @@
       "chain": "base",
       "address": "0x146faac4bd781d62e4d25f93c3f831782fd73995",
       "source": "onchain_lock",
-      "evidence_url": "https://x.com/pitchonchain",
+      "evidence_url": null,
       "detected_at": "2026-10-22T03:51:05+08:00",
       "confidence": "low",
       "note": "onchain_lock low via name_fuzzy:pitch; deployer=0xf1a700000087c011413c21c9b357a6962aa256f9; token=MILLION / Million Dollar Pitch Competition; ca_gate: ERC20 verified: MILLION dec=18 via minimal_clone proxy → impl 0xf1eeeeeeecd95e9eb2df58484ceed175acbd945c",
@@ -12170,9 +12366,9 @@
         "proxy_type": "minimal_clone"
       },
       "categories": [
-        "Meme币"
+        "其他"
       ],
-      "strategy": "Meme币",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
@@ -14689,7 +14885,7 @@
       "lead_seconds": null
     }
   ],
-  "suspected_copycat_count": 123,
+  "suspected_copycat_count": 124,
   "suspected_copycats": [
     {
       "project": "【疑似山寨·同名未确认】ONE LIFE",
@@ -14895,6 +15091,21 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x5523d3c98809dddb82c686e152f5c58b1b0fb59e",
+        "to": "0x02f4a6d26445b773a90a180b8e46fb8d305130b5",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0xe6a740c263353b945d1b8f6cf47d58dbca5d03e68f24c07642c9e341be61bfd8",
+        "amount": "0.50130325",
+        "asset": "ETH",
+        "funded_at": "2024-07-17T10:07:05+08:00",
+        "deployed_at": "2026-10-27T04:23:01+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -14909,6 +15120,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x02f4a6d26445b773a90a180b8e46fb8d305130b5",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -17129,6 +17347,65 @@
         "name_match"
       ],
       "creator": "0x34715bc89c785803e0ada28f9209a42416d08ef7",
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator_watched": false
+    },
+    {
+      "project": "【疑似山寨·同名未确认】Pitch",
+      "handle": null,
+      "chain": "base",
+      "address": "0xf9172fcbe5ea6e4a5d6813c919194e8591bb9957",
+      "source": "onchain_lock",
+      "evidence_url": null,
+      "detected_at": "2026-10-24T23:32:57+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:PITCH; deployer=0xf18117a591518379c75d64cacb8679fdfd3dbac2; token=PITCH / Pitch World Cup; ca_gate: ERC20 verified: PITCH dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-24T23:32:57+08:00",
+          "reason": "symbol:PITCH",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xf18117a591518379c75d64cacb8679fdfd3dbac2",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "PITCH",
+        "name": "Pitch World Cup",
+        "decimals": 18,
+        "code_bytes": 2964,
+        "note": "ERC20 verified: PITCH dec=18"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": false,
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "creator": "0xf18117a591518379c75d64cacb8679fdfd3dbac2",
       "ca_locked": false,
       "suspected_copycat": true,
       "official": false,
@@ -22639,9 +22916,9 @@
   ],
   "strategy_stats": {
     "其他": {
-      "projects": 5,
+      "projects": 4,
       "confirmed": 0,
-      "candidate": 1
+      "candidate": 0
     },
     "GameFi": {
       "projects": 4,
