@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T05:26:44+08:00",
+  "generated_at": "2026-10-27T05:27:23+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 64,
@@ -16490,6 +16490,21 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x00cb86397bb18dea2c3769b5e968ca9af0910469",
+        "to": "0x8c2ea65ee3922a66d8efbe0afc3a7e5a75c15cc7",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0xb740a8c642f7421e9bae9644699f2c428718190f28931ba41fb8e9b3cfd003db",
+        "amount": "0.2",
+        "asset": "ETH",
+        "funded_at": "2026-02-05T06:06:07+08:00",
+        "deployed_at": "2026-10-26T21:25:36+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -16504,6 +16519,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8c2ea65ee3922a66d8efbe0afc3a7e5a75c15cc7",
       "ca_locked": false,
       "suspected_copycat": true,
