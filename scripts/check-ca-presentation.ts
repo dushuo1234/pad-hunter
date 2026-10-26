@@ -47,12 +47,12 @@ const badges = caSourceBadges(
 if (badges.map((badge) => badge.label).join(',') !== '链上工厂,官推X') fail(`badges ${badges.map((badge) => badge.label).join(',')}`)
 if (badges[1]?.href !== 'https://x.com/TapeRobot_bsc') fail(`x href ${badges[1]?.href}`)
 
-const live = parseCaFinds(JSON.parse(readFileSync(new URL('../public/data/ca_finds.json', import.meta.url), 'utf8')))
-const launched = JSON.parse(readFileSync(new URL('../public/data/launched.json', import.meta.url), 'utf8')) as {
+const live = parseCaFinds(JSON.parse(readFileSync(new URL('./fixtures/ca_presentation/ca_finds.json', import.meta.url), 'utf8')))
+const launched = JSON.parse(readFileSync(new URL('./fixtures/ca_presentation/launched.json', import.meta.url), 'utf8')) as {
   items?: { handle?: string; project?: string; ca?: string | null }[]
 }
 const index = indexLaunchedProjects(launched.items ?? [])
-const rawHistory = JSON.parse(readFileSync(new URL('../public/data/ca_finds.json', import.meta.url), 'utf8')) as {
+const rawHistory = JSON.parse(readFileSync(new URL('./fixtures/ca_presentation/ca_finds.json', import.meta.url), 'utf8')) as {
   launched_history?: unknown[]
 }
 

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { alertableFinds, parseCaFinds } from '../src/utils/caFinds.ts'
 
-const live = parseCaFinds(JSON.parse(readFileSync(new URL('../public/data/ca_finds.json', import.meta.url), 'utf8')))
+const live = parseCaFinds(JSON.parse(readFileSync(new URL('./fixtures/ca_status/ca_finds.json', import.meta.url), 'utf8')))
 const alerts = alertableFinds(live.finds)
 
 function fail(message: string): never {

@@ -39,7 +39,14 @@ jobs:
           git fetch origin gh-pages
           mkdir -p /tmp/gh-pages-data
           git archive origin/gh-pages data | tar -x -C /tmp/gh-pages-data
-          changed=$(git diff --name-only HEAD^1 HEAD)
+          # Diff the whole push, not just its last commit, so data changed by an
+          # earlier commit in the same push is published too.
+          before="${{ github.event.before }}"
+          if [ -n "$before" ] && git cat-file -e "$before^{commit}" 2>/dev/null; then
+            changed=$(git diff --name-only "$before" HEAD)
+          else
+            changed=$(git diff --name-only HEAD^1 HEAD)
+          fi
           for path in dist/data/*; do
             [ -f "$path" ] || continue
             base=$(basename "$path")
