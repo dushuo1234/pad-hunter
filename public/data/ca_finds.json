@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T05:32:29+08:00",
+  "generated_at": "2026-10-27T05:33:08+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 64,
@@ -14889,8 +14889,92 @@
       "lead_seconds": null
     }
   ],
-  "suspected_copycat_count": 126,
+  "suspected_copycat_count": 127,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Trench",
+      "handle": "trench_agents",
+      "chain": "base",
+      "address": "0xcc140df42a0a4678c58894196a5c2adc9102eba3",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/trench_agents",
+      "detected_at": "2026-10-27T05:32:24+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:trench; deployer=0x2d3faeac23567d32b249b2325689f6f76dda4a28; token=Trenchors / 8453 Trenchors; ca_gate: ERC20 verified: Trenchors dec=18 via minimal_clone proxy → impl 0xdb7b520bb5c3a2c5d4871198081911359f93be87",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-10-27T05:32:24+08:00",
+          "reason": "name_fuzzy:trench",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "Trenchors",
+        "name": "8453 Trenchors",
+        "decimals": 18,
+        "code_bytes": 44,
+        "note": "ERC20 verified: Trenchors dec=18 via minimal_clone proxy → impl 0xdb7b520bb5c3a2c5d4871198081911359f93be87",
+        "implementation": "0xdb7b520bb5c3a2c5d4871198081911359f93be87",
+        "proxy_type": "minimal_clone"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "funding_link": {
+        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
+        "to": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
+        "amount": "",
+        "asset": "ETH",
+        "funded_at": "2025-06-11T23:55:01+08:00",
+        "deployed_at": "2026-10-27T05:32:24+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
+        "inferred": true
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
+      "creator": "0x2d3faeac23567d32b249b2325689f6f76dda4a28",
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Trench",
       "handle": "trench_agents",
@@ -16253,7 +16337,7 @@
         "amount": "",
         "asset": "ETH",
         "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
+        "deployed_at": "2026-10-27T05:32:24+08:00",
         "confidence": "low",
         "excluded_reason": "",
         "chain": "base",
@@ -16832,7 +16916,7 @@
         "amount": "",
         "asset": "ETH",
         "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
+        "deployed_at": "2026-10-27T05:32:24+08:00",
         "confidence": "low",
         "excluded_reason": "",
         "chain": "base",
@@ -21891,7 +21975,7 @@
         "amount": "",
         "asset": "ETH",
         "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
+        "deployed_at": "2026-10-27T05:32:24+08:00",
         "confidence": "low",
         "excluded_reason": "",
         "chain": "base",
@@ -23106,7 +23190,7 @@
         "amount": "",
         "asset": "ETH",
         "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-26T21:42:52+08:00",
+        "deployed_at": "2026-10-27T05:32:24+08:00",
         "confidence": "low",
         "excluded_reason": "",
         "chain": "base",
