@@ -36,6 +36,7 @@ import {
   formatMs,
   hostLabel,
   introFor,
+  projectContact,
   projectLaunch,
   rowLaunched,
   siteBadge,
@@ -76,7 +77,6 @@ function BoardColumns() {
       <col className="wb-board-col-check" />
       <col className="wb-board-col-name" />
       <col className="wb-board-col-date" />
-      <col className="wb-board-col-url" />
       <col className="wb-board-col-x" />
       <col className="wb-board-col-launch" />
       <col className="wb-board-col-site" />
@@ -225,9 +225,12 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
   const pinnedKeys = new Set<string>()
   const launchedKeys = new Set<string>()
+  const contactsByHandle = new Map<string, ReturnType<typeof projectContact>>()
   for (const item of items) {
     const key = handleKey(item.handle)
     if (!key) continue
+    const candidate = candidateFor(item, candidates)
+    contactsByHandle.set(key, projectContact(item, candidate, live.statusByHandle.get(key)))
     if (isLaunchedHandle(launchedHandles, item.handle) || rowLaunched(live.launched, item)) launchedKeys.add(key)
     else pinnedKeys.add(key)
   }
@@ -288,6 +291,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         readIds={alertFeed.readIds}
         pinned={pinnedKeys}
         launched={launchedKeys}
+        contacts={contactsByHandle}
       />
 
       {!live.token && (
@@ -588,7 +592,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                 </th>
                 <th scope="col" className="px-2 py-2 font-medium">名称</th>
                 <th scope="col" className="px-2 py-2 font-medium">推送日期</th>
-                <th scope="col" className="px-2 py-2 font-medium">URL</th>
                 <th scope="col" className="px-2 py-2 font-medium">推特</th>
                 <th scope="col" className="px-2 py-2 font-medium">项目上线</th>
                 <th scope="col" className="px-2 py-2 font-medium">站点状态</th>
@@ -603,7 +606,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
             {visible.length === 0 && (
               <tbody>
                 <tr>
-                  <td colSpan={13} className="px-4 py-8 text-center text-sm text-[var(--color-ink-muted)]">
+                  <td colSpan={12} className="px-4 py-8 text-center text-sm text-[var(--color-ink-muted)]">
                     没有匹配的目标
                   </td>
                 </tr>
@@ -726,17 +729,8 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                         />
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-2 py-3">
+                    <td className="overflow-hidden px-2 py-3">
                       <PushDate records={[candidate]} variant="value" />
-                    </td>
-                    <td className="max-w-[180px] px-2 py-3">
-                      {url ? (
-                        <a href={url} target="_blank" rel="noreferrer" title={url} className="block truncate font-mono text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-orange)] dark:text-[var(--color-night-soft)]">
-                          {hostLabel(url)}
-                        </a>
-                      ) : (
-                        <span className="text-xs text-[var(--color-ink-muted)]">—</span>
-                      )}
                     </td>
                     <td className="px-2 py-3">
                       {item.handle ? (
@@ -828,6 +822,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
                       readIds={alertFeed.readIds}
                       name={item.name}
                       handle={item.handle}
+                      contacts={contactsByHandle}
                     />
                   )}
                   </div>

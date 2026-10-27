@@ -5,8 +5,10 @@ import {
   consoleLines,
   flashingAlertIds,
   type ConsoleLine,
+  type ProjectContact,
   type WorkbenchAlert,
 } from '../utils/workbenchAlerts'
+import { hostLabel } from '../utils/workbenchView'
 
 /**
  * Command-line alert log.
@@ -20,6 +22,7 @@ export function WorkbenchAlertConsole({
   launched,
   name,
   handle,
+  contacts,
 }: {
   alerts: readonly WorkbenchAlert[]
   readIds: ReadonlySet<string>
@@ -27,13 +30,15 @@ export function WorkbenchAlertConsole({
   launched?: ReadonlySet<string>
   name?: string
   handle?: string
+  /** Official site and X for each project, keyed by lowercased handle. */
+  contacts?: ReadonlyMap<string, ProjectContact>
 }) {
   const project = Boolean(handle)
   const visible = useMemo(
     () => (project ? { handle } : { pinned, launched }),
     [project, handle, pinned, launched],
   )
-  const lines = consoleLines(alerts, readIds, visible)
+  const lines = consoleLines(alerts, readIds, visible, contacts)
   const flashingIds = flashingAlertIds(alerts, readIds, visible)
   const flashing = flashingIds.length > 0
   const title = (name ?? '').trim() || handle || ''
@@ -152,6 +157,30 @@ function ConsoleLineBody({
         >
           {copied === line.copyAddress ? ALERT_UI.copied : ALERT_UI.copy}
         </button>
+      )}
+      {line.siteUrl && (
+        <a
+          href={line.siteUrl}
+          target="_blank"
+          rel="noreferrer"
+          title={line.siteUrl}
+          onClick={(event) => event.stopPropagation()}
+          className="wb-console-link"
+        >
+          {ALERT_UI.site} {hostLabel(line.siteUrl)}
+        </a>
+      )}
+      {line.xUrl && (
+        <a
+          href={line.xUrl}
+          target="_blank"
+          rel="noreferrer"
+          title={line.xUrl}
+          onClick={(event) => event.stopPropagation()}
+          className="wb-console-link"
+        >
+          {line.xLabel ? `${ALERT_UI.x} ${line.xLabel}` : ALERT_UI.x}
+        </a>
       )}
       {line.evidenceUrl && (
         <a

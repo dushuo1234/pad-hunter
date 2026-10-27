@@ -29,6 +29,8 @@ export const ALERT_UI = {
   consoleReady: '就绪',
   consoleStop: '点击停止闪烁',
   consoleCount: '条新提醒',
+  site: '官网',
+  x: 'X',
   fortune: '要发财啦',
   confirmed: '已确认CA',
   pending: '待核验',
@@ -548,6 +550,13 @@ export function loadStoredWorkbenchAlerts(raw: string | null): StoredWorkbenchAl
   }
 }
 
+/** Official site and X for the project an alert belongs to. Empty strings when unknown. */
+export interface ProjectContact {
+  siteUrl: string
+  xUrl: string
+  xLabel: string
+}
+
 export interface ConsoleLine {
   id: string
   handle: string
@@ -564,6 +573,12 @@ export interface ConsoleLine {
   quote: string
   /** Full address when this line is a confirmed CA the user can copy. */
   copyAddress: string
+  /** Project official site. Empty when that project has no site. */
+  siteUrl: string
+  /** Project X / Twitter profile. Empty when that project has no X link. */
+  xUrl: string
+  /** @handle when known. Display-only; the link is `xUrl`. */
+  xLabel: string
 }
 
 function consoleParts(alert: WorkbenchAlert): Pick<ConsoleLine, 'mark' | 'label' | 'text' | 'tone'> {
@@ -636,10 +651,20 @@ export function flashingReminderCount(
  * Command-line log. Newest unread lines stay at the top so a new blink is in view.
  * Quiet history follows, capped so the panel stays a window.
  */
+function contactFor(handle: string, contacts?: ReadonlyMap<string, ProjectContact>): Pick<ConsoleLine, 'siteUrl' | 'xUrl' | 'xLabel'> {
+  const found = contacts?.get(handleKey(handle))
+  return {
+    siteUrl: safeHttpUrl(found?.siteUrl ?? ''),
+    xUrl: safeHttpUrl(found?.xUrl ?? ''),
+    xLabel: (found?.xLabel ?? '').trim().slice(0, 80),
+  }
+}
+
 export function consoleLines(
   alerts: readonly WorkbenchAlert[],
   readIds: ReadonlySet<string>,
   visible?: { pinned?: ReadonlySet<string>; launched?: ReadonlySet<string>; handle?: string },
+  contacts?: ReadonlyMap<string, ProjectContact>,
 ): ConsoleLine[] {
   const ranked = alerts.map((alert, index) => ({ alert, index })).filter(({ alert }) => passesVisibility(alert, visible))
   ranked.sort((a, b) => {
@@ -662,6 +687,7 @@ export function consoleLines(
       evidenceUrl: alert.evidence_url,
       quote: alert.quote.trim(),
       copyAddress: isConfirmedCa(alert) && alert.address.trim() ? alert.address.trim() : '',
+      ...contactFor(alert.handle, contacts),
     }
     if (line.flash) flashing.push(line)
     else quiet.push(line)
@@ -670,7 +696,20 @@ export function consoleLines(
 }
 
 export function consoleVisibleText(lines: readonly ConsoleLine[]): string {
-  return lines.map((line) => [line.stamp, line.mark, line.label, line.text].filter(Boolean).join(' ')).join('\n')
+  return lines
+    .map((line) =>
+      [
+        line.stamp,
+        line.mark,
+        line.label,
+        line.text,
+        line.siteUrl ? `${ALERT_UI.site} ${line.siteUrl}` : '',
+        line.xUrl ? (line.xLabel ? `${ALERT_UI.x} ${line.xLabel}` : ALERT_UI.x) : '',
+      ]
+        .filter(Boolean)
+        .join(' '),
+    )
+    .join('\n')
 }
 
 /** Border color for a row. A blinking line wins over a quiet one, and 即将开始 wins over the other tones. */
