@@ -2,8 +2,9 @@ import type { Candidate } from '../types'
 import { findByHandle } from './candidates'
 import { launchTimeText, listingSourceLabel as launchSourceLabel, structuredLaunch } from './launch'
 import { isAlreadyOpened } from './opening'
+import type { ProjectContact } from './workbenchAlerts'
 import type { LaunchedIndex, WorkbenchStatusItem } from './workbenchApi'
-import { isLaunched, sitesForPin } from './workbenchApi'
+import { isLaunched, sitesForPin, xUrlForPin } from './workbenchApi'
 import { safeHttpUrl, type WorkbenchItem } from './workbench'
 
 export type PillTone = 'ok' | 'bad' | 'warn' | 'muted'
@@ -248,6 +249,20 @@ export function siteBadge(status: WorkbenchStatusItem | undefined, checking: boo
 export function displayUrl(item: WorkbenchItem, candidate: Candidate | undefined, status: WorkbenchStatusItem | undefined): string {
   if (status?.url) return status.url
   return sitesForPin(item, candidate)[0] ?? ''
+}
+
+/** Site and X a workbench row already knows, so an alert can link the same project. */
+export function projectContact(
+  item: WorkbenchItem,
+  candidate: Candidate | undefined,
+  status: WorkbenchStatusItem | undefined,
+): ProjectContact {
+  const handle = item.handle.replace(/^@/, '').trim()
+  return {
+    siteUrl: displayUrl(item, candidate, status),
+    xUrl: safeHttpUrl(item.xUrl) || xUrlForPin(item, candidate),
+    xLabel: handle ? `@${handle}` : '',
+  }
 }
 
 export function urlProtocol(url: string): string {

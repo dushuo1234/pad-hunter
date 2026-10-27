@@ -246,6 +246,30 @@ const perProject = consoleLines([soon, nftAlert], noneRead, {
   handle: '@CaravanRH',
 })
 if (perProject.length !== 1 || perProject[0]?.id !== soon.id) fail('a project console must only list that project')
+if (perProject[0]?.siteUrl || perProject[0]?.xUrl) fail('a console line without a project contact has no site or X')
+const contacts = new Map([
+  ['caravanrh', { siteUrl: 'https://caravan.example/', xUrl: 'https://x.com/CaravanRH', xLabel: '@CaravanRH' }],
+  ['siteonly', { siteUrl: 'https://site.example/play', xUrl: '', xLabel: '' }],
+  ['xonly', { siteUrl: '', xUrl: 'https://x.com/XOnly', xLabel: '@XOnly' }],
+])
+const linked = consoleLines([soon], noneRead, undefined, contacts)
+if (linked[0]?.siteUrl !== 'https://caravan.example/' || linked[0]?.xUrl !== 'https://x.com/CaravanRH' || linked[0]?.xLabel !== '@CaravanRH') {
+  fail('each console line keeps that project site and X')
+}
+const linkedText = consoleVisibleText(linked)
+if (!linkedText.includes('官网 https://caravan.example/') || !linkedText.includes('X @CaravanRH')) {
+  fail(`console text must show site and X, got ${linkedText}`)
+}
+const siteOnlyAlert = { ...soon, id: 'aaaaaaaaaaaaaaa9', handle: 'SiteOnly' }
+const xOnlyAlert = { ...soon, id: 'aaaaaaaaaaaaaa10', handle: 'XOnly', evidence_url: '' }
+const siteOnlyLine = consoleLines([siteOnlyAlert], noneRead, undefined, contacts)[0]
+const xOnlyLine = consoleLines([xOnlyAlert], noneRead, undefined, contacts)[0]
+if (!siteOnlyLine?.siteUrl || siteOnlyLine.xUrl) fail('a project with only a site still shows that site')
+if (xOnlyLine?.siteUrl || xOnlyLine?.xUrl !== 'https://x.com/XOnly' || xOnlyLine.xLabel !== '@XOnly') {
+  fail('a project with only X still shows that X link')
+}
+const junk = consoleLines([soon], noneRead, undefined, new Map([['caravanrh', { siteUrl: 'javascript:alert(1)', xUrl: 'not a url', xLabel: '@CaravanRH' }]]))
+if (junk[0]?.siteUrl || junk[0]?.xUrl) fail('console drops a contact that is not http(s)')
 const readConsole = consoleLines([soon, confirmed], new Set([soon.id]))
 if (readConsole[0]?.id !== confirmed.id || readConsole[0]?.flash !== true || readConsole[1]?.flash !== false) {
   fail('unread lines lead the console')
@@ -295,6 +319,9 @@ if (!css.includes('prefers-reduced-motion') || !css.includes('wb-row-flash') || 
 const consoleSource = readFileSync(new URL('../src/components/WorkbenchAlertConsole.tsx', import.meta.url), 'utf8')
 if (!consoleSource.includes('markWorkbenchAlertIdsRead') || !consoleSource.includes('工作台:~$')) fail('shared console must ack every flashing id')
 if (!consoleSource.includes('handle')) fail('per-project console missing')
+if (!consoleSource.includes('line.siteUrl') || !consoleSource.includes('line.xUrl') || !consoleSource.includes('ALERT_UI.site')) {
+  fail('each console line must link the project site and X')
+}
 const reminderSource = readFileSync(new URL('../src/components/WorkbenchReminders.tsx', import.meta.url), 'utf8')
 if (!reminderSource.includes('bg-emerald-600') || !reminderSource.includes('bg-orange-600') || !reminderSource.includes('bg-sky-600') || !reminderSource.includes('bg-amber-400')) {
   fail('solid reminder pills')
@@ -313,8 +340,14 @@ if (pageSource.includes('<WorkbenchReminders') || pageSource.includes('wb-row-fl
 if (!pageSource.includes('简介') || !pageSource.includes('官网') || !pageSource.includes('X ')) {
   fail('project row keeps 简介, 官网, and X outside the console')
 }
+if (pageSource.includes('wb-board-col-url') || pageSource.includes('>URL</th>')) {
+  fail('the site column next to 推送日期 must stay gone')
+}
 if (!pageSource.includes('pinned={pinnedKeys}') || !pageSource.includes('handle={item.handle}')) {
   fail('shared console and per-project console must both be wired')
+}
+if (pageSource.split('contacts={contactsByHandle}').length - 1 < 2) {
+  fail('shared console and per-project console must both receive site and X')
 }
 if (pageSource.includes('wb-console-span') || pageSource.includes('100cqw') || css.includes('100cqw') || css.includes('container-type')) {
   fail('console width must not depend on container query units')
@@ -323,6 +356,9 @@ if (!pageSource.includes('wb-project') || !pageSource.includes('wb-h-scroll')) f
 const projectChunk = pageSource.slice(Math.max(0, projectAt - 180), projectAt)
 if (/<td[\s>]/.test(projectChunk) || projectChunk.includes('colSpan')) fail('project console is still inside the scrolling table')
 if (!css.includes('width: 100%') || !css.includes('.wb-console')) fail('consoles must fill the content column')
+if (!css.includes('.wb-board-col-date { width: 16%; }') || css.includes('wb-board-col-url')) {
+  fail('推送日期 keeps the width the removed site column used to take')
+}
 const headerSource = readFileSync(new URL('../src/components/Header.tsx', import.meta.url), 'utf8')
 if (!headerSource.includes('条未读提醒')) fail('nav unread count')
 

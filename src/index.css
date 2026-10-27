@@ -200,8 +200,7 @@ td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
 }
 .wb-board-col-check { width: 3%; }
 .wb-board-col-name { width: 22%; }
-.wb-board-col-date { width: 7%; }
-.wb-board-col-url { width: 9%; }
+.wb-board-col-date { width: 16%; }
 .wb-board-col-x { width: 8%; }
 .wb-board-col-launch { width: 6%; }
 .wb-board-col-site { width: 6%; }
@@ -290,6 +289,8 @@ td.wb-row-accent[data-alert-tone="muted"] { box-shadow: inset 5px 0 0 #a3a3a3; }
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 }
 .wb-console-quiet,
 .wb-console-prompt {
