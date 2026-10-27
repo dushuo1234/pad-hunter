@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T18:01:26+08:00",
+  "generated_at": "2026-10-27T18:59:24+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 64,
@@ -17,28 +17,28 @@
     {
       "project": "【扫出钱包·非CA】HappyBlock",
       "handle": "RealHappyBlock",
-      "chain": "ethereum",
+      "chain": "bsc",
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post:https://x.com/RealHappyBlock",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-27T17:50:57+08:00",
+      "detected_at": "2026-10-27T18:47:15+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-27T17:50:57+08:00"
+          "detected_at": "2026-10-27T18:47:15+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-27T17:50:57+08:00"
+          "detected_at": "2026-10-27T18:47:15+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -47,7 +47,7 @@
       "is_token": false,
       "verify": {
         "kind": "wallet",
-        "chain": "ethereum",
+        "chain": "bsc",
         "code_bytes": 0,
         "note": "eth_getCode empty / 7702 → EOA wallet"
       },
@@ -85,19 +85,19 @@
       "address": "0x098e9efbf4d65cbfc27130c1bf8a09b007659dbf",
       "source": "site:https://x.com/Fishesrh",
       "evidence_url": "https://x.com/Fishesrh",
-      "detected_at": "2026-10-27T17:50:57+08:00",
+      "detected_at": "2026-10-27T18:47:15+08:00",
       "confidence": "high",
       "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: FISHESRH dec=18",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/Fishesrh",
-          "detected_at": "2026-10-27T17:50:57+08:00"
+          "detected_at": "2026-10-27T18:47:15+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/Fishesrh",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -152,14 +152,14 @@
       "address": "merKB1YufDS1RrQXsbFsDoT9es12jgV1ZGn6hkYwVfQ",
       "source": "site:https://x.com/merchsdotfun",
       "evidence_url": "https://x.com/merchsdotfun",
-      "detected_at": "2026-10-27T17:50:46+08:00",
+      "detected_at": "2026-10-27T18:47:02+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 ; ca_gate: owned by TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA (not token program)",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/merchsdotfun",
-          "detected_at": "2026-10-27T17:50:46+08:00"
+          "detected_at": "2026-10-27T18:47:02+08:00"
         }
       ],
       "kind": "contract",
@@ -204,19 +204,19 @@
       "address": "0x0da2679000Ea5380d1361cc3Cca7D4e8c881F766",
       "source": "site:https://x.com/swornbyswarm",
       "evidence_url": "https://x.com/swornbyswarm",
-      "detected_at": "2026-10-27T17:49:45+08:00",
+      "detected_at": "2026-10-27T18:46:05+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 classified as contract (21015 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/swornbyswarm",
-          "detected_at": "2026-10-27T17:49:45+08:00"
+          "detected_at": "2026-10-27T18:46:05+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/swornbyswarm",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -265,24 +265,24 @@
       "address": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
       "source": "site:https://x.com/swaydotfamily",
       "evidence_url": "https://x.com/swaydotfamily",
-      "detected_at": "2026-10-27T17:49:20+08:00",
+      "detected_at": "2026-10-27T18:45:42+08:00",
       "confidence": "high",
       "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: SWAY dec=18",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/swaydotfamily",
-          "detected_at": "2026-10-27T17:49:20+08:00"
+          "detected_at": "2026-10-27T18:45:42+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/swaydotfamily",
-          "detected_at": "2026-10-27T17:50:57+08:00"
+          "detected_at": "2026-10-27T18:47:15+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "site:https://x.com/swaydotfamily",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -335,29 +335,29 @@
       "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
       "source": "html:https://tapefoundry.xyz/",
       "evidence_url": "https://tapefoundry.xyz/",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
@@ -410,29 +410,29 @@
       "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
       "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC1155) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
@@ -483,29 +483,29 @@
       "address": "0xb69215ce68792eca5672b49196868369555ea181",
       "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (3228 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
@@ -554,29 +554,29 @@
       "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
       "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:49:57+08:00"
+          "detected_at": "2026-10-27T18:46:17+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
@@ -627,19 +627,19 @@
       "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
       "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
@@ -690,19 +690,19 @@
       "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
       "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
@@ -753,19 +753,19 @@
       "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
       "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
       "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261027091333",
-      "detected_at": "2026-10-27T17:43:56+08:00",
+      "detected_at": "2026-10-27T18:41:28+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as contract (8903 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "NFT合约（非代币），不作为CA",
@@ -828,12 +828,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -892,12 +892,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -958,12 +958,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://lifeone.fun/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -1024,12 +1024,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1088,7 +1088,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1147,7 +1147,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1206,7 +1206,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1265,7 +1265,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1324,7 +1324,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1383,7 +1383,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1442,7 +1442,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1501,7 +1501,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1560,7 +1560,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1619,7 +1619,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1678,7 +1678,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1737,7 +1737,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://sepolia.squeekchain.com/assets/index-Chmh57Ju.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1796,12 +1796,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1860,12 +1860,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://1-2-300.tapeoutscan.io/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -1924,12 +1924,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/contracts",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/contracts",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -1998,12 +1998,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/contracts",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/contracts",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -2071,17 +2071,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -2627,6 +2627,12 @@
           "origin": "wallet_trace_events",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
           "detected_at": "2026-10-27T17:51:01+08:00",
+          "via": "create_derive"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T18:48:26+08:00",
           "via": "create_derive"
         }
       ],
@@ -2710,12 +2716,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -2778,17 +2784,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -3334,6 +3340,12 @@
           "origin": "wallet_trace_events",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
           "detected_at": "2026-10-27T17:51:01+08:00",
+          "via": "create_derive"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T18:48:26+08:00",
           "via": "create_derive"
         }
       ],
@@ -3419,17 +3431,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -3975,6 +3987,12 @@
           "origin": "wallet_trace_events",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
           "detected_at": "2026-10-27T17:51:01+08:00",
+          "via": "create_derive"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T18:48:26+08:00",
           "via": "create_derive"
         }
       ],
@@ -4058,17 +4076,17 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace",
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         },
         {
           "origin": "wallet_trace_events",
@@ -4615,6 +4633,12 @@
           "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
           "detected_at": "2026-10-27T17:51:01+08:00",
           "via": "create_derive"
+        },
+        {
+          "origin": "wallet_trace_events",
+          "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "detected_at": "2026-10-27T18:48:26+08:00",
+          "via": "create_derive"
         }
       ],
       "kind": "contract",
@@ -4697,12 +4721,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "config:https://hashgentic.work/api/config",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -4763,7 +4787,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://circuitpay.cc/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -4831,22 +4855,22 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-27T17:49:54+08:00"
+          "detected_at": "2026-10-27T18:46:13+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_official:https://x.com/ETHERIISPROTOCO",
-          "detected_at": "2026-10-27T17:50:57+08:00"
+          "detected_at": "2026-10-27T18:47:15+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -4926,12 +4950,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261022121627B",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -4999,12 +5023,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -5068,12 +5092,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5139,12 +5163,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5210,12 +5234,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -5279,12 +5303,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://kilnpad.xyz/assets/index-iJO0fWFg.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -5358,12 +5382,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -5436,12 +5460,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5509,12 +5533,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5582,7 +5606,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5656,7 +5680,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -5727,12 +5751,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "html:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -5802,12 +5826,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -5875,12 +5899,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "contract",
@@ -5945,12 +5969,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
-          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027083930",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261027091333",
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -6013,7 +6037,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://colorapp.com/assets/color/live.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         }
       ],
       "kind": "invalid",
@@ -6070,7 +6094,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -6134,12 +6158,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -6203,7 +6227,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -6267,12 +6291,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://elysiumnameservice.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "wallet",
@@ -6381,7 +6405,7 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "js:https://lit.link/_next/static/chunks/1148k7guc-_5y.js",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         }
       ],
       "label_zh": "非地址",
@@ -6443,12 +6467,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://ink-daddy.com/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "label_zh": "NFT合约",
@@ -6558,12 +6582,12 @@
         {
           "origin": "js_factory_scan_latest",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-27T17:43:56+08:00"
+          "detected_at": "2026-10-27T18:41:28+08:00"
         },
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://www.superboard.xyz/",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
@@ -6622,7 +6646,7 @@
         {
           "origin": "wallet_trace.classify",
           "source": "inline:https://thetimecard.xyz",
-          "detected_at": "2026-10-27T17:58:21+08:00"
+          "detected_at": "2026-10-27T18:55:46+08:00"
         }
       ],
       "kind": "nft",
@@ -14049,21 +14073,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x856c1a92c879fe90e16a72c3d49fbf4b7402bb8a",
-        "to": "0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x56e547f732ec6babc14f000b7c46019fef77d4029ffc661eb6abc2cf1912243a",
-        "amount": "0.01",
-        "asset": "ETH",
-        "funded_at": "2026-10-21T00:55:47+08:00",
-        "deployed_at": "2026-10-21T04:56:27+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -14078,13 +14087,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xe1d471b85a4ccde87cf0de3c6860a56da0a6ffb9",
       "ca_locked": false,
       "lock_time": null,
@@ -14133,21 +14135,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x62425cd6bdcb6bfe51558ea465b063486b70dc9f",
-        "to": "0x9170da7f3576c9a243f7953c950a2ec33fc1779d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xdb65cdf541f084901eb364cf4947259cdbff95888fbdeba9d6bb022c084cd61b",
-        "amount": "0.2",
-        "asset": "ETH",
-        "funded_at": "2026-10-20T22:33:23+08:00",
-        "deployed_at": "2026-10-20T22:55:57+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -14162,13 +14149,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x9170da7f3576c9a243f7953c950a2ec33fc1779d",
       "ca_locked": false,
       "lock_time": null,
@@ -14224,21 +14204,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xdea91d119e625fd556b57a85ebf7cda9688ddcbb",
-        "to": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5da556de46c12642324aef450dc4fd6e7fa3c11245f49a4b0399e155272915c8",
-        "amount": "0.04233",
-        "asset": "ETH",
-        "funded_at": "2026-10-20T21:43:59+08:00",
-        "deployed_at": "2026-10-20T22:14:48+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -14253,13 +14218,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc45b29efe2ad7c39eb9236d5673cb192825a76a2",
       "ca_locked": false,
       "lock_time": null,
@@ -24724,21 +24682,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xf11c061eb1381f5cd41a4ee8b2962b3317bb906d",
-        "to": "0x37d5469c22e05d28d8f71c2127c32abdaab0a140",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xa6e428f5511179068d534405967e7920276dc86aabb17eb7e26d98b07c46a565",
-        "amount": "0.0001",
-        "asset": "ETH",
-        "funded_at": "2026-08-27T17:26:16+08:00",
-        "deployed_at": "2026-10-23T06:30:29+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -24753,13 +24696,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x37d5469c22e05d28d8f71c2127c32abdaab0a140",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -25865,21 +25801,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xb3f5a608cf1a2af390f13a385e50c2f208c96e90",
-        "to": "0x959f0f29d2a20e84c0a61ae9bfa562d3bac86d6e",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5266714ebf7955420761788ac652c4af5656db6ca38588aee38412320ddcd00f",
-        "amount": "0.01",
-        "asset": "ETH",
-        "funded_at": "2026-09-20T12:35:59+08:00",
-        "deployed_at": "2026-10-22T21:28:11+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -25894,13 +25815,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x959f0f29d2a20e84c0a61ae9bfa562d3bac86d6e",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -27274,7 +27188,7 @@
       "confidence": "medium",
       "evidence_url": "https://x.com/RealHappyBlock",
       "added_at": "2026-10-25T18:15:35+08:00",
-      "expires_at": "2026-11-25T17:21:31+08:00"
+      "expires_at": "2026-11-26T18:47:15+08:00"
     },
     {
       "handle": "realhappyblock",
