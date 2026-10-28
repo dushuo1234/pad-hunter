@@ -68,5 +68,21 @@ if (!pad.includes('data/today_projects.json') || !pad.includes('fetchTodayProjec
 const home = readFileSync(new URL('../src/pages/HomePage.tsx', import.meta.url), 'utf8')
 const workbench = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import.meta.url), 'utf8')
 if (!home.includes('<TodayProjectsSection') || !workbench.includes('<TodayProjectsSection')) fail('section not mounted')
+if (!section.includes('useWorkbenchAlerts') || !section.includes('alertsByHandle')) {
+  fail('today cards must read the workbench alert stream')
+}
+const todayConsole = section.indexOf('<WorkbenchAlertConsole')
+const todayCardEnd = section.indexOf('</li>', todayConsole)
+if (todayConsole < 0 || todayCardEnd < 0) fail('each today card needs a 提醒窗口')
+const todayConsoleBlock = section.slice(todayConsole, section.indexOf('/>', todayConsole))
+if (!todayConsoleBlock.includes('handle={item.handle}') || !todayConsoleBlock.includes('alerts={alerts}')) {
+  fail('today 提醒窗口 must be bound to that card handle')
+}
+if (todayConsoleBlock.includes('pinned=') || todayConsoleBlock.includes('remindersAllowed')) {
+  fail('today 提醒窗口 filters by handle, not by pin state')
+}
+const sharedAt = workbench.indexOf('<WorkbenchAlertConsole')
+const todaySectionAt = workbench.indexOf('<TodayProjectsSection')
+if (sharedAt < 0 || todaySectionAt < sharedAt) fail('shared 提醒控制台 must stay above 今日项目清单')
 
 console.log(`today projects checks ok (${doc.items.length} fixture rows)`)
