@@ -72,6 +72,7 @@ export default function App() {
           error={data.error}
           uploadNote={data.uploadNote}
           onRetry={() => void data.loadDefault()}
+          todayProjects={data.todayProjects}
         />
       )}
       {route.name === 'today' && (
@@ -98,6 +99,7 @@ export default function App() {
           loading={data.loading}
           eventsAt={data.eventsAt}
           launchedHandles={data.launchedHandles}
+          todayProjects={data.todayProjects}
         />
       )}
       {route.name === 'monitor' && (
