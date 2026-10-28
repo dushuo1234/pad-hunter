@@ -334,6 +334,12 @@ const projectAt = pageSource.indexOf('<WorkbenchAlertConsole', sharedAt + 1)
 if (sharedAt < 0 || projectAt < 0 || tableAt < 0 || sharedAt > tableAt || projectAt < tableAt) {
   fail('need the shared console above the list and a console inside each row')
 }
+const todayAt = pageSource.indexOf('<TodayProjectsSection')
+const headingAt = pageSource.search(/<h1\b[^>]*>\s*工作台\s*<\/h1>/)
+if (todayAt < 0) fail('今日项目清单 must stay on the workbench')
+if (headingAt < 0 || sharedAt < headingAt || todayAt < sharedAt) {
+  fail('shared 提醒控制台 must be the first section under the page heading, above 今日项目清单')
+}
 if (pageSource.includes('<WorkbenchReminders') || pageSource.includes('wb-row-flash') || pageSource.includes('ALERT_UI.fresh')) {
   fail('realtime lines and flashing chips must not sit on the project row')
 }

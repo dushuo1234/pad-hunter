@@ -289,8 +289,6 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         </div>
       </div>
 
-      <TodayProjectsSection projects={todayProjects} className="mt-5" />
-
       <WorkbenchAlertConsole
         alerts={alertFeed.alerts}
         readIds={alertFeed.readIds}
@@ -298,6 +296,8 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         launched={launchedKeys}
         contacts={contactsByHandle}
       />
+
+      <TodayProjectsSection projects={todayProjects} className="mt-5" />
 
       {!live.token && (
         <button
