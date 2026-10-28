@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T18:33:50+08:00",
+  "generated_at": "2026-10-28T18:54:22+08:00",
   "timezone": "Asia/Shanghai",
   "window_hours": 48,
   "count": 4,
@@ -16,11 +16,11 @@
       "listing_at_evidence_url": "https://x.com/world_ygg",
       "status": "待开铸",
       "category": "Agent",
-      "hours_to_launch": 2.44,
+      "hours_to_launch": 2.09,
       "scan_boost": true,
       "playbook": {
         "updated_at": "2026-10-28T18:18:42+08:00",
-        "summary": "Worldygg 是 BNB Chain 上的像素 World Tree NFT 铸造玩法，材料称总量 99,999 棵，仅持有 .ai Agent ID 的钱包可通过 Binance Agentic Wallet/agent 参与；首棵免费，之后 $1.50/棵（以 BNB 支付），每钱包限 9 棵。每次铸造按九个领域剩余供应加权随机抽取，合并 9 棵可成为 1 个 Yggdrasil/Full Set，材料称 Full Set 在 miner 中挖 2× 800M $SAP。开盘时间为 2026-10-28 21:00（Asia/Shanghai，即 10/28 13:00 UTC）。NFT 与 $SAP 合约地址未公布，官推约 17 粉且为新建，KOL 与链上核实弱。",
+        "summary": "Worldygg 是 BNB Chain 上的像素 World Tree NFT 铸造玩法，材料称总量 99,999 棵，仅持有 .ai Agent ID 的钱包可通过 Binance Agentic Wallet/agent 参与；首棵免费，之后 $1.50/棵（以 BNB 支付），每钱包限 9 棵。每次铸造按九个领域剩余供应加权随机抽取，合并 9 棵可成为 1 个 Yggdrasil/Full Set，材料称 Full Set 在 miner 中挖 2× 800M $SAP。开盘时间为 2026-10-28 21:00（Asia/Shanghai，即 10/28 13:00 UTC）。官网 skill.md 已公布 Tree/$SAP 等合约（待官推确认固定）；官推粉量已更新，KOL 与链上核实仍需谨慎。",
         "玩法": [
           "仅 AI agents / 持有 .ai Agent ID 的钱包可铸造像素 World Tree NFT；总量 99,999 棵。",
           "首棵免费，之后每棵 $1.50，以 BNB 支付；每钱包限 9 棵，可一次铸造多棵。",
@@ -37,7 +37,7 @@
           "准备 BNB 支付后续铸造：首棵免费，之后 $1.50/棵；除铸造价外的 Gas/其他费用：未公布。",
           "遵守每钱包限 9 棵；材料称可一次多棵（several per call）。",
           "在 2026-10-28 21:00（Asia/Shanghai，即 10/28 13:00 UTC）开盘后参与。",
-          "NFT 与 $SAP 合约地址：未公布；参与前需等待官方公布并自行核实。"
+          "NFT Tree 铸造合约（官网 skill.md，待官推固定）：`0x2ED9E0a6992BA22B48c2fc2def6bB2365301A0D0`；$SAP：`0x1f8A5409aE34582800BC36843Fb96c90E201f4b9`。"
         ],
         "步骤": [
           "打开官网 https://worldygg.fun/，确认活动页面、开盘时间和规则。",
@@ -50,7 +50,7 @@
         ],
         "风险注意": [
           "官推 @world_ygg 约 17 粉且为新建，KOL 与链上核实弱，需谨慎。",
-          "NFT 与 $SAP 合约地址未公布；绝不使用或传播未公布/未核实的合约地址。",
+          "合约来自官网 skill.md，官推尚未原文贴出 CA；按固定CA规则暂标待确认，勿当已固定。",
           "除铸造价 $1.50/棵外，Gas、税费等费用：未公布。",
           "页面同时出现 No team tokens 与 80% 入池、20% 团队，代币分配口径存在差异，需以官方最终说明为准。",
           "每钱包限 9 棵，首棵免费后续付费；多棵/多次铸造可能产生多笔交易，实际总成本以 agent 展示和 Binance App 确认为准。",
@@ -71,7 +71,18 @@
             "label": "官网内引用的 skill.md",
             "url": "https://worldygg.fun/skill.md"
           }
-        ]
+        ],
+        "contracts_from_skill_md": {
+          "updated_at": "2026-10-28T18:43:48+08:00",
+          "source": "https://worldygg.fun/skill.md",
+          "tree_mint": "0x2ED9E0a6992BA22B48c2fc2def6bB2365301A0D0",
+          "yggdrasil": "0x3F6D606860013174B26B45123b0c60946a3eDa53",
+          "market": "0xB81324e14319712De43E560111452b73834cd72A",
+          "sap": "0x1f8A5409aE34582800BC36843Fb96c90E201f4b9",
+          "ygg_mining": "0xaB3849aBb81E633aE1aF6C72C47d2140BCE9BD6D",
+          "ca_fixed": false,
+          "note": "官网 skill.md；官推尚未贴 CA；按固定CA规则暂待确认。链上 mintOpen=false，totalMinted≈5。"
+        }
       },
       "remind_2h_sent_at": null,
       "_why": "BNB链仅.ai Agent ID可铸像素World Tree NFT，总量99999，首棵免费；合并9棵成Yggdrasil，10/28 13:00 UTC开铸。",
@@ -91,7 +102,7 @@
       "listing_at_evidence_url": "https://x.com/bStonkAgents/status/2115274883026596259",
       "status": "mint进行中",
       "category": "NFT铸造",
-      "hours_to_launch": 4.44,
+      "hours_to_launch": 4.09,
       "scan_boost": true,
       "playbook": {
         "updated_at": "2026-10-28T16:00:29+08:00",
@@ -161,7 +172,7 @@
       "listing_at_evidence_url": "https://x.com/hoodora_rh/status/2115150863341916251",
       "status": "即将启动",
       "category": "GameFi",
-      "hours_to_launch": 5.44,
+      "hours_to_launch": 5.09,
       "scan_boost": true,
       "playbook": {
         "updated_at": "2026-10-28T16:01:18+08:00",
@@ -225,7 +236,7 @@
       "listing_at_evidence_url": "https://x.com/Fishesrh/status/2115005750070145345",
       "status": "即将启动",
       "category": "GameFi",
-      "hours_to_launch": 6.44,
+      "hours_to_launch": 6.09,
       "scan_boost": true,
       "playbook": {
         "updated_at": "2026-10-28T16:00:55+08:00",
