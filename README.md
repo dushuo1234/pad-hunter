@@ -92,7 +92,7 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 导航 **即将开盘**：尚未开盘，且满足下面任一条件的项目。有确定开盘时间、并且落在上海时间今天起 3 天内的排在前面；没有确定时间、但标记为「即将启动」，或站点 / JS / is 文件显示项目、合约代码、游戏代码完成度高的，时间显示「未知」
 - 导航 **发现CA**：已确认 CA、疑似山寨、扫出钱包分开显示，每秒重读 `ca_finds.json`
 - 导航 **工作台**：钉住关心的项目，写个人备注，并对照监控进度
-- **今日项目清单**：项目列表和工作台顶部读取 `public/data/today_projects.json`。文件不在，或 `count` 为 0，这一块不显示。有条目时按 `listing_at` 从近到远排。卡片上是名称、账号、链、状态、官网和 X，以及玩法、参与需求、步骤、风险注意。倒计时只根据清单里的 `listing_at` 计算；解析不了就显示 `listing_at_display` 或 `hours_to_launch`，不另编开盘时间。这份 JSON 和候选、开盘时间一起轮询
+- **今日项目清单**：项目列表和工作台顶部读取 `public/data/today_projects.json`。文件不在，或 `count` 为 0，这一块不显示。有条目时按 `listing_at` 从近到远排。卡片上是名称、账号、链、状态、官网和 X，以及玩法、参与需求、步骤、风险注意。倒计时只根据清单里的 `listing_at` 计算；解析不了就显示 `listing_at_display` 或 `hours_to_launch`，不另编开盘时间。这份 JSON 和候选、开盘时间一起轮询。工作台标题下可以进单独页面，只放清单卡片、上海时间开盘、玩法摘要、官网和 X，以及按账号分开的提醒窗口
 - 卡片和监控详情上的 **加入工作台** 把项目钉到本机工作台
 - 详情侧栏：摘要、风险、开盘、X 链接，可再进监控详情
 - 浅色 / 深色主题
@@ -104,6 +104,7 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 发现CA：`/pad-hunter/ca`
 - 已开盘：`/pad-hunter/launched`
 - 工作台：`/pad-hunter/workbench`
+- 今日项目清单：`/pad-hunter/workbench/today`
 - 某个项目：`/pad-hunter/monitor/<handle>`，例如 `/pad-hunter/monitor/SpareFluxAi`
 
 即将开盘：有 `listing_at`（或 `launch_at`，或 `listing_times.json` 里的同名字段）且落在上海时间今天到第 3 天的，按时间从近到远排。没有解析出的开盘时间时，状态或开盘信号里的「即将启动」（也包括即将上线、about to start、starting soon）会进来；站点、JS 或 is 文件抓到的高完成度也会进来，项目整体、合约代码、游戏代码任一达到即可。高完成度指 0–1 里至少 0.8、百分制至少 80，或 `high` / `complete` / `完成` / `就绪`。`low` 和 `medium` 不算。这些行的时间写「未知」，不编造时间。已知开盘时间但落在 3 天窗外的，仍然不进这张表。已开盘、已上线，以及 `already_listed`、`launched.json` 里的项目不进。没有时间的按 `date_iso` 从新到旧，再按名称排。顶栏「即将开盘」旁的数字用同一条规则（`countUpcoming`）。

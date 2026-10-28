@@ -45,12 +45,12 @@ export function Header({ theme, route, todayCount, launchedCount, workbenchUnrea
                 <span className="font-mono text-[10px] opacity-80">{launchedCount}</span>
               )}
             </NavLink>
-            <NavLink href={appPath('workbench')} active={route.name === 'workbench'}>
+            <NavLink href={appPath('workbench')} active={route.name === 'workbench' || route.name === 'workbenchToday'}>
               工作台
               {workbenchUnread > 0 && (
                 <span
                   className={`wb-dot-flash inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none ${
-                    route.name === 'workbench' ? 'bg-white text-rose-600' : 'bg-rose-600 text-white'
+                    route.name === 'workbench' || route.name === 'workbenchToday' ? 'bg-white text-rose-600' : 'bg-rose-600 text-white'
                   }`}
                   aria-label={`${workbenchUnread} 条未读提醒`}
                 >

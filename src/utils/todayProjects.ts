@@ -1,5 +1,9 @@
 /** Projects auto-enrolled with a concrete listing time inside the next 48 hours. */
 
+import { formatShanghai, xProfileUrl } from './format'
+import { handleKey } from './workbench'
+import type { ProjectContact } from './workbenchAlerts'
+
 export interface TodayProjectSource {
   label: string
   url: string
@@ -182,6 +186,48 @@ export interface TodayTimeView {
   secondary: string
   dateTime?: string
   kind: 'countdown' | 'display' | 'hours'
+}
+
+export interface ShanghaiListingLabel {
+  text: string
+  /** Set only when `text` was formatted from a real instant. */
+  dateTime?: string
+}
+
+/**
+ * Listing clock in Asia/Shanghai.
+ * A parseable instant is formatted there. Otherwise the file's own display string
+ * or `hours_to_launch` is shown as written. Missing fields stay empty.
+ */
+export function shanghaiListingLabel(item: TodayProject): ShanghaiListingLabel | null {
+  const listing = item.listing_at?.trim() ?? ''
+  const fromListing = formatShanghai(listing)
+  if (listing && fromListing) return { text: fromListing, dateTime: listing }
+  const display = item.listing_at_display?.trim() ?? ''
+  if (display) {
+    const formatted = formatShanghai(display)
+    if (formatted) return { text: formatted, dateTime: display }
+    return { text: display }
+  }
+  const hours = hoursToLaunchLabel(item.hours_to_launch)
+  if (!hours) return null
+  return { text: hours }
+}
+
+/** Site and X for each today-list handle, keyed the same way as workbench alerts. */
+export function todayProjectContacts(items: readonly TodayProject[]): Map<string, ProjectContact> {
+  const map = new Map<string, ProjectContact>()
+  for (const item of items) {
+    const key = handleKey(item.handle)
+    if (!key) continue
+    const bare = item.handle.replace(/^@/, '').trim()
+    map.set(key, {
+      siteUrl: item.site ?? '',
+      xUrl: xProfileUrl(bare),
+      xLabel: `@${bare}`,
+    })
+  }
+  return map
 }
 
 /** Clock text comes only from `listing_at`, `listing_at_display`, or `hours_to_launch`. */

@@ -9,6 +9,7 @@ import { ReviewedMark } from '../components/ReviewedMark'
 import { useBoardSyncStatus } from '../hooks/useBoardSync'
 import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
 import { useWorkbenchLive } from '../hooks/useWorkbenchLive'
+import { appPath } from '../router'
 import type { Candidate, MonitorEvent } from '../types'
 import { formatShanghai, xProfileUrl } from '../utils/format'
 import { isLaunchedHandle } from '../utils/launched'
@@ -48,7 +49,7 @@ import {
 import { reviewSnapshot } from '../utils/reviewed'
 import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } from '../utils/workbenchAlertStore'
 import { alertsByHandle, remindersAllowed, workbenchRowDomId } from '../utils/workbenchAlerts'
-import type { TodayProjectsDocument } from '../utils/todayProjects'
+import { todayProjectsToShow, type TodayProjectsDocument } from '../utils/todayProjects'
 
 interface WorkbenchPageProps {
   candidates: Candidate[]
@@ -223,6 +224,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
     setMessage(`已移出 ${ids.length} 个目标`)
   }
 
+  const todayListCount = todayProjectsToShow(todayProjects).length
   const healthLabel =
     live.healthState === 'online' ? '在线' : live.healthState === 'offline' ? '离线' : '连接中'
   const pollerNote = live.health?.pollerAlive === false ? ' · 轮询未运行' : ''
@@ -264,6 +266,14 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-[var(--color-ink)] dark:text-[var(--color-night-ink)]">
             工作台
           </h1>
+          <a
+            href={appPath('workbench/today')}
+            className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--color-orange)] hover:underline"
+          >
+            今日项目清单
+            {todayListCount > 0 ? <span className="font-mono text-xs">({todayListCount})</span> : null}
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span
@@ -297,7 +307,7 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
         contacts={contactsByHandle}
       />
 
-      <TodayProjectsSection projects={todayProjects} className="mt-5" />
+      <TodayProjectsSection projects={todayProjects} className="mt-5" pageHref={appPath('workbench/today')} />
 
       {!live.token && (
         <button

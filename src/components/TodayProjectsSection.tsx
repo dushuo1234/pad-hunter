@@ -7,6 +7,7 @@ import { handleKey } from '../utils/workbench'
 import { alertsByHandle, type ProjectContact, type WorkbenchAlert } from '../utils/workbenchAlerts'
 import {
   playbookGroups,
+  todayProjectContacts,
   todayProjectsToShow,
   todayTimeView,
   type TodayProject,
@@ -23,32 +24,20 @@ const TIME_LABEL: Record<TodayTimeView['kind'], string> = {
   hours: '距开盘',
 }
 
-function todayContacts(items: readonly TodayProject[]): Map<string, ProjectContact> {
-  const map = new Map<string, ProjectContact>()
-  for (const item of items) {
-    const key = handleKey(item.handle)
-    if (!key) continue
-    const bare = item.handle.replace(/^@/, '').trim()
-    map.set(key, {
-      siteUrl: item.site ?? '',
-      xUrl: xProfileUrl(bare),
-      xLabel: `@${bare}`,
-    })
-  }
-  return map
-}
-
 export function TodayProjectsSection({
   projects,
   className = '',
+  pageHref = '',
 }: {
   projects: TodayProjectsDocument | null
   className?: string
+  /** Dedicated list page. Omitted on surfaces that should stay as they are. */
+  pageHref?: string
 }) {
   const items = todayProjectsToShow(projects)
   const alertFeed = useWorkbenchAlerts()
   const alertsByProject = useMemo(() => alertsByHandle(alertFeed.alerts), [alertFeed.alerts])
-  const contacts = useMemo(() => todayContacts(items), [items])
+  const contacts = useMemo(() => todayProjectContacts(items), [items])
   if (items.length === 0) return null
   const generated = projects?.generated_at
   const updated = generated ? formatShanghai(generated) || generated : ''
@@ -62,9 +51,16 @@ export function TodayProjectsSection({
             今日项目清单
           </h2>
         </div>
-        <p className="font-mono text-[11px] text-[var(--color-ink-muted)]">
-          {items.length} 个
-          {updated ? ` · 更新 ${updated}` : ''}
+        <p className="flex flex-wrap items-center gap-3 font-mono text-[11px] text-[var(--color-ink-muted)]">
+          {pageHref ? (
+            <a href={pageHref} className="font-medium text-[var(--color-orange)] hover:underline">
+              单独页面
+            </a>
+          ) : null}
+          <span>
+            {items.length} 个
+            {updated ? ` · 更新 ${updated}` : ''}
+          </span>
         </p>
       </div>
       <ul className="mt-3 space-y-3">

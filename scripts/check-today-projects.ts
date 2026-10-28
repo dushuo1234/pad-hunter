@@ -4,6 +4,8 @@ import {
   hoursToLaunchLabel,
   playbookGroups,
   readTodayProjects,
+  shanghaiListingLabel,
+  todayProjectContacts,
   todayProjectsToShow,
   todayTimeView,
 } from '../src/utils/todayProjects.ts'
@@ -84,5 +86,46 @@ if (todayConsoleBlock.includes('pinned=') || todayConsoleBlock.includes('reminde
 const sharedAt = workbench.indexOf('<WorkbenchAlertConsole')
 const todaySectionAt = workbench.indexOf('<TodayProjectsSection')
 if (sharedAt < 0 || todaySectionAt < sharedAt) fail('shared 提醒控制台 must stay above 今日项目清单')
+if (!workbench.includes("appPath('workbench/today')") || !workbench.includes('今日项目清单')) {
+  fail('workbench must link to the dedicated today page')
+}
+if (!workbench.includes('pageHref={appPath(\'workbench/today\')}')) fail('today section must offer 单独页面')
+
+const page = readFileSync(new URL('../src/pages/TodayProjectsPage.tsx', import.meta.url), 'utf8')
+const router = readFileSync(new URL('../src/router.ts', import.meta.url), 'utf8')
+const app = readFileSync(new URL('../src/App.tsx', import.meta.url), 'utf8')
+if (!router.includes("path === '/workbench/today'") || !router.includes("name: 'workbenchToday'")) {
+  fail('route /workbench/today')
+}
+if (!app.includes('<TodayProjectsPage') || !app.includes("route.name === 'workbenchToday'")) fail('today page not mounted')
+for (const label of ['今日项目清单', '官网', '开盘时间 · 上海', 'shanghaiListingLabel', '今日没有项目', '返回工作台']) {
+  if (!page.includes(label)) fail(`today page missing ${label}`)
+}
+if (!page.includes('item.playbook?.summary') || page.includes('playbookGroups')) fail('today page must show the summary only')
+const pageConsole = page.indexOf('<WorkbenchAlertConsole')
+const pageConsoleBlock = page.slice(pageConsole, page.indexOf('/>', pageConsole))
+if (pageConsole < 0 || !pageConsoleBlock.includes('handle={item.handle}') || !pageConsoleBlock.includes('alerts={alerts}')) {
+  fail('today page 提醒窗口 must be bound to that card handle')
+}
+if (pageConsoleBlock.includes('pinned=') || pageConsoleBlock.includes('remindersAllowed')) {
+  fail('today page 提醒窗口 filters by handle, not by pin state')
+}
+const emptyAt = page.indexOf('items.length === 0')
+if (emptyAt < 0 || page.indexOf('今日没有项目') < emptyAt) fail('empty copy must sit in the zero-item branch')
+
+const shanghai = shanghaiListingLabel(doc.items[1]!)
+if (!shanghai || shanghai.text !== '10/28 23:00' || shanghai.dateTime !== '2026-10-28T23:00:00+08:00' || shanghai.text.includes('T')) {
+  fail(`shanghai clock ${JSON.stringify(shanghai)}`)
+}
+const utc = shanghaiListingLabel({ handle: 'h', name: 'H', chain: '', listing_at: '2026-10-28T15:00:00Z' })
+if (!utc || utc.text !== '10/28 23:00') fail(`utc instant must be Shanghai ${utc?.text}`)
+const plainClock = shanghaiListingLabel(doc.items[2]!)
+if (!plainClock || plainClock.text !== '今晚' || plainClock.dateTime) fail(`display clock invented a time ${JSON.stringify(plainClock)}`)
+if (shanghaiListingLabel({ handle: 'h', name: 'H', chain: '', hours_to_launch: 8.5 })?.text !== '8.5 小时') fail('hours clock')
+if (shanghaiListingLabel({ handle: 'h', name: 'H', chain: '' }) !== null) fail('blank clock')
+const contacts = todayProjectContacts(doc.items)
+if (contacts.get('bstonkagents')?.xLabel !== '@bStonkAgents' || contacts.get('bstonkagents')?.siteUrl !== 'https://stonk.example') {
+  fail('today contacts')
+}
 
 console.log(`today projects checks ok (${doc.items.length} fixture rows)`)

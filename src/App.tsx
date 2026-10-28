@@ -11,6 +11,7 @@ import { HomePage } from './pages/HomePage'
 import { LaunchedPage } from './pages/LaunchedPage'
 import { MonitorPage } from './pages/MonitorPage'
 import { TodayPage } from './pages/TodayPage'
+import { TodayProjectsPage } from './pages/TodayProjectsPage'
 import { WorkbenchPage } from './pages/WorkbenchPage'
 import { useWorkbenchAttention } from './hooks/useWorkbenchAttention'
 import { setBaseDocumentTitle, setWorkbenchReminderCount } from './utils/caAlert'
@@ -44,6 +45,7 @@ export default function App() {
       ca: '发现CA · 台子雷达',
       launched: '已开盘 · 台子雷达',
       workbench: '工作台 · 台子雷达',
+      workbenchToday: '今日项目清单 · 台子雷达',
       monitor: '监控详情 · 台子雷达',
       notfound: '未找到 · 台子雷达',
     }
@@ -101,6 +103,9 @@ export default function App() {
           launchedHandles={data.launchedHandles}
           todayProjects={data.todayProjects}
         />
+      )}
+      {route.name === 'workbenchToday' && (
+        <TodayProjectsPage projects={data.todayProjects} loading={data.loading} />
       )}
       {route.name === 'monitor' && (
         <MonitorPage

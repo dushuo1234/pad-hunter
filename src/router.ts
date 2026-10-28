@@ -6,6 +6,7 @@ export type AppRoute =
   | { name: 'ca' }
   | { name: 'launched' }
   | { name: 'workbench' }
+  | { name: 'workbenchToday' }
   | { name: 'monitor'; handle: string }
   | { name: 'notfound' }
 
@@ -39,6 +40,7 @@ export function parseRoute(pathname: string): AppRoute {
   if (path === '/ca') return { name: 'ca' }
   if (path === '/launched') return { name: 'launched' }
   if (path === '/workbench') return { name: 'workbench' }
+  if (path === '/workbench/today') return { name: 'workbenchToday' }
   const match = /^\/monitor\/([^/]+)$/.exec(path)
   if (!match) return { name: 'notfound' }
   try {
