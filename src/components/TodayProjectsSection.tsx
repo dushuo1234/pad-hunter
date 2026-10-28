@@ -1,6 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { WorkbenchAlertConsole } from './WorkbenchAlertConsole'
+import { useWorkbenchAlerts } from '../hooks/useWorkbenchAlerts'
 import { monitorPath } from '../router'
 import { formatShanghai, xProfileUrl } from '../utils/format'
+import { handleKey } from '../utils/workbench'
+import { alertsByHandle, type ProjectContact, type WorkbenchAlert } from '../utils/workbenchAlerts'
 import {
   playbookGroups,
   todayProjectsToShow,
@@ -19,6 +23,21 @@ const TIME_LABEL: Record<TodayTimeView['kind'], string> = {
   hours: '距开盘',
 }
 
+function todayContacts(items: readonly TodayProject[]): Map<string, ProjectContact> {
+  const map = new Map<string, ProjectContact>()
+  for (const item of items) {
+    const key = handleKey(item.handle)
+    if (!key) continue
+    const bare = item.handle.replace(/^@/, '').trim()
+    map.set(key, {
+      siteUrl: item.site ?? '',
+      xUrl: xProfileUrl(bare),
+      xLabel: `@${bare}`,
+    })
+  }
+  return map
+}
+
 export function TodayProjectsSection({
   projects,
   className = '',
@@ -27,6 +46,9 @@ export function TodayProjectsSection({
   className?: string
 }) {
   const items = todayProjectsToShow(projects)
+  const alertFeed = useWorkbenchAlerts()
+  const alertsByProject = useMemo(() => alertsByHandle(alertFeed.alerts), [alertFeed.alerts])
+  const contacts = useMemo(() => todayContacts(items), [items])
   if (items.length === 0) return null
   const generated = projects?.generated_at
   const updated = generated ? formatShanghai(generated) || generated : ''
@@ -47,14 +69,30 @@ export function TodayProjectsSection({
       </div>
       <ul className="mt-3 space-y-3">
         {items.map((item, index) => (
-          <TodayProjectCard key={`${item.handle}-${item.listing_at ?? ''}-${index}`} item={item} />
+          <TodayProjectCard
+            key={`${item.handle}-${item.listing_at ?? ''}-${index}`}
+            item={item}
+            alerts={item.handle ? alertsByProject.get(handleKey(item.handle)) ?? [] : []}
+            readIds={alertFeed.readIds}
+            contacts={contacts}
+          />
         ))}
       </ul>
     </section>
   )
 }
 
-function TodayProjectCard({ item }: { item: TodayProject }) {
+function TodayProjectCard({
+  item,
+  alerts,
+  readIds,
+  contacts,
+}: {
+  item: TodayProject
+  alerts: readonly WorkbenchAlert[]
+  readIds: ReadonlySet<string>
+  contacts: ReadonlyMap<string, ProjectContact>
+}) {
   const groups = playbookGroups(item.playbook)
   const sources = item.playbook?.来源 ?? []
   const summary = item.playbook?.summary
@@ -62,7 +100,8 @@ function TodayProjectCard({ item }: { item: TodayProject }) {
   const playbookUpdated = playbookAt ? formatShanghai(playbookAt) || playbookAt : ''
   const profile = item.handle ? xProfileUrl(item.handle) : ''
   return (
-    <li className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] px-4 py-3.5 shadow-[inset_3px_0_0_var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
+    <li className="w-full min-w-0">
+    <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-card)] px-4 py-3.5 shadow-[inset_3px_0_0_var(--color-orange)] dark:border-[var(--color-night-line)] dark:bg-[var(--color-night-card)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -166,6 +205,16 @@ function TodayProjectCard({ item }: { item: TodayProject }) {
           )}
         </div>
       )}
+    </div>
+      {item.handle ? (
+        <WorkbenchAlertConsole
+          alerts={alerts}
+          readIds={readIds}
+          name={item.name}
+          handle={item.handle}
+          contacts={contacts}
+        />
+      ) : null}
     </li>
   )
 }
