@@ -3,7 +3,9 @@ import { CandidateCard } from '../components/CandidateCard'
 import { DetailDrawer } from '../components/DetailDrawer'
 import { FiltersBar } from '../components/Filters'
 import { Hero } from '../components/Hero'
+import { TodayProjectsSection } from '../components/TodayProjectsSection'
 import type { Candidate, CandidatesPayload, Filters } from '../types'
+import type { TodayProjectsDocument } from '../utils/todayProjects'
 import { compareCandidates, matches, sortSources } from '../utils/candidates'
 import { categoryOf, sortChains } from '../utils/categories'
 
@@ -24,9 +26,10 @@ interface HomePageProps {
   error: string | null
   uploadNote: string | null
   onRetry: () => void
+  todayProjects: TodayProjectsDocument | null
 }
 
-export function HomePage({ payload, candidates, loading, error, uploadNote, onRetry }: HomePageProps) {
+export function HomePage({ payload, candidates, loading, error, uploadNote, onRetry, todayProjects }: HomePageProps) {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [selected, setSelected] = useState<Candidate | null>(null)
 
@@ -105,6 +108,7 @@ export function HomePage({ payload, candidates, loading, error, uploadNote, onRe
       />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <TodayProjectsSection projects={todayProjects} />
         {payload?.goal && (
           <p className="mb-5 rounded-xl border border-[var(--color-line)] bg-[var(--color-orange-soft)] px-4 py-3 text-sm text-[var(--color-orange-deep)] dark:border-[rgba(232,135,58,0.25)] dark:bg-[rgba(232,135,58,0.1)] dark:text-[var(--color-orange)]">
             {payload.goal}

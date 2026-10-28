@@ -24,7 +24,7 @@ npm run preview
 
 GitHub Pages 已指向 `gh-pages` 分支：<https://dushuo1234.github.io/pad-hunter/>
 
-合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。这次提交没有改到的 `data/*.json`（`candidates.json`、`launched.json`、`ca_finds.json`、`projects.json`、`listing_times.json`、`monitor_events.json`）会沿用 `gh-pages` 上已发布的文件，避免前端发布把自动化数据盖掉。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
+合并到 `main` 后，`.github/workflows/pages.yml` 会执行 `npm run build`，并把 `dist` 推到 `gh-pages`。这次提交没有改到的 `data/*.json`（`candidates.json`、`launched.json`、`ca_finds.json`、`projects.json`、`listing_times.json`、`monitor_events.json`、`today_projects.json`）会沿用 `gh-pages` 上已发布的文件，避免前端发布把自动化数据盖掉。不需要再改 Pages 设置。Pull request 上同一工作流只构建、不发布。
 
 ## 数据文件
 
@@ -92,6 +92,7 @@ python3 scripts/telegram/sync_site.py --offline --out /tmp/pad-hunter-sample.jso
 - 导航 **即将开盘**：尚未开盘，且满足下面任一条件的项目。有确定开盘时间、并且落在上海时间今天起 3 天内的排在前面；没有确定时间、但标记为「即将启动」，或站点 / JS / is 文件显示项目、合约代码、游戏代码完成度高的，时间显示「未知」
 - 导航 **发现CA**：已确认 CA、疑似山寨、扫出钱包分开显示，每秒重读 `ca_finds.json`
 - 导航 **工作台**：钉住关心的项目，写个人备注，并对照监控进度
+- **今日项目清单**：项目列表和工作台顶部读取 `public/data/today_projects.json`。文件不在，或 `count` 为 0，这一块不显示。有条目时按 `listing_at` 从近到远排。卡片上是名称、账号、链、状态、官网和 X，以及玩法、参与需求、步骤、风险注意。倒计时只根据清单里的 `listing_at` 计算；解析不了就显示 `listing_at_display` 或 `hours_to_launch`，不另编开盘时间。这份 JSON 和候选、开盘时间一起轮询
 - 卡片和监控详情上的 **加入工作台** 把项目钉到本机工作台
 - 详情侧栏：摘要、风险、开盘、X 链接，可再进监控详情
 - 浅色 / 深色主题

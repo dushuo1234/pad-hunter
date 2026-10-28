@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type ReactNode, type UIEvent } from 're
 import { ConfirmLaunchedButton } from '../components/ConfirmLaunchedButton'
 import { WorkbenchAlertToasts } from '../components/WorkbenchAlertToasts'
 import { WorkbenchDetailModal } from '../components/WorkbenchDetailModal'
+import { TodayProjectsSection } from '../components/TodayProjectsSection'
 import { WorkbenchAlertConsole } from '../components/WorkbenchAlertConsole'
 import { PushDate } from '../components/PushDate'
 import { ReviewedMark } from '../components/ReviewedMark'
@@ -47,6 +48,7 @@ import {
 import { reviewSnapshot } from '../utils/reviewed'
 import { dismissWorkbenchToast, markWorkbenchAlertsRead, type WorkbenchToast } from '../utils/workbenchAlertStore'
 import { alertsByHandle, remindersAllowed, workbenchRowDomId } from '../utils/workbenchAlerts'
+import type { TodayProjectsDocument } from '../utils/todayProjects'
 
 interface WorkbenchPageProps {
   candidates: Candidate[]
@@ -54,6 +56,7 @@ interface WorkbenchPageProps {
   loading: boolean
   eventsAt?: string
   launchedHandles: Set<string>
+  todayProjects: TodayProjectsDocument | null
 }
 
 const FIELD =
@@ -90,7 +93,7 @@ function BoardColumns() {
   )
 }
 
-export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles }: WorkbenchPageProps) {
+export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedHandles, todayProjects }: WorkbenchPageProps) {
   const live = useWorkbenchLive(launchedHandles)
   const board = useBoardSyncStatus()
   const alertFeed = useWorkbenchAlerts()
@@ -285,6 +288,8 @@ export function WorkbenchPage({ candidates, events, loading, eventsAt, launchedH
           </span>
         </div>
       </div>
+
+      <TodayProjectsSection projects={todayProjects} className="mt-5" />
 
       <WorkbenchAlertConsole
         alerts={alertFeed.alerts}

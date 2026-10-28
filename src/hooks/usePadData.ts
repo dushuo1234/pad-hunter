@@ -5,6 +5,7 @@ import { findByHandle, withSourceFallback } from '../utils/candidates'
 import { getBlockSnapshot, getServerBlockSnapshot, subscribeBlocklist, withManualLaunched } from '../utils/launchedMark'
 import { withProjectPushDates } from '../utils/pushDate'
 import { applyListingTimes, readListingTimes, type ListingTimeEntry } from '../utils/launch'
+import { EMPTY_TODAY_PROJECTS, readTodayProjects, type TodayProjectsDocument } from '../utils/todayProjects'
 import { launchedHandleSet, readLaunched, sortLaunchedItems, withoutLaunched, type LaunchedDocument } from '../utils/launched'
 import { collectMonitorEvents, listedMonitorFiles, readMonitorDocument } from '../utils/monitor'
 import { getRadarOverlay, getServerRadarOverlay, mergeRadarCards, readRadarCards, subscribeRadar } from '../utils/radarLive'
@@ -15,6 +16,7 @@ const EVENTS_URL = `${import.meta.env.BASE_URL}data/monitor_events.json`
 const LISTING_TIMES_URL = `${import.meta.env.BASE_URL}data/listing_times.json`
 const LAUNCHED_URL = `${import.meta.env.BASE_URL}data/launched.json`
 const PROJECTS_URL = `${import.meta.env.BASE_URL}data/projects.json`
+const TODAY_PROJECTS_URL = `${import.meta.env.BASE_URL}data/today_projects.json`
 
 /** Safety-net poll. Slows while the workbench socket is delivering radar cards. */
 const POLL_MS = 20_000
@@ -55,6 +57,18 @@ async function fetchOptional(url: string): Promise<unknown | null> {
     const res = await fetch(withBust(url), { cache: 'no-store' })
     if (!res.ok) return null
     return await res.json()
+  } catch {
+    return null
+  }
+}
+
+/** 404 clears the list. Other failures leave the previous list in place. */
+async function fetchTodayProjects(): Promise<TodayProjectsDocument | null> {
+  try {
+    const res = await fetch(withBust(TODAY_PROJECTS_URL), { cache: 'no-store' })
+    if (res.status === 404) return EMPTY_TODAY_PROJECTS
+    if (!res.ok) return null
+    return readTodayProjects(await res.json())
   } catch {
     return null
   }
@@ -103,6 +117,7 @@ export function usePadData() {
   const [listingTimes, setListingTimes] = useState<ListingTimeEntry[]>([])
   const [launched, setLaunched] = useState<LaunchedDocument>(EMPTY_LAUNCHED)
   const [projects, setProjects] = useState<unknown>(null)
+  const [todayProjects, setTodayProjects] = useState<TodayProjectsDocument>(EMPTY_TODAY_PROJECTS)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [uploadNote, setUploadNote] = useState<string | null>(null)
@@ -118,13 +133,14 @@ export function usePadData() {
     inflight.current = true
     const soft = Boolean(opts?.soft)
     try {
-      const [candidatesJson, recentCards, monitor, listingTimesJson, launchedJson, projectsJson] = await Promise.all([
+      const [candidatesJson, recentCards, monitor, listingTimesJson, launchedJson, projectsJson, todayJson] = await Promise.all([
         fetchJson(CANDIDATES_URL),
         fetchRecentCards(),
         soft && events.length ? Promise.resolve({ events, note: eventsNote, generatedAt: eventsAt }) : loadEvents(),
         fetchOptional(LISTING_TIMES_URL),
         fetchOptional(LAUNCHED_URL),
         fetchOptional(PROJECTS_URL),
+        fetchTodayProjects(),
       ])
 
       const nextPayload = parsePayload(candidatesJson)
@@ -138,6 +154,7 @@ export function usePadData() {
       if (listingTimesJson != null) setListingTimes(readListingTimes(listingTimesJson))
       if (launchedJson != null) setLaunched(readLaunched(launchedJson))
       if (projectsJson != null) setProjects(projectsJson)
+      if (todayJson) setTodayProjects(todayJson)
       setLiveSource(recentCards.length > 0 ? 'api' : 'pages')
       if (!soft) setUploadNote(null)
       setError(null)
@@ -227,5 +244,6 @@ export function usePadData() {
     handleUpload,
     candidates,
     allCandidates,
+    todayProjects,
   }
 }
