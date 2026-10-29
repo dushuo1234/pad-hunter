@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T13:20:30+08:00",
+  "generated_at": "2026-10-29T13:21:18+08:00",
   "timezone": "Asia/Shanghai",
   "window_hours": 48,
   "count": 3,
@@ -19,51 +19,70 @@
       "hours_to_launch": 3.93,
       "scan_boost": true,
       "playbook": {
-        "updated_at": "2026-10-29T07:17:06+08:00",
-        "summary": "Inktrons @Inktrons404 的材料显示：项目计划在 2026-10-29T17:16:28+08:00（Asia/Shanghai）开盘，玩法围绕 GTD/WL 拍卖、Uniswap V4 公开交易、1 token=1 machine 的 Hardwire 永久绑定机器、股票与 XAU 奖励、Gold 1/1 拍卖及 swap 燃烧引擎展开；材料未提供官网（None）和合约地址，链字段未明确，RAW 材料称其为 Ink 链上首个 ERC404 产品并推出 2222 台实时竞价机器。",
+        "updated_at": "2026-10-29T13:21:18+08:00",
+        "summary": "Inktrons（@Inktrons404）材料自称是 Ink 链（@inkonchain）上首个 ERC404，共 2,222 台实时竞价机器；1 token = 1 machine，持有完整 token 会铸造机器，卖出低于 1 个会燃烧。材料给出的开盘时间为 2026-10-29T17:16:28+08:00（Asia/Shanghai）；给定链字段为其他。官网为 None；材料未公布合约地址/CA。拍卖分 GTD 与 WL、无公开竞价，拍卖后 Uniswap V4 池按最终价开启；可 hardwire 燃烧 token 赚取对应股票/XAU 奖励。",
         "玩法": [
-          "拍卖：材料称 Supply 中 Auction 为 1,100 枚，GTD 先出价、WL 随后，无公开竞价；起拍 0.0001 ETH，出价越高越有竞争力，最高出价者获胜，未中者全额退款；赢家按统一清算价支付，未使用 ETH 退还；Uniswap V4 池按最终价格开放，公众在此购买。",
-          "GTD/WL 资格玩法：材料称 GTD 先于 WL 出价；GTD drop 为前 50 个钱包获得 GTD 席位；WL 申请开放，材料称仅 111 个钱包，截止 10 月 31 日；另有推文称 22 个拍卖席位（11 GTD + 11 WL）从评论中随机抽取，24 小时内公布。",
-          "Hardwire 奖励：1 token = 1 live machine；将 token hardwire 后会永久燃烧，机器变为永久；Hardwired 机器分享每笔 swap 的 2% 股票奖励，例如 TSLA 对应 TSLAx、NVDA 对应 NVDAx；奖励跟随机器，卖出机器后新 owner 获得奖励。",
-          "Gold 1/1：材料称 #0001 Genesis（The Ink Exchange）与 #0002 Aurum（The Gold Press）为仅有的两台一次性机器，也是仅有的两台赚取 XAU 的机器；两者将分别拍卖，细节 soon。",
-          "Swap 费用分配：材料称 3% swap fee 由代码自动拆分：2.00% 给 hardwired holders 作为股票和 XAU 奖励，0.60% buy and burn，0.25% buyback 到锁定流动性，0.15% 给 creator；每次 burn 永久减少供应。",
-          "路线图：1）拍卖：GTD + WL 出价，需求决定价格；2）Trading Live：Uniswap 池按该价格立即开放；3）Hardwire Era：burn 以接入机器并赚取股票；4）Gold 1/1 Auction：Genesis 与 Aurum；5）Burn Engine：每笔 swap 燃烧供应。",
-          "RAW 材料称：项目自称 Ink 链上首个 ERC404 标准产品，推出 2222 台实时竞价机器，用户可针对十条股票代码进行链上竞价。"
+          "1 token = 1 machine：持有完整 Inktron 会向钱包铸造实时竞价机器；卖出后低于 1 个 token 会燃烧。",
+          "每台机器为实时竞价动画终端，材料称全部由代码生成且没有两台相同。",
+          "拍卖：1,100 枚用于拍卖；GTD 先竞价，WL 随后；无公开竞价；起拍 0.0001 ETH；更多出价会推高价格。",
+          "出价规则：每钱包无出价上限，可出任意金额；出价是最高价而非实际支付价；所有赢家按统一清算价支付，未用 ETH 退还；最高出价者获胜，其他人全额退款。",
+          "拍卖结束后 Uniswap V4 池按最终拍卖价开启，公众可在池中购买。",
+          "供给分配：拍卖 1,100；Uniswap 池 1,100；团队 22（含 gold #0001 和 #0002）。材料称团队从拍卖取 0 ETH，100% 进入池子，流动性永久锁定。",
+          "硬接线：将 Inktron hardwire 后 token 永久燃烧，机器成为永久；只有硬接线机器赚取所追踪股票奖励，如 TSLA 赚 TSLAx、NVDA 赚 NVDAx；奖励随机器转移，卖出后新持有人赚取。",
+          "Swap 费 3% 自动拆分：2.00% 给硬接线持有者作为股票和 XAU 奖励；0.60% 买入并燃烧；0.25% 回购进入锁定流动性；0.15% 创作者。",
+          "Gold 1/1s：#0001 Genesis（The Ink Exchange）与 #0002 Aurum（The Gold Press）各仅存在一台，且仅这两台赚取 XAU；两者将分别拍卖，细节未公布。",
+          "路线图：拍卖（GTD + WL 竞价，需求定价）→ 交易上线（Uniswap 池按该价格立即开启）→ Hardwire Era（燃烧接线赚股票）→ Gold 1/1 拍卖（Genesis 与 Aurum）→ Burn Engine（每笔 swap 燃烧供应）。"
         ],
         "参与需求": [
-          "拍卖参与资格：仅 GTD + WL，无公开竞价；需先获得 GTD 或 WL 资格。",
-          "GTD 参与要求（材料称）：关注 @Inktrons404、Like、RT、Tag 2 位好友，并在评论留下 Ink 钱包；前 50 个钱包获得 GTD 席位。",
-          "WL 参与要求（材料称）：关注 @Inktrons404 + Like + RT 以符合资格，提交 WL 申请并留下 Ink 钱包或 EVM 钱包；材料称仅 111 个钱包，截止 10 月 31 日。",
-          "22 席位抽奖要求（材料称）：关注 @Inktrons404，在评论留下 EVM 钱包，随机抽取 11 GTD + 11 WL，24 小时内公布。",
-          "拍卖出价：需准备 ETH；起拍价 0.0001 ETH；每钱包不限金额；出价是最高价而非实际支付价，赢家统一按清算价支付，未用 ETH 退还。",
-          "接收与转换：材料称 Inktrons tokens 会进入钱包，可随时转换为 NFT；1 token = 1 machine；具体转换入口未公布。",
-          "Hardwire：持有 token 后需 burn 以绑定机器并永久化；具体操作入口、链上费用未公布。",
-          "公开交易：Uniswap V4 池开放后公众可购买；所需链上资产、Gas 及其他费用未公布。",
-          "Gold 1/1 拍卖：需等待官方公布单独拍卖细节；参与要求与费用未公布。"
+          "关注 @Inktrons404，按要求 Like + RT；部分活动要求 Tag 2 位好友或提交 Ink/EVM 钱包。",
+          "WL 申请材料写截止 31 October，未给具体时刻；时区按 Asia/Shanghai 理解日期。",
+          "WL 名额材料出现 111 wallets only；另有 GTD 首批 50 钱包、22 个拍卖席位（11 GTD + 11 WL）等不同活动口径。",
+          "拍卖仅 GTD 与 WL 可出价，无公开竞价；每钱包无出价上限；出价任意金额，起拍 0.0001 ETH。",
+          "需准备 Ink/EVM 钱包；材料分别写 Ink wallet 与 EVM wallet。",
+          "需要 ETH 作为拍卖出价资金；除拍卖出价和材料所述 3% swap fee 外，其他费用未公布。",
+          "Gold 1/1 拍卖细节、具体时间与参与门槛未公布。",
+          "官网未公布；合约地址/CA 未公布。"
         ],
         "步骤": [
-          "1. 在 2026-10-29T17:16:28+08:00（Asia/Shanghai）前，核对官方 X @Inktrons404 与证据链；材料未提供官网（None），不要使用非材料来源的链接或地址。",
-          "2. 按材料规则争取 GTD/WL：完成关注、Like、RT、Tag 好友、留下 Ink/EVM 钱包或提交 WL 申请；名额、截止和抽奖规则以官方最终公告为准。",
-          "3. 参与拍卖：GTD 先出价，WL 随后；无公开竞价；填写你的最高出价，等待清算；若中标按统一清算价支付，未用 ETH 退回；若未中标获得全额退款。",
-          "4. 拍卖结束后关注 Uniswap V4 池：材料称池子按最终价格开放，公众可在该池购买。",
-          "5. 持有 token 后按官方入口将 token 转为 NFT 或进行 Hardwire：burn token 绑定机器，机器永久化并进入奖励体系；此步骤不可逆。",
-          "6. 关注 Gold 1/1 拍卖与 Burn Engine 后续：Genesis、Aurum 将分别拍卖，细节 soon；每笔 swap 触发供应燃烧。"
+          "关注 @Inktrons404，按对应推文要求 Like + RT；部分活动要求 Tag 2 位好友或提交 Ink/EVM 钱包，以申请 WL 或参与 GTD 抽取。",
+          "WL 截止材料写 31 October，未给具体时刻；按 Asia/Shanghai 理解日期，并以官方最新说明为准。",
+          "获得 GTD/WL 资格后，在拍卖中出价：起拍 0.0001 ETH；每钱包无上限；出价是最高价；GTD 先于 WL；无公开竞价。",
+          "拍卖结束：最高出价者获胜，所有赢家按统一清算价支付；未用 ETH 退还；未赢者全额退款。",
+          "拍卖后 Inktron token 进入钱包，可随时转换为 NFT；Uniswap V4 池按最终价开放，公众可在池中购买。",
+          "若要赚取奖励，将机器 hardwire：token 永久燃烧，机器永久化；只有硬接线机器赚取所追踪股票奖励，奖励随机器转移，卖出后新持有人赚取。",
+          "关注 Gold 1/1 拍卖：#0001 Genesis 与 #0002 Aurum 分别拍卖，细节未公布；路线图后续为 Burn Engine，每笔 swap 燃烧供应。"
         ],
         "风险注意": [
-          "本整理仅基于给定材料；材料未给出合约地址（CA），也明确官网为 None。绝不编造 CA，任何未在官方材料中确认的合约地址都不应视为本材料来源。",
-          "链字段未明确；RAW 材料称项目在 Ink 链并自称首个 ERC404，但材料未给出链 ID、合约或浏览器验证信息。",
-          "材料内部名额与供应存在不一致：Supply 写 Auction 1,100，另有 22 个拍卖席位抽奖、前 50 个 GTD、111 个 WL 等说法；需以官方最终公告为准。",
-          "拍卖规则为 GTD/WL only、无公开竞价；出价是最高价，赢家按统一清算价支付，未用 ETH 退还；未中退款流程与到账时间未公布。",
-          "Hardwire 会永久燃烧 token，属于不可逆操作；奖励依赖 swap 费和股票代币化机制，具体股票映射、领取方式、税务与合规未公布。",
-          "费用方面：材料仅列明 3% swap fee 分配和 0.0001 ETH 起拍价；其他参与费用、Gas、NFT 转换费用、WL/GTD 费用均未公布。",
-          "「流动性永久锁定」「团队从拍卖拿 0 ETH」「100% 进入池子」「奖励永久」等为材料/项目方表述，未独立验证；X/t.co 链接可能变化。",
-          "开盘时间按 Asia/Shanghai 记录为 2026-10-29T17:16:28+08:00；截止日期、抽奖和拍卖时间如有变更，以官方最终信息为准。",
-          "加密资产波动大且规则复杂，参与前应自行核对官方信息并遵守所在地法律。"
+          "材料未公布合约地址/CA，官网为 None；不要根据非官方信息转账或交互。",
+          "材料仅称部署在 Ink 链/@inkonchain 且为首个 ERC404，给定链字段为其他；跨链与标准实现风险未说明。",
+          "WL/GTD 规则存在多个版本（111 WL、首批 50 GTD、22 席位等），且截止 31 October 未给具体时刻，需以官方最新为准。",
+          "拍卖无公开竞价，仅 GTD/WL；存在资格、抽选、出价与清算规则理解风险；材料未给拍卖合约细节。",
+          "硬接线会永久燃烧 token，机器永久化且奖励随机器转移；卖出后新持有人获得奖励，需确认不可逆风险。",
+          "奖励涉及股票代币（如 TSLAx、NVDAx）与 XAU，材料未说明发行方、托管、合规、流动性与兑付风险。",
+          "3% swap fee 及分配为材料自述；其他费用未公布；滑点、MEV、DEX 风险未说明。",
+          "Gold 1/1 拍卖细节未公布；团队份额、流动性永久锁定等均为材料自述，需独立核验。",
+          "时间：开盘 2026-10-29T17:16:28+08:00（Asia/Shanghai）；WL 截止仅写 31 October，未给具体时刻。"
         ],
         "来源": [
           {
-            "label": "X @Inktrons404 证据链",
+            "label": "X 证据链（Inktrons404）",
             "url": "https://x.com/Inktrons404/status/2115372115641946301"
+          },
+          {
+            "label": "X 材料链接（拍卖说明）",
+            "url": "https://t.co/KO8ybD8qTz"
+          },
+          {
+            "label": "X 材料链接（WL 申请）",
+            "url": "https://t.co/KCC8RKSUs0"
+          },
+          {
+            "label": "X 材料链接（供给分配）",
+            "url": "https://t.co/TTTvMjqNiI"
+          },
+          {
+            "label": "X 材料链接（3% 费用拆分）",
+            "url": "https://t.co/x89BXySJWG"
           }
         ]
       },
