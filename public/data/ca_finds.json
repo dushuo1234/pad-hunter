@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-11-01T13:30:06+08:00",
+  "generated_at": "2026-11-01T13:36:35+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 309,
+  "count": 310,
   "token_ca_count": 19,
-  "wallet_count": 112,
+  "wallet_count": 113,
   "confirmed_count": 2,
   "candidate_count": 27,
   "status_counts": {
     "confirmed": 2,
     "candidate": 27,
     "superseded": 0,
-    "not_ca": 280
+    "not_ca": 281
   },
   "finds": [
     {
@@ -21,19 +21,19 @@
       "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
       "source": "x_post:https://x.com/RealHappyBlock",
       "evidence_url": "https://x.com/RealHappyBlock",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "x_post:https://x.com/RealHappyBlock",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -76,20 +76,80 @@
       "lead_seconds": null
     },
     {
+      "project": "Brawlers",
+      "handle": "brawlers_nft",
+      "chain": "robinhood",
+      "address": "0xbd8063188d0125da2759c63a6ffa117dbe1ae93d",
+      "source": "site:https://x.com/brawlers_nft",
+      "evidence_url": "https://x.com/brawlers_nft",
+      "detected_at": "2026-11-01T13:19:26+08:00",
+      "confidence": "high",
+      "note": "ca_gate: ERC20 verified: BRAWLERS dec=18",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/brawlers_nft",
+          "detected_at": "2026-11-01T13:19:26+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "BRAWLERS",
+        "name": "Brawlers",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: BRAWLERS dec=18"
+      },
+      "categories": [
+        "NFT铸造"
+      ],
+      "strategy": "NFT铸造",
+      "watch_promoted": false,
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": "2026-10-28T01:07:15+08:00",
+      "first_buy_in_creation_tx": true,
+      "first_buy_tx": "0xdbca445d086341f03d1943a9663a29e78da766433ebddbf539a9b3c79cda4012",
+      "first_external_buy_time": "2026-10-28T01:07:16+08:00",
+      "first_external_buy_tx": "0x1abc0439c026b6282fb875a589cbccbece2615bc0000fcdfac2846d555cddfdf",
+      "listing_time": "2026-10-28T01:07:16+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）；创建交易内另有开发者买入已排除；判定为启发式（买入来自未登记的合约池子）",
+      "lead_seconds": null
+    },
+    {
       "project": "【扫出钱包·非CA】XO",
       "handle": "xo_xlayer",
       "chain": "ethereum",
       "address": "0x393CF5AFB9500a7a4719F982161553BA5EBC1940",
       "source": "watchlist.scanned_wallets",
       "evidence_url": "https://x.com/xo_xlayer",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -136,14 +196,14 @@
       "address": "0xf63e7df1b80a0862e50589330ab63ac6d52d0bb1",
       "source": "watchlist:https://x.com/THEFORGEEN_NFT",
       "evidence_url": "https://x.com/THEFORGEEN_NFT",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/THEFORGEEN_NFT",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -192,14 +252,14 @@
       "address": "0x5d43566e40e2e6d396ec10224363e5cacfc40cf0",
       "source": "watchlist:https://x.com/BrushbornBNB",
       "evidence_url": "https://x.com/BrushbornBNB",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/BrushbornBNB",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -248,14 +308,14 @@
       "address": "0xee581c7d13cff5c4e34a662ba521c0d3c63efb6d",
       "source": "watchlist:https://x.com/sonicprotocol_",
       "evidence_url": "https://x.com/sonicprotocol_",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/sonicprotocol_",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -302,14 +362,14 @@
       "address": "0x6a64c1c5b1e7b35e6a8a03af165b9fec75b17f5e",
       "source": "watchlist:https://x.com/citiland_rh",
       "evidence_url": "https://x.com/citiland_rh",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "high",
       "note": "ca_gate: ERC20 verified: CITI dec=18",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/citiland_rh",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -359,14 +419,14 @@
       "address": "0xb45af6c6844b1085705b2bfe6dd06fa96466290e",
       "source": "watchlist:https://x.com/vozzGPU",
       "evidence_url": "https://x.com/vozzGPU",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "high",
       "note": "ca_gate: ERC20 verified: VZ dec=18",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/vozzGPU",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -419,14 +479,14 @@
       "address": "0x0be1b4f7610414b22af528f74790d0274b1a4152",
       "source": "watchlist:https://x.com/squishemfun",
       "evidence_url": "https://x.com/squishemfun",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/squishemfun",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -475,14 +535,14 @@
       "address": "0x23242527ead68eddffdcb6d8ca6874a7e691a821",
       "source": "site:https://x.com/HuntFieldRH",
       "evidence_url": "https://x.com/HuntFieldRH",
-      "detected_at": "2026-10-31T15:59:34+08:00",
+      "detected_at": "2026-11-01T13:19:26+08:00",
       "confidence": "high",
       "note": "ca_gate: ERC20 verified: HF dec=18",
       "sources": [
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/HuntFieldRH",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -529,86 +589,25 @@
       "lead_seconds": null
     },
     {
-      "project": "Eason",
-      "handle": "wuyidefi",
-      "chain": "robinhood",
-      "address": "0x42df7dc8381c963318cb203021f7a74f58705bca",
-      "source": "site:https://x.com/wuyidefi",
-      "evidence_url": "https://x.com/wuyidefi",
-      "detected_at": "2026-10-31T15:59:19+08:00",
-      "confidence": "high",
-      "note": "ca_gate: ERC20 verified: PonsiOS dec=18",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/wuyidefi",
-          "detected_at": "2026-10-31T15:59:19+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/wuyidefi",
-          "detected_at": "2026-10-31T15:59:34+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "robinhood",
-        "symbol": "PonsiOS",
-        "name": "PonsiOS",
-        "decimals": 18,
-        "code_bytes": 3248,
-        "note": "ERC20 verified: PonsiOS dec=18"
-      },
-      "categories": [
-        "发射台"
-      ],
-      "strategy": "发射台",
-      "watch_promoted": false,
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
-      "lead_seconds": null
-    },
-    {
       "project": "【扫出钱包·非CA】slymz",
       "handle": "slymzcrew",
       "chain": "robinhood",
       "address": "0x9e93410278234E651E3B4cee31e6286d8D6c9D97",
       "source": "x_post",
       "evidence_url": "https://x.com/slymzcrew",
-      "detected_at": "2026-10-31T15:59:19+08:00",
+      "detected_at": "2026-11-01T13:19:05+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:19+08:00"
+          "detected_at": "2026-11-01T13:19:05+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-31T15:59:47+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -663,14 +662,14 @@
       "address": "0xbb7526ce21b526ae0c50b932790570786fb1b160",
       "source": "x_post",
       "evidence_url": "https://x.com/slymzcrew",
-      "detected_at": "2026-10-31T15:59:19+08:00",
+      "detected_at": "2026-11-01T13:19:05+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:19+08:00"
+          "detected_at": "2026-11-01T13:19:05+08:00"
         }
       ],
       "kind": "wallet",
@@ -725,14 +724,14 @@
       "address": "0xe4c1e1329Edf032760d24BFe117Ac67C123BDe0B",
       "source": "x_post",
       "evidence_url": "https://x.com/slymzcrew",
-      "detected_at": "2026-10-31T15:59:19+08:00",
+      "detected_at": "2026-11-01T13:19:05+08:00",
       "confidence": "medium",
       "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:19+08:00"
+          "detected_at": "2026-11-01T13:19:05+08:00"
         }
       ],
       "kind": "wallet",
@@ -781,20 +780,81 @@
       "lead_seconds": null
     },
     {
+      "project": "Eason",
+      "handle": "wuyidefi",
+      "chain": "robinhood",
+      "address": "0x42df7dc8381c963318cb203021f7a74f58705bca",
+      "source": "site:https://x.com/wuyidefi",
+      "evidence_url": "https://x.com/wuyidefi",
+      "detected_at": "2026-11-01T13:19:04+08:00",
+      "confidence": "high",
+      "note": "ca_gate: ERC20 verified: PonsiOS dec=18",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://x.com/wuyidefi",
+          "detected_at": "2026-11-01T13:19:04+08:00"
+        },
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/wuyidefi",
+          "detected_at": "2026-11-01T13:19:26+08:00"
+        }
+      ],
+      "kind": "contract",
+      "addr_kind": "contract",
+      "is_token": true,
+      "label_zh": "合约CA",
+      "verify": {
+        "kind": "token",
+        "chain": "robinhood",
+        "symbol": "PonsiOS",
+        "name": "PonsiOS",
+        "decimals": 18,
+        "code_bytes": 3248,
+        "note": "ERC20 verified: PonsiOS dec=18"
+      },
+      "categories": [
+        "发射台"
+      ],
+      "strategy": "发射台",
+      "watch_promoted": false,
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "lead_seconds": null
+    },
+    {
       "project": "【合约(非代币)·非CA】Elysium Alpha",
       "handle": "AlphaElysium",
       "chain": "solana",
       "address": "6qHtAvksH2cSaUjz6euVSikPU8RnDqLpFtuWH6Ropump",
       "source": "x_post",
       "evidence_url": "https://x.com/AlphaElysium",
-      "detected_at": "2026-10-31T15:59:19+08:00",
+      "detected_at": "2026-11-01T13:19:04+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 ; ca_gate: owned by TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA (not token program)",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:19+08:00"
+          "detected_at": "2026-11-01T13:19:04+08:00"
         }
       ],
       "kind": "contract",
@@ -841,20 +901,228 @@
       "lead_seconds": null
     },
     {
+      "project": "【非地址·非CA】The Forge",
+      "handle": "theforgeen_nft",
+      "chain": "solana",
+      "address": "EABoBAQEBAQEBAQAAAAAAAAAAAAABAgMEBQb",
+      "source": "site:https://theforgeen.pages.dev/",
+      "evidence_url": "https://theforgeen.pages.dev/",
+      "detected_at": "2026-11-01T13:19:00+08:00",
+      "confidence": "low",
+      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://theforgeen.pages.dev/",
+          "detected_at": "2026-11-01T13:19:00+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "not a valid Solana pubkey"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【非地址·非CA】The Forge",
+      "handle": "theforgeen_nft",
+      "chain": "solana",
+      "address": "me9UtbdLfUXhuSpA4B7GsdStd6akdxHcx",
+      "source": "site:https://theforgeen.pages.dev/",
+      "evidence_url": "https://theforgeen.pages.dev/",
+      "detected_at": "2026-11-01T13:19:00+08:00",
+      "confidence": "low",
+      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://theforgeen.pages.dev/",
+          "detected_at": "2026-11-01T13:19:00+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "not a valid Solana pubkey"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【非地址·非CA】The Forge",
+      "handle": "theforgeen_nft",
+      "chain": "solana",
+      "address": "n86PYX8en3QEse5XG1wDwAehoepS2trdNnK",
+      "source": "site:https://theforgeen.pages.dev/",
+      "evidence_url": "https://theforgeen.pages.dev/",
+      "detected_at": "2026-11-01T13:19:00+08:00",
+      "confidence": "low",
+      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://theforgeen.pages.dev/",
+          "detected_at": "2026-11-01T13:19:00+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "not a valid Solana pubkey"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【非地址·非CA】The Forge",
+      "handle": "theforgeen_nft",
+      "chain": "solana",
+      "address": "hpmKEQxDkHAyee1ZuoXsa2wMRyXyARXbBw5PUjJt",
+      "source": "site:https://theforgeen.pages.dev/",
+      "evidence_url": "https://theforgeen.pages.dev/",
+      "detected_at": "2026-11-01T13:19:00+08:00",
+      "confidence": "low",
+      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
+      "sources": [
+        {
+          "origin": "listing_scan_latest",
+          "source": "site:https://theforgeen.pages.dev/",
+          "detected_at": "2026-11-01T13:19:00+08:00"
+        }
+      ],
+      "kind": "invalid",
+      "addr_kind": "invalid",
+      "is_token": false,
+      "label_zh": "非地址",
+      "verify": {
+        "kind": "invalid",
+        "chain": "未知",
+        "note": "not a valid Solana pubkey"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
       "project": "【非地址·非CA】Brushborn",
       "handle": "brushbornbnb",
       "chain": "solana",
       "address": "fJxVBvnVZ4SUwaQiLzEjtngQwHPunAssHgU",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -899,14 +1167,14 @@
       "address": "4eBLW57kMxsfJpVSPGMvn3H1cfQrSeuztqGMiSLhA",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -951,14 +1219,14 @@
       "address": "2v7TbDrgxwKJQmKqqDkUVtPVrDeie9EY5CP",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -1003,14 +1271,14 @@
       "address": "TwrbiNC3c9WedkWKzKtGWiG5TAPztU3rg9vAx2",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -1055,14 +1323,14 @@
       "address": "msFvSdKdUr9q9GEfhXPbsNvMRtjoSyiZA",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -1107,14 +1375,14 @@
       "address": "X31z5K8aGi57KVFKhHMEZDn97P786T9EEv46A1PL",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -1159,14 +1427,14 @@
       "address": "oVjj4rmhS72hxJYdmDUb3ZyCZ8ZuLi6m7mGHDG",
       "source": "site:https://brushborn.pages.dev",
       "evidence_url": "https://brushborn.pages.dev",
-      "detected_at": "2026-10-31T15:59:16+08:00",
+      "detected_at": "2026-11-01T13:19:00+08:00",
       "confidence": "low",
       "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://brushborn.pages.dev",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         }
       ],
       "kind": "invalid",
@@ -1211,14 +1479,14 @@
       "address": "0x335a4E49d1BDDE83D4fE5b9D9fbca3Fe3F08C7f5",
       "source": "x_post",
       "evidence_url": "https://x.com/ooq1079965",
-      "detected_at": "2026-10-31T15:59:15+08:00",
+      "detected_at": "2026-11-01T13:18:59+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         }
       ],
       "kind": "nft",
@@ -1277,14 +1545,14 @@
       "address": "0x41ed6bfa4a9eee713bf3a3997f1dd7ac0d3ac482",
       "source": "x_post",
       "evidence_url": "https://x.com/ooq1079965",
-      "detected_at": "2026-10-31T15:59:15+08:00",
+      "detected_at": "2026-11-01T13:18:59+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         }
       ],
       "kind": "nft",
@@ -1342,14 +1610,14 @@
       "address": "0x85c27083f50b4984cffed9800c95bc6add3046db",
       "source": "x_post",
       "evidence_url": "https://x.com/ooq1079965",
-      "detected_at": "2026-10-31T15:59:15+08:00",
+      "detected_at": "2026-11-01T13:18:59+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         }
       ],
       "kind": "nft",
@@ -1415,14 +1683,14 @@
       "address": "0x9c62b25C8772cA5C0E3dbeE74638C71EaE2977C5",
       "source": "x_post",
       "evidence_url": "https://x.com/ooq1079965",
-      "detected_at": "2026-10-31T15:59:15+08:00",
+      "detected_at": "2026-11-01T13:18:59+08:00",
       "confidence": "low",
       "note": "【NFT合约·非CA】 ; ca_gate: NFT contract (ERC721) — not a token CA",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         }
       ],
       "kind": "nft",
@@ -1475,36 +1743,42 @@
       "lead_seconds": null
     },
     {
-      "project": "【非地址·非CA】The Forge",
-      "handle": "theforgeen_nft",
-      "chain": "solana",
-      "address": "EABoBAQEBAQEBAQAAAAAAAAAAAAABAgMEBQb",
-      "source": "site:https://theforgeen.pages.dev/",
-      "evidence_url": "https://theforgeen.pages.dev/",
-      "detected_at": "2026-10-31T15:59:15+08:00",
-      "confidence": "low",
-      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
+      "project": "【扫出钱包·非CA】YouDex",
+      "handle": "youdex_xyz",
+      "chain": "ethereum",
+      "address": "0x2509affcEf31a0Aecf6875d229f5F4B3c6B53aFd",
+      "source": "site:https://x.com/Youdex_xyz",
+      "evidence_url": "https://x.com/Youdex_xyz",
+      "detected_at": "2026-11-01T13:18:58+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "listing_scan_latest",
-          "source": "site:https://theforgeen.pages.dev/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "source": "site:https://x.com/Youdex_xyz",
+          "detected_at": "2026-11-01T13:18:58+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
-      "kind": "invalid",
-      "addr_kind": "invalid",
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
       "is_token": false,
-      "label_zh": "非地址",
       "verify": {
-        "kind": "invalid",
-        "chain": "未知",
-        "note": "not a valid Solana pubkey"
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
-        "AI代理"
+        "DeFi协议"
       ],
-      "strategy": "AI代理",
-      "watch_promoted": false,
+      "strategy": "DeFi协议",
+      "watch_promoted": true,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -1518,162 +1792,7 @@
       "conflict": false,
       "matched_by": [],
       "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": null,
-      "lead_seconds": null
-    },
-    {
-      "project": "【非地址·非CA】The Forge",
-      "handle": "theforgeen_nft",
-      "chain": "solana",
-      "address": "me9UtbdLfUXhuSpA4B7GsdStd6akdxHcx",
-      "source": "site:https://theforgeen.pages.dev/",
-      "evidence_url": "https://theforgeen.pages.dev/",
-      "detected_at": "2026-10-31T15:59:15+08:00",
-      "confidence": "low",
-      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://theforgeen.pages.dev/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
-        }
-      ],
-      "kind": "invalid",
-      "addr_kind": "invalid",
-      "is_token": false,
-      "label_zh": "非地址",
-      "verify": {
-        "kind": "invalid",
-        "chain": "未知",
-        "note": "not a valid Solana pubkey"
-      },
-      "categories": [
-        "AI代理"
-      ],
-      "strategy": "AI代理",
-      "watch_promoted": false,
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": null,
-      "lead_seconds": null
-    },
-    {
-      "project": "【非地址·非CA】The Forge",
-      "handle": "theforgeen_nft",
-      "chain": "solana",
-      "address": "n86PYX8en3QEse5XG1wDwAehoepS2trdNnK",
-      "source": "site:https://theforgeen.pages.dev/",
-      "evidence_url": "https://theforgeen.pages.dev/",
-      "detected_at": "2026-10-31T15:59:15+08:00",
-      "confidence": "low",
-      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://theforgeen.pages.dev/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
-        }
-      ],
-      "kind": "invalid",
-      "addr_kind": "invalid",
-      "is_token": false,
-      "label_zh": "非地址",
-      "verify": {
-        "kind": "invalid",
-        "chain": "未知",
-        "note": "not a valid Solana pubkey"
-      },
-      "categories": [
-        "AI代理"
-      ],
-      "strategy": "AI代理",
-      "watch_promoted": false,
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": null,
-      "lead_seconds": null
-    },
-    {
-      "project": "【非地址·非CA】The Forge",
-      "handle": "theforgeen_nft",
-      "chain": "solana",
-      "address": "hpmKEQxDkHAyee1ZuoXsa2wMRyXyARXbBw5PUjJt",
-      "source": "site:https://theforgeen.pages.dev/",
-      "evidence_url": "https://theforgeen.pages.dev/",
-      "detected_at": "2026-10-31T15:59:15+08:00",
-      "confidence": "low",
-      "note": "【非地址·非CA】 ; ca_gate: not a valid Solana pubkey",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://theforgeen.pages.dev/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
-        }
-      ],
-      "kind": "invalid",
-      "addr_kind": "invalid",
-      "is_token": false,
-      "label_zh": "非地址",
-      "verify": {
-        "kind": "invalid",
-        "chain": "未知",
-        "note": "not a valid Solana pubkey"
-      },
-      "categories": [
-        "AI代理"
-      ],
-      "strategy": "AI代理",
-      "watch_promoted": false,
-      "ca_status": "not_ca",
-      "ca_status_zh": "非CA",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": null,
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "lock_time": null,
       "listing_time_estimate": null,
       "first_buy_time": null,
@@ -1689,14 +1808,14 @@
       "address": "FUSE3in85PPWaA7BdRucpRyemH69nLQHdCU6NfwfWXqL",
       "source": "site:https://x.com/ForgeLaunchPad",
       "evidence_url": "https://x.com/ForgeLaunchPad",
-      "detected_at": "2026-10-31T15:59:10+08:00",
+      "detected_at": "2026-11-01T13:18:55+08:00",
       "confidence": "low",
       "note": "【合约(非代币)·非CA】 ; ca_gate: owned by TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA (not token program)",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/ForgeLaunchPad",
-          "detected_at": "2026-10-31T15:59:10+08:00"
+          "detected_at": "2026-11-01T13:18:55+08:00"
         }
       ],
       "kind": "contract",
@@ -1735,90 +1854,25 @@
       "lead_seconds": null
     },
     {
-      "project": "Brawlers",
-      "handle": "brawlers_nft",
-      "chain": "robinhood",
-      "address": "0xbd8063188d0125da2759c63a6ffa117dbe1ae93d",
-      "source": "site:https://x.com/brawlers_nft",
-      "evidence_url": "https://x.com/brawlers_nft",
-      "detected_at": "2026-10-31T15:59:08+08:00",
-      "confidence": "high",
-      "note": "ca_gate: ERC20 verified: BRAWLERS dec=18",
-      "sources": [
-        {
-          "origin": "listing_scan_latest",
-          "source": "site:https://x.com/brawlers_nft",
-          "detected_at": "2026-10-31T15:59:08+08:00"
-        },
-        {
-          "origin": "watchlist.ca",
-          "source": "site:https://x.com/brawlers_nft",
-          "detected_at": "2026-10-31T15:59:34+08:00"
-        }
-      ],
-      "kind": "contract",
-      "addr_kind": "contract",
-      "is_token": true,
-      "label_zh": "合约CA",
-      "verify": {
-        "kind": "token",
-        "chain": "robinhood",
-        "symbol": "BRAWLERS",
-        "name": "Brawlers",
-        "decimals": 18,
-        "code_bytes": 3248,
-        "note": "ERC20 verified: BRAWLERS dec=18"
-      },
-      "categories": [
-        "NFT铸造"
-      ],
-      "strategy": "NFT铸造",
-      "watch_promoted": false,
-      "ca_status": "candidate",
-      "ca_status_zh": "待确认",
-      "provenance": null,
-      "provenance_zh": null,
-      "official_x_confirmed": false,
-      "wallet_factory_confirmed": false,
-      "ca_role": "token",
-      "alert_ok": false,
-      "evidence": [],
-      "hard_evidence_count": 0,
-      "conflict": false,
-      "matched_by": [],
-      "ca_locked": false,
-      "lock_time": null,
-      "listing_time_estimate": null,
-      "first_buy_time": "2026-10-28T01:07:15+08:00",
-      "first_buy_in_creation_tx": true,
-      "first_buy_tx": "0xdbca445d086341f03d1943a9663a29e78da766433ebddbf539a9b3c79cda4012",
-      "first_external_buy_time": "2026-10-28T01:07:16+08:00",
-      "first_external_buy_tx": "0x1abc0439c026b6282fb875a589cbccbece2615bc0000fcdfac2846d555cddfdf",
-      "listing_time": "2026-10-28T01:07:16+08:00",
-      "listing_time_source": "first_external_buy_onchain",
-      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）；创建交易内另有开发者买入已排除；判定为启发式（买入来自未登记的合约池子）",
-      "lead_seconds": null
-    },
-    {
       "project": "sway",
       "handle": "swaydotfamily",
       "chain": "robinhood",
       "address": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
       "source": "site:https://x.com/swaydotfamily",
       "evidence_url": "https://x.com/swaydotfamily",
-      "detected_at": "2026-10-31T15:59:03+08:00",
+      "detected_at": "2026-11-01T13:18:49+08:00",
       "confidence": "high",
       "note": "ca_gate: ERC20 verified: SWAY dec=18",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/swaydotfamily",
-          "detected_at": "2026-10-31T15:59:03+08:00"
+          "detected_at": "2026-11-01T13:18:49+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/swaydotfamily",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -1871,19 +1925,19 @@
       "address": "0x3885a7eec5ec70637e248c01b7ff4d6a78266ea1",
       "source": "site:https://x.com/playmewly",
       "evidence_url": "https://x.com/playmewly",
-      "detected_at": "2026-10-31T15:59:02+08:00",
+      "detected_at": "2026-11-01T13:18:47+08:00",
       "confidence": "high",
       "note": "ca_gate: ERC20 verified: MEWLY dec=18",
       "sources": [
         {
           "origin": "listing_scan_latest",
           "source": "site:https://x.com/playmewly",
-          "detected_at": "2026-10-31T15:59:02+08:00"
+          "detected_at": "2026-11-01T13:18:47+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/playmewly",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -1955,19 +2009,24 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "kind": "wallet",
+      "label_zh": "扫出钱包",
       "addr_kind": "wallet",
       "is_token": false,
-      "label_zh": "扫出钱包",
       "verify": {
         "kind": "wallet",
         "chain": "ethereum",
@@ -2021,12 +2080,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
@@ -2087,12 +2146,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         }
       ],
       "note_zh": "代码/配置键或浏览器链接中的项目地址",
@@ -2153,12 +2212,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         },
         {
           "origin": "listing_scan_latest",
           "source": "site:https://tapefoundry.xyz/",
-          "detected_at": "2026-10-31T15:59:09+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         }
       ],
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
@@ -4825,7 +4884,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -4897,7 +4956,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -5117,21 +5176,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xc6ad87d630ab0b278c4c36c6394e3e3e0e844c61",
-        "to": "0xf5c3b1deda892437d3830dd0017fd5ec0d32af65",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x21acaf6ec596f9b8abaa01da5f501e6f8efa324a6fd1da5c910151b47eee5214",
-        "amount": "0.001",
-        "asset": "BNB",
-        "funded_at": "2026-08-18T17:13:48+08:00",
-        "deployed_at": "2026-10-29T07:21:25+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -5146,13 +5190,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf5c3b1deda892437d3830dd0017fd5ec0d32af65",
       "ca_locked": false,
       "lock_time": null,
@@ -5894,21 +5931,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xa67d7eb4dc68fa6ce8e34ef8cadaf075b9893fbb",
-        "to": "0xb7e9019d06a61c0092aafc9cd110a2b71bc96ef4",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x6bd745a3d7d540cbaa2f4bd10cd24562dc0d5cd5517c8a69c379691c357c136b",
-        "amount": "0.02676008",
-        "asset": "BNB",
-        "funded_at": "2026-10-24T05:33:58+08:00",
-        "deployed_at": "2026-10-29T01:53:18+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -5923,13 +5945,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xb7e9019d06a61c0092aafc9cd110a2b71bc96ef4",
       "ca_locked": false,
       "lock_time": null,
@@ -5991,21 +6006,6 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xc6ad87d630ab0b278c4c36c6394e3e3e0e844c61",
-        "to": "0x289157c5694cd0d227f4620a1a1bf43230d48f46",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x21acaf6ec596f9b8abaa01da5f501e6f8efa324a6fd1da5c910151b47eee5214",
-        "amount": "0.001",
-        "asset": "BNB",
-        "funded_at": "2026-08-18T17:13:48+08:00",
-        "deployed_at": "2026-10-28T22:52:41+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -6020,13 +6020,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x289157c5694cd0d227f4620a1a1bf43230d48f46",
       "ca_locked": false,
       "lock_time": null,
@@ -6068,7 +6061,7 @@
         {
           "origin": "watchlist.ca",
           "source": "x_official:https://x.com/reapoxyz",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -6448,21 +6441,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -6752,21 +6730,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -7059,21 +7022,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -7363,21 +7311,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -7667,21 +7600,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -7974,21 +7892,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -8281,21 +8184,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -8579,21 +8467,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -8883,21 +8756,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -9187,21 +9045,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -9491,21 +9334,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -9795,21 +9623,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -10102,21 +9915,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -10406,21 +10204,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -10713,21 +10496,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -11017,21 +10785,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -11324,21 +11077,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
       "provenance": "wallet_factory",
@@ -11628,21 +11366,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -11932,21 +11655,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x86b815a6819cf1f069266bab7111cc323cbe64fe",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x07a1d6bd2c65830ba87bc9db655cf19d89bb2cbf5bbf1f9b40f9bcb321e0ee6f",
-        "amount": "0.05",
-        "asset": "ETH",
-        "funded_at": "2026-08-16T14:22:24+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -12236,21 +11944,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x56eddb7aa87536c09ccc2793473599fd21a8b17f",
-        "to": "0xb53cb636243aad194628b88cfcd770ffbe0cedd8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x3e9ed8ac59e0464f4fbfc4b211aa6ee4ea299610ff58dc6ec11c4ed62bf038cf",
-        "amount": "0.01",
-        "asset": "ETH",
-        "funded_at": "2026-10-27T13:03:59+08:00",
-        "deployed_at": "2026-10-28T19:18:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -12307,7 +12000,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Subsonictribe",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -12372,12 +12065,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://vozz.fun/",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         },
         {
           "origin": "watchlist.ca_alt",
           "source": "watchlist.ca_alt",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -12513,7 +12206,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://sonicprotocol.fun",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         }
       ],
       "kind": "nft",
@@ -12579,12 +12272,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://stonkrobotics.xyz",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/StonkRobotics",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -13076,12 +12769,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://seedform.web.id",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/SeedForm_",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -13503,7 +13196,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/RelicMiners",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -13764,17 +13457,17 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://pixel-dragon.pages.dev/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/yonyun96",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         },
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -13838,12 +13531,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://pixelagents.pages.dev",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/BiyBtc",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14144,12 +13837,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://nomio.uk",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/nomiouk_",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14215,12 +13908,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://otv-nft.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/OTV_NFT",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14291,12 +13984,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://omikujibnb.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:00+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/_Omikuji",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14435,12 +14128,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://onchaincrystals.surge.sh/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/OnchainCrystals",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14574,7 +14267,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/lodepass",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14642,7 +14335,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Lanternhold",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -14713,12 +14406,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "x_bio",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/kimchiwork",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -14794,12 +14487,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/koaidotfun",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -14869,7 +14562,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -14938,7 +14631,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -15007,7 +14700,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -15076,7 +14769,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "wallet",
@@ -15145,7 +14838,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -15214,7 +14907,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "wallet",
@@ -15283,7 +14976,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -15352,7 +15045,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://koai.surge.sh",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "nft",
@@ -15425,7 +15118,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Madisonrussle",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -15915,12 +15608,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://floppymarket.surge.sh/",
-          "detected_at": "2026-10-31T15:59:17+08:00"
+          "detected_at": "2026-11-01T13:19:03+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Floppyagents",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -15966,7 +15659,7 @@
       "project": "【NFT合约·非CA】Fin-Sail",
       "handle": "Finsail_",
       "chain": "bsc",
-      "address": "0xedc2f993A226D2c7767C6AFFD2922B1C6614c4CC",
+      "address": "0xedc2f993a226d2c7767c6affd2922b1c6614c4cc",
       "source": "html:https://www.fin-sail.com/",
       "evidence_url": "https://www.fin-sail.com/",
       "detected_at": "2026-10-28T18:18:57+08:00",
@@ -15984,14 +15677,9 @@
           "detected_at": "2026-10-30T21:15:53+08:00"
         },
         {
-          "origin": "listing_scan_latest",
-          "source": "site:https://www.fin-sail.com/",
-          "detected_at": "2026-10-31T15:59:15+08:00"
-        },
-        {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Finsail_",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -16056,7 +15744,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://flaggies.world/",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "nft",
@@ -16127,7 +15815,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/digiwarriorsfun",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -16458,7 +16146,7 @@
         {
           "origin": "watchlist.ca",
           "source": "site:https://x.com/CityHunters_X",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -16646,12 +16334,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://blueskybnb.netlify.app/",
-          "detected_at": "2026-10-31T15:59:17+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/BlueSkyBNB",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -16717,7 +16405,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://blueskybnb.netlify.app/",
-          "detected_at": "2026-10-31T15:59:17+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         }
       ],
       "kind": "contract",
@@ -16841,7 +16529,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://blueskybnb.netlify.app/",
-          "detected_at": "2026-10-31T15:59:17+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         }
       ],
       "kind": "nft",
@@ -16909,7 +16597,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/BitpawsFun",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -17032,12 +16720,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "x_post",
-          "detected_at": "2026-10-31T15:59:15+08:00"
+          "detected_at": "2026-11-01T13:18:59+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/ooq1079965",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -17246,7 +16934,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/agentsplot",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -17667,7 +17355,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/AgentPad_ai",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -17854,12 +17542,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://agent-skelly.fun",
-          "detected_at": "2026-10-31T15:59:18+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/agent_skelly",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -17925,7 +17613,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://agent-skelly.fun",
-          "detected_at": "2026-10-31T15:59:18+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         }
       ],
       "kind": "nft",
@@ -17991,7 +17679,7 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://snack.is-a.si",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         }
       ],
       "kind": "contract",
@@ -18184,12 +17872,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://snack.is-a.si",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:01+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/thevayne666",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -18256,12 +17944,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://agentseal.netlify.app",
-          "detected_at": "2026-10-31T15:59:17+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/Handln",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -18541,7 +18229,7 @@
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/AgentOrdi_BSC",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "wallet",
@@ -18605,12 +18293,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://4agent.surge.sh",
-          "detected_at": "2026-10-31T15:59:16+08:00"
+          "detected_at": "2026-11-01T13:19:02+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "watchlist:https://x.com/4Agent_ai",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "nft",
@@ -18740,21 +18428,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": true,
-      "funding_link": {
-        "from": "0x014ff1bd86c24140c6b1dc4783c2c9ca7cd8877e",
-        "to": "0xf4754fd6fbec5af5248c9b325fcdefd8f05bf9ce",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x88db3e519d7d99cdf35e5cdeb60db23d91683deb884f54c6d64edd745d7cf23c",
-        "amount": "0.04",
-        "asset": "BNB",
-        "funded_at": "2026-10-26T23:44:50+08:00",
-        "deployed_at": "2026-10-28T17:06:28+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -18769,13 +18442,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf4754fd6fbec5af5248c9b325fcdefd8f05bf9ce",
       "ca_locked": false,
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
@@ -18997,21 +18663,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": true,
-      "funding_link": {
-        "from": "0x00e476d08c3dff70557e4df9b74e28a0c5580000",
-        "to": "0x00215c634be902fd2697c5d73246e22ef8ccfffe",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xbf79704f4a585e289c7bb1c1088af7939886c0f9a84c8585cd3c82e81d26a60f",
-        "amount": "0.01",
-        "asset": "BNB",
-        "funded_at": "2026-10-21T18:46:07+08:00",
-        "deployed_at": "2026-10-28T08:47:46+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -19026,13 +18677,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x00215c634be902fd2697c5d73246e22ef8ccfffe",
       "ca_locked": false,
       "note_zh": "核验：EOA 钱包，已加入创建者监控",
@@ -26664,12 +26308,12 @@
         {
           "origin": "listing_scan_latest",
           "source": "site:https://etheriis.netlify.app/",
-          "detected_at": "2026-10-31T15:59:08+08:00"
+          "detected_at": "2026-11-01T13:18:53+08:00"
         },
         {
           "origin": "watchlist.ca",
           "source": "x_official:https://x.com/ETHERIISPROTOCO",
-          "detected_at": "2026-10-31T15:59:34+08:00"
+          "detected_at": "2026-11-01T13:19:26+08:00"
         }
       ],
       "kind": "contract",
@@ -28315,9 +27959,9 @@
         "note": "ERC20 verified: UP dec=18"
       },
       "categories": [
-        "基础设施"
+        "其他"
       ],
-      "strategy": "基础设施",
+      "strategy": "其他",
       "watch_promoted": false,
       "ca_status": "candidate",
       "ca_status_zh": "待确认",
@@ -37225,21 +36869,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xdce9a489d2cce8d96e3ad354747b784f0cd4b112",
-        "to": "0x4f73259329bc3c4f355168f14646d9a71be82745",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x94f1c3fdab31f66e5d23de4979507fc06fc7c1e35f70d858d09ab4d236367a91",
-        "amount": "0.00022",
-        "asset": "BNB",
-        "funded_at": "2026-10-28T17:22:55+08:00",
-        "deployed_at": "2026-10-28T18:19:35+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -37385,21 +37014,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xdce9a489d2cce8d96e3ad354747b784f0cd4b112",
-        "to": "0x4f73259329bc3c4f355168f14646d9a71be82745",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x94f1c3fdab31f66e5d23de4979507fc06fc7c1e35f70d858d09ab4d236367a91",
-        "amount": "0.00022",
-        "asset": "BNB",
-        "funded_at": "2026-10-28T17:22:55+08:00",
-        "deployed_at": "2026-10-28T18:19:35+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": "wallet_factory",
@@ -52620,8 +52234,67 @@
       "lead_seconds": null
     }
   ],
-  "suspected_copycat_count": 205,
+  "suspected_copycat_count": 206,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Alpha",
+      "handle": "alpha_ai",
+      "chain": "base",
+      "address": "0xf39ada4cbc5922306733956f6c723a017aa72b07",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/alpha_ai",
+      "detected_at": "2026-11-01T13:05:09+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:alpha; deployer=0xb85c7972a10a578d09fd296140991f1c7aac04b3; token=MMAQUA / Aqua Agent Alpha; ca_gate: ERC20 verified: MMAQUA dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-11-01T13:05:09+08:00",
+          "reason": "name_fuzzy:alpha",
+          "via": "factory:univ4_pm_base:Initialize"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0xb85c7972a10a578d09fd296140991f1c7aac04b3",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "base",
+        "symbol": "MMAQUA",
+        "name": "Aqua Agent Alpha",
+        "decimals": 18,
+        "code_bytes": 12791,
+        "note": "ERC20 verified: MMAQUA dec=18"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "creator": "0xb85c7972a10a578d09fd296140991f1c7aac04b3",
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Plea IMD",
       "handle": "pleaimd",
@@ -52741,21 +52414,6 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x58f6e5e38c1197d8bceb528885ca249ab4297a3f",
-        "to": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5a7d2fe85c3278005c1819583abc82020f91a507af4fef645e7b4aebba0a8151",
-        "amount": "0.001",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T17:37:43+08:00",
-        "deployed_at": "2026-10-31T15:17:38+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -52770,13 +52428,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -53865,21 +53516,6 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x58f6e5e38c1197d8bceb528885ca249ab4297a3f",
-        "to": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5a7d2fe85c3278005c1819583abc82020f91a507af4fef645e7b4aebba0a8151",
-        "amount": "0.001",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T17:37:43+08:00",
-        "deployed_at": "2026-10-31T15:17:38+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -53894,13 +53530,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -54933,21 +54562,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xbeabd1c9759932568f66604861dd4220535f0d47",
-        "to": "0xd5a3beda9021945c3000f6b1c93ac8a7154d7c9e",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x970040627aec466bad48166c8e1f01de978f61ec304b4de30e1f0939c04cc3c6",
-        "amount": "0.03848797",
-        "asset": "ETH",
-        "funded_at": "2026-03-09T04:14:49+08:00",
-        "deployed_at": "2026-10-29T20:05:37+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -54962,13 +54576,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xd5a3beda9021945c3000f6b1c93ac8a7154d7c9e",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55028,21 +54635,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd9497b53abcd6972b6370cb195b6bfd6b280e607",
-        "to": "0xeb3b9b165de0642919ce63a46878e6c018ce0870",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xf9f41ec68a9dc34f81e895b09c5b6a1e797cecca63b1f0b5549081480e93feda",
-        "amount": "0.01377893",
-        "asset": "ETH",
-        "funded_at": "2026-10-29T16:42:43+08:00",
-        "deployed_at": "2026-10-29T17:10:06+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55057,13 +54649,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xeb3b9b165de0642919ce63a46878e6c018ce0870",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55109,21 +54694,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x35dbf67d3e85731a54022102c7dd9324287d19b2",
-        "to": "0x4f833042a98089c81fb6ce6817d7a40463041b69",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x85ed52ae190aca0ba64b8cc11deb20380e0adc660e715c6078abb37bb99febf0",
-        "amount": "0.28926692",
-        "asset": "ETH",
-        "funded_at": "2026-10-29T15:58:01+08:00",
-        "deployed_at": "2026-10-29T15:58:38+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "robinhood",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55138,13 +54708,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x4f833042a98089c81fb6ce6817d7a40463041b69",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55192,21 +54755,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x6dcbce46a8b494c885d0e7b6817d2b519df64467",
-        "to": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x95fa9129d3ad222c2de1abd0b099fa3dd6ba87e6a7d459905608bdac9692aef6",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:17:19+08:00",
-        "deployed_at": "2026-10-29T09:22:10+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55221,13 +54769,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55275,22 +54816,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x3d75430d3b4ebf09980bb6c8103f799b9ad33478",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:07:45+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55305,13 +54830,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x3d75430d3b4ebf09980bb6c8103f799b9ad33478",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55359,22 +54877,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:06:17+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55389,13 +54891,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55721,21 +55216,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x58f6e5e38c1197d8bceb528885ca249ab4297a3f",
-        "to": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5a7d2fe85c3278005c1819583abc82020f91a507af4fef645e7b4aebba0a8151",
-        "amount": "0.001",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T17:37:43+08:00",
-        "deployed_at": "2026-10-31T15:17:38+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55750,13 +55230,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xd7ab5f1cfa14957f9ce0abb9871707470978798c",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -55802,21 +55275,6 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xada5bb90d0de0bd1b6f3938708f49295a8d1f7cb",
-        "to": "0x8de04c99005a95a173057b5d54c3a4c848bd5513",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xabf69286ccdebe6198f05324d8c93889b377af674dacc2c754d60132039e906c",
-        "amount": "0.00079665",
-        "asset": "ETH",
-        "funded_at": "2026-09-05T01:23:59+08:00",
-        "deployed_at": "2026-10-29T02:15:47+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -55831,13 +55289,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8de04c99005a95a173057b5d54c3a4c848bd5513",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56002,21 +55453,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x5babe600b9fcd5fb7b66c0611bf4896d967b23a1",
-        "to": "0xe6271fece676c66f6c51b78b3a3256e48c338b13",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xf5097bccb2ebc2bbed0c0bf0b3a678603ed248c471ec17f3e180d3a871c8d978",
-        "amount": "0.00257552",
-        "asset": "ETH",
-        "funded_at": "2026-10-27T00:58:47+08:00",
-        "deployed_at": "2026-10-29T00:31:54+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56031,13 +55467,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xe6271fece676c66f6c51b78b3a3256e48c338b13",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56084,21 +55513,6 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xc4ddcb3d07e24a4e1faaf6c9d4d72274ec6ad636",
-        "to": "0x2539085e78584e750c82751b92b1459df4a522fb",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xeeb83ba6efb8fb5ab8b8c1c5f0edb6ccad828a02d490d1c05330c2cb1b558b1f",
-        "amount": "0.00328038",
-        "asset": "BNB",
-        "funded_at": "2026-09-19T20:17:36+08:00",
-        "deployed_at": "2026-10-29T00:01:46+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56113,13 +55527,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x2539085e78584e750c82751b92b1459df4a522fb",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56167,21 +55574,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x31107817244c05e6deba5881a4a56715ea53f560",
-        "to": "0x23b5704a275f743303e1cfdc5d90c715f9a3131c",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x4dfc64c0a226271f5b672b39f53fbf463f897c913622dfccb9285d1607b090b8",
-        "amount": "0.001",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T06:45:11+08:00",
-        "deployed_at": "2026-10-28T23:55:54+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56196,13 +55588,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x23b5704a275f743303e1cfdc5d90c715f9a3131c",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56248,21 +55633,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xc60eeaf05fceef324427c767f122af03fa99378e",
-        "to": "0xf5749bcc4c4e41da7255eaae7a1c3be41ca25b91",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x48563d297367196f920722d4180b54f4033a22fe48394b97019b766634650e6d",
-        "amount": "0.00352832",
-        "asset": "BNB",
-        "funded_at": "2026-10-28T19:29:58+08:00",
-        "deployed_at": "2026-10-28T22:43:45+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56277,13 +55647,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf5749bcc4c4e41da7255eaae7a1c3be41ca25b91",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56331,21 +55694,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xca11bde05977b3631167028862be2a173976ca11",
-        "to": "0x6cfcc8f86e1182772bfe8994f4aa38ef3012e224",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-28T22:36:32+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56360,13 +55708,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x6cfcc8f86e1182772bfe8994f4aa38ef3012e224",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56414,20 +55755,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
-        "to": "0x5ac0c727dcdb5bdfc2135f2f9fb59ccfebcad3d9",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x83bd324e4d86bcc269ce63f24f1572321897bd58f58568864a4a6c4124d31c4d",
-        "amount": "0.002305",
-        "asset": "ETH",
-        "funded_at": "2026-10-06T08:05:03+08:00",
-        "deployed_at": "2026-10-28T21:04:08+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Coinbase Hot",
-        "chain": "base"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56442,14 +55769,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
-          "excluded_reason": "public_funder:exchange:Coinbase Hot"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
       "creator": "0x5ac0c727dcdb5bdfc2135f2f9fb59ccfebcad3d9",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56495,20 +55814,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x28c6c06298d514db089934071355e5743bf21d60",
-        "to": "0x14c89305a2fa487ea49ffafd80e61d7a39dfac52",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x9a07a5cfc2388ae0fed5cea2db766ded939e4ae704eca643959ed70d101126b4",
-        "amount": "0.0994",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T20:18:47+08:00",
-        "deployed_at": "2026-10-28T20:21:21+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Binance 14",
-        "chain": "ethereum"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56523,14 +55828,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 14）",
-          "excluded_reason": "public_funder:exchange:Binance 14"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 14）",
       "creator": "0x14c89305a2fa487ea49ffafd80e61d7a39dfac52",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56578,21 +55875,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xfbad3312ef3f3109948f2866e49400eac053fe50",
-        "to": "0x456305b9a88df6754349391da8df8ac598caad3c",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x0413e004b10edf42738efb2d813ce4e61eda39345af148c705e0e27db0c5c48c",
-        "amount": "0.00017287",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T08:24:45+08:00",
-        "deployed_at": "2026-10-28T19:51:27+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56607,13 +55889,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x456305b9a88df6754349391da8df8ac598caad3c",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56659,21 +55934,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x8d2e69ce8acfdb88524ab611c664942fd132361d",
-        "to": "0x07e0e704a36b425ffc3cfab0df6557f0b858a41b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xa4bda3d81c337b6f51aaccd7083b1bc041c6168853878e6b51bc3b805e5cc689",
-        "amount": "0.00000002",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T19:22:51+08:00",
-        "deployed_at": "2026-10-28T19:23:41+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56688,13 +55948,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x07e0e704a36b425ffc3cfab0df6557f0b858a41b",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56740,21 +55993,6 @@
       ],
       "strategy": "基础设施",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x28afc7ba9c675d4e47e67a3917df3b0d088721a6",
-        "to": "0xb3a18139b52ef0ef25dda97b67b7f214aab09558",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x31f075a04f8593b011336417fc5fcbc3cb85093028f159ba1f25ef9bbaacc1c4",
-        "amount": "0.00042326",
-        "asset": "ETH",
-        "funded_at": "2026-09-16T18:45:31+08:00",
-        "deployed_at": "2026-10-28T19:21:02+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56769,13 +56007,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xb3a18139b52ef0ef25dda97b67b7f214aab09558",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56821,21 +56052,6 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x28afc7ba9c675d4e47e67a3917df3b0d088721a6",
-        "to": "0xb3a18139b52ef0ef25dda97b67b7f214aab09558",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x31f075a04f8593b011336417fc5fcbc3cb85093028f159ba1f25ef9bbaacc1c4",
-        "amount": "0.00042326",
-        "asset": "ETH",
-        "funded_at": "2026-09-16T18:45:31+08:00",
-        "deployed_at": "2026-10-28T19:21:02+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56850,13 +56066,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xb3a18139b52ef0ef25dda97b67b7f214aab09558",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56904,21 +56113,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x56eddb7aa87536c09ccc2793473599fd21a8b17f",
-        "to": "0x14e229bddb5ca973751b84c07832d1fe0dd550e8",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xcc379582a0e90580b8e779afcdc04afe17b82fed8323445842ffb8aae3ee9c1d",
-        "amount": "0.01876251",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T18:03:59+08:00",
-        "deployed_at": "2026-10-28T18:40:01+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -56933,13 +56127,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x14e229bddb5ca973751b84c07832d1fe0dd550e8",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -56987,20 +56174,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
-        "to": "0x81f7ca6af86d1ca6335e44a2c28bc88807491415",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xed254ee7014ed65db2cbd120f7af5956b124bd9e8459430ef3e36865d9ba6bf5",
-        "amount": "0.5",
-        "asset": "ETH",
-        "funded_at": "2024-11-08T22:30:41+08:00",
-        "deployed_at": "2026-10-28T17:20:26+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Coinbase Hot",
-        "chain": "base"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57015,14 +56188,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
-          "excluded_reason": "public_funder:exchange:Coinbase Hot"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
       "creator": "0x81f7ca6af86d1ca6335e44a2c28bc88807491415",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57068,21 +56233,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x27dec74d688f705af5acde0962b1a8252c388888",
-        "to": "0xc5b06be0a73bde3e30d2140ed238e693b6e3448d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xc32a8fb9ee548eea122e6b2893abe9c964bf49f2364650d55351301e9b400e3c",
-        "amount": "0.00000105",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T15:56:09+08:00",
-        "deployed_at": "2026-10-28T15:57:06+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57097,13 +56247,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc5b06be0a73bde3e30d2140ed238e693b6e3448d",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57149,21 +56292,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x068c65b461bd0ff744f568d2ce7d45527b6baf45",
-        "to": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x813ba4d55478fbb59292bea50ccba8ca9648cff86a0e0eccd15a74a844cf531e",
-        "amount": "0.03",
-        "asset": "ETH",
-        "funded_at": "2025-09-01T01:08:11+08:00",
-        "deployed_at": "2026-10-28T14:08:16+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57178,13 +56306,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57230,21 +56351,6 @@
       ],
       "strategy": "NFT铸造",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xf4ff6e743dc6c4acb91c98ffaa578ebb5cfc27db",
-        "to": "0x8eaa65a18637ac7f05c060beadcd0cfd1d857c2e",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1b27c92d0de82dc7fad3e1d4c2216e26a3a1cd3e2006ccbc44f8c35e19075264",
-        "amount": "36.44576418",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T13:41:33+08:00",
-        "deployed_at": "2026-10-28T13:44:03+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57259,13 +56365,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8eaa65a18637ac7f05c060beadcd0cfd1d857c2e",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57374,21 +56473,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xca11bde05977b3631167028862be2a173976ca11",
-        "to": "0x6cfcc8f86e1182772bfe8994f4aa38ef3012e224",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-28T22:36:32+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57403,13 +56487,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x6cfcc8f86e1182772bfe8994f4aa38ef3012e224",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57516,21 +56593,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x21519d5e6973703d850b89ecf0ce75feced5e2e7",
-        "to": "0x208c96926f723a735ac80f99f3ce9ca2a7b8268d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x983bcc6aa3cff43734b4f216a6000ebe3339e6296d7f5dcc9e5fcd72d5feb000",
-        "amount": "0.00000002",
-        "asset": "ETH",
-        "funded_at": "2026-10-28T10:07:39+08:00",
-        "deployed_at": "2026-10-28T10:08:18+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57545,13 +56607,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x208c96926f723a735ac80f99f3ce9ca2a7b8268d",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57597,21 +56652,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xa587abb2e61c572c70f830c3ae8dde4f1d6da0e2",
-        "to": "0xd9cfd6ac6cc16579b4426419617466b8b3c23e1f",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xc96829f546189aa29e03ef0462c076ac3bbf06b680e58f3bbe776a1a8522db41",
-        "amount": "0.59528258",
-        "asset": "ETH",
-        "funded_at": "2026-10-27T09:06:51+08:00",
-        "deployed_at": "2026-10-28T09:21:33+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57626,13 +56666,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xd9cfd6ac6cc16579b4426419617466b8b3c23e1f",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -57802,21 +56835,6 @@
       ],
       "strategy": "GameFi",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x6dcbce46a8b494c885d0e7b6817d2b519df64467",
-        "to": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x95fa9129d3ad222c2de1abd0b099fa3dd6ba87e6a7d459905608bdac9692aef6",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:17:19+08:00",
-        "deployed_at": "2026-10-29T09:22:10+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -57831,13 +56849,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -60186,22 +59197,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:06:17+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -60216,13 +59211,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -60929,22 +59917,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:06:17+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -60959,13 +59931,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -61784,21 +60749,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x6dcbce46a8b494c885d0e7b6817d2b519df64467",
-        "to": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x95fa9129d3ad222c2de1abd0b099fa3dd6ba87e6a7d459905608bdac9692aef6",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:17:19+08:00",
-        "deployed_at": "2026-10-29T09:22:10+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -61813,13 +60763,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xaf2bfb6b69dfe6efd257fe8cd694175156a23812",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -62105,22 +61048,6 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x3d75430d3b4ebf09980bb6c8103f799b9ad33478",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:07:45+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -62135,13 +61062,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x3d75430d3b4ebf09980bb6c8103f799b9ad33478",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -62250,20 +61170,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
-        "to": "0x81f7ca6af86d1ca6335e44a2c28bc88807491415",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0xed254ee7014ed65db2cbd120f7af5956b124bd9e8459430ef3e36865d9ba6bf5",
-        "amount": "0.5",
-        "asset": "ETH",
-        "funded_at": "2024-11-08T22:30:41+08:00",
-        "deployed_at": "2026-10-28T17:20:26+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Coinbase Hot",
-        "chain": "base"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -62278,14 +61184,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
-          "excluded_reason": "public_funder:exchange:Coinbase Hot"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Coinbase Hot）",
       "creator": "0x81f7ca6af86d1ca6335e44a2c28bc88807491415",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -63543,22 +62441,6 @@
       ],
       "strategy": "DeFi协议",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x652ef9e98176b71126106a474f769a90ffd6d321",
-        "to": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-10-29T04:06:17+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "批量转账（calldata 含部署者地址）推断资助方，仅作弱信号",
-        "inferred": true
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -63573,13 +62455,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x710680d1711f284e9acd905b69b0ac5d6e399ed6",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -65928,7 +64803,7 @@
     "taperobot_bsc",
     "zardlabspro"
   ],
-  "watched_wallet_count": 182,
+  "watched_wallet_count": 183,
   "watched_wallets": [
     {
       "handle": "",
@@ -67478,7 +66353,7 @@
       "confidence": "low",
       "evidence_url": "https://x.com/slymzcrew",
       "added_at": "2026-10-30T14:16:23+08:00",
-      "expires_at": "2026-11-30T15:59:19+08:00"
+      "expires_at": "2026-12-01T13:19:05+08:00"
     },
     {
       "handle": "slymzcrew",
@@ -67488,7 +66363,7 @@
       "confidence": "low",
       "evidence_url": "https://x.com/slymzcrew",
       "added_at": "2026-10-30T14:16:23+08:00",
-      "expires_at": "2026-11-30T15:59:19+08:00"
+      "expires_at": "2026-12-01T13:19:05+08:00"
     },
     {
       "handle": "slymzcrew",
@@ -67498,7 +66373,7 @@
       "confidence": "low",
       "evidence_url": "https://x.com/slymzcrew",
       "added_at": "2026-10-30T14:16:23+08:00",
-      "expires_at": "2026-11-30T15:59:19+08:00"
+      "expires_at": "2026-12-01T13:19:05+08:00"
     },
     {
       "handle": "sonicprotocol_",
@@ -67508,7 +66383,7 @@
       "confidence": "medium",
       "evidence_url": "https://x.com/sonicprotocol_",
       "added_at": "2026-10-31T15:59:34+08:00",
-      "expires_at": "2026-11-30T15:59:34+08:00"
+      "expires_at": "2026-12-01T13:19:26+08:00"
     },
     {
       "handle": "subsonictribe",
@@ -67738,7 +66613,7 @@
       "confidence": "low",
       "evidence_url": "https://x.com/xo_xlayer",
       "added_at": "2026-10-29T06:34:58+08:00",
-      "expires_at": "2026-11-30T15:59:34+08:00"
+      "expires_at": "2026-12-01T13:19:26+08:00"
     },
     {
       "handle": "yonyun96",
@@ -67749,6 +66624,16 @@
       "evidence_url": "https://x.com/yonyun96",
       "added_at": "2026-10-28T18:19:40+08:00",
       "expires_at": "2026-11-27T18:19:40+08:00"
+    },
+    {
+      "handle": "youdex_xyz",
+      "chain": "ethereum",
+      "wallet": "0x2509affcEf31a0Aecf6875d229f5F4B3c6B53aFd",
+      "source": "x_official",
+      "confidence": "medium",
+      "evidence_url": "https://x.com/Youdex_xyz",
+      "added_at": "2026-11-01T13:18:58+08:00",
+      "expires_at": "2026-12-01T13:18:58+08:00"
     }
   ],
   "strategy_stats": {
@@ -67756,6 +66641,11 @@
       "projects": 11,
       "confirmed": 0,
       "candidate": 15
+    },
+    "NFT铸造": {
+      "projects": 9,
+      "confirmed": 0,
+      "candidate": 6
     },
     "基础设施": {
       "projects": 7,
@@ -67772,13 +66662,8 @@
       "confirmed": 0,
       "candidate": 1
     },
-    "NFT铸造": {
-      "projects": 9,
-      "confirmed": 0,
-      "candidate": 6
-    },
     "DeFi协议": {
-      "projects": 8,
+      "projects": 9,
       "confirmed": 0,
       "candidate": 1
     },
