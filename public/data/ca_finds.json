@@ -1,19 +1,131 @@
 {
-  "generated_at": "2026-11-03T03:35:08+08:00",
+  "generated_at": "2026-11-03T03:42:17+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 360,
+  "count": 362,
   "token_ca_count": 23,
-  "wallet_count": 138,
+  "wallet_count": 140,
   "confirmed_count": 2,
   "candidate_count": 38,
   "status_counts": {
     "confirmed": 2,
     "candidate": 38,
     "superseded": 0,
-    "not_ca": 320
+    "not_ca": 322
   },
   "finds": [
+    {
+      "project": "【扫出钱包·非CA】Agora",
+      "handle": "agora_elysium",
+      "chain": "ethereum",
+      "address": "0x51d9243d87ad13d7eca55ab57357b2b5fc8241f2",
+      "source": "js:https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "evidence_url": "https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "detected_at": "2026-11-03T03:39:27+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+          "detected_at": "2026-11-03T03:39:27+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "发射台"
+      ],
+      "strategy": "发射台",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": "2026-11-02T00:00:00+08:00",
+      "listing_time_estimate_source": "listing_times.json",
+      "listing_time_estimate_note_zh": "预告开盘时间（仅估计，不是链上首笔外部买入，不参与提前量计算）",
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】Agora",
+      "handle": "agora_elysium",
+      "chain": "ethereum",
+      "address": "0xba876237b0f021a6c6d852d6c26e107997cc5e81",
+      "source": "js:https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "evidence_url": "https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "detected_at": "2026-11-03T03:39:21+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+          "detected_at": "2026-11-03T03:39:21+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "发射台"
+      ],
+      "strategy": "发射台",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": "2026-11-02T00:00:00+08:00",
+      "listing_time_estimate_source": "listing_times.json",
+      "listing_time_estimate_note_zh": "预告开盘时间（仅估计，不是链上首笔外部买入，不参与提前量计算）",
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
     {
       "project": "【扫出钱包·非CA】HappyBlock",
       "handle": "realhappyblock",
@@ -61017,6 +61129,21 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x0795f018e383a56755d7940afc454d607addf483",
+        "to": "0x31c35c9fcbffaeee72af57c1ea7076c588bdc896",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x9cbd122d20f1ea5c185253d5bff4fca7abf58b05cf798ce2b0f9ddc73a9452dc",
+        "amount": "0.82634759",
+        "asset": "ETH",
+        "funded_at": "2026-11-03T02:38:35+08:00",
+        "deployed_at": "2026-11-03T02:40:36+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "base",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -61031,6 +61158,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x31c35c9fcbffaeee72af57c1ea7076c588bdc896",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -76784,7 +76918,7 @@
     "taperobot_bsc",
     "zardlabspro"
   ],
-  "watched_wallet_count": 254,
+  "watched_wallet_count": 256,
   "watched_wallets": [
     {
       "handle": "",
@@ -76909,6 +77043,16 @@
     {
       "handle": "agora_elysium",
       "chain": "ethereum",
+      "wallet": "0x51d9243d87ad13d7eca55ab57357b2b5fc8241f2",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "added_at": "2026-11-03T03:39:27+08:00",
+      "expires_at": "2026-11-09T00:00:00+08:00"
+    },
+    {
+      "handle": "agora_elysium",
+      "chain": "ethereum",
       "wallet": "0x7d1904bfb2472a0ef97d886139a4236060e064ab",
       "source": "site",
       "confidence": "low",
@@ -76935,6 +77079,16 @@
       "evidence_url": "https://www.agoradex.app/_next/static/immutable/chunks/2bxqg21kw7j_0.js",
       "added_at": "2026-11-02T08:52:36+08:00",
       "expires_at": "2026-12-02T08:52:36+08:00"
+    },
+    {
+      "handle": "agora_elysium",
+      "chain": "ethereum",
+      "wallet": "0xba876237b0f021a6c6d852d6c26e107997cc5e81",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://www.agoradex.app/_next/static/immutable/chunks/34qwfiztm2agi.js",
+      "added_at": "2026-11-03T03:39:21+08:00",
+      "expires_at": "2026-11-09T00:00:00+08:00"
     },
     {
       "handle": "agora_elysium",
@@ -79328,6 +79482,11 @@
     }
   ],
   "strategy_stats": {
+    "发射台": {
+      "projects": 4,
+      "confirmed": 0,
+      "candidate": 1
+    },
     "GameFi": {
       "projects": 8,
       "confirmed": 0,
@@ -79347,11 +79506,6 @@
       "projects": 40,
       "confirmed": 0,
       "candidate": 9
-    },
-    "发射台": {
-      "projects": 4,
-      "confirmed": 0,
-      "candidate": 1
     },
     "DeFi协议": {
       "projects": 8,
