@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T17:39:04+08:00",
+  "generated_at": "2026-11-03T17:43:01+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 402,
@@ -63360,12 +63360,19 @@
       "evidence_url": null,
       "detected_at": "2026-11-03T17:33:41+08:00",
       "confidence": "medium",
-      "note": "onchain_lock medium via name:币安人; deployer=0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a; token=币安人 / 币安人; ca_gate: ERC20 verified: 币安人 dec=18 via eip1167 proxy → impl 0x7330d8865f4b6800b72bdd73e2007833a5d45c94",
+      "note": "onchain_lock medium via name:币安人; deployer=0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a; token=币安人 / 币安人; onchain_lock medium via name:币安人; deployer=0x4a56c4f1ab4f9cc4140bdecbc648b9ddf5c441c2; token=币安人 / 币安人; ca_gate: ERC20 verified: 币安人 dec=18 via eip1167 proxy → impl 0x7330d8865f4b6800b72bdd73e2007833a5d45c94",
       "sources": [
         {
           "origin": "onchain_lock",
           "source": "onchain_lock",
           "detected_at": "2026-11-03T17:33:41+08:00",
+          "reason": "name:币安人",
+          "via": "factory:fourmeme_tm2_bsc:Unknown"
+        },
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-11-03T17:37:15+08:00",
           "reason": "name:币安人",
           "via": "factory:fourmeme_tm2_bsc:Unknown"
         }
@@ -63392,6 +63399,21 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x01c952174c24e1210d26961d456a77a39e1f0bb0",
+        "to": "0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x5cd76a975c9b5ad3c09964d65fec62ed45bf939a65a4c2d86badfd7806d1c3eb",
+        "amount": "0.33757634",
+        "asset": "BNB",
+        "funded_at": "2025-05-04T22:16:54+08:00",
+        "deployed_at": "2026-11-03T17:33:41+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "bsc",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -63406,6 +63428,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -63451,21 +63480,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x0ada3111b866ff1ad0477f0c5d2e8ed35a36eb5b",
-        "to": "0xc10ddad0794b9125b7b1a2ae54b09e139a43a2fe",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5aa43061959e4c30bfbd356e70e37f00a4892c0f5e54c0413e9e8f3532a45034",
-        "amount": "0.02980773",
-        "asset": "BNB",
-        "funded_at": "2025-11-04T02:40:26+08:00",
-        "deployed_at": "2026-11-03T17:15:49+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -63480,13 +63494,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc10ddad0794b9125b7b1a2ae54b09e139a43a2fe",
       "ca_locked": false,
       "suspected_copycat": true,
