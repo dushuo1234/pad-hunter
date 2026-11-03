@@ -33,6 +33,10 @@ const PHRASES: Array<[RegExp, string | Replacer]> = [
     /(?:ca_gate:\s*)?contract bytecode but no ERC20 decimals\/symbol\s*[—–-]+\s*not a token CA/gi,
     '核验：有合约字节码，但没有 ERC20 精度或符号，不是代币 CA',
   ],
+  [
+    /(?:ca_gate:\s*)?contract has decimals\/symbol but missing ERC20 transfer\/approve\/allowance path\s*[—–-]+\s*not a token CA/gi,
+    '核验：合约有精度/符号，但缺少 ERC20 transfer/approve/allowance 路径，不是代币 CA',
+  ],
   [/(?:ca_gate:\s*)?account does not exist on Solana mainnet/gi, '核验：Solana 主网上不存在该账户'],
   [
     /low confidence:\s*feed-style site that embeds third-party token icons\/posts/gi,
