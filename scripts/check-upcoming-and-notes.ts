@@ -213,6 +213,16 @@ const colorfulExpected =
   '链上锁定：低置信，依据名称模糊匹配 color；部署者 0x501ef174b66883ba40f92e6fb24bfb49331d4d4c；代币 Vibrant Alpine Village Beneath a Colorful Sky / Vibrant Alpine Village Beneath a Colorful Sky；核验：已确认 ERC20（符号 Vibrant Alpine Village Beneath a Colorful Sky，精度 18）'
 if (colorfulZh !== colorfulExpected) fail(`colorful\n${colorfulZh}`)
 
+const missingPathExpected =
+  '核验：合约有精度/符号，但缺少 ERC20 transfer/approve/allowance 路径，不是代币 CA'
+for (const missingPath of [
+  'ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA',
+  'contract has decimals/symbol but missing ERC20 transfer/approve/allowance path – not a token CA',
+]) {
+  const missingPathZh = localizeMachineNote(missingPath)
+  if (missingPathZh !== missingPathExpected) fail(`missing path\n${missingPath}\n${missingPathZh}`)
+}
+
 const samples = [
   'ca_gate: ERC20 verified: HYDRA dec=18',
   'ca_gate: NFT contract (ERC721) — not a token CA',
@@ -222,6 +232,8 @@ const samples = [
   'ca_gate: not a valid Solana pubkey',
   'ca_gate: hex string (hash / git SHA), not a Solana address',
   'ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA',
+  'ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA',
+  'contract has decimals/symbol but missing ERC20 transfer/approve/allowance path – not a token CA',
   'ca_gate: account does not exist on Solana mainnet',
   'classified as EOA/wallet via eth_getCode',
   'classified as contract (3248 bytes)',
