@@ -1,0 +1,114 @@
+{
+  "routine": "开盘与CA预警",
+  "hhmm": "1358",
+  "at": "2026-10-30T14:35:48+08:00",
+  "timezone": "Asia/Shanghai",
+  "pause": "OPEN",
+  "pause_file": "ABSENT",
+  "fired_at_utc": "2026-10-30T05:58:20.010Z",
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "watchlist": {
+    "before": 428,
+    "after_sync": 428,
+    "after_pipeline": 428,
+    "locked_new": [],
+    "updated_meta": 3,
+    "npa_skipped": 43,
+    "kol_skipped": 1,
+    "incomplete": 167
+  },
+  "x_refresh": {
+    "at": "2026-10-30T14:01:43+08:00",
+    "bios_refreshed": 18,
+    "posts_handles": [
+      "privatekeycoin_",
+      "pixelblobsnft",
+      "huemans_rh",
+      "tapeupio",
+      "kaspaseal",
+      "bopzopapp",
+      "graildotfamily",
+      "inktrons404"
+    ],
+    "posts_counts": {
+      "privatekeycoin_": 3,
+      "pixelblobsnft": 3,
+      "huemans_rh": 5,
+      "tapeupio": 5,
+      "kaspaseal": 5,
+      "bopzopapp": 5,
+      "graildotfamily": 5,
+      "inktrons404": 5
+    },
+    "not_found": [
+      "hashgentic",
+      "bloopersinknft"
+    ],
+    "pkc_bio_snip": "(empty)",
+    "highlights": [
+      "privatekeycoin_: Launching this week.  Only CA will be posted in bio.  Stand by.",
+      "pixelblobsnft: Eligible to mint: everyone who is verified on @kalosfun and has the yellow role on Kalos Discord. https://t.co/0qJ1nACEdf",
+      "pixelblobsnft: RT @pixelblobsnft: Welcome to @Enter_Elysium 🌃  1,111 pixel blobs are moving into the city. Saints, kings, ghosts and a few menaces.  Mint:…",
+      "pixelblobsnft: Welcome to @Enter_Elysium 🌃  1,111 pixel blobs are moving into the city. Saints, kings, ghosts and a few menaces.  Mint: Oct 30, 18:00 UTC o",
+      "huemans_rh: RT @Huemans_rh: Tomorrow. 🎨  $HUE, the Huemans meme coin, launches on   @robinhoodapp.  Same faces. Same colors. Same voice for everyone.…",
+      "huemans_rh: Tomorrow. 🎨  $HUE, the Huemans meme coin, launches on   @robinhoodapp.  Same faces. Same colors. Same voice for everyone.  Official contract"
+    ],
+    "user_count": 773
+  },
+  "pipeline": {
+    "exit": 0,
+    "elapsed_s": 1754,
+    "elapsed_min": 29.2,
+    "trace_wallet": "timeout900 rc=124",
+    "new_js_ca": 0,
+    "js_factory_matches": 0,
+    "site_js_changes": 13,
+    "new_deploy_hints_ambient": 27,
+    "prune_newly_removed": 0,
+    "mark_launched_newly": 0,
+    "ca_finds": 274
+  },
+  "onchain_lock": {
+    "baseline_offset": 289,
+    "offset_at_finish": 290,
+    "new_alerts": 1,
+    "actionable": 0,
+    "skipped": "Gazbi.fun 0xfc85… symbol:GF low via univ4_pm_base Initialize (ambient)"
+  },
+  "listing_scan_snapshot": {
+    "checked_at": "2026-10-30 14:32:45 Asia/Shanghai",
+    "new_cas_n": 1,
+    "new_signals_n": 2
+  },
+  "actionable": [],
+  "qualifying": 0,
+  "skipped_notes": {
+    "slymz_new_ca_skipped": "x_post contest winner EOAs 【扫出钱包·非CA】 not token CA",
+    "h4ck0r_sol_skipped": "hex puzzle FLAG{...} not Solana mint",
+    "gazbi_onchain_lock_skipped": "low confidence symbol:GF UniV4 ambient",
+    "site_js_changes_skipped": "13 SITE_JS_CHANGE; near_deploys ambient univ2/univ4 only",
+    "new_deploy_skipped": "27 univ2 ambient; NEW_DEPLOY none watchlist-relevant",
+    "listing_signals_skipped": "boostbob TGE chat noise; h4ck0r \"directory listings\" CTF false positive; no listing_at publish",
+    "x_ca_locked_skipped": "etheriisprotoco ETHRS + reapoxyz REAPO already known sticky"
+  },
+  "today_windows": [
+    "Pixel Blobs 2026-10-30T18:00:00+08:00 (bio also says Oct 30 18:00 UTC on kalosfun)",
+    "Huemans 2026-10-31T00:00:00+08:00 ($HUE tomorrow; Official contract will be posted here only — not yet)",
+    "TapeUP 2026-10-31T00:00:00+08:00",
+    "Hashgentic 2026-10-31T21:00:00+08:00 (X handle not found)",
+    "Kasseal/bopzop/Grail 2026-11-01",
+    "Inktrons 2026-11-01T07:59:00+08:00"
+  ],
+  "rpc_notes": [
+    "base/bsc/eth publicnode intermittent rate limits on onchain daemon — transient, not pausing",
+    "hyperevm rate limited — transient",
+    "trace_wallet hang-safe timeout 900s (rc=124) as prior runs"
+  ],
+  "wake_parent": false,
+  "user_ping": false,
+  "wakeparent_payload": "",
+  "journal_sentence": "2026-10-30 14:35 Asia/Shanghai 开盘与CA预警 (fired 05:58Z): pause absent; running pid=6323 + running pid=5409 ok; wl sync 428→428 locked_new=[]; x bios18 posts8 (PKC+today; hashgentic/bloopers nf); mirrors ok; pipeline EXIT=0 ~29.2m trace_wallet timeout900; new_ca wallet/puzzle-only skip; lock_qual0 (Gazbi low ambient); new_js0 matches0; SITE_JS×13 ambient-only skip; newly已开盘0; qualifying=0; no user ping."
+}

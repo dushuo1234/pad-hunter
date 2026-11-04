@@ -1,0 +1,328 @@
+#!/usr/bin/env python3
+"""Near-realtime Telegram → Pad Hunter candidates sync.
+
+One cycle:
+  1. flock TG fetch lock (share with the 30m routine; no dual Telethon)
+  2. fetch recent 项目推送 cards (default 40 msgs)
+  3. if new message_ids (or --force): sync_site --offline → merge → publish_radar_data
+  4. always refresh local push-radar snapshot; write wake JSON when new cards land
+
+Designed to run every ~60s via tg_push_fast_daemon.sh. Does not relax CA gate.
+Timestamps Asia/Shanghai.
+"""
+from __future__ import annotations
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+SH = ZoneInfo("Asia/Shanghai")
+BASE = Path("/workspace/project-monitor")
+TG = Path("/home/box/.tg-monitor")
+FETCH_LOCK = TG / "tg.fetch.lock"
+STATE = BASE / "tg_push_fast_state.json"
+WAKE = BASE / "tg_push_fast_wake.json"
+LOG_PREFIX = "[tg_push_fast]"
+VENV_TG = TG / "venv" / "bin" / "python"
+VENV_PM = BASE / ".venv" / "bin" / "python"
+SYNC = TG / "sync_site.py"
+MERGE = BASE / "merge_projects_into_candidates.py"
+ENRICH = BASE / "enrich_qingnian.py"
+CANDIDATES = Path("/workspace/push-radar/data/candidates.json")
+PROJECTS_SITE = Path("/workspace/push-radar/data/projects.json")
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def py_tg() -> str:
+    return str(VENV_TG) if VENV_TG.exists() else sys.executable
+
+
+def py_pm() -> str:
+    return str(VENV_PM) if VENV_PM.exists() else sys.executable
+
+
+def load_state() -> dict:
+    try:
+        return json.loads(STATE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_state(obj: dict) -> None:
+    tmp = STATE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(STATE)
+
+
+def snapshot_ids() -> set[str]:
+    """Track composite keys (peer:mid) so multi-source mids never collide."""
+    path = TG / "projects.jsonl"
+    ids: set[str] = set()
+    try:
+        for ln in path.read_text(encoding="utf-8").splitlines():
+            try:
+                o = json.loads(ln)
+                peer = o.get("source_peer")
+                mid = o.get("message_id")
+                if peer is None or peer == "" or peer == 0:
+                    ids.add(str(int(mid)))
+                else:
+                    ids.add(f"{int(peer)}:{int(mid)}")
+            except Exception:
+                pass
+    except FileNotFoundError:
+        pass
+    return ids
+
+
+def run(cmd: list[str], cwd: str | None = None, timeout: int = 180) -> tuple[int, str]:
+    env = {**os.environ, "PYTHONUNBUFFERED": "1"}
+    proc = subprocess.run(
+        cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, env=env
+    )
+    out = (proc.stdout or "") + (proc.stderr or "")
+    # scrub credential-looking lines
+    lines = []
+    for line in out.splitlines():
+        low = line.lower()
+        if any(k in low for k in ("api_hash", "password", "phone=", "proxy pass", "authtoken")):
+            continue
+        lines.append(line)
+    return proc.returncode, "\n".join(lines)
+
+
+def with_fetch_lock(fn):
+    FETCH_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    with open(FETCH_LOCK, "a+", encoding="utf-8") as fh:
+        fcntl.flock(fh.fileno(), fcntl.LOCK_EX)
+        try:
+            return fn()
+        finally:
+            fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+
+
+def stamp_candidates_updated() -> None:
+    if not CANDIDATES.is_file():
+        return
+    try:
+        doc = json.loads(CANDIDATES.read_text(encoding="utf-8"))
+        doc["updated_at"] = now_iso()
+        doc["timezone"] = "Asia/Shanghai"
+        text = json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
+        CANDIDATES.write_text(text, encoding="utf-8")
+        mirror = Path("/workspace/publish-pages-data/candidates.json")
+        mirror.parent.mkdir(parents=True, exist_ok=True)
+        mirror.write_text(text, encoding="utf-8")
+    except Exception as e:
+        print(f"{LOG_PREFIX} stamp_updated failed: {e}", flush=True)
+
+
+def publish() -> int:
+    sys.path.insert(0, str(BASE))
+    from publish_pages_file import publish_radar_data  # noqa: WPS433
+
+    return int(publish_radar_data(force=False) or 0)
+
+
+def write_wake(added: list[str], new_ids: list, candidates_count: int) -> None:
+    payload = {
+        "at": now_iso(),
+        "timezone": "Asia/Shanghai",
+        "added": added,
+        "new_message_ids": new_ids,
+        "candidates_count": candidates_count,
+        "note": "New TG project cards synced to candidates + published. Relay a short digest to the user.",
+    }
+    WAKE.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def push_radar_cloud(added: list[str], *, seed_on_empty: bool = False) -> None:
+    """Realtime Telegram cards → Cloudflare Worker (api.adualpha.win). Never fails cycle."""
+    try:
+        from cf_radar_push import run as _radar_run
+        if added:
+            res = _radar_run(handles=added, client_id="tg_push_fast")
+        elif seed_on_empty:
+            res = _radar_run(seed=50, client_id="tg_push_fast_seed")
+        else:
+            return
+        if res.get("ok"):
+            print(f"{LOG_PREFIX} radar_push upserted={res.get('upserted')} count={res.get('count')} "
+                  f"handles={res.get('pushed_handles')}", flush=True)
+        else:
+            print(f"{LOG_PREFIX} radar_push WARN {res.get('error')}", flush=True)
+    except Exception as e:  # noqa: BLE001
+        print(f"{LOG_PREFIX} radar_push WARN {type(e).__name__}: {e}", flush=True)
+
+
+def one_cycle(*, limit: int, force: bool, offline: bool, publish_ok: bool) -> dict:
+    t0 = time.time()
+    before_ids = snapshot_ids()
+    fetch_rc, fetch_out = 0, "skipped"
+    new_ids: list[str] = []
+
+    def do_fetch():
+        nonlocal fetch_rc, fetch_out
+        if offline:
+            fetch_rc, fetch_out = 0, "offline"
+            return
+        fetch_rc, fetch_out = run(
+            [py_tg(), str(TG / "fetch_and_classify.py"), str(limit),
+             "--board-md", "/tmp/push-radar-board.md",
+             "--board-html", "/tmp/push-radar-board.html"],
+            cwd=str(TG),
+            timeout=120,
+        )
+
+    with_fetch_lock(do_fetch)
+    after_ids = snapshot_ids()
+    new_ids = sorted(after_ids - before_ids)
+    print(f"{LOG_PREFIX} fetch_rc={fetch_rc} new_ids={len(new_ids)} fetch_s={time.time()-t0:.1f}", flush=True)
+    for line in (fetch_out or "").splitlines()[-12:]:
+        print(f"{LOG_PREFIX} | {line}", flush=True)
+
+    # Always refresh site projects snapshot from TG (blocklist applied)
+    sync_rc, sync_out = run([py_tg(), str(SYNC), "--offline"], cwd=str(TG), timeout=60)
+    print(f"{LOG_PREFIX} sync_rc={sync_rc}", flush=True)
+    for line in (sync_out or "").splitlines()[-6:]:
+        print(f"{LOG_PREFIX} | {line}", flush=True)
+
+    # Auto-enrich blank 青年大学习 cards (heuristic; jina only when new msgs landed)
+    # Always allow jina: cards that stay blank on a later cycle still need a profile
+    enrich_cmd = [py_pm(), str(ENRICH), "--limit", "12", "--jina"]
+    enrich_rc, enrich_out = run(enrich_cmd, cwd=str(BASE), timeout=180)
+    print(f"{LOG_PREFIX} enrich_rc={enrich_rc}", flush=True)
+    for line in (enrich_out or "").splitlines()[-8:]:
+        print(f"{LOG_PREFIX} | {line}", flush=True)
+    # refresh site snapshot after enrich wrote projects.json
+    if enrich_rc == 0:
+        sync2_rc, sync2_out = run([py_tg(), str(SYNC), "--offline"], cwd=str(TG), timeout=60)
+        print(f"{LOG_PREFIX} sync_after_enrich_rc={sync2_rc}", flush=True)
+
+    merge_rc, merge_out = run([py_pm(), str(MERGE)], cwd=str(BASE), timeout=60)
+    print(f"{LOG_PREFIX} merge_rc={merge_rc}", flush=True)
+    for line in (merge_out or "").splitlines()[-8:]:
+        print(f"{LOG_PREFIX} | {line}", flush=True)
+
+    added: list[str] = []
+    filled: list[str] = []
+    for line in (merge_out or "").splitlines():
+        if line.startswith("added:"):
+            added = [x.strip() for x in line[len("added:"):].split(",") if x.strip()]
+        if line.startswith("filled:"):
+            filled = [x.strip() for x in line[len("filled:"):].split(",") if x.strip()]
+
+    # Detect merge-added OR new TG message ids OR enriched fills
+    should_publish = force or bool(new_ids) or bool(added) or bool(filled)
+    stamp_candidates_updated()
+
+    # Realtime cloud radar (WS → open site tabs) — before Pages publish; never fatal
+    if added:
+        push_radar_cloud(added)
+    elif new_ids:
+        # New TG msgs but merge didn't report "added:" — still try newest from candidates matching msg ids later;
+        # fall back to seeding nothing here; publish path remains backup.
+        pass
+
+    pub_rc = 0
+    if should_publish and publish_ok:
+        t_pub = time.time()
+        try:
+            pub_rc = publish()
+        except Exception as e:
+            print(f"{LOG_PREFIX} publish error: {e}", flush=True)
+            pub_rc = 2
+        print(f"{LOG_PREFIX} publish_rc={pub_rc} publish_s={time.time()-t_pub:.1f}", flush=True)
+    else:
+        print(f"{LOG_PREFIX} publish skipped (no_delta)", flush=True)
+
+    cand_n = 0
+    try:
+        cand_n = len(json.loads(CANDIDATES.read_text(encoding="utf-8")).get("candidates") or [])
+    except Exception:
+        pass
+
+    if new_ids or added:
+        write_wake(added, new_ids, cand_n)
+
+    st = {
+        "at": now_iso(),
+        "fetch_rc": fetch_rc,
+        "sync_rc": sync_rc,
+        "merge_rc": merge_rc,
+        "publish_rc": pub_rc if should_publish else None,
+        "new_message_ids": new_ids,
+        "added": added,
+        "candidates": cand_n,
+        "elapsed_s": round(time.time() - t0, 2),
+        "limit": limit,
+        "force": force,
+        "offline": offline,
+    }
+    # fingerprint for cheap change detection
+    try:
+        raw = CANDIDATES.read_bytes()
+        st["candidates_sha256"] = hashlib.sha256(raw).hexdigest()[:16]
+        st["candidates_bytes"] = len(raw)
+    except Exception:
+        pass
+    save_state(st)
+    print(f"{LOG_PREFIX} done {json.dumps({k: st[k] for k in ('at','new_message_ids','added','candidates','elapsed_s','publish_rc')}, ensure_ascii=False)}", flush=True)
+    return st
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Fast TG → candidates sync (one cycle)")
+    ap.add_argument("--limit", type=int, default=40, help="TG messages to fetch (default 40)")
+    ap.add_argument("--force", action="store_true", help="publish even with no new cards")
+    ap.add_argument("--offline", action="store_true", help="skip Telegram fetch")
+    ap.add_argument("--no-publish", action="store_true", help="local merge only")
+    ap.add_argument("--daemon", action="store_true", help="loop forever")
+    ap.add_argument("--interval", type=int, default=60, help="daemon sleep seconds (default 60)")
+    args = ap.parse_args()
+    interval = max(30, int(args.interval))
+
+    if args.daemon:
+        print(f"{LOG_PREFIX} daemon start interval={interval}s at {now_iso()}", flush=True)
+        try:
+            push_radar_cloud([], seed_on_empty=True)
+        except Exception as e:  # noqa: BLE001
+            print(f"{LOG_PREFIX} radar seed WARN: {e}", flush=True)
+        while True:
+            try:
+                one_cycle(
+                    limit=args.limit,
+                    force=False,
+                    offline=False,
+                    publish_ok=not args.no_publish,
+                )
+            except Exception as e:
+                print(f"{LOG_PREFIX} cycle error: {type(e).__name__}: {e}", flush=True)
+            time.sleep(interval)
+        return 0
+
+    st = one_cycle(
+        limit=args.limit,
+        force=args.force,
+        offline=args.offline,
+        publish_ok=not args.no_publish,
+    )
+    # non-zero only on hard fetch+empty failure
+    if st.get("fetch_rc") and not st.get("candidates"):
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

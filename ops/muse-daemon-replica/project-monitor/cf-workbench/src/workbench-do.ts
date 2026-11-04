@@ -1,0 +1,1235 @@
+/**
+ * One Durable Object = one sync room ("pad-hunter").
+ * Holds pins + reviewed state in DO storage and fans out WebSocket updates.
+ */
+import {
+  norm,
+  emptyPins,
+  emptyReviewed,
+  mergeReviewed,
+  mergeWorkbench,
+  nowIso,
+  pinsPayload,
+  type PinsDoc,
+  type ReviewedDoc,
+  type ReviewedMark,
+  type Tombstone,
+  type WBItem,
+} from "./merge";
+import { originAllowed } from "./cors";
+
+import seedPins from "../seed-pins.json";
+import seedReviewed from "../seed-reviewed.json";
+import seedBlocklist from "../seed-blocklist.json";
+import seedRadar from "../seed-radar.json";
+
+/** Lightweight candidate card for realtime radar push (Telegram → open tabs). */
+export type RadarCard = Record<string, unknown> & { handle: string };
+
+/** Human 「手动确认已开盘」 mark (Durable Object audit + box sync source). */
+export type ManualLaunchMark = {
+  handle: string;
+  name?: string | null;
+  reason: string;
+  at: string;
+  client_id?: string | null;
+  source?: string | null;
+};
+
+const RADAR_MAX = 200;
+const WB_ALERTS_MAX = 200;
+
+/** 工作台「即将开始」高频提醒 (box workbench_soon_watch.py → POST /v1/workbench/alert). */
+export type WorkbenchAlert = Record<string, unknown> & {
+  id: string;
+  handle: string;
+  kind: string;
+  ts: string;
+};
+
+/** 今日清单项目 + 实时 CA 事件（给本地机器人最快拉 CA） */
+export type TodayProject = Record<string, unknown> & {
+  handle: string;
+  name?: string | null;
+  chain?: string | null;
+  listing_at?: string | null;
+  listing_at_display?: string | null;
+  site?: string | null;
+  tweet_url?: string | null;
+  status?: string | null;
+};
+export type TodayCaEvent = Record<string, unknown> & {
+  id: string;
+  handle: string;
+  ca: string;
+  ts: string;
+  chain?: string | null;
+  chain_note?: string | null;
+  wallet_note?: string | null;
+  confidence?: string | null;
+  ca_fixed?: boolean;
+  ca_fixed_reason?: string | null;
+  ca_status?: string | null;
+  is_token?: boolean;
+  kind?: string | null;
+  source?: string | null;
+  evidence_url?: string | null;
+};
+const TODAY_CAS_MAX = 500;
+const MANUAL_MARKS_MAX = 500;
+
+export interface Env {
+  WORKBENCH: DurableObjectNamespace;
+  WORKBENCH_TOKEN: string;
+  VERSION: string;
+  ROOM_NAME: string;
+  BUILD_ID?: string;
+}
+
+type WsMeta = { authed: boolean };
+
+export class WorkbenchRoom implements DurableObject {
+  private pins: PinsDoc = emptyPins();
+  private reviewed: ReviewedDoc = emptyReviewed();
+  private loaded = false;
+  private blocked: Set<string> = new Set();
+  private blockedMeta: { updated_at: string | null; source: string | null } = { updated_at: null, source: null };
+  private radarCards: RadarCard[] = [];
+  private radarSyncedAt: string | null = null;
+  private manualMarks: ManualLaunchMark[] = [];
+  private manualMarksUpdatedAt: string | null = null;
+  private wbAlerts: WorkbenchAlert[] = [];
+  private wbAlertsUpdatedAt: string | null = null;
+  /** 今日项目清单 · 实时 CA（box T-20 / deployer_hunt → local bots） */
+  private todayProjects: TodayProject[] = [];
+  private todayProjectsUpdatedAt: string | null = null;
+  private todayCas: TodayCaEvent[] = [];
+  private todayCasUpdatedAt: string | null = null;
+
+  constructor(
+    private readonly ctx: DurableObjectState,
+    private readonly env: Env,
+  ) {
+    this.ctx.setWebSocketAutoResponse(
+      new WebSocketRequestResponsePair(
+        '{"type":"ping"}',
+        '{"type":"pong","server_time":"auto"}',
+      ),
+    );
+  }
+
+  private async ensureLoaded(): Promise<void> {
+    if (this.loaded) return;
+
+    const pins = await this.ctx.storage.get<PinsDoc>("pins");
+    const reviewed = await this.ctx.storage.get<ReviewedDoc>("reviewed");
+    const seeded = await this.ctx.storage.get<boolean>("seeded");
+
+    if (pins) {
+      this.pins = pins;
+      this.reviewed = reviewed || emptyReviewed();
+    } else if (!seeded) {
+      const items = ((seedPins as PinsDoc).items || []) as WBItem[];
+      this.pins = {
+        synced_at: (seedPins as PinsDoc).synced_at || nowIso(),
+        timezone: "Asia/Shanghai",
+        client_id: (seedPins as PinsDoc).client_id ?? "seed",
+        count: items.length,
+        items,
+        removed: ((seedPins as PinsDoc).removed || []) as Tombstone[],
+        dropped_launched: [],
+        note: "Seeded from box workbench_active.json on first Durable Object boot.",
+      };
+      this.reviewed = {
+        synced_at: (seedReviewed as ReviewedDoc).synced_at || nowIso(),
+        timezone: "Asia/Shanghai",
+        client_id: (seedReviewed as ReviewedDoc).client_id ?? "seed",
+        marks: ((seedReviewed as ReviewedDoc).marks || {}) as Record<
+          string,
+          ReviewedMark
+        >,
+      };
+      // Seed blocklist + radar on first boot (room migration)
+      const seedBl = seedBlocklist as { handles?: string[]; updated_at?: string | null; source?: string | null };
+      const seedHandles = (seedBl.handles || []).map((h) => norm(h)).filter(Boolean);
+      this.blocked = new Set(seedHandles);
+      this.blockedMeta = {
+        updated_at: seedBl.updated_at ?? nowIso(),
+        source: seedBl.source ?? "seed-migrate",
+      };
+      const seedRd = seedRadar as { cards?: RadarCard[]; synced_at?: string | null };
+      this.radarCards = Array.isArray(seedRd.cards) ? seedRd.cards : [];
+      this.radarSyncedAt = seedRd.synced_at ?? null;
+
+      await this.ctx.storage.put({
+        pins: this.pins,
+        reviewed: this.reviewed,
+        seeded: true,
+        blocklist: { handles: [...this.blocked], ...this.blockedMeta },
+        radar: { cards: this.radarCards, synced_at: this.radarSyncedAt },
+      });
+    } else {
+      this.pins = emptyPins();
+      this.reviewed = reviewed || emptyReviewed();
+    }
+
+    const bl = await this.ctx.storage.get<{ handles: string[]; updated_at: string | null; source: string | null }>("blocklist");
+    if (bl) {
+      this.blocked = new Set((bl.handles || []).map((h) => norm(h)).filter(Boolean));
+      this.blockedMeta = { updated_at: bl.updated_at ?? null, source: bl.source ?? null };
+    } else if (!this.blocked.size) {
+      const seedBl = seedBlocklist as { handles?: string[]; updated_at?: string | null; source?: string | null };
+      const seedHandles = (seedBl.handles || []).map((h) => norm(h)).filter(Boolean);
+      if (seedHandles.length) {
+        this.blocked = new Set(seedHandles);
+        this.blockedMeta = {
+          updated_at: seedBl.updated_at ?? nowIso(),
+          source: seedBl.source ?? "seed-migrate",
+        };
+        await this.ctx.storage.put("blocklist", { handles: [...this.blocked], ...this.blockedMeta });
+      }
+    }
+
+    const radar = await this.ctx.storage.get<{ cards: RadarCard[]; synced_at: string | null }>("radar");
+    if (radar) {
+      this.radarCards = Array.isArray(radar.cards) ? radar.cards : [];
+      this.radarSyncedAt = radar.synced_at ?? null;
+    } else if (!this.radarCards.length) {
+      const seedRd = seedRadar as { cards?: RadarCard[]; synced_at?: string | null };
+      if (Array.isArray(seedRd.cards) && seedRd.cards.length) {
+        this.radarCards = seedRd.cards;
+        this.radarSyncedAt = seedRd.synced_at ?? null;
+        await this.ctx.storage.put("radar", { cards: this.radarCards, synced_at: this.radarSyncedAt });
+      }
+    }
+
+    const manual = await this.ctx.storage.get<{ items: ManualLaunchMark[]; updated_at: string | null }>("manual_launched");
+    if (manual) {
+      this.manualMarks = Array.isArray(manual.items) ? manual.items : [];
+      this.manualMarksUpdatedAt = manual.updated_at ?? null;
+    }
+
+    const wba = await this.ctx.storage.get<{ items: WorkbenchAlert[]; updated_at: string | null }>("wb_alerts");
+    if (wba) {
+      this.wbAlerts = Array.isArray(wba.items) ? wba.items : [];
+      this.wbAlertsUpdatedAt = wba.updated_at ?? null;
+    }
+
+    const td = await this.ctx.storage.get<{
+      projects: TodayProject[];
+      projects_updated_at: string | null;
+      cas: TodayCaEvent[];
+      cas_updated_at: string | null;
+    }>("today_cas");
+    if (td) {
+      this.todayProjects = Array.isArray(td.projects) ? td.projects : [];
+      this.todayProjectsUpdatedAt = td.projects_updated_at ?? null;
+      this.todayCas = Array.isArray(td.cas) ? td.cas : [];
+      this.todayCasUpdatedAt = td.cas_updated_at ?? null;
+    }
+
+    this.loaded = true;
+    this.ensurePingTimer();
+  }
+
+  // No setInterval keepalive: it pinned the DO instance across deploys.
+  // Clients ping; hibernation auto-response answers {"type":"ping"}.
+  private ensurePingTimer(): void {}
+
+  private tokenOk(tok: string | null | undefined): boolean {
+    const expected = (this.env.WORKBENCH_TOKEN || "").trim();
+    if (!expected || !tok) return false;
+    const a = tok.trim();
+    if (a.length !== expected.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ expected.charCodeAt(i);
+    return diff === 0;
+  }
+
+  private extractToken(request: Request, url: URL): string | null {
+    const q = url.searchParams.get("token");
+    if (q) return q;
+    const h = request.headers.get("X-Pad-Hunter-Token");
+    if (h) return h;
+    const auth = request.headers.get("Authorization");
+    if (auth && auth.toLowerCase().startsWith("bearer ")) return auth.slice(7).trim();
+    return null;
+  }
+
+  private requireAuth(request: Request, url: URL): Response | null {
+    if (!this.tokenOk(this.extractToken(request, url))) {
+      return Response.json(
+        { detail: "invalid or missing X-Pad-Hunter-Token" },
+        { status: 401 },
+      );
+    }
+    return null;
+  }
+
+  private broadcast(msg: unknown): void {
+    const raw = JSON.stringify(msg);
+    for (const ws of this.ctx.getWebSockets()) {
+      try {
+        const meta = ws.deserializeAttachment() as WsMeta | null;
+        if (meta && meta.authed === false) continue;
+        ws.send(raw);
+      } catch {
+        /* drop */
+      }
+    }
+  }
+
+  private pinsState() {
+    return pinsPayload(this.pins);
+  }
+
+  private reviewedState() {
+    return {
+      synced_at: this.reviewed.synced_at || nowIso(),
+      marks: this.reviewed.marks || {},
+    };
+  }
+
+  private radarState() {
+    return {
+      synced_at: this.radarSyncedAt || nowIso(),
+      cards: this.radarCards,
+      count: this.radarCards.length,
+    };
+  }
+
+  private manualLaunchedState() {
+    return {
+      updated_at: this.manualMarksUpdatedAt || nowIso(),
+      count: this.manualMarks.length,
+      items: this.manualMarks,
+      blocklist_count: this.blocked.size,
+      blocklist_updated_at: this.blockedMeta.updated_at,
+      handles: this.manualMarks.map((m) => m.handle),
+    };
+  }
+
+  private wbAlertsState() {
+    return {
+      updated_at: this.wbAlertsUpdatedAt || nowIso(),
+      count: this.wbAlerts.length,
+      items: this.wbAlerts,
+    };
+  }
+
+  private todayCasState(since?: string | null) {
+    let events = this.todayCas;
+    if (since) {
+      events = events.filter((e) => String(e.ts || "") > since);
+    }
+    // per-handle best CA: fixed > confirmed > high > others; newest first already in list
+    const best: Record<string, TodayCaEvent> = {};
+    for (const e of this.todayCas) {
+      const h = norm(e.handle);
+      if (!h) continue;
+      const prev = best[h];
+      if (!prev) {
+        best[h] = e;
+        continue;
+      }
+      const score = (x: TodayCaEvent) =>
+        (x.ca_fixed ? 100 : 0) +
+        (String(x.ca_status || "") === "confirmed" || String(x.confidence || "") === "confirmed" ? 50 : 0) +
+        (String(x.confidence || "").startsWith("high") ? 20 : 0) +
+        (x.is_token === false ? -80 : 0);
+      if (score(e) > score(prev) || (score(e) === score(prev) && String(e.ts || "") > String(prev.ts || ""))) {
+        best[h] = e;
+      }
+    }
+    const projects = this.todayProjects.map((p) => {
+      const h = norm(p.handle);
+      const ca = best[h];
+      return {
+        ...p,
+        handle: p.handle,
+        best_ca: ca
+          ? {
+              ca: ca.ca,
+              chain: ca.chain ?? null,
+              chain_note: (ca as TodayCaEvent).chain_note
+                || (ca.chain ? `[${ca.chain}] ${ca.ca}` : ca.ca),
+              wallet_note: (ca as TodayCaEvent).wallet_note
+                || (ca as TodayCaEvent).chain_note
+                || (ca.chain ? `[${ca.chain}] ${ca.ca}` : ca.ca),
+              confidence: ca.confidence ?? null,
+              ca_fixed: Boolean(ca.ca_fixed),
+              ca_status: ca.ca_status ?? null,
+              ca_fixed_reason: ca.ca_fixed_reason ?? null,
+              is_token: ca.is_token !== false,
+              source: ca.source ?? null,
+              ts: ca.ts,
+              evidence_url: ca.evidence_url ?? null,
+              id: ca.id,
+            }
+          : null,
+      };
+    });
+    return {
+      ok: true,
+      timezone: "Asia/Shanghai",
+      updated_at: this.todayCasUpdatedAt || this.todayProjectsUpdatedAt || nowIso(),
+      projects_updated_at: this.todayProjectsUpdatedAt,
+      cas_updated_at: this.todayCasUpdatedAt,
+      count: projects.length,
+      projects,
+      events,
+      events_count: events.length,
+      since: since || null,
+    };
+  }
+
+  /** Replace today list + upsert CA events; broadcast today_ca for new events. */
+  private async doTodayCasPush(body: {
+    projects?: TodayProject[];
+    events?: TodayCaEvent[];
+    event?: TodayCaEvent;
+    client_id?: string | null;
+    replace_projects?: boolean;
+    replace_events?: boolean;
+  }): Promise<Response> {
+    let projectsChanged = false;
+    if (Array.isArray(body.projects) && (body.replace_projects !== false || body.projects.length >= 0)) {
+      const cleaned: TodayProject[] = [];
+      for (const raw of body.projects) {
+        if (!raw || typeof raw !== "object") continue;
+        const handle = String((raw as TodayProject).handle || "").trim();
+        if (!handle) continue;
+        cleaned.push({ ...(raw as TodayProject), handle });
+      }
+      this.todayProjects = cleaned;
+      this.todayProjectsUpdatedAt = nowIso();
+      projectsChanged = true;
+    }
+    if (body.replace_events) {
+      this.todayCas = [];
+      this.todayCasUpdatedAt = nowIso();
+    }
+    const incoming = [...(body.events || []), ...(body.event ? [body.event] : [])];
+    const known = new Set(this.todayCas.map((e) => e.id));
+    const fresh: TodayCaEvent[] = [];
+    for (const raw of incoming) {
+      if (!raw || typeof raw !== "object") continue;
+      const id = String((raw as TodayCaEvent).id || "").trim();
+      const handle = String((raw as TodayCaEvent).handle || "").trim();
+      const ca = String((raw as TodayCaEvent).ca || (raw as { address?: string }).address || "").trim();
+      if (!id || !handle || !ca) continue;
+      if (known.has(id)) continue;
+      known.add(id);
+      const r = raw as TodayCaEvent;
+      fresh.push({
+        ...r,
+        id,
+        handle,
+        ca,
+        ts: String(r.ts || nowIso()),
+        received_at: nowIso(),
+      });
+    }
+    if (fresh.length) {
+      this.todayCas = [...fresh, ...this.todayCas]
+        .sort((a, b) => String(b.ts || "").localeCompare(String(a.ts || "")))
+        .slice(0, TODAY_CAS_MAX);
+      this.todayCasUpdatedAt = nowIso();
+    }
+    if (projectsChanged || fresh.length) {
+      await this.ctx.storage.put("today_cas", {
+        projects: this.todayProjects,
+        projects_updated_at: this.todayProjectsUpdatedAt,
+        cas: this.todayCas,
+        cas_updated_at: this.todayCasUpdatedAt,
+      });
+    }
+    if (fresh.length || projectsChanged) {
+      this.broadcast({
+        type: "today_ca",
+        events: fresh,
+        projects_updated: projectsChanged,
+        state: this.todayCasState(),
+        origin_client_id: body.client_id ?? null,
+      });
+    }
+    return Response.json({
+      ok: true,
+      accepted: fresh.length,
+      projects_count: this.todayProjects.length,
+      events_count: this.todayCas.length,
+      ids: fresh.map((e) => e.id),
+      ws_clients: this.ctx.getWebSockets().length,
+    });
+  }
+
+  /** Upsert 工作台即将开始提醒 (dedupe by id), newest first; broadcast only genuinely new ones. */
+  private async doWbAlertPush(body: {
+    alerts?: WorkbenchAlert[];
+    alert?: WorkbenchAlert;
+    client_id?: string | null;
+    dry_run?: boolean;
+  }): Promise<Response> {
+    const incoming = [...(body.alerts || []), ...(body.alert ? [body.alert] : [])];
+    const known = new Set(this.wbAlerts.map((a) => a.id));
+    const fresh: WorkbenchAlert[] = [];
+    for (const raw of incoming) {
+      if (!raw || typeof raw !== "object") continue;
+      const id = String((raw as WorkbenchAlert).id || "").trim();
+      const handle = String((raw as WorkbenchAlert).handle || "").trim();
+      if (!id || !handle) continue;
+      if (known.has(id)) continue;
+      known.add(id);
+      const r = raw as WorkbenchAlert;
+      fresh.push({ ...r, id, handle, kind: String(r.kind || ""), ts: String(r.ts || nowIso()), received_at: nowIso() });
+    }
+    if (body.dry_run) {
+      // test path: broadcast only, never persisted
+      if (fresh.length) {
+        this.broadcast({ type: "workbench_alert", alerts: fresh, dry_run: true, origin_client_id: body.client_id ?? null });
+      }
+      return Response.json({ ok: true, dry_run: true, accepted: fresh.length, ws_clients: this.ctx.getWebSockets().length });
+    }
+    if (fresh.length) {
+      this.wbAlerts = [...fresh, ...this.wbAlerts]
+        .sort((a, b) => String(b.ts || "").localeCompare(String(a.ts || "")))
+        .slice(0, WB_ALERTS_MAX);
+      this.wbAlertsUpdatedAt = nowIso();
+      await this.ctx.storage.put("wb_alerts", { items: this.wbAlerts, updated_at: this.wbAlertsUpdatedAt });
+      this.broadcast({ type: "workbench_alert", alerts: fresh, origin_client_id: body.client_id ?? null });
+    }
+    return Response.json({
+      ok: true,
+      accepted: fresh.length,
+      count: this.wbAlerts.length,
+      ids: fresh.map((a) => a.id),
+      ws_clients: this.ctx.getWebSockets().length,
+    });
+  }
+
+  async fetch(request: Request): Promise<Response> {
+    // Build guard: a DO instance kept alive by WS clients across a deploy runs stale code.
+    // The stateless Worker always runs the newest build and forwards its BUILD_ID; on mismatch
+    // close sockets (clients reconnect) and reset this instance so the next request loads new code.
+    const fwdBuild = request.headers.get("X-PH-Build");
+    const myBuild = this.env.BUILD_ID || "";
+    if (fwdBuild && myBuild && fwdBuild !== myBuild) {
+      for (const ws of this.ctx.getWebSockets()) {
+        try { ws.close(1012, "server upgrade"); } catch { /* ignore */ }
+      }
+      try { this.ctx.abort("stale build"); } catch { /* ignore */ }
+      return Response.json({ detail: "server upgrading, retry" }, { status: 503, headers: { "Retry-After": "1" } });
+    }
+    await this.ensureLoaded();
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const origin = request.headers.get("Origin");
+
+    if (request.headers.get("Upgrade")?.toLowerCase() === "websocket") {
+      return this.handleWs(request, url, origin);
+    }
+
+    if (path === "/internal/health" || path === "/health") {
+      return Response.json({
+        ok: true,
+        version: this.env.VERSION || "1.7.2-cf",
+        now: nowIso(),
+        workbench_count: (this.pins.items || []).length,
+        reviewed_marks: Object.keys(this.reviewed.marks || {}).length,
+        blocklist_count: this.blocked.size,
+        blocklist_updated_at: this.blockedMeta.updated_at,
+        radar_cards: this.radarCards.length,
+        radar_synced_at: this.radarSyncedAt,
+        manual_launched_count: this.manualMarks.length,
+        manual_launched_updated_at: this.manualMarksUpdatedAt,
+        workbench_alerts: this.wbAlerts.length,
+        workbench_alerts_updated_at: this.wbAlertsUpdatedAt,
+        today_projects_count: this.todayProjects.length,
+        today_cas_count: this.todayCas.length,
+        today_cas_updated_at: this.todayCasUpdatedAt,
+        ws_clients: this.ctx.getWebSockets().length,
+        backend: "cloudflare-workers-do",
+        room: this.env.ROOM_NAME || "pad-hunter",
+        poller_alive: null,
+        note: "Cloud sync: pins + reviewed + radar + manual launched marks. Full candidates.json stays on Pages.",
+      });
+    }
+
+    // Public GET /v1/radar/recent: token OR allowed Origin (github.io / localhost)
+    if (path === "/v1/radar/recent" && request.method === "GET") {
+      const tok = this.extractToken(request, url);
+      const ok = this.tokenOk(tok) || (origin !== null && originAllowed(origin)) || origin === null;
+      if (!ok) {
+        return Response.json({ detail: "token or allowed Origin required" }, { status: 401 });
+      }
+      return Response.json(this.radarState());
+    }
+
+    if (
+      (path === "/v1/radar/push" || path === "/v1/radar/candidates") &&
+      request.method === "POST"
+    ) {
+      const authErr = this.requireAuth(request, url);
+      if (authErr) return authErr;
+      const body = (await request.json().catch(() => ({}))) as {
+        client_id?: string | null;
+        cards?: RadarCard[];
+        items?: RadarCard[];
+        mode?: "upsert" | "replace_recent";
+        snapshot_meta?: Record<string, unknown>;
+      };
+      const cards = (body.cards || body.items || []) as RadarCard[];
+      const mode = body.mode || "upsert";
+      return this.doRadarPush(cards, body.client_id ?? null, mode, body.snapshot_meta);
+    }
+
+    const authErr = this.requireAuth(request, url);
+    if (authErr) return authErr;
+
+    if (path === "/v1/workbench/pins" && request.method === "GET") {
+      return Response.json(this.pinsState());
+    }
+
+    if (
+      (path === "/v1/workbench/sync" || path === "/v1/workbench/pins/sync") &&
+      request.method === "POST"
+    ) {
+      const body = (await request.json().catch(() => ({}))) as {
+        items?: WBItem[];
+        client_id?: string | null;
+        removed?: Tombstone[] | null;
+      };
+      return this.doPinsSync(body);
+    }
+
+    if (path === "/v1/workbench/blocklist" && request.method === "GET") {
+      return Response.json({
+        ...this.blockedMeta,
+        count: this.blocked.size,
+        handles: [...this.blocked].sort(),
+        manual_count: this.manualMarks.length,
+        manual_updated_at: this.manualMarksUpdatedAt,
+      });
+    }
+
+    if (path === "/v1/workbench/blocklist" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        handles?: string[];
+        source?: string | null;
+        mode?: "replace" | "add";
+      };
+      return this.doBlocklist(body);
+    }
+
+    if (path === "/v1/launched/recent" && request.method === "GET") {
+      return Response.json(this.manualLaunchedState());
+    }
+
+    if (path === "/v1/launched/unmark" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as { handle?: string; client_id?: string | null };
+      return this.doUnmarkLaunched(body);
+    }
+
+    if (path === "/v1/launched/mark" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        handle?: string;
+        name?: string | null;
+        reason?: string;
+        at?: string | null;
+        client_id?: string | null;
+        source?: string | null;
+      };
+      return this.doMarkLaunched(body);
+    }
+
+    if (path === "/v1/workbench/alerts" && request.method === "GET") {
+      return Response.json(this.wbAlertsState());
+    }
+
+    if ((path === "/v1/workbench/alert" || path === "/v1/workbench/alerts") && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        alerts?: WorkbenchAlert[];
+        alert?: WorkbenchAlert;
+        client_id?: string | null;
+        dry_run?: boolean;
+      };
+      return this.doWbAlertPush(body);
+    }
+
+    if ((path === "/v1/today/cas" || path === "/v1/today/cas/") && request.method === "GET") {
+      const since = url.searchParams.get("since");
+      return Response.json(this.todayCasState(since));
+    }
+
+    if ((path === "/v1/today/cas/push" || path === "/v1/today/cas") && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        projects?: TodayProject[];
+        events?: TodayCaEvent[];
+        event?: TodayCaEvent;
+        client_id?: string | null;
+        replace_projects?: boolean;
+        replace_events?: boolean;
+      };
+      return this.doTodayCasPush(body);
+    }
+
+    if (path === "/v1/workbench/reviewed" && request.method === "GET") {
+      return Response.json(this.reviewedState());
+    }
+
+    if (path === "/v1/workbench/reviewed/sync" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        client_id?: string | null;
+        marks?: Record<string, ReviewedMark>;
+      };
+      return this.doReviewedSync(body);
+    }
+
+    return Response.json({ detail: "not found", path }, { status: 404 });
+  }
+
+  private async doRadarPush(
+    incoming: RadarCard[],
+    clientId: string | null,
+    mode: "upsert" | "replace_recent",
+    snapshotMeta?: Record<string, unknown>,
+  ): Promise<Response> {
+    const now = nowIso();
+    const cleaned: RadarCard[] = [];
+    for (const raw of incoming || []) {
+      if (!raw || typeof raw !== "object") continue;
+      const handle = String((raw as RadarCard).handle || "").trim();
+      if (!handle) continue;
+      const card: RadarCard = { ...(raw as object), handle } as RadarCard;
+      if (!card._pushed_at) card._pushed_at = now;
+      if (!card.pushed_at) card.pushed_at = card._pushed_at;
+      cleaned.push(card);
+    }
+    if (mode === "replace_recent") {
+      this.radarCards = cleaned
+        .sort((a, b) => String(b._pushed_at || "").localeCompare(String(a._pushed_at || "")))
+        .slice(0, RADAR_MAX);
+    } else {
+      const by = new Map<string, RadarCard>();
+      for (const c of this.radarCards) by.set(norm(c.handle), c);
+      for (const c of cleaned) by.set(norm(c.handle), c);
+      this.radarCards = [...by.values()]
+        .sort((a, b) => String(b._pushed_at || b.pushed_at || "").localeCompare(String(a._pushed_at || a.pushed_at || "")))
+        .slice(0, RADAR_MAX);
+    }
+    this.radarSyncedAt = now;
+    await this.ctx.storage.put("radar", {
+      cards: this.radarCards,
+      synced_at: this.radarSyncedAt,
+      client_id: clientId,
+      snapshot_meta: snapshotMeta || null,
+    });
+    const state = this.radarState();
+    this.broadcast({
+      type: "radar",
+      state,
+      origin_client_id: clientId,
+      event: mode === "replace_recent" ? "replace" : "upsert",
+    });
+    if (cleaned.length && cleaned.length <= 40) {
+      this.broadcast({
+        type: "radar_delta",
+        cards: cleaned,
+        origin_client_id: clientId,
+        event: "upsert",
+        synced_at: now,
+      });
+    }
+    return Response.json({
+      ok: true,
+      synced_at: now,
+      upserted: cleaned.length,
+      count: this.radarCards.length,
+      handles: cleaned.map((c) => c.handle),
+    });
+  }
+
+  private async doPinsSync(body: {
+    items?: WBItem[];
+    client_id?: string | null;
+    removed?: Tombstone[] | null;
+  }): Promise<Response> {
+    const { doc } = mergeWorkbench(this.pins, body, this.blocked);
+    this.pins = doc;
+    await this.ctx.storage.put("pins", doc);
+    const state = this.pinsState();
+    this.broadcast({
+      type: "pins",
+      state,
+      origin_client_id: body.client_id ?? null,
+    });
+    return Response.json({
+      ...state,
+      count: doc.count,
+      dropped_launched: doc.dropped_launched,
+      client_id: doc.client_id,
+      timezone: doc.timezone,
+    });
+  }
+
+  /** Replace (default) or extend the launched blocklist; drops+tombstones blocked pins and broadcasts. */
+  private async doBlocklist(body: {
+    handles?: string[];
+    source?: string | null;
+    mode?: "replace" | "add";
+  }): Promise<Response> {
+    const incoming = (Array.isArray(body.handles) ? body.handles : [])
+      .filter((h): h is string => typeof h === "string")
+      .map((h) => norm(h))
+      .filter(Boolean)
+      .slice(0, 5000);
+    // replace still unions durable manual marks so a box prune cannot wipe a fresh site tap
+    const next =
+      body.mode === "add"
+        ? new Set([...this.blocked, ...incoming])
+        : new Set([
+            ...incoming,
+            ...this.manualMarks.map((m) => norm(m.handle)).filter(Boolean),
+          ]);
+    this.blocked = next;
+    this.blockedMeta = { updated_at: nowIso(), source: body.source ?? null };
+    await this.ctx.storage.put("blocklist", { handles: [...next], ...this.blockedMeta });
+    this.broadcast({
+      type: "blocklist",
+      state: {
+        ...this.blockedMeta,
+        count: next.size,
+        handles: [...next].sort(),
+        manual_count: this.manualMarks.length,
+      },
+      origin_client_id: body.source ?? "box-launched-prune",
+    });
+
+    const now = nowIso();
+    const hits = (this.pins.items || []).filter((it) => next.has(norm(it.handle)));
+    let dropped: { handle?: string | null; name?: string | null }[] = [];
+    if (hits.length) {
+      const { doc } = mergeWorkbench(
+        this.pins,
+        { client_id: "box-launched-prune", items: [], removed: hits.map((it) => ({ handle: it.handle, removed_at: now })) },
+        next,
+      );
+      dropped = hits.map((it) => ({ handle: it.handle, name: it.name ?? null }));
+      doc.dropped_launched = dropped;
+      this.pins = doc;
+      await this.ctx.storage.put("pins", doc);
+      this.broadcast({ type: "pins", state: this.pinsState(), origin_client_id: "box-launched-prune" });
+    }
+    return Response.json({
+      ok: true,
+      count: next.size,
+      updated_at: this.blockedMeta.updated_at,
+      dropped_launched: dropped,
+      pins: this.pinsState(),
+    });
+  }
+
+  /** Undo a manual mark: drop from manual audit + blocklist; broadcast. */
+  private async doUnmarkLaunched(body: { handle?: string; client_id?: string | null }): Promise<Response> {
+    const handle = norm(String(body.handle || ""));
+    if (!handle) return Response.json({ detail: "handle required" }, { status: 400 });
+    const clientId = body.client_id ?? "box-unmark";
+    const now = nowIso();
+    const hadManual = this.manualMarks.some((m) => norm(m.handle) === handle);
+    const hadBlocked = this.blocked.delete(handle);
+    this.manualMarks = this.manualMarks.filter((m) => norm(m.handle) !== handle);
+    this.manualMarksUpdatedAt = now;
+    this.blockedMeta = { updated_at: now, source: `unmark:${clientId}` };
+    await this.ctx.storage.put({
+      manual_launched: { items: this.manualMarks, updated_at: now },
+      blocklist: { handles: [...this.blocked], ...this.blockedMeta },
+    });
+    this.broadcast({ type: "launched_unmark", handle, origin_client_id: clientId });
+    this.broadcast({
+      type: "blocklist",
+      state: { ...this.blockedMeta, count: this.blocked.size, handles: [...this.blocked].sort(), manual_count: this.manualMarks.length },
+      origin_client_id: clientId,
+    });
+    return Response.json({
+      ok: true,
+      handle,
+      removed_manual: hadManual,
+      removed_blocked: hadBlocked,
+      blocklist_count: this.blocked.size,
+      launched: this.manualLaunchedState(),
+    });
+  }
+
+  /** Frontend 「手动确认已开盘」: durable blocklist + pin tombstone + radar drop + WS fanout. */
+  private async doMarkLaunched(body: {
+    handle?: string;
+    name?: string | null;
+    reason?: string;
+    at?: string | null;
+    client_id?: string | null;
+    source?: string | null;
+  }): Promise<Response> {
+    const handleRaw = String(body.handle || "").trim();
+    const handle = norm(handleRaw);
+    if (!handle) {
+      return Response.json({ detail: "handle required" }, { status: 400 });
+    }
+    const now = (body.at && String(body.at).trim()) || nowIso();
+    const reason = (body.reason && String(body.reason).trim()) || "manual";
+    const name = body.name != null && String(body.name).trim() ? String(body.name).trim() : null;
+    const clientId = body.client_id ?? "site-manual";
+    const source = body.source ?? "manual";
+
+    const already = this.blocked.has(handle);
+    this.blocked.add(handle);
+    this.blockedMeta = { updated_at: now, source: `manual:${source}` };
+    await this.ctx.storage.put("blocklist", { handles: [...this.blocked], ...this.blockedMeta });
+
+    const mark: ManualLaunchMark = {
+      handle: handleRaw.replace(/^@/, "") || handle,
+      name,
+      reason,
+      at: now,
+      client_id: clientId,
+      source,
+    };
+    // Newest first; one row per handle (latest wins)
+    this.manualMarks = [
+      mark,
+      ...this.manualMarks.filter((m) => norm(m.handle) !== handle),
+    ].slice(0, MANUAL_MARKS_MAX);
+    this.manualMarksUpdatedAt = now;
+    await this.ctx.storage.put("manual_launched", {
+      items: this.manualMarks,
+      updated_at: this.manualMarksUpdatedAt,
+    });
+
+    // Tombstone matching pins
+    const hits = (this.pins.items || []).filter((it) => norm(it.handle) === handle);
+    let dropped: { handle?: string | null; name?: string | null }[] = [];
+    if (hits.length) {
+      const { doc } = mergeWorkbench(
+        this.pins,
+        {
+          client_id: clientId,
+          items: [],
+          removed: hits.map((it) => ({ handle: it.handle, removed_at: now })),
+        },
+        this.blocked,
+      );
+      dropped = hits.map((it) => ({ handle: it.handle, name: it.name ?? name }));
+      doc.dropped_launched = dropped;
+      this.pins = doc;
+      await this.ctx.storage.put("pins", doc);
+    }
+
+    // Drop from rolling radar cards
+    const beforeRadar = this.radarCards.length;
+    this.radarCards = this.radarCards.filter((c) => norm(c.handle) !== handle);
+    let radarChanged = this.radarCards.length !== beforeRadar;
+    if (radarChanged) {
+      this.radarSyncedAt = now;
+      await this.ctx.storage.put("radar", {
+        cards: this.radarCards,
+        synced_at: this.radarSyncedAt,
+      });
+    }
+
+    const pinsState = this.pinsState();
+    const launchedState = this.manualLaunchedState();
+    this.broadcast({
+      type: "launched_mark",
+      mark,
+      already_blocked: already,
+      origin_client_id: clientId,
+    });
+    this.broadcast({
+      type: "blocklist",
+      state: {
+        ...this.blockedMeta,
+        count: this.blocked.size,
+        handles: [...this.blocked].sort(),
+        manual_count: this.manualMarks.length,
+      },
+      origin_client_id: clientId,
+    });
+    if (hits.length) {
+      this.broadcast({ type: "pins", state: pinsState, origin_client_id: clientId });
+    }
+    if (radarChanged) {
+      this.broadcast({
+        type: "radar",
+        state: this.radarState(),
+        origin_client_id: clientId,
+        event: "launched_prune",
+      });
+      this.broadcast({
+        type: "radar_delta",
+        cards: [],
+        removed_handles: [mark.handle],
+        origin_client_id: clientId,
+        event: "launched_prune",
+        synced_at: now,
+      });
+    }
+
+    return Response.json({
+      ok: true,
+      mark,
+      already_blocked: already,
+      blocklist_count: this.blocked.size,
+      dropped_launched: dropped,
+      pins: pinsState,
+      launched: launchedState,
+      radar_removed: radarChanged,
+    });
+  }
+
+  private async doReviewedSync(body: {
+    client_id?: string | null;
+    marks?: Record<string, ReviewedMark>;
+  }): Promise<Response> {
+    const doc = mergeReviewed(this.reviewed, body);
+    this.reviewed = doc;
+    await this.ctx.storage.put("reviewed", doc);
+    const state = this.reviewedState();
+    this.broadcast({
+      type: "reviewed",
+      state,
+      origin_client_id: body.client_id ?? null,
+    });
+    return Response.json(state);
+  }
+
+  private async handleWs(
+    request: Request,
+    url: URL,
+    origin: string | null,
+  ): Promise<Response> {
+    if (origin !== null && !originAllowed(origin)) {
+      return new Response("forbidden origin", { status: 403 });
+    }
+
+    let authed = this.tokenOk(url.searchParams.get("token"));
+    let subproto: string | undefined;
+    if (!authed) {
+      const offered = (request.headers.get("Sec-WebSocket-Protocol") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      for (const s of offered) {
+        const cand = /^(token|bearer)\./i.test(s) ? s.split(".", 2)[1] : s;
+        if (this.tokenOk(cand)) {
+          authed = true;
+          subproto = s;
+          break;
+        }
+      }
+    }
+
+    const pair = new WebSocketPair();
+    const client = pair[0];
+    const server = pair[1];
+    this.ctx.acceptWebSocket(server);
+    server.serializeAttachment({ authed } satisfies WsMeta);
+
+    const headers: Record<string, string> = {};
+    if (subproto) headers["Sec-WebSocket-Protocol"] = subproto;
+
+    if (!authed && url.searchParams.get("token")) {
+      server.close(4401, "invalid token");
+      return new Response(null, { status: 101, webSocket: client, headers });
+    }
+
+    if (authed) {
+      this.sendHello(server);
+    } else {
+      server.serializeAttachment({ authed: false } satisfies WsMeta);
+      await this.ctx.storage.setAlarm(Date.now() + 5000);
+    }
+
+    return new Response(null, { status: 101, webSocket: client, headers });
+  }
+
+  private sendHello(ws: WebSocket): void {
+    try {
+      ws.send(
+        JSON.stringify({
+          type: "hello",
+          version: this.env.VERSION || "1.7.2-cf",
+          server_time: nowIso(),
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "pins",
+          state: this.pinsState(),
+          origin_client_id: null,
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "reviewed",
+          state: this.reviewedState(),
+          origin_client_id: null,
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "radar",
+          state: this.radarState(),
+          origin_client_id: null,
+          event: "hello",
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "blocklist",
+          state: {
+            ...this.blockedMeta,
+            count: this.blocked.size,
+            handles: [...this.blocked].sort(),
+            manual_count: this.manualMarks.length,
+          },
+          origin_client_id: null,
+          event: "hello",
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "launched",
+          state: this.manualLaunchedState(),
+          origin_client_id: null,
+          event: "hello",
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "workbench_alerts",
+          state: this.wbAlertsState(),
+          origin_client_id: null,
+          event: "hello",
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "today_cas",
+          state: this.todayCasState(),
+          origin_client_id: null,
+          event: "hello",
+        }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async webSocketMessage(
+    ws: WebSocket,
+    message: string | ArrayBuffer,
+  ): Promise<void> {
+    await this.ensureLoaded();
+    const raw =
+      typeof message === "string"
+        ? message
+        : new TextDecoder().decode(message);
+
+    let m: Record<string, unknown>;
+    try {
+      m = JSON.parse(raw);
+    } catch {
+      ws.send(JSON.stringify({ type: "error", error: "invalid json" }));
+      return;
+    }
+
+    const meta =
+      (ws.deserializeAttachment() as WsMeta | null) || { authed: false };
+
+    if (!meta.authed) {
+      if (m.type === "auth" && this.tokenOk(String(m.token || ""))) {
+        ws.serializeAttachment({ authed: true });
+        this.sendHello(ws);
+        return;
+      }
+      ws.close(4401, "invalid token");
+      return;
+    }
+
+    const typ = m.type;
+    if (typ === "ping") {
+      ws.send(JSON.stringify({ type: "pong", server_time: nowIso() }));
+      return;
+    }
+    if (typ === "pong" || typ === "auth") return;
+
+    if (typ === "pins_sync") {
+      try {
+        await this.doPinsSync(
+          (m.body || {}) as {
+            items?: WBItem[];
+            client_id?: string | null;
+            removed?: Tombstone[] | null;
+          },
+        );
+      } catch (e) {
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            op: "pins_sync",
+            error: String(e).slice(0, 300),
+          }),
+        );
+      }
+      return;
+    }
+
+    if (typ === "reviewed_sync") {
+      try {
+        await this.doReviewedSync(
+          (m.body || {}) as {
+            client_id?: string | null;
+            marks?: Record<string, ReviewedMark>;
+          },
+        );
+      } catch (e) {
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            op: "reviewed_sync",
+            error: String(e).slice(0, 300),
+          }),
+        );
+      }
+      return;
+    }
+
+    ws.send(
+      JSON.stringify({ type: "error", error: `unknown type ${String(typ)}` }),
+    );
+  }
+
+  async webSocketClose(_ws: WebSocket): Promise<void> {
+    /* hibernation cleans up */
+  }
+
+  async webSocketError(ws: WebSocket): Promise<void> {
+    try {
+      ws.close(1011, "error");
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async alarm(): Promise<void> {
+    for (const ws of this.ctx.getWebSockets()) {
+      const meta = ws.deserializeAttachment() as WsMeta | null;
+      if (meta && meta.authed === false) {
+        try {
+          ws.close(4401, "invalid token");
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+  }
+}

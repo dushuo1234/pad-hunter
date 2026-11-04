@@ -1,0 +1,27 @@
+{
+  "note": "CAs that must never be 固定CA / locked / TG-pushed / bought.",
+  "cas": {
+    "0x8b50c3137680e1b179a1767b2c8bf79e8b7e95f3": {
+      "chain": "ethereum",
+      "symbol": "SQK",
+      "name": "SQUEEK",
+      "ca_status": "suspected_copycat",
+      "honeypot": true,
+      "flags": [
+        "suspected_copycat",
+        "honeypot",
+        "kol_mention_not_official"
+      ],
+      "reason": "Mentioned by KOL @captadotdl promoting @squeekchain (token NOT launched per @squeekchain bio); GMGN eth honeypot=true, vol24h=0, liq≈$86; wrongly fixed by T-20 2026-10-29 19:36 Asia/Shanghai and reverted.",
+      "evidence_url": "https://x.com/captadotdl/status/2115635784359571954",
+      "related_handles": [
+        "captadotdl",
+        "squeekchain"
+      ],
+      "added_by": "capta_fix_20261029",
+      "address": "0x8b50c3137680e1b179a1767b2c8bf79e8b7e95f3",
+      "updated_at": "2026-10-29T20:00:08+08:00"
+    }
+  },
+  "updated_at": "2026-10-29T20:00:08+08:00"
+}

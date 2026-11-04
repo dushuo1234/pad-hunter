@@ -1,0 +1,634 @@
+#!/usr/bin/env python3
+"""Always-on lightweight official-site poller for Pad Hunter (Sentinel-style).
+
+Light layer (every --interval seconds, default 15, clamp 5–60):
+  HEAD/GET each usable official site; compare ETag / Last-Modified / HTML body hash.
+On change (or first baseline):
+  Full HTML + linked JS address extract via scan_js_factory_match.scan_one_project.
+Alerts (append-only fast_site_alerts.jsonl, Asia/Shanghai timestamps):
+  SITE_CHANGE  — HTML fingerprint/ETag/Last-Modified changed
+  NEW_JS_CA    — address not previously seen for that project (deduped)
+
+Does NOT invent CAs. Does not push GitHub. Does not break the 30m batch scanners.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import signal
+import subprocess
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
+
+# Reuse extract / usable-site / full scan helpers — do not duplicate deny lists.
+from scan_js_factory_match import (  # noqa: E402
+    HTML_MAX_BYTES,
+    INLINE_SCRIPT_RE,
+    SCRIPT_SRC_RE,
+    is_usable_site,
+    load_json,
+    now_iso,
+    now_label,
+    scan_one_project,
+)
+import re
+
+BASE = Path("/workspace/project-monitor")
+WATCHLIST = BASE / "watchlist.json"
+STATE_PATH = BASE / "fast_site_state.json"
+ALERTS_PATH = BASE / "fast_site_alerts.jsonl"
+WAKE_PATH = BASE / "fast_site_wake.json"
+PID_PATH = BASE / "fast_site_poll.pid"
+JS_BATCH_LATEST = BASE / "js_factory_scan_latest.json"
+
+SH = ZoneInfo("Asia/Shanghai")
+UA = "Mozilla/5.0 (compatible; PadHunterFastSitePoll/1.0)"
+
+# Projects whose sites often embed third-party token icons / launchpad feeds.
+# NEW_JS_CA from these still alert but with confidence=low.
+LOW_CONFIDENCE_HANDLES = {
+    "baodotla",  # Baola — often shows other coins' icons
+    "ballast",   # Ballast launchpad feed (if/when it has a site)
+}
+LOW_CONFIDENCE_NAMES = {
+    "baola",
+    "ballast",
+}
+
+LIGHT_WORKERS = 8
+LIGHT_TIMEOUT = 12
+RUNNING = True
+
+
+def clamp_interval(sec: float) -> float:
+    return max(5.0, min(60.0, float(sec)))
+
+
+def project_key(proj: dict) -> str:
+    return (proj.get("handle") or proj.get("name") or "").strip().lower() or proj.get("name", "?")
+
+
+def is_low_confidence(proj: dict) -> bool:
+    h = (proj.get("handle") or "").lower().strip()
+    n = (proj.get("name") or "").lower().strip()
+    if h in LOW_CONFIDENCE_HANDLES:
+        return True
+    if n in LOW_CONFIDENCE_NAMES:
+        return True
+    return False
+
+
+def pick_site(proj: dict) -> str | None:
+    sites = [u for u in (proj.get("sites") or []) if is_usable_site(u)]
+    if not sites:
+        return None
+    # prefer https, then shorter path
+    sites = sorted(sites, key=lambda x: (0 if x.startswith("https") else 1, len(x), x))
+    preferred = []
+    seen = set()
+    for u in sites:
+        p = urlparse(u)
+        key = ((p.hostname or "").lower(), (p.path or "/").rstrip("/") or "/")
+        if key in seen:
+            continue
+        seen.add(key)
+        preferred.append(u)
+    return preferred[0] if preferred else None
+
+
+
+def stable_html_fp(html: str) -> str:
+    """Light fingerprint: prefer external script src list (Vite/hashed bundles).
+
+    When a page has no external scripts, fall back to a shell hash with
+    <script> bodies stripped so inline nonces hurt less.
+    """
+    scripts = sorted(
+        {
+            (m.group(1) or "").strip()
+            for m in SCRIPT_SRC_RE.finditer(html or "")
+            if (m.group(1) or "").strip()
+        }
+    )
+    if scripts:
+        payload = json.dumps({"scripts": scripts}, separators=(",", ":"))
+    else:
+        shell = INLINE_SCRIPT_RE.sub("<script/>", html or "")
+        shell = re.sub(r"(?is)<!--.*?-->", "", shell)
+        shell = re.sub(r"\s+", " ", shell).strip()
+        payload = json.dumps(
+            {"shell": hashlib.sha256(shell.encode("utf-8", errors="ignore")).hexdigest()},
+            separators=(",", ":"),
+        )
+    return hashlib.sha256(payload.encode()).hexdigest()[:32]
+
+
+def _parse_validators(header_text: str) -> tuple[str | None, str | None]:
+    etag = None
+    last_mod = None
+    for line in (header_text or "").splitlines():
+        low = line.lower()
+        if low.startswith("etag:"):
+            raw = line.split(":", 1)[1].strip()
+            # Normalize weak etags: W/"abc" -> abc ; "abc" -> abc
+            if raw.upper().startswith("W/"):
+                raw = raw[2:].strip()
+            etag = raw.strip('"').strip("'") or None
+        elif low.startswith("last-modified:"):
+            last_mod = line.split(":", 1)[1].strip() or None
+    return etag, last_mod
+
+
+def light_probe(url: str) -> dict:
+    """Cheap change detection: prefer HEAD validators; else GET HTML body hash."""
+    t0 = time.time()
+    result = {
+        "url": url,
+        "ok": False,
+        "http_code": "000",
+        "etag": None,
+        "last_modified": None,
+        "body_hash": None,
+        "bytes": 0,
+        "method": "HEAD",
+        "error": "",
+        "time_s": 0.0,
+    }
+    # 1) HEAD for ETag / Last-Modified
+    try:
+        head = subprocess.run(
+            [
+                "curl", "-sS", "-I", "-L", "--max-time", str(LIGHT_TIMEOUT),
+                "-A", UA,
+                "-w", "\n__CURLMETA__%{http_code}",
+                url,
+            ],
+            capture_output=True, text=True, timeout=LIGHT_TIMEOUT + 5,
+        )
+        raw = head.stdout or ""
+        headers, meta = raw, ""
+        if "__CURLMETA__" in raw:
+            headers, meta = raw.rsplit("__CURLMETA__", 1)
+        code = (meta or "").strip() or "000"
+        if code.isdigit() and 200 <= int(code) < 400:
+            etag, last_mod = _parse_validators(headers)
+            result["http_code"] = code
+            result["etag"] = etag
+            result["last_modified"] = last_mod
+            if etag or last_mod:
+                result["ok"] = True
+                result["method"] = "HEAD"
+                result["time_s"] = round(time.time() - t0, 3)
+                return result
+    except Exception:
+        pass
+
+    # 2) GET HTML — body hash (+ pick up validators from response headers)
+    hdr_file = f"/tmp/padhunter_fast_hdrs_{os.getpid()}.txt"
+    try:
+        get = subprocess.run(
+            [
+                "curl", "-sS", "-L", "--max-time", str(LIGHT_TIMEOUT),
+                "-A", UA,
+                "--max-filesize", str(HTML_MAX_BYTES),
+                "-w", "\n__CURLMETA__%{http_code}",
+                "-D", hdr_file,
+                url,
+            ],
+            capture_output=True, text=True, timeout=LIGHT_TIMEOUT + 5,
+        )
+        raw = get.stdout or ""
+        html, meta = raw, ""
+        if "__CURLMETA__" in raw:
+            html, meta = raw.rsplit("__CURLMETA__", 1)
+        code = (meta or "").strip() or "000"
+        etag = result.get("etag")
+        last_mod = result.get("last_modified")
+        try:
+            hdr_text = Path(hdr_file).read_text(encoding="utf-8", errors="ignore")
+            e2, m2 = _parse_validators(hdr_text)
+            etag = e2 or etag
+            last_mod = m2 or last_mod
+        except Exception:
+            pass
+        finally:
+            try:
+                Path(hdr_file).unlink(missing_ok=True)
+            except Exception:
+                pass
+        ok = code.isdigit() and 200 <= int(code) < 400
+        result.update({
+            "ok": ok,
+            "http_code": code,
+            "etag": etag,
+            "last_modified": last_mod,
+            "body_hash": (stable_html_fp(html) if ok else None),
+            "bytes": len(html.encode("utf-8", errors="ignore")) if ok else 0,
+            "method": "GET",
+            "error": "" if ok else f"http {code}",
+            "time_s": round(time.time() - t0, 3),
+        })
+        return result
+    except Exception as e:
+        result["error"] = str(e)[:200]
+        result["method"] = "GET"
+        result["time_s"] = round(time.time() - t0, 3)
+        return result
+
+
+def changed(prev: dict | None, probe: dict) -> bool:
+    """True only when comparable validators disagree.
+
+    Prefer ETag, then Last-Modified, then stable HTML fingerprint.
+    Validator-type switches (e.g. HEAD etag → GET hash) are NOT treated as
+    changes — caller should quietly refresh stored validators.
+    """
+    if not probe.get("ok") or not prev:
+        return False
+    pe, ne = prev.get("etag") or "", probe.get("etag") or ""
+    if pe and ne:
+        return pe != ne
+    pl, nl = prev.get("last_modified") or "", probe.get("last_modified") or ""
+    if pl and nl and not (pe or ne):
+        return pl != nl
+    ph, nh = prev.get("body_hash") or "", probe.get("body_hash") or ""
+    if ph and nh:
+        return ph != nh
+    return False
+
+
+def append_alert(ev: dict) -> None:
+    ev = dict(ev)
+    ev.setdefault("at", now_iso())
+    ev.setdefault("at_label", now_label())
+    with ALERTS_PATH.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+    # Tiny wake file for parent routine
+    wake = {
+        "updated_at": now_iso(),
+        "updated_at_label": now_label(),
+        "last_alert_type": ev.get("type"),
+        "last_alert_name": ev.get("name"),
+        "alerts_path": str(ALERTS_PATH),
+    }
+    WAKE_PATH.write_text(json.dumps(wake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def save_state(state: dict) -> None:
+    state["updated_at"] = now_iso()
+    state["updated_at_label"] = now_label()
+    tmp = STATE_PATH.with_suffix(".tmp")
+    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(STATE_PATH)
+
+
+def load_watch_targets() -> list[dict]:
+    wl = load_json(WATCHLIST, {})
+    out = []
+    for p in wl.get("projects") or []:
+        site = pick_site(p)
+        if not site:
+            continue
+        out.append({
+            "name": p.get("name"),
+            "handle": p.get("handle"),
+            "chain": p.get("chain"),
+            "site": site,
+            "project": p,
+            "low_confidence": is_low_confidence(p),
+        })
+    return out
+
+
+
+def seed_addrs_from_batch(name: str) -> list[dict]:
+    """Reuse last batch JS scan addresses so baseline does not re-alert known CAs."""
+    doc = load_json(JS_BATCH_LATEST, {})
+    for r in doc.get("results") or []:
+        if r.get("name") == name:
+            out = []
+            for c in r.get("addresses") or []:
+                out.append({
+                    "type": c.get("type"),
+                    "address": c.get("address"),
+                    "source": c.get("source"),
+                    "snippet": c.get("snippet"),
+                })
+            return out
+    return []
+
+
+def full_extract_and_alert(
+    target: dict,
+    probe: dict,
+    site_state: dict,
+    *,
+    reason: str,
+) -> list[dict]:
+    """Run full JS extract; emit SITE_CHANGE / NEW_JS_CA. Returns new alerts."""
+    alerts: list[dict] = []
+    proj = target["project"]
+    name = target["name"]
+    handle = target["handle"]
+    low = target["low_confidence"]
+
+    scan = scan_one_project(proj)
+    addrs = scan.get("addresses") or []
+    addr_list = [
+        {"type": c.get("type"), "address": c.get("address"), "source": c.get("source"), "snippet": c.get("snippet")}
+        for c in addrs
+    ]
+    prev_addrs = {
+        (a.get("type"), (a.get("address") or "").lower())
+        for a in (site_state.get("last_addrs") or [])
+    }
+    alerted = set(site_state.get("alerted_addrs") or [])
+
+    prev_fp = site_state.get("fingerprint")
+    prev_afp = site_state.get("address_fingerprint")
+    new_fp = scan.get("fingerprint")
+    new_afp = scan.get("address_fingerprint")
+    # First full extract after light baseline only seeds fingerprints — do not
+    # SITE_CHANGE yet (avoids one-shot noise). Later fp/addr moves do alert.
+    had_fp = bool(prev_fp or prev_afp)
+    content_changed = had_fp and (
+        (prev_fp and new_fp and prev_fp != new_fp)
+        or (prev_afp and new_afp and prev_afp != new_afp)
+    )
+    if content_changed:
+        ev = {
+            "type": "SITE_CHANGE",
+            "name": name,
+            "handle": handle,
+            "site": target["site"],
+            "reason": reason,
+            "etag": probe.get("etag"),
+            "last_modified": probe.get("last_modified"),
+            "body_hash": probe.get("body_hash"),
+            "prev_body_hash": site_state.get("body_hash"),
+            "address_count": len(addr_list),
+            "confidence": "low" if low else "normal",
+            "note": "feed-style site; third-party token icons common" if low else None,
+        }
+        append_alert(ev)
+        alerts.append(ev)
+        print(f"  ALERT SITE_CHANGE {name} ({target['site']})", flush=True)
+    else:
+        print(
+            f"  light-change only {name} (JS fingerprint unchanged) — no SITE_CHANGE",
+            flush=True,
+        )
+
+    for c in addr_list:
+        key = f"{c.get('type')}:{(c.get('address') or '').lower()}"
+        tkey = (c.get("type"), (c.get("address") or "").lower())
+        if tkey in prev_addrs:
+            continue
+        if key in alerted:
+            continue
+        ev = {
+            "type": "NEW_JS_CA",
+            "name": name,
+            "handle": handle,
+            "site": target["site"],
+            "address": c.get("address"),
+            "addr_type": c.get("type"),
+            "source": c.get("source"),
+            "snippet": c.get("snippet"),
+            "confidence": "low" if low else "normal",
+            "note": (
+                "low confidence: site often embeds third-party token icons / feed noise"
+                if low
+                else None
+            ),
+        }
+        append_alert(ev)
+        alerts.append(ev)
+        alerted.add(key)
+        print(
+            f"  ALERT NEW_JS_CA {name} {c.get('address')} conf={ev['confidence']}",
+            flush=True,
+        )
+
+    # Update site state
+    site_state.update({
+        "name": name,
+        "handle": handle,
+        "site": target["site"],
+        "etag": probe.get("etag"),
+        "last_modified": probe.get("last_modified"),
+        "body_hash": probe.get("body_hash"),
+        "http_code": probe.get("http_code"),
+        "last_probe_at": now_iso(),
+        "last_full_at": now_iso(),
+        "last_addrs": addr_list,
+        "alerted_addrs": sorted(alerted),
+        "fingerprint": scan.get("fingerprint"),
+        "address_fingerprint": scan.get("address_fingerprint"),
+        "low_confidence": low,
+        "last_errors": (scan.get("errors") or [])[:5],
+        "baseline": False,
+    })
+    return alerts
+
+
+def handle_signal(signum, _frame):
+    global RUNNING
+    print(f"\n[{now_label()}] signal {signum}, shutting down…", flush=True)
+    RUNNING = False
+
+
+def run_loop(interval: float, once: bool = False) -> int:
+    global RUNNING
+    interval = clamp_interval(interval)
+    signal.signal(signal.SIGTERM, handle_signal)
+    signal.signal(signal.SIGINT, handle_signal)
+
+    state = load_json(STATE_PATH, {})
+    if not isinstance(state, dict):
+        state = {}
+    sites_state: dict = state.setdefault("sites", {})
+
+    targets = load_watch_targets()
+    print(
+        f"[{now_label()}] fast_site_poll start interval={interval}s "
+        f"sites={len(targets)} state={STATE_PATH}",
+        flush=True,
+    )
+    state["poll_interval_s"] = interval
+    state["watched_count"] = len(targets)
+    state["started_at"] = state.get("started_at") or now_iso()
+    save_state(state)
+
+    cycle = 0
+    while RUNNING:
+        cycle += 1
+        t0 = time.time()
+        targets = load_watch_targets()  # reload watchlist each cycle
+        state["watched_count"] = len(targets)
+        changed_targets: list[tuple[dict, dict, str]] = []
+
+        # Light probes in parallel
+        probes: dict[str, dict] = {}
+        with ThreadPoolExecutor(max_workers=LIGHT_WORKERS) as ex:
+            futs = {ex.submit(light_probe, t["site"]): t for t in targets}
+            for fut in as_completed(futs):
+                t = futs[fut]
+                key = project_key(t["project"])
+                try:
+                    probe = fut.result()
+                except Exception as e:
+                    probe = {"ok": False, "error": str(e)[:200], "url": t["site"]}
+                probes[key] = probe
+                prev = sites_state.get(key) or {}
+                if not probe.get("ok"):
+                    # keep last good identity; record miss
+                    if key not in sites_state:
+                        sites_state[key] = {
+                            "name": t["name"],
+                            "handle": t["handle"],
+                            "site": t["site"],
+                            "last_probe_at": now_iso(),
+                            "last_error": probe.get("error") or probe.get("http_code"),
+                        }
+                    else:
+                        sites_state[key]["last_probe_at"] = now_iso()
+                        sites_state[key]["last_error"] = probe.get("error") or probe.get("http_code")
+                    continue
+                if key not in sites_state or not (
+                    sites_state[key].get("etag")
+                    or sites_state[key].get("last_modified")
+                    or sites_state[key].get("body_hash")
+                ):
+                    # Light baseline only — seed addrs from batch scan; no alert flood
+                    seeded = seed_addrs_from_batch(t["name"])
+                    alerted = {
+                        f"{a.get('type')}:{(a.get('address') or '').lower()}"
+                        for a in seeded
+                    }
+                    sites_state[key] = {
+                        "name": t["name"],
+                        "handle": t["handle"],
+                        "site": t["site"],
+                        "etag": probe.get("etag"),
+                        "last_modified": probe.get("last_modified"),
+                        "body_hash": probe.get("body_hash"),
+                        "http_code": probe.get("http_code"),
+                        "last_probe_at": now_iso(),
+                        "last_full_at": None,
+                        "last_addrs": seeded,
+                        "alerted_addrs": sorted(alerted),
+                        "low_confidence": t["low_confidence"],
+                        "baseline": True,
+                    }
+                    print(
+                        f"  [baseline] {t['name']} seeded_addrs={len(seeded)} "
+                        f"etag={probe.get('etag')} lm={probe.get('last_modified')} "
+                        f"hash={probe.get('body_hash')}",
+                        flush=True,
+                    )
+                elif changed(sites_state.get(key), probe):
+                    changed_targets.append((t, probe, "change"))
+                else:
+                    # touch probe time / refresh validators if newly available
+                    st = sites_state.setdefault(key, {})
+                    st["last_probe_at"] = now_iso()
+                    st["http_code"] = probe.get("http_code")
+                    if probe.get("etag"):
+                        st["etag"] = probe["etag"]
+                    if probe.get("last_modified"):
+                        st["last_modified"] = probe["last_modified"]
+                    if probe.get("body_hash"):
+                        st["body_hash"] = probe["body_hash"]
+                    st.pop("last_error", None)
+
+        alert_count = 0
+        for t, probe, reason in changed_targets:
+            key = project_key(t["project"])
+            site_state = sites_state.setdefault(key, {})
+            print(
+                f"  [{reason}] {t['name']} {t['site']} "
+                f"etag={probe.get('etag')} hash={probe.get('body_hash')}",
+                flush=True,
+            )
+            try:
+                alerts = full_extract_and_alert(t, probe, site_state, reason=reason)
+                alert_count += len(alerts)
+            except Exception as e:
+                site_state["last_error"] = f"full_extract: {e}"[:200]
+                site_state["last_probe_at"] = now_iso()
+                print(f"  ERROR full extract {t['name']}: {e}", flush=True)
+
+        elapsed = round(time.time() - t0, 2)
+        state["sites"] = sites_state
+        state["last_cycle"] = {
+            "n": cycle,
+            "at": now_iso(),
+            "at_label": now_label(),
+            "elapsed_s": elapsed,
+            "probed": len(targets),
+            "changed": len(changed_targets),
+            "alerts": alert_count,
+        }
+        save_state(state)
+        print(
+            f"[{now_label()}] cycle={cycle} probed={len(targets)} "
+            f"changed={len(changed_targets)} alerts={alert_count} "
+            f"elapsed={elapsed}s",
+            flush=True,
+        )
+
+        if once:
+            break
+        # sleep remaining interval
+        sleep_for = max(0.5, interval - (time.time() - t0))
+        end = time.time() + sleep_for
+        while RUNNING and time.time() < end:
+            time.sleep(min(0.5, end - time.time()))
+
+    save_state(state)
+    print(f"[{now_label()}] stopped after {cycle} cycles", flush=True)
+    return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Pad Hunter fast official-site poller")
+    ap.add_argument(
+        "--interval", type=float, default=15.0,
+        help="Light poll interval seconds (default 15, clamp 5–60)",
+    )
+    ap.add_argument("--once", action="store_true", help="One cycle then exit")
+    ap.add_argument("--status", action="store_true", help="Print state summary and exit")
+    args = ap.parse_args()
+
+    if args.status:
+        st = load_json(STATE_PATH, {})
+        print(json.dumps({
+            "state": str(STATE_PATH),
+            "alerts": str(ALERTS_PATH),
+            "wake": str(WAKE_PATH),
+            "watched_count": st.get("watched_count"),
+            "poll_interval_s": st.get("poll_interval_s"),
+            "updated_at": st.get("updated_at"),
+            "last_cycle": st.get("last_cycle"),
+            "pid_file": str(PID_PATH),
+            "pid_alive": (
+                PID_PATH.exists()
+                and Path(f"/proc/{PID_PATH.read_text().strip()}/cmdline").exists()
+            ) if PID_PATH.exists() else False,
+        }, ensure_ascii=False, indent=2))
+        return 0
+
+    os.chdir(BASE)
+    return run_loop(args.interval, once=args.once)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

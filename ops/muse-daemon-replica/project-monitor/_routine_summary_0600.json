@@ -1,0 +1,55 @@
+{
+  "at": "2026-10-30T06:34:23+08:00",
+  "hhmm": "0600",
+  "pause": false,
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "sync": {
+    "before": 426,
+    "after": 426,
+    "locked_new": [],
+    "updated_meta": 3,
+    "npa_skipped": 41,
+    "kol_skipped": 1,
+    "incomplete": 145
+  },
+  "x": {
+    "bios": 0,
+    "posts_counts": {},
+    "user_count": 766,
+    "pkc_bio_snip": "(empty)",
+    "bio_errors": 1,
+    "note": "built-in x namespace SKIPPED: daily X read limit 1000 reached; resets 2026-10-30T00:00:00Z (=08:00 Asia/Shanghai). Continued with existing x_posts_cache.",
+    "x_error": "X read limit reached (daily limit 1000); remaining=0 until 2026-10-30T00:00:00.000Z"
+  },
+  "pipeline_exit": 0,
+  "elapsed_s": 1682,
+  "elapsed_min": 28.0,
+  "onchain_lock_relay": {
+    "offset": 280
+  },
+  "solana_lock_relay": {
+    "offset": 4
+  },
+  "onchain_lock_new": 0,
+  "onchain_lock_actionable": 0,
+  "new_js_ca": 0,
+  "js_factory_match": 0,
+  "site_js_changes_ambient": 11,
+  "newly_launched": 0,
+  "newly_launched_handles": [],
+  "listing_at_changes": 0,
+  "new_ca": 0,
+  "trace_wallet": "timeout rc=124 (900s hang-safe)",
+  "rpc_notes": [
+    "base/bsc publicnode: usage limit reached (onchain daemon last_error) — transient, not pausing",
+    "ethereum publicnode: Cannot fulfill request — transient",
+    "hyperevm: rate limited — transient"
+  ],
+  "actionable": [],
+  "quiet": true,
+  "user_ping": false,
+  "wakeparent_payload": ""
+}

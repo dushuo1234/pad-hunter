@@ -1,0 +1,201 @@
+{
+  "id": "clanker_v3_1_base",
+  "address": "0x2A787b2362021cC3eEa3C24C4748a6cD5B687382",
+  "chain": "base",
+  "name": "Clanker v3.1 Token Factory (Base)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "TokenCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "msgSender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tokenAdmin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokenImage",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenSymbol",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenMetadata",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenContext",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "startingTick",
+          "type": "int24"
+        },
+        {
+          "indexed": false,
+          "name": "poolHook",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "poolId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "pairedToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "locker",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "mevModule",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "extensionsSupply",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "extensions",
+          "type": "address[]"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "TokenCreated",
+      "signature": "TokenCreated(address,address,address,string,string,string,string,string,int24,address,bytes32,address,address,address,uint256,address[])",
+      "topic0": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67",
+      "args": [
+        {
+          "name": "msgSender",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "tokenAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "tokenImage",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "tokenMetadata",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "tokenContext",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "startingTick",
+          "type": "int24",
+          "indexed": false
+        },
+        {
+          "name": "poolHook",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "poolId",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "name": "pairedToken",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "locker",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "mevModule",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "extensionsSupply",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": false,
+  "source_files": null,
+  "explorer_url": "https://basescan.org/address/0x2A787b2362021cC3eEa3C24C4748a6cD5B687382",
+  "explorer_api_used": null,
+  "source_note": "Legacy Clanker v3.1 still occasionally used; same TokenCreated family may differ — watch Create logs + wallet path.",
+  "meta": {
+    "proxy_implementation": null,
+    "verified_how": null,
+    "note": "v3.1 event ABI may differ from v4; registered for eth_getLogs + heuristic extract. Prefer v4."
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67",
+      "count": null
+    }
+  ],
+  "canonical_abi": false,
+  "verification_method": "docs_plus_topic0"
+}

@@ -1,0 +1,171 @@
+{
+  "run": "开盘与CA预警",
+  "at": "2026-10-24T15:02:36+08:00",
+  "fired_approx": "2026-10-24T14:25+08:00",
+  "exit": 0,
+  "duration_s": 1957,
+  "duration_note": "pipeline ~32.6min (14:27:23→15:00:00 Asia/Shanghai); full routine incl. sync+X+lock+publish ~35min",
+  "pipeline_ok": "yes",
+  "watchlist": "232→233",
+  "watchlist_note": "locked +1 Matthaus @matthausagent (即将启动)",
+  "locked_new": [
+    {
+      "name": "Matthaus",
+      "handle": "matthausagent",
+      "status": "即将启动"
+    }
+  ],
+  "candidates": 233,
+  "projects": 233,
+  "launched": 64,
+  "newly_launched": [],
+  "workbench": 52,
+  "x_refresh": {
+    "at": "2026-10-24T14:27:09+08:00",
+    "bios": 94,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "Matthausagent",
+      "hexxxx2_0",
+      "QernApp",
+      "RebateLaunch",
+      "hashgentic",
+      "ZardlabsPro",
+      "CaravanRH"
+    ],
+    "user_count": 359,
+    "pkc_bio": "",
+    "pkc_sticky_post": "Launching this week.\n\nOnly CA will be posted in bio.\n\nStand by.",
+    "matthaus_url": "https://t.co/FBN85NPGRS"
+  },
+  "new_ca": 0,
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "within_3d": [
+    {
+      "name": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "listing_at": "2026-10-25T00:00:00+08:00",
+      "note": "NEW listing_at from X; $ZARD launches Sat Oct 24 4PM UTC (=00:00 Asia/Shanghai Oct 25); bio still CA: Launch Soon; no CA yet",
+      "evidence_url": "https://x.com/ZardlabsPro/status/2113880115096785317",
+      "source": "x"
+    }
+  ],
+  "listing_at_changes_published": [
+    {
+      "name": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "listing_at": "2026-10-25T00:00:00+08:00",
+      "prev": null,
+      "published": true,
+      "main": "8210e3f",
+      "gh_pages": "428488c"
+    }
+  ],
+  "LISTING_SIGNAL": [
+    {
+      "name": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "detail": "$ZARD launches today 4PM UTC; strong NEW",
+      "actionable": true
+    },
+    {
+      "name": "Qern App",
+      "handle": "QernApp",
+      "detail": "TGE / PRE-TGE airdrop repeat",
+      "actionable": false
+    },
+    {
+      "name": "sway",
+      "handle": "swaydotfamily",
+      "detail": "listing wording repeat",
+      "actionable": false
+    },
+    {
+      "name": "Mannequin",
+      "handle": "mannequinsnft",
+      "detail": "status=即将启动 TG ambient",
+      "actionable": false
+    },
+    {
+      "name": "Matthaus",
+      "handle": "matthausagent",
+      "detail": "new lock status=即将启动; empty bio; site matthaus.io",
+      "actionable": false
+    }
+  ],
+  "SITE_JS_CHANGE": [
+    "CozyGolem",
+    "Shielded-NakaPunks 中文社区",
+    "TapeFoundry×2",
+    "paperbird"
+  ],
+  "SITE_JS_note": "fp changes addrs unchanged; near_deploys=8 ambient — skip",
+  "NEW_DEPLOY_watchlist": null,
+  "NEW_DEPLOY_ambient_univ2_samples": 30,
+  "TRACE_CA": 4,
+  "TRACE_CA_note": "Hashgentic NFT/non-token create_derive repeats (0x7d94…, 0x08bd…, 0xe6ba…, 0x3577…) — not fungible CA",
+  "onchain_lock": {
+    "bytes_before": 87879,
+    "bytes_after": 87879,
+    "new": 0,
+    "offset_after": 87879,
+    "hits": [],
+    "daemon": "running pid=11455 phase=running",
+    "rpc_note": "robinhood 429 Too Many Requests noise; still phase=running"
+  },
+  "prune": {
+    "newly_pruned": 0,
+    "launched_total": 64,
+    "borderline_kept": 4
+  },
+  "pages": {
+    "at": "2026-10-24T15:02:09+08:00",
+    "results": [
+      {
+        "file": "data/listing_times.json",
+        "main": "8210e3f",
+        "gh_pages": "428488c",
+        "main_published_at": "2026-10-24T15:01:13+08:00",
+        "gh_published_at": "2026-10-24T15:02:04+08:00"
+      },
+      {
+        "file": "data/candidates.json",
+        "main": "9782a6a",
+        "gh_pages": "",
+        "main_published_at": "2026-10-24T15:01:39+08:00",
+        "gh_published_at": "2026-10-24T15:02:06+08:00"
+      },
+      {
+        "file": "data/monitor_events.json",
+        "main": "260e437",
+        "gh_pages": "",
+        "main_published_at": "2026-10-24T15:01:19+08:00",
+        "gh_published_at": "2026-10-24T15:02:09+08:00"
+      }
+    ]
+  },
+  "actionable_items": [
+    {
+      "type": "LISTING_SIGNAL",
+      "name": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "chain": "robinhood",
+      "ca": null,
+      "evidence": "$ZARD launches today, Saturday, October 24 · 4 PM UTC (=2026-10-25T00:00+08). Launch tokens on @ponsdotfamily. Bio still 'CA: Launch Soon'.",
+      "source": "X",
+      "url": "https://x.com/ZardlabsPro/status/2113880115096785317"
+    },
+    {
+      "type": "listing_at_change_published",
+      "name": "ZardLabs",
+      "handle": "ZardlabsPro",
+      "chain": "robinhood",
+      "ca": null,
+      "evidence": "listing_at None→2026-10-25T00:00:00+08:00 published main 8210e3f + gh-pages 428488c",
+      "source": "X"
+    }
+  ],
+  "actionable": "yes",
+  "ping": "yes"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "hyperswap_v2_factory",
+  "address": "0x724412C00059bf7d6ee7d4a1d0D5cd4de3ea1C48",
+  "chain": "hyperevm",
+  "name": "HyperSwap V2 Factory",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "pair",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "PairCreated",
+      "type": "event"
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "PairCreated",
+      "signature": "PairCreated(address,address,address,uint256)",
+      "topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "args": [
+        {
+          "name": "token0",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "token1",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "pair",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "a3",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0x724412C00059bf7d6ee7d4a1d0D5cd4de3ea1C48",
+  "explorer_api_used": null,
+  "source_note": "Official HyperSwap V2 factory (docs.hyperswap.exchange). UniV2 PairCreated. Labeled on HyperEVMScan factory-contract list (~3k txns).",
+  "meta": {
+    "verified_how": [
+      "docs.hyperswap.exchange AMM V2 Factory 0x724412C0…1C48",
+      "HyperEVMScan label HyperSwap V2: Factory"
+    ]
+  },
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": 20357,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "official_docs_univ2_abi"
+}

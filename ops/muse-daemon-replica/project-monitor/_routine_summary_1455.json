@@ -1,0 +1,85 @@
+{
+  "run": "2026-10-25T15:18:00+08:00",
+  "fired_at": "2026-10-25T06:55:02Z",
+  "fired_local": "2026-10-25T14:55:00+08:00",
+  "watchlist": "252→252",
+  "newly_locked": [],
+  "listing_daemon": {
+    "ok": true,
+    "pid": 827796,
+    "age_min_at_start": 12.8,
+    "age_min_at_end": 16.0,
+    "restarted": false,
+    "new_ca": 0,
+    "new_signals": 0,
+    "at": "2026-10-25T15:01:04+08:00",
+    "checked_at": "2026-10-25T15:02:25+08:00"
+  },
+  "pipeline": {
+    "exit": 0,
+    "elapsed_min": 17.1,
+    "elapsed_s": 1024,
+    "new_js_ca": 0,
+    "matches": 0,
+    "TRACE_CA": 4,
+    "within_3d": [
+      "Agent AI 10-26 20:00 (NEW)",
+      "Timecard 10-27 21:00",
+      "PlayBlastOff 10-28 07:59"
+    ],
+    "NEW_DEPLOY": "none watchlist-relevant; ambient_univ2_samples=28",
+    "SITE_JS_CHANGE": [
+      "E.T.A",
+      "EmberWorld",
+      "Shielded-NakaPunks 中文社区",
+      "tom"
+    ],
+    "SITE_JS_CHANGE_note": "ambient fp churn; EmberWorld addr churn=tapeoutscan gateway noise/invalid sol hashes (new_js_ca=0)",
+    "launched": 68,
+    "newly": 0,
+    "workbench": "61→61"
+  },
+  "onchain_lock": {
+    "offset": "109780→109780",
+    "new": 0,
+    "daemon": "ok pid=889131"
+  },
+  "x_cache": {
+    "refreshed": [
+      "PrivateKeyCoin_",
+      "thetimecard",
+      "play_blastoff"
+    ],
+    "pkc_bio_empty": true,
+    "x_reads_left_approx": 725
+  },
+  "listing_at_changes": [
+    {
+      "name": "Agent AI",
+      "handle": "Agentai_ai",
+      "listing_at": "2026-10-26T20:00:00+08:00",
+      "prev": null,
+      "within_3d": true,
+      "source": "x",
+      "confidence": "high",
+      "evidence": "https://x.com/Agentai_ai/status/2114247188910092393",
+      "raw": "AGI 公平铸造｜10 月 26 日 20:00 正式开启",
+      "published": true,
+      "pages": "noop hash unchanged (already published by listing_scan_daemon)"
+    }
+  ],
+  "actionable": [
+    {
+      "project": "Agent AI",
+      "handle": "Agentai_ai",
+      "chain": null,
+      "ca": null,
+      "evidence": "listing_at NEW 2026-10-26T20:00+08 (AGI fair mint) published to site",
+      "source": "X",
+      "criteria": "listing_at change published to site"
+    }
+  ],
+  "ping": true,
+  "auth_rpc_failures": null,
+  "notes": "wallet_watchlist store mirror Errno5 (publish-pages-data ok); no pause"
+}

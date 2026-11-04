@@ -1,0 +1,126 @@
+{
+  "id": "univ4_pm_base",
+  "address": "0x498581ff718922c3f8e6a244956af099b2652b2b",
+  "chain": "base",
+  "name": "Uniswap V4 PoolManager (Base)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "Initialize",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "id",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "currency0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "currency1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "fee",
+          "type": "uint24"
+        },
+        {
+          "indexed": false,
+          "name": "tickSpacing",
+          "type": "int24"
+        },
+        {
+          "indexed": false,
+          "name": "hooks",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "sqrtPriceX96",
+          "type": "uint160"
+        },
+        {
+          "indexed": false,
+          "name": "tick",
+          "type": "int24"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "Initialize",
+      "signature": "Initialize(bytes32,address,address,uint24,int24,address,uint160,int24)",
+      "topic0": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438",
+      "args": [
+        {
+          "name": "id",
+          "type": "bytes32",
+          "indexed": true
+        },
+        {
+          "name": "currency0",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "currency1",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "fee",
+          "type": "uint24",
+          "indexed": false
+        },
+        {
+          "name": "tickSpacing",
+          "type": "int24",
+          "indexed": false
+        },
+        {
+          "name": "hooks",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "sqrtPriceX96",
+          "type": "uint160",
+          "indexed": false
+        },
+        {
+          "name": "tick",
+          "type": "int24",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://basescan.org/address/0x498581ff718922c3f8e6a244956af099b2652b2b",
+  "explorer_api_used": null,
+  "source_note": "Base UniV4 pools; Clanker v4 hooks create pools here too.",
+  "meta": {
+    "proxy_implementation": null,
+    "verified_how": null,
+    "note": null
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "docs_plus_topic0"
+}

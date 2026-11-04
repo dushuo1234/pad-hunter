@@ -1,0 +1,92 @@
+{
+  "id": "kittenswap_cl_factory",
+  "address": "0x2E08F5Ff603E4343864B14599CAeDb19918BDCaF",
+  "chain": "hyperevm",
+  "name": "KittenSwap CL Factory",
+  "abi": [
+    {
+      "type": "event",
+      "name": "PoolCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "fee",
+          "type": "uint24"
+        },
+        {
+          "indexed": false,
+          "name": "tickSpacing",
+          "type": "int24"
+        },
+        {
+          "indexed": false,
+          "name": "pool",
+          "type": "address"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "PoolCreated",
+      "signature": "PoolCreated(address,address,uint24,int24,address)",
+      "topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+      "args": [
+        {
+          "name": "token0",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "token1",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "fee",
+          "type": "uint24",
+          "indexed": true
+        },
+        {
+          "name": "tickSpacing",
+          "type": "int24",
+          "indexed": false
+        },
+        {
+          "name": "pool",
+          "type": "address",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": false,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0x2E08F5Ff603E4343864B14599CAeDb19918BDCaF",
+  "explorer_api_used": null,
+  "source_note": "HyperEVMScan label Kittenswap: CL Factory. Assumed UniV3 PoolCreated ABI (common for CL DEX forks). Not in primary KittenSwap docs table (only PairFactory listed).",
+  "meta": {},
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "explorer_label_univ3_assumed"
+}

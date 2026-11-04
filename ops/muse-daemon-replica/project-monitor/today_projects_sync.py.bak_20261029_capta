@@ -1,0 +1,436 @@
+#!/usr/bin/env python3
+"""同步「今日项目清单」：有具体 listing_at 且在 2 天内开盘的项目自动录入。
+
+规则（Asia/Shanghai）：
+  - 绝不编造 listing_at；仅当 listing_at 可解析为真实 datetime 才录入
+  - 窗口：now ≤ listing_at ≤ now+48h
+  - 剔除：listing_at+6h 已过，或 already_listed / listing∈{已开盘,已上线} / status 含已开盘
+  - 重同步时保留同 handle 的 playbook 与 remind_2h_sent_at
+输出：
+  /workspace/project-monitor/today_projects.json
+  /workspace/push-radar/data/today_projects.json
+  /workspace/publish-pages-data/today_projects.json
+  /workspace/project-monitor/today_projects_boost.json
+CLI 打印一行 JSON：{count, added, removed, handles}
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+CANDIDATES = Path("/workspace/push-radar/data/candidates.json")
+LISTING_TIMES = Path("/workspace/push-radar/data/listing_times.json")
+OUT = BASE / "today_projects.json"
+BOOST = BASE / "today_projects_boost.json"
+MIRRORS = [
+    Path("/workspace/push-radar/data/today_projects.json"),
+    Path("/workspace/publish-pages-data/today_projects.json"),
+]
+X_PLAN = BASE / "alerts" / "workbench_soon_x_plan.json"
+WB_LOCAL = BASE / "workbench_active.json"
+TZ = ZoneInfo("Asia/Shanghai")
+WINDOW_H = 48
+KEEP_AFTER_H = 6  # drop when past listing_at + 6h
+
+
+def now() -> datetime:
+    return datetime.now(TZ)
+
+
+def iso(dt: datetime) -> str:
+    return dt.astimezone(TZ).isoformat(timespec="seconds")
+
+
+def norm(h: str | None) -> str:
+    return (h or "").strip().lstrip("@").lower()
+
+
+def parse_dt(val) -> datetime | None:
+    if val is None:
+        return None
+    s = str(val).strip()
+    if not s or s in ("null", "None", "未给具体时间"):
+        return None
+    # refuse date-only without clock if clearly no time component? Task: real parseable datetime.
+    # Accept ISO with time; reject bare YYYY-MM-DD (no concrete clock → not "具体日期" with time for remind).
+    try:
+        if len(s) <= 10 and "T" not in s and " " not in s:
+            # date-only — not a concrete listing clock; skip
+            return None
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TZ)
+        return dt.astimezone(TZ)
+    except Exception:
+        return None
+
+
+def load_json(path: Path, default=None):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default if default is not None else {}
+
+
+def clean_site(site) -> str | None:
+    if not isinstance(site, str):
+        return None
+    s = site.strip()
+    if not s or s in ("null", "None", "-"):
+        return None
+    # strip truncation ellipsis from radar display
+    if s.endswith("..."):
+        s = s[:-3].rstrip(".")
+    if not s.startswith(("http://", "https://")):
+        return None
+    # still truncated host path like http://foo.bar... already stripped
+    if s.endswith("...") or "…" in s:
+        return None
+    return s
+
+
+_LAUNCHED_CACHE: set[str] | None = None
+
+
+def _launched_handles() -> set[str]:
+    """removed_launched + push-radar launched — so T-20 官推CA后不会被 sync 重新录入。"""
+    global _LAUNCHED_CACHE
+    if _LAUNCHED_CACHE is not None:
+        return _LAUNCHED_CACHE
+    out: set[str] = set()
+    for path, keys in (
+        (BASE / "removed_launched.json", ("items", "removed", "entries")),
+        (Path("/workspace/push-radar/data/launched.json"), ("items", "projects", "launched")),
+    ):
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(doc, list):
+            ents = doc
+        elif isinstance(doc, dict):
+            ents = []
+            for k in keys:
+                if isinstance(doc.get(k), list):
+                    ents = doc[k]
+                    break
+            if not ents:
+                # map-style
+                for k, v in doc.items():
+                    if isinstance(v, dict) and (v.get("handle") or k):
+                        ents.append(v if v.get("handle") else {**v, "handle": k})
+        else:
+            continue
+        for e in ents:
+            if not isinstance(e, dict):
+                continue
+            if e.get("restored"):
+                continue
+            h = norm(e.get("handle"))
+            if h:
+                out.add(h)
+    _LAUNCHED_CACHE = out
+    return out
+
+
+def is_launched(it: dict) -> bool:
+    if it.get("already_listed") is True:
+        return True
+    listing = str(it.get("listing") or "")
+    status = str(it.get("status") or "")
+    if listing in ("已开盘", "已上线"):
+        return True
+    if "已开盘" in status or "已上线" in status:
+        return True
+    if norm(it.get("handle")) in _launched_handles():
+        return True
+    return False
+
+
+def merge_sources() -> dict[str, dict]:
+    """handle_norm -> best candidate+listing_times merge. Prefer candidates fields; fill listing from LT."""
+    cdoc = load_json(CANDIDATES, {})
+    ltdoc = load_json(LISTING_TIMES, {})
+    by: dict[str, dict] = {}
+
+    for it in ltdoc.get("items") or []:
+        if not isinstance(it, dict):
+            continue
+        h = it.get("handle")
+        if not h:
+            continue
+        key = norm(h)
+        by[key] = {
+            "handle": h,
+            "name": it.get("project") or it.get("name") or h,
+            "listing_at": it.get("listing_at"),
+            "listing_at_display": it.get("listing_at_display") or it.get("listing_at"),
+            "listing_at_source": it.get("source") or it.get("listing_at_source"),
+            "listing_at_evidence_url": it.get("evidence_url") or it.get("listing_at_evidence_url"),
+            "already_listed": bool(it.get("already_listed")),
+            "listing_at_raw": it.get("listing_at_raw") or "",
+            "_from": "listing_times",
+        }
+
+    for it in cdoc.get("candidates") or []:
+        if not isinstance(it, dict):
+            continue
+        h = it.get("handle")
+        if not h:
+            continue
+        key = norm(h)
+        base = by.get(key) or {}
+        # Prefer concrete listing_at from either side (candidates usually synced)
+        la = it.get("listing_at") or base.get("listing_at")
+        merged = {
+            **base,
+            "handle": h,
+            "name": it.get("name") or base.get("name") or h,
+            "chain": it.get("chain"),
+            "site": clean_site(it.get("site")),
+            "tweet_url": it.get("tweet_url") or (f"https://x.com/{h.lstrip('@')}" if h else None),
+            "status": it.get("status"),
+            "category": it.get("category"),
+            "listing": it.get("listing"),
+            "already_listed": bool(it.get("already_listed") or base.get("already_listed")),
+            "listing_at": la,
+            "listing_at_display": it.get("listing_at_display") or base.get("listing_at_display") or la,
+            "listing_at_source": it.get("listing_at_source") or base.get("listing_at_source"),
+            "listing_at_evidence_url": it.get("listing_at_evidence_url") or base.get("listing_at_evidence_url"),
+            "why": it.get("why") or "",
+            "bio": it.get("bio") or "",
+            "x_progress_snippet": it.get("x_progress_snippet") or "",
+            "listing_at_raw": it.get("listing_at_raw") or base.get("listing_at_raw") or "",
+            "_from": "candidates",
+        }
+        by[key] = merged
+    return by
+
+
+def build_items(prev_by_handle: dict[str, dict]) -> tuple[list[dict], list[str], list[str]]:
+    ref = now()
+    end = ref + timedelta(hours=WINDOW_H)
+    sources = merge_sources()
+    items: list[dict] = []
+    for key, src in sources.items():
+        if is_launched(src):
+            continue
+        dt = parse_dt(src.get("listing_at"))
+        if not dt:
+            continue
+        # window: now ≤ listing_at ≤ now+48h  OR  still within keep-after (listing passed but < +6h)
+        # Task: enroll when now ≤ listing_at ≤ now+2d; drop when past listing_at+6h
+        if dt > end:
+            continue
+        if ref > dt + timedelta(hours=KEEP_AFTER_H):
+            continue
+        # Also require listing_at was within window at some point — if listing_at < now but within +6h, keep for post-launch grace
+        if dt < ref - timedelta(hours=KEEP_AFTER_H):
+            continue
+        # For enrollment of NEW items: only if listing_at still in future or grace; both covered.
+        # Strict enroll window for brand-new: if already past listing, still keep until +6h (already in list).
+        # New projects that already passed listing_at but within +6h: include (still "today" relevant).
+        if dt > end:
+            continue
+
+        hours = round((dt - ref).total_seconds() / 3600.0, 2)
+        prev = prev_by_handle.get(key) or {}
+        item = {
+            "handle": src["handle"].lstrip("@"),
+            "name": src.get("name") or src["handle"],
+            "chain": src.get("chain") or "未知",
+            "site": src.get("site"),
+            "tweet_url": src.get("tweet_url") or f"https://x.com/{src['handle'].lstrip('@')}",
+            "listing_at": iso(dt),
+            "listing_at_display": src.get("listing_at_display") or iso(dt),
+            "listing_at_source": src.get("listing_at_source"),
+            "listing_at_evidence_url": src.get("listing_at_evidence_url"),
+            "status": src.get("status") or src.get("listing") or "即将开盘",
+            "category": src.get("category"),
+            "hours_to_launch": hours,
+            "scan_boost": True,
+            "playbook": prev.get("playbook"),
+            "remind_2h_sent_at": prev.get("remind_2h_sent_at"),
+            # internal helpers for playbook (ok to keep; UI can ignore)
+            "_why": src.get("why") or "",
+            "_bio": src.get("bio") or "",
+            "_listing_at_raw": src.get("listing_at_raw") or "",
+            "_x_progress_snippet": src.get("x_progress_snippet") or "",
+        }
+        items.append(item)
+
+    items.sort(key=lambda x: x["listing_at"])
+    new_handles = [it["handle"] for it in items]
+    prev_handles = list(prev_by_handle.keys())
+    # compare by norm
+    new_set = {norm(h) for h in new_handles}
+    old_set = set(prev_by_handle.keys())
+    added = sorted(new_set - old_set)
+    removed = sorted(old_set - new_set)
+    return items, added, removed
+
+
+def mirror(path: Path) -> None:
+    for dest in MIRRORS:
+        try:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest)
+        except OSError as e:
+            print(f"[today_sync] mirror warn {dest}: {e}", file=sys.stderr, flush=True)
+
+
+def ensure_x_plan_priority(handles: list[str]) -> None:
+    """把今日清单 handle 放到 x_plan 最前（若文件存在）；不删原有。"""
+    if not handles:
+        return
+    try:
+        doc = load_json(X_PLAN, {})
+        existing = list(doc.get("handles") or [])
+        front = []
+        for h in handles:
+            if h and h.lower() not in {x.lower() for x in front}:
+                front.append(h)
+        rest = [h for h in existing if h.lower() not in {x.lower() for x in front}]
+        doc["handles"] = front + rest
+        doc["today_priority"] = front
+        doc["today_priority_at"] = iso(now())
+        X_PLAN.parent.mkdir(parents=True, exist_ok=True)
+        X_PLAN.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    except Exception as e:
+        print(f"[today_sync] x_plan priority warn: {e}", file=sys.stderr, flush=True)
+
+
+def ensure_workbench_local(handles_meta: list[dict]) -> None:
+    """若本地 workbench_active 缺 handle，则 LWW 安全追加（只加不删）。"""
+    if not WB_LOCAL.is_file() or not handles_meta:
+        return
+    try:
+        doc = load_json(WB_LOCAL, {})
+        items = list(doc.get("items") or [])
+        have = {norm(it.get("handle")) for it in items if isinstance(it, dict)}
+        added = 0
+        ts = datetime.now(TZ).astimezone(ZoneInfo("UTC")).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+        for meta in handles_meta:
+            h = meta.get("handle")
+            if not h or norm(h) in have:
+                continue
+            items.append({
+                "handle": h.lstrip("@"),
+                "name": meta.get("name") or h,
+                "sites": [meta["site"]] if meta.get("site") else [],
+                "x_url": meta.get("tweet_url") or f"https://x.com/{h.lstrip('@')}",
+                "chain": meta.get("chain") or "",
+                "notes": "auto:今日项目清单",
+                "push": True,
+                "added_at": ts,
+                "updated_at": ts,
+            })
+            have.add(norm(h))
+            added += 1
+        if added:
+            doc["items"] = items
+            doc["count"] = len(items)
+            doc["synced_at"] = iso(now())
+            doc["note"] = (doc.get("note") or "") + f"; today_projects appended {added}"
+            tmp = WB_LOCAL.with_suffix(".tmp")
+            tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            tmp.replace(WB_LOCAL)
+            print(f"[today_sync] workbench_active appended {added}", flush=True)
+    except Exception as e:
+        print(f"[today_sync] workbench append warn: {e}", file=sys.stderr, flush=True)
+
+
+def sync(*, publish: bool = False) -> dict:
+    global _LAUNCHED_CACHE
+    _LAUNCHED_CACHE = None  # refresh blocklist each sync
+    prev_doc = load_json(OUT, {})
+    prev_items = prev_doc.get("items") if isinstance(prev_doc, dict) else []
+    prev_by = {norm(it.get("handle")): it for it in (prev_items or []) if isinstance(it, dict) and it.get("handle")}
+
+    items, added, removed = build_items(prev_by)
+    doc = {
+        "generated_at": iso(now()),
+        "timezone": "Asia/Shanghai",
+        "window_hours": WINDOW_H,
+        "count": len(items),
+        "items": items,
+    }
+    OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    mirror(OUT)
+
+    handles = [it["handle"] for it in items]
+    # Preserve T-20 overrides written by today_t20_watch (do not wipe site_every map).
+    prev_boost = load_json(BOOST, {}) if BOOST.is_file() else {}
+    t20_prev = list(prev_boost.get("t20_handles") or [])
+    # Drop T-20 handles no longer on today list
+    handle_norms = {norm(h) for h in handles}
+    t20_keep = [h for h in t20_prev if norm(h) in handle_norms]
+    hse = {
+        k: v
+        for k, v in (prev_boost.get("handle_site_every") or {}).items()
+        if norm(k) in handle_norms and norm(k) in {norm(x) for x in t20_keep}
+    }
+    BOOST.write_text(
+        json.dumps(
+            {
+                "handles": handles,
+                "generated_at": iso(now()),
+                "site_every_seconds": float(prev_boost.get("site_every_seconds") or 10),
+                "t20_handles": t20_keep,
+                "t20_site_every_seconds": float(prev_boost.get("t20_site_every_seconds") or 3),
+                "t20_window_minutes": float(prev_boost.get("t20_window_minutes") or 20),
+                "handle_site_every": hse,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    ensure_x_plan_priority(handles)
+    ensure_workbench_local(items)
+
+    summary = {
+        "count": len(items),
+        "added": [a for a in added],  # norm keys — map back
+        "removed": removed,
+        "handles": handles,
+    }
+    # prettier added/removed as original handles when possible
+    summary["added"] = [next((it["handle"] for it in items if norm(it["handle"]) == a), a) for a in added]
+
+    if publish:
+        try:
+            from publish_pages_file import put_file, put_file_to_branch
+
+            msg = f"data: today_projects auto (count={len(items)})"
+            rc1 = put_file(OUT, "public/data/today_projects.json", message=msg)
+            rc2 = put_file_to_branch(
+                OUT, "data/today_projects.json", "gh-pages", message=msg + " (gh-pages)"
+            )
+            summary["publish_main"] = rc1
+            summary["publish_gh_pages"] = rc2
+        except Exception as e:
+            summary["publish_error"] = str(e)[:200]
+            print(f"[today_sync] publish soft-fail: {e}", flush=True)
+
+    return summary
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--publish", action="store_true", help="Also publish to pad-hunter main + gh-pages")
+    args = ap.parse_args()
+    summary = sync(publish=args.publish)
+    print(json.dumps(summary, ensure_ascii=False), flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

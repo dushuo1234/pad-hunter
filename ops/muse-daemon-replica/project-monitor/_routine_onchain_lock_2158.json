@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-28T22:40:21+08:00",
+  "offset_before": 195735,
+  "offset_after": 196478,
+  "new_count": 1,
+  "alerts": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "name_fuzzy:trench",
+      "project": "Trench",
+      "handle": "trench_agents",
+      "address": "0x9127474b81ce8ae1260ba1817d2a10cb0c6ddba3",
+      "deployer": "0x6cfcc8f86e1182772bfe8994f4aa38ef3012e224",
+      "chain": "base",
+      "tx": "0xbeabec7e6d84af554e860eb61a5437a4634ea245a014fd5cc8ce13651d3b2eb9",
+      "block": 53204400,
+      "via": "factory:univ4_pm_base:Initialize",
+      "factory": "0x498581ff718922c3f8e6a244956af099b2652b2b",
+      "token_name": "8453 Trenchors",
+      "token_symbol": "TRENCHORS",
+      "code_bytes": 44,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Trench",
+          "handle": "trench_agents",
+          "via": "name_fuzzy:trench",
+          "explicit": false,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-28T22:36:32+08:00"
+    }
+  ]
+}

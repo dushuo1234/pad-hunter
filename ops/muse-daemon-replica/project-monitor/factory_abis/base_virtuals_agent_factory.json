@@ -1,0 +1,109 @@
+{
+  "id": "virtuals_agent_factory_base",
+  "address": "0xc169a24010fd4d47ca7be4b4c7863b76520442a3",
+  "chain": "base",
+  "name": "Virtuals AgentFactoryV7 (Base)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "NewPersona",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "virtualId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "dao",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tba",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "veToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "lp",
+          "type": "address"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "NewPersona",
+      "signature": "NewPersona(uint256,address,address,address,address,address)",
+      "topic0": "0xf9d151d23a5253296eb20ab40959cf48828ea2732d337416716e302ed83ca658",
+      "args": [
+        {
+          "name": "virtualId",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "dao",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "tba",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "veToken",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "lp",
+          "type": "address",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://basescan.org/address/0xc169a24010fd4d47ca7be4b4c7863b76520442a3",
+  "explorer_api_used": null,
+  "source_note": "Virtuals Protocol agent token launches on Base (proxy → AgentFactoryV7).",
+  "meta": {
+    "proxy_implementation": "0x5e357d0219e3a15674f18a5a197fb45e93568ae9",
+    "verified_how": [
+      "Sourcify exact_match AgentFactoryV7 impl 0x5e357d…68ae9",
+      "NewPersona emits token"
+    ],
+    "note": null
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0xf9d151d23a5253296eb20ab40959cf48828ea2732d337416716e302ed83ca658",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "docs_plus_topic0"
+}

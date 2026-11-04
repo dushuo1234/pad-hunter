@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+"""HARD CA GATE — single source of truth for "is this scraped address a token CA?".
+
+No address may become CA / NEW_CA / NEW_JS_CA / ca_finds(合约CA) / alert unless
+verify_address() returns is_token=True.
+
+  EVM:    eth_getCode != 0x (not EIP-7702 delegation) AND ERC20-shaped
+          (decimals() returns 0..36 AND symbol() or totalSupply() returns) AND
+          NOT ERC721/1155 (supportsInterface 0x80ac58cd / 0xd9b67a26).
+  Solana: getAccountInfo owner == SPL Token / Token-2022 AND account is a mint
+          (parsed type == "mint"). System-owned or token *accounts* are not CAs.
+  Hex-only strings (git SHAs, hashes) are never Solana addresses.
+
+kinds: token | nft | contract (non-token) | wallet | invalid | unknown
+label_zh: 合约CA | NFT合约 | 合约(非代币) | 扫出钱包 | 非地址 | 未确认地址
+Results cached in addr_verify_cache.json (token/wallet/nft/invalid 24h; unknown 10m).
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import time
+from pathlib import Path
+
+BASE = Path("/workspace/project-monitor")
+CACHE = BASE / "addr_verify_cache.json"
+TOKEN_PROGRAMS = {"TokenkegQfeZyiNwAJbNbGqPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"}
+SYSTEM_PROGRAM = "11111111111111111111111111111111"
+B58 = re.compile(r"^[1-9A-HJ-NP-Za-km-z]{32,44}$")
+LABEL = {"token": "合约CA", "nft": "NFT合约", "contract": "合约(非代币)", "wallet": "扫出钱包",
+         "invalid": "非地址", "unknown": "未确认地址"}
+
+
+def _note_zh(kind: str, note: str | None = None, *, symbol: str | None = None,
+             decimals=None, chain: str | None = None) -> str:
+    """Human-facing Chinese note for UI; keep English `note` for logs."""
+    k = kind or "unknown"
+    if k == "token":
+        bits = ["已确认 ERC20"]
+        if symbol:
+            bits.append(f"符号 {symbol}")
+        if decimals is not None:
+            bits.append(f"精度 {decimals}")
+        if chain:
+            bits.append(f"链 {chain}")
+        return " · ".join(bits)
+    if k == "nft":
+        return "NFT 合约（ERC721/1155），不当作代币 CA"
+    if k == "wallet":
+        return "链上无合约代码 → 钱包（EOA），不当作 CA；已进入关联钱包监控"
+    if k == "contract":
+        return "有合约字节码但不是 ERC20 代币形态，不当作代币 CA"
+    if k == "invalid":
+        n = (note or "").lower()
+        if "hex string" in n or "git" in n:
+            return "十六进制哈希/非地址，已丢弃"
+        if "base58" in n or "malformed" in n:
+            return "地址格式无效"
+        return "非有效地址"
+    if k == "unknown":
+        n = (note or "").lower()
+        if "does not exist" in n:
+            return "链上账户不存在"
+        if "unreachable" in n:
+            return "RPC 暂不可达，待重试"
+        return "未能确认地址类型"
+    return note or LABEL.get(k, "未确认地址")
+TTL = {"unknown": 600}
+DEFAULT_TTL = 86400
+_RPCS = None
+
+
+def _load_cache() -> dict:
+    try:
+        return json.loads(CACHE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_cache(c: dict) -> None:
+    try:
+        tmp = CACHE.with_suffix(".tmp")
+        tmp.write_text(json.dumps(c, ensure_ascii=False) + "\n", encoding="utf-8")
+        tmp.replace(CACHE)
+    except Exception:
+        pass
+
+
+def _rpc(url: str, method: str, params: list, timeout: int = 12) -> dict:
+    payload = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+    try:
+        out = subprocess.check_output(["curl", "-sS", "--max-time", str(timeout), "-H",
+                                       "Content-Type: application/json", "-d", payload, url],
+                                      stderr=subprocess.DEVNULL, timeout=timeout + 2)
+        return json.loads(out.decode("utf-8", "replace") or "{}")
+    except Exception as e:
+        return {"error": str(e)[:120]}
+
+
+def _eth_call(rpc: str, to: str, data: str) -> str | None:
+    r = _rpc(rpc, "eth_call", [{"to": to, "data": data}, "latest"])
+    res = r.get("result")
+    return res if isinstance(res, str) and res.startswith("0x") and len(res) > 2 else None
+
+
+def _decode_str(h: str | None) -> str | None:
+    if not h:
+        return None
+    try:
+        b = bytes.fromhex(h[2:])
+        if len(b) >= 64:
+            ln = int.from_bytes(b[32:64], "big")
+            if 0 < ln <= 64 and len(b) >= 64 + ln:
+                return b[64:64 + ln].decode("utf-8", "replace")
+        return b.rstrip(b"\x00").decode("utf-8", "replace").strip("\x00") or None
+    except Exception:
+        return None
+
+
+def _erc_probe(rpc: str, addr: str) -> dict:
+    out: dict = {}
+    bogus = _eth_call(rpc, addr, "0x01ffc9a7" + "ffffffff".ljust(64, "0"))
+    erc165_ok = not (bogus and int(bogus, 16) == 1)
+    out["erc165_reliable"] = erc165_ok
+    for iface, tag in (("80ac58cd", "erc721"), ("d9b67a26", "erc1155")):
+        if not erc165_ok:
+            break
+        r = _eth_call(rpc, addr, "0x01ffc9a7" + iface.ljust(64, "0"))
+        if r and int(r, 16) == 1:
+            out[tag] = True
+    dec = _eth_call(rpc, addr, "0x313ce567")
+    if dec:
+        try:
+            v = int(dec[:66], 16)
+            if 0 <= v <= 36:
+                out["decimals"] = v
+        except Exception:
+            pass
+    out["symbol"] = _decode_str(_eth_call(rpc, addr, "0x95d89b41"))
+    out["name"] = _decode_str(_eth_call(rpc, addr, "0x06fdde03"))
+    ts = _eth_call(rpc, addr, "0x18160ddd")
+    out["has_total_supply"] = bool(ts)
+    return out
+
+
+def _verify_evm(addr: str, chain_hint: str | None, snippet: str | None, source: str | None) -> dict:
+    global _RPCS
+    from addr_kind import classify_evm, pick_rpcs
+    if _RPCS is None:
+        _RPCS = pick_rpcs()
+    clf = classify_evm(addr, chain_hint=chain_hint, snippet=snippet, source=source, rpcs=_RPCS, stop_on_contract=True)
+    k = clf.get("kind")
+    base = {"chain": clf.get("chain"), "code_bytes": clf.get("code_bytes"), "nonce": clf.get("nonce")}
+    if k == "wallet":
+        return {**base, "kind": "wallet", "is_token": False, "note": "eth_getCode empty / 7702 → EOA wallet"}
+    if k != "contract":
+        return {**base, "kind": "unknown", "is_token": False, "note": clf.get("note") or "no bytecode on probed chains"}
+    rpc = next((t.get("rpc") for t in clf.get("tried") or [] if t.get("chain") == clf.get("chain") and t.get("rpc")), None)
+    erc = _erc_probe(rpc, addr) if rpc else {}
+    base.update({k2: erc.get(k2) for k2 in ("symbol", "name", "decimals") if erc.get(k2) is not None})
+    if erc.get("erc721") or erc.get("erc1155"):
+        return {**base, "kind": "nft", "is_token": False,
+                "note": f"NFT contract ({'ERC721' if erc.get('erc721') else 'ERC1155'}) — not a token CA"}
+    if "decimals" in erc and (erc.get("symbol") or erc.get("has_total_supply")):
+        return {**base, "kind": "token", "is_token": True,
+                "note": f"ERC20 verified: {erc.get('symbol')} dec={erc.get('decimals')}"}
+    return {**base, "kind": "contract", "is_token": False,
+            "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"}
+
+
+def _sol_rpcs() -> list[str]:
+    urls = ["https://api.mainnet-beta.solana.com"]
+    try:
+        k = (BASE / ".helius_api_key").read_text().strip()
+        if k:
+            urls.append(f"https://mainnet.helius-rpc.com/?api-key={k}")
+    except Exception:
+        pass
+    return urls
+
+
+def _verify_sol(addr: str) -> dict:
+    if re.fullmatch(r"[0-9a-f]+", addr) or re.fullmatch(r"[0-9A-F]+", addr):
+        return {"kind": "invalid", "is_token": False, "chain": "未知", "note": "hex string (hash / git SHA), not a Solana address"}
+    if not B58.match(addr):
+        return {"kind": "invalid", "is_token": False, "chain": "未知", "note": "not base58 address"}
+    for url in _sol_rpcs():
+        r = _rpc(url, "getAccountInfo", [addr, {"encoding": "jsonParsed"}])
+        if "result" not in r:
+            msg = json.dumps(r.get("error") or "").lower()
+            if "invalid" in msg and ("param" in msg or "pubkey" in msg):
+                return {"kind": "invalid", "is_token": False, "chain": "未知", "note": "not a valid Solana pubkey"}
+            continue
+        v = (r.get("result") or {}).get("value")
+        if v is None:
+            return {"kind": "unknown", "is_token": False, "chain": "solana", "note": "account does not exist on Solana mainnet"}
+        owner = v.get("owner")
+        data = v.get("data")
+        ptype = data.get("parsed", {}).get("type") if isinstance(data, dict) else None
+        if owner in TOKEN_PROGRAMS and ptype == "mint":
+            info = data.get("parsed", {}).get("info", {})
+            dec = info.get("decimals")
+            if dec == 0 and str(info.get("supply")) in ("1", "0"):
+                return {"kind": "nft", "is_token": False, "chain": "solana", "decimals": dec,
+                        "note": "SPL mint with decimals=0 supply<=1 → NFT"}
+            return {"kind": "token", "is_token": True, "chain": "solana", "decimals": dec,
+                    "note": f"SPL mint verified (owner {owner[:6]}…, dec={dec})"}
+        if owner in TOKEN_PROGRAMS:
+            return {"kind": "contract", "is_token": False, "chain": "solana", "note": f"SPL {ptype or 'account'} (not a mint)"}
+        if owner == SYSTEM_PROGRAM:
+            return {"kind": "wallet", "is_token": False, "chain": "solana", "note": "system-owned account → wallet"}
+        if v.get("executable"):
+            return {"kind": "contract", "is_token": False, "chain": "solana", "note": "Solana program, not a token mint"}
+        return {"kind": "contract", "is_token": False, "chain": "solana", "note": f"owned by {owner} (not token program)"}
+    return {"kind": "unknown", "is_token": False, "chain": "solana", "note": "solana rpc unreachable"}
+
+
+def verify_address(address: str, chain_hint: str | None = None, *, snippet: str | None = None,
+                   source: str | None = None, use_cache: bool = True) -> dict:
+    addr = (address or "").strip()
+    key = addr.lower() if addr.lower().startswith("0x") else addr
+    cache = _load_cache() if use_cache else {}
+    hit = cache.get(key)
+    now = time.time()
+    if hit and now - hit.get("_ts", 0) < TTL.get(hit.get("kind"), DEFAULT_TTL):
+        return hit
+    try:
+        if addr.lower().startswith("0x") and len(addr) == 42 and re.fullmatch(r"0x[0-9a-fA-F]{40}", addr):
+            res = _verify_evm(addr, chain_hint, snippet, source)
+        elif addr.lower().startswith("0x"):
+            res = {"kind": "invalid", "is_token": False, "chain": "未知", "note": "malformed 0x address"}
+        else:
+            res = _verify_sol(addr)
+    except Exception as e:
+        res = {"kind": "unknown", "is_token": False, "note": f"verify error {e}"[:160]}
+    res["address"] = addr
+    res["label_zh"] = LABEL.get(res.get("kind"), "未确认地址")
+    res["note_zh"] = _note_zh(
+        res.get("kind"), res.get("note"),
+        symbol=res.get("symbol"), decimals=res.get("decimals"), chain=res.get("chain"),
+    )
+    # Keep English note for logs; also provide ca_gate_zh one-liner used by UI mappers
+    if res.get("kind") == "token" and res.get("symbol") is not None:
+        res["note"] = f"ERC20 verified: {res.get('symbol')} dec={res.get('decimals')}"
+    res["_ts"] = now
+    cache = _load_cache() if use_cache else cache
+    cache[key] = res
+    _save_cache(cache)
+    return res
+
+
+def is_token_ca(address: str, chain_hint: str | None = None, **kw) -> bool:
+    return bool(verify_address(address, chain_hint, **kw).get("is_token"))
+
+
+if __name__ == "__main__":
+    import sys
+    for a in sys.argv[1:]:
+        print(json.dumps(verify_address(a, use_cache=False), ensure_ascii=False))

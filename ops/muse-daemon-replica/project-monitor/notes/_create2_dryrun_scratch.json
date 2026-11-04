@@ -1,0 +1,159 @@
+{
+  "factory_log_stats": [
+    {
+      "factory": "nftx_public_gate_rh",
+      "chain": "robinhood",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "nftx_locker_rh",
+      "chain": "robinhood",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "launchpad_meme_hyperevm",
+      "chain": "hyperevm",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "spinup_memelaunchpad",
+      "chain": "hyperevm",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "clanker_v4_eth",
+      "chain": "ethereum",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "clanker_v4_base",
+      "chain": "base",
+      "logs": 4,
+      "tokens_decoded": 4,
+      "sample": [
+        "0x3a5a25baface2ab7aa3eb9fd41b6b3f5996b5b07",
+        "0xb162a7de663eae170c1bc7df1f8735ea2792cb07"
+      ]
+    },
+    {
+      "factory": "clanker_v3_1_base",
+      "chain": "base",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "virtuals_agent_factory_base",
+      "chain": "base",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "virtuals_bonding_base",
+      "chain": "base",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "fourmeme_tm2_bsc",
+      "chain": "bsc",
+      "logs": 6,
+      "tokens_decoded": 5,
+      "sample": [
+        "0xef11f9bf3828bfa057c5a5d48aadb6fca61cffff",
+        "0xc535acc0db2097628fd77184e55de48b1224ffff"
+      ]
+    },
+    {
+      "factory": "launchpad_meme_bonding_hyperevm",
+      "chain": "hyperevm",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "liquidlaunch_hyperevm",
+      "chain": "hyperevm",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    },
+    {
+      "factory": "tapeout_factory_bsc",
+      "chain": "bsc",
+      "logs": 0,
+      "tokens_decoded": 0,
+      "sample": []
+    }
+  ],
+  "create2_live_samples": [
+    {
+      "factory": "clanker_v4_base",
+      "tx": "0xc82c1b85b4f9\u2026",
+      "event_token": "0x3a5a25baface2ab7aa3eb9fd41b6b3f5996b5b07",
+      "sel": "0xdf40224a",
+      "clone_parsed": false,
+      "create2_hits": 0
+    },
+    {
+      "factory": "clanker_v4_base",
+      "tx": "0xee98c8ce1281\u2026",
+      "event_token": "0xb162a7de663eae170c1bc7df1f8735ea2792cb07",
+      "sel": "0xdf40224a",
+      "clone_parsed": false,
+      "create2_hits": 0
+    },
+    {
+      "factory": "fourmeme_tm2_bsc",
+      "tx": "0x32078e36c0ae\u2026",
+      "event_token": "0xef11f9bf3828bfa057c5a5d48aadb6fca61cffff",
+      "sel": "0x519ebb10",
+      "clone_parsed": false,
+      "create2_hits": 0
+    },
+    {
+      "factory": "fourmeme_tm2_bsc",
+      "tx": "0xa5378c4e0597\u2026",
+      "event_token": "0xc535acc0db2097628fd77184e55de48b1224ffff",
+      "sel": "0x519ebb10",
+      "clone_parsed": false,
+      "create2_hits": 0
+    },
+    {
+      "factory": "fourmeme_tm2_bsc",
+      "tx": "0x571819d963f6\u2026",
+      "event_token": "0xb70de22e30cf35c0bf82c82cf79bb0d9f7d9ffff",
+      "sel": "0x519ebb10",
+      "clone_parsed": false,
+      "create2_hits": 0
+    }
+  ],
+  "demo_wallet_match": {
+    "deployer": "0xad5c7930d59e03da1dfae541236d8f6b70c6ac1b",
+    "event_token": "0xef11f9bf3828bfa057c5a5d48aadb6fca61cffff",
+    "hits": 3,
+    "hit_vias": [
+      "factory_tx_from",
+      "factory_tx_from",
+      "factory_tx_from"
+    ],
+    "hit_contracts": [
+      "0xef11f9bf3828bfa057c5a5d48aadb6fca61cffff",
+      "0x000000000000000000000000000000000627dbdc",
+      "0x0000000000000000000000000000000000000100"
+    ],
+    "matched_event_token": true
+  }
+}

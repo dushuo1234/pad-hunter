@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="dark"/>
+  <title>项目雷达 · PushRadar</title>
+  <link rel="stylesheet" href="assets/style.css"/>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-mark">PR</div>
+        <div>
+          <h1>项目雷达 <span>· PushRadar</span></h1>
+          <p class="sub">电报「项目推送」实时分类看板 · 按链 / 类型筛选</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="pill"><span class="dot"></span> 本地看板 · 无钱包</span>
+        <span class="pill" id="metaLine">加载中…</span>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="搜索项目名 / @handle / 摘要…" autocomplete="off"/>
+      <select id="chain" aria-label="按链筛选"><option value="">全部链</option></select>
+      <select id="cat" aria-label="按类型筛选"><option value="">全部类型</option></select>
+      <div class="seg" role="group" aria-label="视图">
+        <button type="button" data-view="board" class="active">看板</button>
+        <button type="button" data-view="grid">网格</button>
+      </div>
+    </div>
+
+    <div class="filter-chips" id="catChips"></div>
+  </header>
+
+  <main id="main">
+    <div class="empty"><h2>加载中…</h2><p>正在读取项目数据</p></div>
+  </main>
+
+  <p class="footer-note">独立看板，非 AlphaRadar。数据来自电报「项目推送」分类结果。时间均为 Asia/Shanghai。</p>
+
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <h2 id="drawerTitle">项目详情</h2>
+        <div class="card-handle" id="drawerHandle"></div>
+      </div>
+      <button type="button" class="close-btn" id="closeDrawer" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

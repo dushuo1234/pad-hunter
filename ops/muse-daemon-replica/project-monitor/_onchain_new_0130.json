@@ -1,0 +1,42 @@
+{
+  "offset_before": 175154,
+  "size": 175986,
+  "lines": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "name_fuzzy:rebate",
+      "project": "Rebate",
+      "handle": null,
+      "address": "0x40a15dff5be4c9a09baa3ac9f7c0f712bad916a2",
+      "deployer": "0x42fdb641b70b2216308943082cc826d4da658c3e",
+      "chain": "robinhood",
+      "tx": "0xbd6af4ff798a216fb4d5171fe0fb87f612af8efe92f38c34230233a210577f6d",
+      "block": 99416530,
+      "via": "factory:univ4_pm_rh:Initialize",
+      "factory": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "token_name": "Rebate Cat",
+      "token_symbol": "RCAT",
+      "code_bytes": 2934,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Rebate",
+          "handle": null,
+          "via": "name_fuzzy:rebate",
+          "explicit": false,
+          "ambiguous": true
+        },
+        {
+          "project": "Rebate",
+          "handle": "RebateLaunch",
+          "via": "name_fuzzy:rebate",
+          "explicit": false,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-28T01:27:18+08:00"
+    }
+  ]
+}

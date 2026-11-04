@@ -1,0 +1,53 @@
+{
+  "routine": "开盘与CA预警",
+  "at": "2026-10-29T04:43:09+08:00",
+  "pause_file_present": false,
+  "listing_daemon": "running pid=44693",
+  "onchain_lock_daemon": "running pid=1823",
+  "pipeline": {
+    "exit": 0,
+    "elapsed_sec": 2430,
+    "approx_runtime": "~40.5m"
+  },
+  "x_refresh": "skipped_quota_until_08:00_Asia/Shanghai",
+  "sync": {
+    "locked_new": 3,
+    "names": [
+      "Curveless/@CRVLess",
+      "Ape/@ApeNFTs_RH",
+      "Pump Forge/@Pump_Forge_"
+    ],
+    "before": 389,
+    "after": 392
+  },
+  "onchain_lock": {
+    "new": 2,
+    "actionable": 0,
+    "details": [
+      {
+        "project": "Grok Pot",
+        "chain": "base",
+        "ca": "0x079f47f1258de6f810e0d3d7e2ce2d713a5d1ba3",
+        "confidence": "medium",
+        "evidence": "symbol:GROK via univ4_pm_base:Initialize (ambient)"
+      },
+      {
+        "project": "Grok Pot",
+        "chain": "base",
+        "ca": "0x30cecbdc63ed8baa861287b7fe5c2b3ce4a0eba3",
+        "confidence": "medium",
+        "evidence": "symbol:GROK via univ4_pm_base:Initialize (ambient)"
+      }
+    ]
+  },
+  "NEW_CA": 0,
+  "NEW_JS_CA": 0,
+  "JS_FACTORY_MATCH": 0,
+  "SITE_JS_CHANGE": 4,
+  "SITE_JS_CHANGE_note": "fp-only / invalid hash addrs discarded; new_js_ca=0",
+  "LISTING_SIGNAL": 0,
+  "listing_at_published_changes": [],
+  "mark_launched_newly": [],
+  "actionable_for_user": false,
+  "outcome": "nothing new"
+}

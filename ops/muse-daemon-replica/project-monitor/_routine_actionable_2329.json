@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-30T00:01:15+08:00",
+  "items": [
+    {
+      "type": "已开盘",
+      "project": "BIBIAI",
+      "handle": "bibiai_meme",
+      "chain": "bsc",
+      "ca": "0x415aac3e46264c046d103c994a1da71f05c547f9",
+      "evidence": "already trading since 18:45 Asia/Shanghai (vol24 ~$838k); bio CA; pruned from watchlist",
+      "source": "prune/dex",
+      "at": "2026-10-29T23:37:05+08:00"
+    }
+  ],
+  "suppressed": [
+    {
+      "type": "NEW_JS_CA",
+      "project": "BLOCK ZERO",
+      "handle": "blockzerofun",
+      "ca": "0x04472cae5e9175a3678f659672901d93b1504620",
+      "why": "detected_at 2026-10-28 already in ca_finds before this run; re-fingerprint only"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "why": "relay offset 276→276; Cambria 0x44b6… already relayed by ca-2 earlier tonight"
+    },
+    {
+      "type": "NEW_CA",
+      "handles": [
+        "etheriisprotoco",
+        "reapoxyz"
+      ],
+      "why": "already in ca_finds/watchlist before this run (re-verified only)"
+    },
+    {
+      "type": "NEW_DEPLOY",
+      "why": "univ2_eth ambient factory hints only — skipped"
+    }
+  ]
+}

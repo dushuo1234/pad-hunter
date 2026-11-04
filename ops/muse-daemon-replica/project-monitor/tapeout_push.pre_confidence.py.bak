@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""Shared immediate-CA push for the TapeRobot / TapeOut watch.
+
+push_candidate(address, source=..., meta=...) is called by every source
+(tapeout_watch.py factory/wallet scan, tapeout_x_ingest.py X posts).
+First source to land an address wins; later sources are appended to
+also_seen_by and never re-alert (dedupe by lowercase address, file lock).
+
+Accepted kinds (ca_gate, BSC):
+  token (ERC20)          -> 合约CA
+  nft ERC1155            -> 晶体管合约 (TapeOut transistors)
+  nft ERC721 from factory-> TapeOut Processor
+Rejected: wallet / invalid / unknown / plain contract (logged only).
+Name-only match (creator not watched, not from official X): NOT pushed; logged to
+tapeout_name_match_unconfirmed.jsonl as name_match_unconfirmed (疑似山寨·同名非官方).
+
+On accept: append TAPEOUT_CA to tapeout_ca_alerts.jsonl + fast_site_alerts.jsonl
+(官网秒级CA快报 relay) + onchain_lock_alerts.jsonl (开盘与CA预警), update
+fast_site_wake.json, then rebuild ca_finds.json and publish to Pages
+(main public/data/ca_finds.json + gh-pages data/ca_finds.json).
+"""
+from __future__ import annotations
+
+import fcntl
+import json
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+sys.path.insert(0, str(BASE))
+SH = ZoneInfo("Asia/Shanghai")
+LOCK = BASE / ".tapeout_push.lock"
+SEEN = BASE / "tapeout_seen.json"
+ALERTS = BASE / "tapeout_ca_alerts.jsonl"
+REJECTS = BASE / "tapeout_rejects.jsonl"
+FAST_ALERTS = BASE / "fast_site_alerts.jsonl"
+ONCHAIN_ALERTS = BASE / "onchain_lock_alerts.jsonl"
+WAKE = BASE / "fast_site_wake.json"
+UNCONFIRMED = BASE / "tapeout_name_match_unconfirmed.jsonl"
+PY = str(BASE / ".venv/bin/python") if (BASE / ".venv/bin/python").exists() else sys.executable
+PROJECT = "TapeRobot·TapeOut监控"
+HANDLE = "TapeOutWatch"
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def _load(p: Path, d):
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return d
+
+
+def _append(p: Path, ev: dict) -> None:
+    with p.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+
+
+def _classify(address: str, role_hint: str | None) -> dict:
+    from ca_gate import verify_address
+    v = verify_address(address, "bsc")
+    if v.get("kind") == "unknown":
+        time.sleep(2)
+        try:  # bypass 10m unknown cache
+            import ca_gate
+            c = ca_gate._load_cache(); c.pop(address.lower(), None); c.pop(address, None); ca_gate._save_cache(c)
+        except Exception:
+            pass
+        v = verify_address(address, "bsc")
+    k = v.get("kind")
+    note = (v.get("note") or "")
+    if k == "token":
+        return {**v, "accept": True, "ca_kind": "token", "label_zh": "合约CA"}
+    if k == "nft" and "1155" in note:
+        return {**v, "accept": True, "ca_kind": "transistors", "label_zh": "晶体管合约(ERC-1155)"}
+    if k == "nft" and role_hint == "processor":
+        return {**v, "accept": True, "ca_kind": "processor", "label_zh": "TapeOut Processor"}
+    if k == "nft":
+        return {**v, "accept": True, "ca_kind": "nft", "label_zh": "NFT合约"}
+    return {**v, "accept": False}
+
+
+def _rebuild_publish() -> None:
+    try:
+        subprocess.run([PY, str(BASE / "build_ca_finds.py")], cwd=BASE, timeout=240,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        r = subprocess.run([PY, str(BASE / "publish_ca_finds_pages.py")], cwd=BASE, timeout=180,
+                           capture_output=True, text=True)
+        print(f"[tapeout_push] publish rc={r.returncode} {(r.stdout or '').strip()[-200:]}", flush=True)
+    except Exception as e:
+        print(f"[tapeout_push] rebuild/publish error {e}", flush=True)
+
+
+def push_candidate(address: str, *, source: str, meta: dict | None = None,
+                   role_hint: str | None = None, publish: bool = True, background: bool = True) -> dict | None:
+    """Return alert event if this call won (new CA), else None."""
+    meta = dict(meta or {})
+    key = address.lower()
+    LOCK.touch(exist_ok=True)
+    with LOCK.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        seen = _load(SEEN, {})
+        if key in seen and not ((seen[key].get("seed") or seen[key].get("name_match_unconfirmed"))
+                                and source.startswith("x:") and not seen[key].get("x_confirmed")):
+            s = seen[key]
+            if source not in s.setdefault("also_seen_by", []) and source != s.get("source"):
+                s["also_seen_by"].append(source)
+                SEEN.write_text(json.dumps(seen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            fcntl.flock(lf, fcntl.LOCK_UN)
+            return None
+        # RULE (2026-10-21, copycat fix): a name-only match is NOT an alert / Pages CA.
+        # Creator must be a watched wallet, or the address must come from official X (x:*).
+        # Name-only hits are logged to tapeout_name_match_unconfirmed.jsonl only, and
+        # marked in SEEN so a later official-X post can still promote them.
+        if (not meta.get("creator_watched")) and (not source.startswith("x:")) \
+                and (meta.get("match") == "name_match" or source.endswith(":name_match")):
+            _append(UNCONFIRMED, {"type": "name_match_unconfirmed", "at": now_iso(), "address": address,
+                                  "chain": "bsc", "source": source, "role_hint": role_hint,
+                                  "official": False, "suspected_copycat": True,
+                                  "label_zh": "疑似山寨·同名非官方",
+                                  **{k: meta.get(k) for k in ("tx", "block", "creator", "name", "symbol",
+                                                              "processor", "transistors", "factory",
+                                                              "supply_cap", "mint_price_bnb")}})
+            seen[key] = {"source": source, "at": now_iso(), "name_match_unconfirmed": True,
+                         "suspected_copycat": True, "creator": meta.get("creator"), "also_seen_by": []}
+            SEEN.write_text(json.dumps(seen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            fcntl.flock(lf, fcntl.LOCK_UN)
+            print(f"[tapeout_push] name_match_unconfirmed (not pushed) {address} creator={meta.get('creator')}", flush=True)
+            return None
+        v = _classify(address, role_hint)
+        if not v.get("accept"):
+            _append(REJECTS, {"at": now_iso(), "address": address, "source": source,
+                              "kind": v.get("kind"), "note": v.get("note"), **{k: meta.get(k) for k in ("tx", "post_url")}})
+            if v.get("kind") in ("wallet", "invalid", "contract"):
+                seen[key] = {"source": source, "at": now_iso(), "rejected": v.get("kind")}
+                SEEN.write_text(json.dumps(seen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            fcntl.flock(lf, fcntl.LOCK_UN)
+            return None
+        at = now_iso()
+        sym = v.get("symbol") or meta.get("symbol") or ""
+        nm = v.get("name") or meta.get("name") or ""
+        ev = {
+            "type": "TAPEOUT_CA",
+            "dedupe_key": f"TAPEOUT_CA:{key}",
+            "project": PROJECT,
+            "name": PROJECT,
+            "handle": HANDLE,
+            "address": address,
+            "chain": "bsc",
+            "ca_kind": v["ca_kind"],
+            "label_zh": v["label_zh"],
+            "token_name": nm,
+            "token_symbol": sym,
+            "source": source,
+            "confidence": "confirmed" if meta.get("creator_watched") or source.startswith("x:") else "high",
+            "at": at,
+            "at_label": at.replace("T", " ")[:19] + " Asia/Shanghai",
+            "bscscan": f"https://bscscan.com/address/{address}",
+            **{k: val for k, val in meta.items() if val is not None},
+        }
+        ev["alert_zh"] = (f"🚨 TapeRobot/TapeOut 新CA [{v['label_zh']}] {nm or sym or ''} `{address}` "
+                          f"(BSC) 来源:{source}" + (f" 创建者:{meta.get('creator')}" if meta.get('creator') else "")
+                          + (f" tx:{meta.get('tx')}" if meta.get('tx') else "")
+                          + (f" 推文:{meta.get('post_url')}" if meta.get('post_url') else ""))
+        if (seen.get(key) or {}).get("seed"):
+            ev["x_confirms_known"] = True
+            ev["alert_zh"] = "✅ 官方推特确认 " + ev["alert_zh"]
+        seen[key] = {"source": source, "at": at, "label_zh": v["label_zh"], "also_seen_by": [],
+                     "x_confirmed": source.startswith("x:")}
+        SEEN.write_text(json.dumps(seen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        _append(ALERTS, ev)
+        _append(FAST_ALERTS, ev)
+        _append(ONCHAIN_ALERTS, ev)
+        WAKE.write_text(json.dumps({"updated_at": at, "updated_at_label": ev["at_label"],
+                                    "last_alert_type": "TAPEOUT_CA", "last_alert_name": PROJECT,
+                                    "last_alert_address": address,
+                                    "alerts_path": str(FAST_ALERTS)}, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8")
+        fcntl.flock(lf, fcntl.LOCK_UN)
+    print(f"[tapeout_push] {ev['alert_zh']}", flush=True)
+    if publish:
+        if background:
+            threading.Thread(target=_rebuild_publish, daemon=False).start()
+        else:
+            _rebuild_publish()
+    return ev
+
+
+def seed(address: str, source: str, note: str) -> None:
+    key = address.lower()
+    LOCK.touch(exist_ok=True)
+    with LOCK.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        seen = _load(SEEN, {})
+        seen.setdefault(key, {"source": source, "at": now_iso(), "seed": True, "note": note, "also_seen_by": []})
+        SEEN.write_text(json.dumps(seen, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        fcntl.flock(lf, fcntl.LOCK_UN)
