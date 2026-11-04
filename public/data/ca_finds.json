@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T18:38:46+08:00",
+  "generated_at": "2026-11-04T18:41:44+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 356,
@@ -21328,10 +21328,14 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
-      "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_buy_time": "2026-09-01T06:33:11+08:00",
+      "first_buy_in_creation_tx": true,
+      "first_buy_tx": "0xf2b153483bc3c6fd8f3fe1cb523988740521f1b791f3b79aa7d3723c2d6a500a",
+      "first_external_buy_time": "2026-09-01T06:33:12+08:00",
+      "first_external_buy_tx": "0x81ef34c5094265e63f2793fea7b9efad8041db14a8819db001837d535d4a8011",
+      "listing_time": "2026-09-01T06:33:12+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）；创建交易内另有开发者买入已排除；判定为启发式（买入来自未登记的合约池子）",
       "lead_seconds": null
     },
     {
@@ -30923,8 +30927,147 @@
       "lead_seconds": null
     }
   ],
-  "suspected_copycat_count": 227,
+  "suspected_copycat_count": 229,
   "suspected_copycats": [
+    {
+      "project": "【疑似山寨·同名未确认】Uniswap",
+      "handle": "Uniswap",
+      "chain": "ethereum",
+      "address": "0x9bd82673c50acb4a3b883d61e070a3c8d9b08e10",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/Uniswap",
+      "detected_at": "2026-11-04T18:34:57+08:00",
+      "confidence": "low",
+      "note": "onchain_lock low via name_fuzzy:uniswap; deployer=None; token=UNI-V2 / Uniswap V2; ca_gate: ERC20 verified: UNI-V2 dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-11-04T18:34:57+08:00",
+          "reason": "name_fuzzy:uniswap",
+          "via": "factory:univ4_pm_eth:Initialize:gapfill"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "UNI-V2",
+        "name": "Uniswap V2",
+        "decimals": 18,
+        "code_bytes": 11293,
+        "note": "ERC20 verified: UNI-V2 dec=18"
+      },
+      "categories": [
+        "DeFi协议"
+      ],
+      "strategy": "DeFi协议",
+      "watch_promoted": false,
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator": null,
+      "creator_watched": false
+    },
+    {
+      "project": "【疑似山寨·同名未确认】ALT L2",
+      "handle": "altl2fun",
+      "chain": "ethereum",
+      "address": "0x8457ca5040ad67fdebbcc8edce889a335bc0fbfb",
+      "source": "onchain_lock",
+      "evidence_url": "https://x.com/AltL2fun",
+      "detected_at": "2026-11-04T18:32:40+08:00",
+      "confidence": "medium",
+      "note": "onchain_lock medium via symbol:ALT; deployer=0x064efbb4133ecbe0070154ffb7a6186f2759db7b; token=ALT / AltLayer Token; ca_gate: ERC20 verified: ALT dec=18",
+      "sources": [
+        {
+          "origin": "onchain_lock",
+          "source": "onchain_lock",
+          "detected_at": "2026-11-04T18:32:40+08:00",
+          "reason": "symbol:ALT",
+          "via": "factory:univ4_pm_eth:Initialize:gapfill"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "疑似山寨·同名未确认",
+      "traced_from": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "symbol": "ALT",
+        "name": "AltLayer Token",
+        "decimals": 18,
+        "code_bytes": 4948,
+        "note": "ERC20 verified: ALT dec=18"
+      },
+      "categories": [
+        "发射台"
+      ],
+      "strategy": "发射台",
+      "watch_promoted": false,
+      "funding_link": {
+        "from": "0xdfd5293d8e347dfe59e90efd55b2956a1343963d",
+        "to": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x2caad9311335c7c687004d921a3ea52ecbdba6c55fd1cde226d36531f523c812",
+        "amount": "0.02292825",
+        "asset": "ETH",
+        "funded_at": "2026-07-02T18:29:35+08:00",
+        "deployed_at": "2026-11-04T18:32:40+08:00",
+        "confidence": null,
+        "excluded_reason": "public_funder:exchange:Binance 16",
+        "chain": "ethereum"
+      },
+      "ca_status": "suspected_copycat",
+      "ca_status_zh": "疑似山寨",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [
+        "name_match"
+      ],
+      "vetoes": [
+        {
+          "kind": "public_funder",
+          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 16）",
+          "excluded_reason": "public_funder:exchange:Binance 16"
+        }
+      ],
+      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 16）",
+      "creator": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
+      "ca_locked": false,
+      "suspected_copycat": true,
+      "official": false,
+      "status": "name_match_unconfirmed",
+      "creator_watched": false
+    },
     {
       "project": "【疑似山寨·同名未确认】Capta",
       "handle": null,
@@ -33495,6 +33638,21 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0xfe908731af54c56dfd63948f18ce5878a3b8a1ad",
+        "to": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x85fb2c0fcc0028573d986621268958505016a7c3faea370c0aaac01f2935926d",
+        "amount": "0.01107723",
+        "asset": "ETH",
+        "funded_at": "2025-04-22T14:10:23+08:00",
+        "deployed_at": "2026-10-30T17:22:39+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "ethereum",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -33509,6 +33667,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -40438,6 +40603,21 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0xfe908731af54c56dfd63948f18ce5878a3b8a1ad",
+        "to": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x85fb2c0fcc0028573d986621268958505016a7c3faea370c0aaac01f2935926d",
+        "amount": "0.01107723",
+        "asset": "ETH",
+        "funded_at": "2025-04-22T14:10:23+08:00",
+        "deployed_at": "2026-10-30T17:22:39+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "ethereum",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -40452,6 +40632,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
       "ca_locked": false,
       "suspected_copycat": true,
@@ -40499,6 +40686,21 @@
       ],
       "strategy": "发射台",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0xfe908731af54c56dfd63948f18ce5878a3b8a1ad",
+        "to": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x85fb2c0fcc0028573d986621268958505016a7c3faea370c0aaac01f2935926d",
+        "amount": "0.01107723",
+        "asset": "ETH",
+        "funded_at": "2025-04-22T14:10:23+08:00",
+        "deployed_at": "2026-10-30T17:22:39+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "ethereum",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -40513,6 +40715,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x4f2c49c54cf28549a222188fc9c5456092035fd7",
       "ca_locked": false,
       "suspected_copycat": true,
