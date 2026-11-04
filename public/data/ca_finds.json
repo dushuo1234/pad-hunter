@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T17:58:54+08:00",
+  "generated_at": "2026-11-04T18:02:15+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 356,
@@ -22071,10 +22071,13 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
+      "first_buy_time": "2026-06-17T05:05:48+08:00",
       "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_external_buy_time": "2026-06-17T05:05:48+08:00",
+      "first_external_buy_tx": null,
+      "listing_time": "2026-06-17T05:05:48+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
       "lead_seconds": null
     },
     {
@@ -22177,10 +22180,13 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
+      "first_buy_time": "2026-07-27T00:32:43+08:00",
       "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_external_buy_time": "2026-07-27T00:32:43+08:00",
+      "first_external_buy_tx": null,
+      "listing_time": "2026-07-27T00:32:43+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
       "lead_seconds": null
     },
     {
@@ -22230,10 +22236,13 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
+      "first_buy_time": "2026-03-02T17:28:47+08:00",
       "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_external_buy_time": "2026-03-02T17:28:47+08:00",
+      "first_external_buy_tx": null,
+      "listing_time": "2026-03-02T17:28:47+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
       "lead_seconds": null
     },
     {
@@ -31436,6 +31445,21 @@
       ],
       "strategy": "Meme币",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x4d7f1790644af787933c9ff0e2cff9a9b4299abb",
+        "to": "0x0d1fb7595ed81983a3b84442f8c9e7381c6d3e21",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x9f439c24d90bcfdc8064638568964180ca08296cf2987a471347ddfd98f7a446",
+        "amount": "0.0369",
+        "asset": "ETH",
+        "funded_at": "2022-10-08T23:27:47+08:00",
+        "deployed_at": "2026-10-31T14:02:05+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "ethereum",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -31450,6 +31474,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x0d1fb7595ed81983a3b84442f8c9e7381c6d3e21",
       "ca_locked": false,
       "suspected_copycat": true,
