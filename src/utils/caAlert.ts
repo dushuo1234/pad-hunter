@@ -14,6 +14,7 @@ const FLASH_MS = 900
 export interface CaSighting {
   address: string
   project: string
+  handle?: string
   statusZh?: string
   provenanceZh?: string
 }
@@ -21,9 +22,20 @@ export interface CaSighting {
 export interface CaToast {
   id: string
   project: string
+  projectKey: string
   address: string
   statusZh: string
   provenanceZh: string
+}
+
+/**
+ * Stable per-project identity for the "clicked once, never alert again"
+ * rule. Handles win when present; the display name is the fallback.
+ */
+export function sightingProjectKey(sighting: { handle?: string; project: string }): string {
+  const key = sighting.handle ? handleKey(sighting.handle) : ''
+  if (key) return `h:${key}`
+  return `p:${sighting.project.trim().toLowerCase()}`
 }
 
 interface AlertUi {
@@ -37,6 +49,8 @@ type WatchSource = 'ca' | 'workbench'
 interface SeenState {
   ids: Set<string>
   baselined: Record<WatchSource, boolean>
+  /** Project keys the user has clicked once — never alert for them again. */
+  acked: Set<string>
 }
 
 const EMPTY_TOASTS: CaToast[] = []
@@ -72,7 +86,7 @@ function loadEnabled(): boolean {
 }
 
 function loadSeen(): SeenState {
-  const empty: SeenState = { ids: new Set(), baselined: { ca: false, workbench: false } }
+  const empty: SeenState = { ids: new Set(), baselined: { ca: false, workbench: false }, acked: new Set() }
   if (typeof localStorage === 'undefined') return empty
   try {
     const raw = localStorage.getItem(SEEN_KEY)
@@ -84,9 +98,13 @@ function loadSeen(): SeenState {
       ? row.addresses.filter((item): item is string => typeof item === 'string' && item.length > 0)
       : []
     const flags = row.baselined && typeof row.baselined === 'object' ? (row.baselined as Record<string, unknown>) : {}
+    const acked = Array.isArray(row.acked)
+      ? row.acked.filter((item): item is string => typeof item === 'string' && item.length > 0)
+      : []
     return {
       ids: new Set(addresses),
       baselined: { ca: flags.ca === true, workbench: flags.workbench === true },
+      acked: new Set(acked),
     }
   } catch {
     return empty
@@ -106,11 +124,24 @@ function persistSeen() {
     const payload = {
       addresses: [...seen.ids],
       baselined: seen.baselined,
+      acked: [...seen.acked],
     }
     localStorage.setItem(SEEN_KEY, JSON.stringify(payload))
   } catch {
     // Keep the in-memory set so this tab does not re-alert.
   }
+}
+
+/** Remember that the user has dealt with this project: silence it for good. */
+export function ackCaProject(handle: string, project = '') {
+  const key = sightingProjectKey({ handle: handle || undefined, project })
+  if (!key || seen.acked.has(key)) return
+  seen.acked.add(key)
+  persistSeen()
+}
+
+export function isCaProjectAcked(sighting: { handle?: string; project: string }): boolean {
+  return seen.acked.has(sightingProjectKey(sighting))
 }
 
 function emitUi() {
@@ -138,6 +169,7 @@ export function sightingsFromFinds(finds: CaFind[]): CaSighting[] {
   return alertableFinds(finds).map((find) => ({
     address: find.address,
     project: displayProjectName(find.project, find.handle),
+    handle: find.handle || undefined,
     statusZh: find.caStatusZh || '已确认CA',
     provenanceZh: find.provenanceZh,
   }))
@@ -149,7 +181,7 @@ export function sightingsFromStatus(items: WorkbenchStatusItem[]): CaSighting[] 
     if (item.alreadyListed) continue
     const project = projectLabel(item.name, item.handle)
     for (const address of item.lastAddresses) {
-      sightings.push({ address, project })
+      sightings.push({ address, project, handle: item.handle || undefined })
     }
   }
   return sightings
@@ -159,6 +191,7 @@ export function sightingsFromDetail(project: string, handle: string, addresses: 
   return addresses.map((found) => ({
     address: found.address,
     project: projectLabel(found.label || project, handle),
+    handle: handle || undefined,
   }))
 }
 
@@ -181,7 +214,7 @@ function takeNovel(sightings: CaSighting[]): CaSighting[] {
     if (!id || seen.ids.has(id) || batch.has(id)) continue
     batch.add(id)
     seen.ids.add(id)
-    novel.push({ address: sighting.address.trim(), project: sighting.project })
+    novel.push({ address: sighting.address.trim(), project: sighting.project, handle: sighting.handle })
   }
   return novel
 }
@@ -201,7 +234,12 @@ export function observeSightings(source: WatchSource, sightings: CaSighting[]) {
   const novel = takeNovel(sightings)
   if (novel.length === 0) return
   persistSeen()
-  queueNovel(novel)
+  // Projects the user already clicked once stay silent even when a brand
+  // new address shows up for them; their addresses are still remembered
+  // above so nothing replays if the ack is ever lifted.
+  const fresh = novel.filter((sighting) => !isCaProjectAcked(sighting))
+  if (fresh.length === 0) return
+  queueNovel(fresh)
 }
 
 export function observeWorkbenchStatus(items: WorkbenchStatusItem[]) {
@@ -226,6 +264,10 @@ export function observeWorkbenchDetail(
   addresses: FoundAddress[],
   options?: { launched?: boolean },
 ) {
+  // Opening a project's detail counts as having clicked it: from now on
+  // this project never raises a CA sound/toast again, same rule as the
+  // workbench alert console.
+  ackCaProject(handle, project)
   const launched = options?.launched === true
   const silent = launched ? addresses : addresses.filter((found) => /扫出钱包|疑似山寨|非CA|非地址|NFT合约|未确认/.test(found.label))
   if (remember(sightingsFromDetail(project, handle, silent))) persistSeen()
@@ -266,6 +308,7 @@ function pushToasts(items: CaSighting[]) {
   const next = items.slice(0, TOAST_LIMIT).map((item) => ({
     id: `ca-${++toastSeq}`,
     project: item.project,
+    projectKey: sightingProjectKey(item),
     address: item.address,
     statusZh: item.statusZh || '新CA',
     provenanceZh: item.provenanceZh || '',
@@ -283,8 +326,22 @@ export function dismissToast(id: string) {
   emitUi()
 }
 
+/** Acknowledge every toast of this toast's project without dismissing. */
+export function ackToastProject(id: string) {
+  const toast = ui.toasts.find((item) => item.id === id)
+  if (!toast || seen.acked.has(toast.projectKey)) return
+  seen.acked.add(toast.projectKey)
+  persistSeen()
+}
+
+/** The toast's close button: dismiss it and silence its project for good. */
+export function ackToast(id: string) {
+  ackToastProject(id)
+  dismissToast(id)
+}
+
 function soundUrl(): string {
-  const base = import.meta.env.BASE_URL || '/'
+  const base = import.meta.env?.BASE_URL || '/'
   return `${base}sounds/new-ca.mp3`
 }
 

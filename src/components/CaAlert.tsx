@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from 'react'
 import { appPath } from '../router'
 import {
-  dismissToast,
+  ackToast,
+  ackToastProject,
   getAlertUi,
   pressSoundToggle,
   previewAlertSound,
@@ -67,13 +68,17 @@ export function CaAlertToasts() {
           <p className="mt-1 pl-2 font-mono text-[12px] break-all text-[var(--color-ink-soft)] dark:text-[var(--color-night-soft)]">
             {toast.address}
           </p>
-          <a href={appPath('ca')} className="mt-2 inline-block pl-2 font-mono text-[11px] text-[var(--color-orange)] hover:underline">
+          <a
+            href={appPath('ca')}
+            onClick={() => ackToastProject(toast.id)}
+            className="mt-2 inline-block pl-2 font-mono text-[11px] text-[var(--color-orange)] hover:underline"
+          >
             打开发现CA
           </a>
           <button
             type="button"
-            aria-label="关闭提示"
-            onClick={() => dismissToast(toast.id)}
+            aria-label="关闭提示并记住这个项目"
+            onClick={() => ackToast(toast.id)}
             className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-ink-muted)] hover:bg-[var(--color-cream-2)] hover:text-[var(--color-ink)] dark:hover:bg-[var(--color-night-2)] dark:hover:text-[var(--color-night-ink)]"
           >
             ×
