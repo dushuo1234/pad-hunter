@@ -52,6 +52,8 @@ const EMPTY_SNAPSHOT: WorkbenchAlertSnapshot = {
 
 let alerts: WorkbenchAlert[] = []
 let readIds = new Set<string>()
+/** Handles the user clicked once: this project must never flash or chime again. */
+let ackedHandles = new Set<string>()
 let backlogQuiet = false
 let highlightUntil: Record<string, number> = {}
 let toasts: WorkbenchToast[] = []
@@ -119,8 +121,46 @@ function rememberRead(ids: Iterable<string>): boolean {
   return true
 }
 
+const ACKED_HANDLE_LIMIT = 500
+
+function trimAckedHandles() {
+  if (ackedHandles.size <= ACKED_HANDLE_LIMIT) return
+  ackedHandles = new Set([...ackedHandles].slice(-ACKED_HANDLE_LIMIT))
+}
+
+/** Every current alert of an acknowledged project counts as read, so nothing re-flashes. */
+function applyAckedHandles() {
+  if (ackedHandles.size === 0) return
+  for (const alert of alerts) {
+    if (!alert.id) continue
+    const key = handleKey(alert.handle)
+    if (key && ackedHandles.has(key)) readIds.add(alert.id)
+  }
+}
+
+function ackProjectHandles(keys: Iterable<string>): boolean {
+  let changed = false
+  for (const key of keys) {
+    if (!key || ackedHandles.has(key)) continue
+    ackedHandles.add(key)
+    changed = true
+  }
+  if (!changed) return false
+  trimAckedHandles()
+  applyAckedHandles()
+  let highlights = highlightUntil
+  for (const key of keys) {
+    if (key && highlights[key] != null) {
+      if (highlights === highlightUntil) highlights = { ...highlightUntil }
+      delete highlights[key]
+    }
+  }
+  highlightUntil = highlights
+  return true
+}
+
 function persist() {
-  storageSet(JSON.stringify({ alerts, readIds: [...readIds] }))
+  storageSet(JSON.stringify({ alerts, readIds: [...readIds], ackedHandles: [...ackedHandles] }))
 }
 
 function publish() {
@@ -138,6 +178,8 @@ function hydrate() {
   const stored = loadStoredWorkbenchAlerts(storageGet())
   alerts = stored.alerts
   readIds = new Set(stored.readIds)
+  ackedHandles = new Set(stored.ackedHandles)
+  applyAckedHandles()
   backlogQuiet = stored.seeded
   publish()
 }
@@ -163,6 +205,7 @@ function noteFresh(alert: WorkbenchAlert, now: number) {
   if (!plan.unread) return
   const key = handleKey(alert.handle)
   if (!key) return
+  if (ackedHandles.has(key) || readIds.has(alert.id)) return
   highlightUntil = { ...highlightUntil, [key]: plan.highlightUntil }
   if (!plan.toast) return
   const pinned = getWorkbenchItems().some((item) => handleKey(item.handle) === key)
@@ -180,7 +223,16 @@ function noteFresh(alert: WorkbenchAlert, now: number) {
 
 function chimeIfContentChanged(previous: readonly WorkbenchAlert[], next: readonly WorkbenchAlert[], live: boolean) {
   if (!live) return
-  if (alertFeedChanged(previous, next)) noteWorkbenchAlertChime()
+  // Acknowledged projects stay silent, and so do edits to alerts already read:
+  // the sound is only for something still flashing unread.
+  const audible = (list: readonly WorkbenchAlert[]) =>
+    list.filter((alert) => {
+      const key = handleKey(alert.handle)
+      return !key || !ackedHandles.has(key)
+    })
+  const nextAudible = audible(next)
+  if (!nextAudible.some((alert) => alert.id && !readIds.has(alert.id) && reminderCanFlash(alert))) return
+  if (alertFeedChanged(audible(previous), nextAudible)) noteWorkbenchAlertChime()
 }
 
 function replaceAlerts(next: readonly WorkbenchAlert[]) {
@@ -194,6 +246,7 @@ function replaceAlerts(next: readonly WorkbenchAlert[]) {
     backlogQuiet = true
   }
   alerts = normalized
+  applyAckedHandles()
   trimReadIds()
   persist()
   publish()
@@ -209,6 +262,7 @@ export function ingestWorkbenchSocketEvent(event: SocketEvent) {
   const previous = alerts
   const merged = mergeAlertIncremental(alerts, event.alerts)
   alerts = merged.alerts
+  applyAckedHandles()
   const now = Date.now()
   for (const alert of merged.added) noteFresh(alert, now)
   persist()
@@ -220,7 +274,10 @@ export function markWorkbenchAlertsRead(handle: string) {
   const key = handleKey(handle)
   if (!key) return
   const ids = alerts.filter((alert) => handleKey(alert.handle) === key).map((alert) => alert.id)
-  if (!rememberRead(ids)) return
+  // One click acknowledges the whole project: future alerts for it stay quiet too.
+  const acked = ackProjectHandles([key])
+  const read = rememberRead(ids)
+  if (!acked && !read) return
   if (highlightUntil[key] != null) {
     const next = { ...highlightUntil }
     delete next[key]
@@ -232,7 +289,17 @@ export function markWorkbenchAlertsRead(handle: string) {
 
 /** Stop blinking for these alert ids. A click on the console passes every flashing id. */
 export function markWorkbenchAlertIdsRead(ids: readonly string[]) {
-  if (!rememberRead(ids)) return
+  const wanted = new Set(ids)
+  const keys = new Set<string>()
+  for (const alert of alerts) {
+    if (!wanted.has(alert.id)) continue
+    const key = handleKey(alert.handle)
+    if (key) keys.add(key)
+  }
+  // The console click acknowledges those projects, not just the visible rows.
+  const acked = ackProjectHandles(keys)
+  const read = rememberRead(ids)
+  if (!acked && !read) return
   persist()
   publish()
 }
@@ -275,6 +342,9 @@ function onStorage(event: StorageEvent) {
   const live = backlogQuiet || stored.seeded
   alerts = stored.alerts
   readIds = new Set(stored.readIds)
+  ackedHandles = new Set([...ackedHandles, ...stored.ackedHandles])
+  trimAckedHandles()
+  applyAckedHandles()
   if (stored.seeded) backlogQuiet = true
   publish()
   chimeIfContentChanged(previous, alerts, live)

@@ -115,6 +115,8 @@ export interface StoredWorkbenchAlerts {
   alerts: WorkbenchAlert[]
   readIds: string[]
   unread: string[]
+  /** Project handles the user has acknowledged: never flash or chime again. */
+  ackedHandles: string[]
   seeded: boolean
 }
 
@@ -523,14 +525,29 @@ function cleanReadIds(value: unknown): string[] {
   return ids.slice(-READ_ID_LIMIT)
 }
 
+const ACKED_HANDLE_LIMIT = 500
+
+function cleanAckedHandles(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  const keys: string[] = []
+  const seen = new Set<string>()
+  for (const entry of value) {
+    const key = handleKey(asString(entry))
+    if (!key || seen.has(key)) continue
+    seen.add(key)
+    keys.push(key)
+  }
+  return keys.slice(-ACKED_HANDLE_LIMIT)
+}
+
 export function loadStoredWorkbenchAlerts(raw: string | null): StoredWorkbenchAlerts {
-  const empty: StoredWorkbenchAlerts = { alerts: [], readIds: [], unread: [], seeded: false }
+  const empty: StoredWorkbenchAlerts = { alerts: [], readIds: [], unread: [], ackedHandles: [], seeded: false }
   if (!raw) return empty
   try {
     const parsed: unknown = JSON.parse(raw)
     if (Array.isArray(parsed)) {
       const alerts = normalizeAlertList(parseWorkbenchAlertList(parsed))
-      return { alerts, readIds: alerts.map((alert) => alert.id), unread: [], seeded: true }
+      return { alerts, readIds: alerts.map((alert) => alert.id), unread: [], ackedHandles: [], seeded: true }
     }
     const row = asRecord(parsed)
     if (!row) return empty
@@ -544,7 +561,7 @@ export function loadStoredWorkbenchAlerts(raw: string | null): StoredWorkbenchAl
       const pending = new Set(unread)
       readIds = alerts.filter((alert) => !pending.has(handleKey(alert.handle))).map((alert) => alert.id)
     } else readIds = alerts.map((alert) => alert.id)
-    return { alerts, readIds, unread, seeded: true }
+    return { alerts, readIds, unread, ackedHandles: cleanAckedHandles(row.ackedHandles), seeded: true }
   } catch {
     return empty
   }
