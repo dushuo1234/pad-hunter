@@ -19,11 +19,23 @@ Pad Hunter 是「项目推送 + 即将开盘 + CA 早期发现」看板，由三
 | **云端工作台 API** | Cloudflare Worker + Durable Object，公网 `https://api.adualpha.win`，room `pad-hunter-v6`（VERSION 约 `1.8.0-cf`） | Cloudflare；源码在 `/workspace/project-monitor/cf-workbench/` |
 | **本机（box）** | 雷达采集、官网秒级轮询、链上锁、TG 近实时同步、本地 FastAPI 兜底 `127.0.0.1:8780`、发布到 Pages | `/workspace/project-monitor/*_daemon.sh` + Cursor 例行 |
 
-**职责分工（边界）**
+**职责分工（边界）**（2026-11-04 adu 裁定：公网侧 **与 box 守护** 都交 Muse）
 
-- **Muse**：网站与工作台**怎么跑**——守护起停、Pages 数据发布、Worker 部署健康、前端 PR/部署注意、API 可达性、暂停/恢复扫描标记。
-- **Ori（及其他）**：监控策略、CA 闸门调参、买卖/狙击、项目钱包签名、例行业务判断。  
-- **硬边界**：项目钱包 **server-only**——本机 box **不登录、不签名**钱包；`sniper_config.json` 路径上 `dry_run=true`，本路径不实买。勿越权。
+- **Muse（全权网站/运维）**：
+  - 公网：API health、Pages 数据时间戳、站点可用性、前端 PR/部署
+  - **box**：`/workspace/project-monitor` 下各 `*_daemon.sh` 的 ensure/start/stop/status、看 pid/日志、`.site_scan_paused` 暂停/恢复、本地 8780 健康、发布脚本
+- **Ori（及其他）**：监控策略、CA 闸门调参、买卖/狙击、项目钱包签名、Cursor 例行业务判断；**不再默认管守护起停**（过渡期可应 Muse 请求代执行一次 ensure）。
+- **硬边界**：项目钱包 **server-only**——运维机 **不登录、不签名**钱包；`sniper_config.json` 路径上 `dry_run=true`，本路径不实买。勿越权。
+
+**接入缺口（必须解决才能真正接手 box）**
+
+当前守护跑在 **Cursor Grok Bot 共享 box**（路径 `/workspace/project-monitor`）。Meta Muse **默认进不了**这台机。交接文档里的 ensure/pid/日志命令在 Muse 获得等价 shell 之前无法由 Muse 直接执行。可选落地方式（由 adu 开权限，勿把 token 写进仓库）：
+
+1. 给 Muse 一台可 SSH 的运维机，并把 `project-monitor`（含 venv/守护脚本，密钥走 Muse 保险柜不进 git）同步过去，改文档根路径后切流量；或  
+2. 在 Muse 可控环境复刻同一套守护；或  
+3. 过渡期：Muse 盯公网，需要 ensure 时通过 GitHub issue / 聊天点名 Ori 代跑。
+
+未解决接入前：**所有权归 Muse，执行权仍可能短时落在 Ori**——以 adu 最新口令为准。
 
 **例行（名称 only，喂站点数据；调度在 Cursor Routines，不是本机 cron）**
 
