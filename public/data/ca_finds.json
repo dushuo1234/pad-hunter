@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T17:54:52+08:00",
+  "generated_at": "2026-11-04T17:58:54+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
   "count": 356,
@@ -22015,10 +22015,13 @@
       "ca_locked": false,
       "lock_time": null,
       "listing_time_estimate": null,
-      "first_buy_time": null,
+      "first_buy_time": "2026-10-02T01:36:21+08:00",
       "first_buy_in_creation_tx": false,
-      "listing_time": null,
-      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "first_external_buy_time": "2026-10-02T01:36:21+08:00",
+      "first_external_buy_tx": null,
+      "listing_time": "2026-10-02T01:36:21+08:00",
+      "listing_time_source": "first_external_buy_onchain",
+      "listing_time_basis_zh": "链上第一笔外部买入（不含创建交易里的开发者买入）",
       "lead_seconds": null
     },
     {
@@ -31291,6 +31294,21 @@
       ],
       "strategy": "AI代理",
       "watch_promoted": false,
+      "funding_link": {
+        "from": "0x5babe600b9fcd5fb7b66c0611bf4896d967b23a1",
+        "to": "0xff3e8d9ba776662ca6ed1420ee366afb436d2684",
+        "hops": 0,
+        "kind": "direct",
+        "tx": "0x05df4aea1a611bb695467e53035c786285a84716956241600164a939b707ba66",
+        "amount": "0.00430343",
+        "asset": "ETH",
+        "funded_at": "2025-08-30T23:30:59+08:00",
+        "deployed_at": "2026-10-31T14:24:01+08:00",
+        "confidence": "low",
+        "excluded_reason": "",
+        "chain": "ethereum",
+        "note_zh": "资助方不在项目图谱，不计硬证据"
+      },
       "ca_status": "suspected_copycat",
       "ca_status_zh": "疑似山寨",
       "provenance": null,
@@ -31305,6 +31323,13 @@
       "matched_by": [
         "name_match"
       ],
+      "vetoes": [
+        {
+          "kind": "fresh_withdrawal_no_graph",
+          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
+        }
+      ],
+      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xff3e8d9ba776662ca6ed1420ee366afb436d2684",
       "ca_locked": false,
       "suspected_copycat": true,
