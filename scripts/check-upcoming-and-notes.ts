@@ -222,6 +222,7 @@ const samples = [
   'ca_gate: not a valid Solana pubkey',
   'ca_gate: hex string (hash / git SHA), not a Solana address',
   'ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA',
+  'ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA',
   'ca_gate: account does not exist on Solana mainnet',
   'classified as EOA/wallet via eth_getCode',
   'classified as contract (3248 bytes)',
