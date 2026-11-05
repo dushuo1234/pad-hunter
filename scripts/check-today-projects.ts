@@ -67,7 +67,8 @@ const pad = readFileSync(new URL('../src/hooks/usePadData.ts', import.meta.url),
 if (!pad.includes('data/today_projects.json') || !pad.includes('fetchTodayProjects()')) fail('today projects not polled with the board')
 const home = readFileSync(new URL('../src/pages/HomePage.tsx', import.meta.url), 'utf8')
 const workbench = readFileSync(new URL('../src/pages/WorkbenchPage.tsx', import.meta.url), 'utf8')
-if (!home.includes('<TodayProjectsSection') || !workbench.includes('<TodayProjectsSection')) fail('section not mounted')
+if (home.includes('<TodayProjectsSection')) fail('section must not be mounted on home (user removed it 2026-11-05)')
+if (!workbench.includes('<TodayProjectsSection')) fail('section not mounted')
 if (!section.includes('useWorkbenchAlerts') || !section.includes('alertsByHandle')) {
   fail('today cards must read the workbench alert stream')
 }

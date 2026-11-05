@@ -72,7 +72,6 @@ export default function App() {
           error={data.error}
           uploadNote={data.uploadNote}
           onRetry={() => void data.loadDefault()}
-          todayProjects={data.todayProjects}
         />
       )}
       {route.name === 'today' && (
