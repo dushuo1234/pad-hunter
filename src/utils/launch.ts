@@ -181,7 +181,8 @@ function postedAt(candidate: Candidate): number {
  *    Rows that share a listing time break the tie by 推送日期, newest first.
  *
  * A resolved listing time outside the window stays off this list.
- * Already-open wording and `already_listed` are excluded. Callers also drop `launched.json`.
+ * Already-open wording, a running mint, the X-progress scanner's 疑似已开盘
+ * verdict and `already_listed` are excluded. Callers also drop `launched.json`.
  */
 export function upcomingLaunches(
   candidates: Candidate[],

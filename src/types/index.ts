@@ -47,6 +47,9 @@ export interface Candidate {
   ca_chain?: string | null
   ca_source?: string | null
   listing_signal?: string | null
+  /** X-progress scan verdict: `already_live` means the scanner flagged 疑似已开盘. */
+  x_progress_bucket?: string | null
+  x_progress_signal?: string | null
   sites?: string[]
   last_checked?: string
   onchain_notes?: string
