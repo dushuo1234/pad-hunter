@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-30T01:09:39+08:00",
+  "fired_routine": "开盘与CA预警",
+  "pause": "OPEN",
+  "daemons": {
+    "listing": 6323,
+    "onchain_lock": 5409,
+    "fast_site": 5938,
+    "ok": true
+  },
+  "watchlist": "401→402(+mastchain_depin)→401 (prune lanternstown)",
+  "locked_new": [
+    "mastchain_depin"
+  ],
+  "x": {
+    "bios": 68,
+    "posts_handles": 12,
+    "users": 688,
+    "pkc_bio_empty": true
+  },
+  "pipeline_exit": 0,
+  "pipeline_elapsed_min": 31.6,
+  "hang_workaround": "trace_wallet_ca.py timeout=900",
+  "onchain_lock": {
+    "offset_before": 276,
+    "offset_after": 277,
+    "new_lines": 1,
+    "qualifying_medium": 0,
+    "raw_new": [
+      "Trench"
+    ]
+  },
+  "new_js_ca": 0,
+  "actionable": [
+    {
+      "type": "已开盘",
+      "project": "Lanterns Town",
+      "handle": "lanternstown",
+      "chain": "BSC",
+      "ca": null,
+      "evidence": "56m Mint Live Now 👉 lanterns.town/v2/mint Ghost Town @GhostTownBNB 58m 🚨 $TREAT MINT IS LIVE! @LanternsTown presents @GhostTownBNB 👻 Mint your candy house with",
+      "source": "prune_launched",
+      "at": "2026-10-30T01:01:25+08:00"
+    },
+    {
+      "type": "listing_at_change",
+      "project": "Noctrive",
+      "handle": "noctrive",
+      "chain": null,
+      "ca": null,
+      "evidence": "2026-10-30T00:00:00+08:00 → 2026-10-30T01:00:00+08:00 (x)",
+      "source": "listing_times"
+    },
+    {
+      "type": "listing_at_change",
+      "project": "bopzop",
+      "handle": "bopzopapp",
+      "chain": null,
+      "ca": null,
+      "evidence": "未知 → 2026-11-01T00:00:00+08:00 (x)",
+      "source": "listing_times"
+    }
+  ]
+}

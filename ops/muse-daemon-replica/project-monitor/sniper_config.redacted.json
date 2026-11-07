@@ -1,0 +1,18 @@
+{
+  "dry_run": true,
+  "amount": "20",
+  "amount_unit": "USDT",
+  "slippage": "auto",
+  "mev": "false",
+  "gasLevel": "HIGH",
+  "baw_bin": "baw",
+  "log_path": "alerts/sniper_buys.jsonl",
+  "state_path": "alerts/sniper_state.json",
+  "note": "dry_run=true hard default. Flip dry_run to false ONLY after explicit user approval to spend. Token: env SNIPER_6551_TOKEN or secrets/6551_token (for later WSS layer).",
+  "layers": {
+    "high_conf_watcher": "sniper_watcher.py watch",
+    "6551_last_layer": "sniper_6551.py watch  # needs paid watch plan; inject/smoke work now",
+    "buy_hook": "sniper_buy.fire_buy"
+  },
+  "token_6551": "REDACTED"
+}

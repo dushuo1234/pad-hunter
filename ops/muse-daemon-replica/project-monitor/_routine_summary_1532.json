@@ -1,0 +1,123 @@
+{
+  "at": "2026-10-23T16:02:12+08:00",
+  "fired_at": "2026-10-23T15:32:00+08:00",
+  "exit": 0,
+  "duration_s": 1397,
+  "watchlist": "211→211",
+  "locked_new": [],
+  "candidates": "211→211",
+  "projects": "211→211",
+  "launched": 48,
+  "newly_launched": [],
+  "workbench": "3→3",
+  "workbench_names": [
+    "valut",
+    "GiwaMeme",
+    "Ptah.trade"
+  ],
+  "new_ca": [],
+  "x_ca_repeats": [
+    "ETHERIISPROTOCO",
+    "GEARZ",
+    "DRAK"
+  ],
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "onchain_lock": {
+    "lines_before": 63,
+    "lines_after": 65,
+    "new": 2,
+    "effective_new_ca": 0,
+    "hits": [
+      {
+        "project": "Bit Miners",
+        "handle": "BitMinersonRH",
+        "address": "0xb20000000000000000000067bac6366346d62bcd",
+        "chain": "base",
+        "confidence": "low",
+        "reason": "symbol:BM",
+        "token": "BM/Base Morning",
+        "via": "factory:univ4_pm_base:Initialize",
+        "at": "2026-10-23T15:32:50+08:00",
+        "suppressed": "疑似山寨·同名未确认"
+      },
+      {
+        "project": "Drakhen",
+        "handle": "drakhenRH",
+        "address": "0x0362a6fd48f5c182f85cb02f151870ebf069ffff",
+        "chain": "bsc",
+        "confidence": "medium",
+        "reason": "symbol:DRAK",
+        "token": "DRAK/Drakhen 5eeec",
+        "via": "factory:fourmeme_tm2_bsc:TokenCreate",
+        "at": "2026-10-23T15:40:26+08:00",
+        "suppressed": "疑似山寨·同名未确认"
+      }
+    ]
+  },
+  "NEW_DEPLOY_watchlist": null,
+  "NEW_DEPLOY_ambient_univ2_samples": 3,
+  "listing_at_changes_published": [
+    {
+      "name": "boostbob",
+      "handle": "boostbob",
+      "old": null,
+      "listing_at": "2026-10-22T00:00:00+08:00",
+      "within_3d": false,
+      "note": "past sticky fill"
+    }
+  ],
+  "within_3d": [
+    {
+      "name": "Wallet V: Trade with AI Agents",
+      "listing_at": "2026-10-24T20:00:00+08:00",
+      "note": "already published"
+    }
+  ],
+  "SITE_JS": [
+    "Authority",
+    "Listen",
+    "ShieldX",
+    "TapeFoundry"
+  ],
+  "SITE_JS_note": "fp-only; address_set unchanged; near_deploys univ2_base ambient — skip",
+  "LISTING_SIGNAL_NEW": [
+    "ShieldX Market is open + Batch sweep live (prev: market opens very soon); mint sold out; still status mint进行中",
+    "SpacInk Genesis SOLD OUT + reveal live (scanner sticky goes-live-in-4 / 延期 — under-detected)",
+    "Ptah.trade Relics mint open (95k) + trading UI live (scanner sticky almost live)"
+  ],
+  "LISTING_SIGNAL_repeats": [
+    "QernApp PRE-TGE airdrop (repeat; also claims $10M/24h DEX volume)",
+    "buidlr almost live (repeat)",
+    "$PKC Launching this week / CA in bio only sticky延期",
+    "MarsMind Launch-in-2h sticky延期",
+    "KaspaRocket MAINNET/launchpad activity sticky延期",
+    "WalletV_io within 3d 2026-10-24T20:00 already published"
+  ],
+  "pages_publish": {
+    "listing_times": {
+      "main": "5095829",
+      "gh-pages": "9853358"
+    },
+    "ca_finds": {
+      "main": "c866795",
+      "gh-pages": "14a7514"
+    }
+  },
+  "daemon": {
+    "onchain_lock": "ok pid=4515",
+    "rpc_note": "public RPC rate-limits on several chains; daemon still looping"
+  },
+  "x_refresh": {
+    "priority_handles_fetched": 10,
+    "bios": 15,
+    "unresolved_missing": [
+      "ArscelareAi",
+      "myslabsfun",
+      "fourgefun"
+    ]
+  },
+  "actionable": true,
+  "actionable_reason": "strong LISTING_SIGNAL: ShieldX market open; SpacInk mint sold out (under-detected). ONCHAIN_LOCK +2 suppressed as 疑似山寨 (not NEW_CA)."
+}

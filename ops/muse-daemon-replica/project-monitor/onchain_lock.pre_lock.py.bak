@@ -1,0 +1,1276 @@
+#!/usr/bin/env python3
+"""Pad Hunter on-chain lock daemon — match new token contracts to watched projects in seconds.
+
+Polls new blocks (~1–3s) on chains that have public RPCs in factories.json.
+For each new contract creation (tx.to is null) and each factory PairCreated/PoolCreated:
+
+  (a) deployer / tx.from in wallet_watchlist.json  -> high (or confirmed if name also matches)
+  (b) ERC20 name()/symbol() fuzzy-matches token_name_watchlist.json -> medium
+      (ambiguous symbols alone stay low)
+  (c) both wallet + name/symbol -> confirmed
+
+Appends matches to onchain_lock_alerts.jsonl and optionally rebuilds ca_finds.json.
+State in onchain_lock_state.json (last block per chain).
+
+No API keys. Rotates public RPCs with backoff on rate limits.
+"""
+from __future__ import annotations
+
+import argparse
+import threading
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+# Prefer local venv for keccak / Crypto
+_VENV_SP = Path("/workspace/project-monitor/.venv/lib")
+if _VENV_SP.exists():
+    for _p in sorted(_VENV_SP.glob("python*/site-packages")):
+        sp = str(_p)
+        if sp not in sys.path:
+            sys.path.insert(0, sp)
+
+BASE = Path("/workspace/project-monitor")
+FACTORIES = BASE / "factories.json"
+ABI_DIR = BASE / "factory_abis"
+WALLET_WL = BASE / "wallet_watchlist.json"
+TOKEN_WL = BASE / "token_name_watchlist.json"
+ALERTS = BASE / "onchain_lock_alerts.jsonl"
+STATE = BASE / "onchain_lock_state.json"
+STATUS = BASE / "onchain_lock_status.json"
+WATCHLIST = BASE / "watchlist.json"
+REMOVED_LAUNCHED = BASE / "removed_launched.json"
+LAUNCHED_DATA = Path("/workspace/push-radar/data/launched.json")
+SH = ZoneInfo("Asia/Shanghai")
+UA = "PadHunterOnchainLock/1.0"
+
+# ERC20 selectors
+SEL_NAME = "0x06fdde03"
+SEL_SYMBOL = "0x95d89b41"
+SEL_DECIMALS = "0x313ce567"
+
+PAIR_CREATED = "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+# filled from factories.json at runtime if present
+POOL_CREATED = "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118"
+
+# Chains we actively poll (must have working RPC)
+ACTIVE_CHAINS_DEFAULT = ("ethereum", "base", "bsc", "ink", "hyperevm", "robinhood")
+
+# Skip matching these as "token" when they appear in PairCreated (base pairs)
+BASE_TOKENS = {
+    # WETH mainnet / common
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    # WETH base
+    "0x4200000000000000000000000000000000000006",
+    # WBNB
+    "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    # USDC / USDT common
+    "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",  # USDC base
+}
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def load_json(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def save_json(path: Path, doc) -> None:
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def append_alert(ev: dict) -> None:
+    ev = dict(ev)
+    ev.setdefault("at", now_iso())
+    ev.setdefault("type", "ONCHAIN_LOCK")
+    with ALERTS.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+
+
+class RpcPool:
+    def __init__(self, chain: str, urls: list[str]):
+        self.chain = chain
+        self.urls = [u for u in urls if u]
+        self.i = 0
+        self.fail_until: dict[str, float] = {}
+        self.last_error = ""
+
+    def _pick(self) -> str | None:
+        if not self.urls:
+            return None
+        now = time.time()
+        for _ in range(len(self.urls)):
+            u = self.urls[self.i % len(self.urls)]
+            self.i += 1
+            if self.fail_until.get(u, 0) <= now:
+                return u
+        # all cooling — pick soonest
+        u = min(self.urls, key=lambda x: self.fail_until.get(x, 0))
+        return u
+
+    def mark_fail(self, url: str, seconds: float = 8.0) -> None:
+        self.fail_until[url] = time.time() + seconds
+
+    def call(self, method: str, params: list, timeout: int = 20) -> dict:
+        last_err = {"error": {"message": "no rpc"}}
+        for _attempt in range(max(1, len(self.urls))):
+            url = self._pick()
+            if not url:
+                break
+            payload = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+            cmd = [
+                "curl", "-sS", "--max-time", str(timeout),
+                "-X", "POST", url,
+                "-H", "content-type: application/json",
+                "-H", f"user-agent: {UA}",
+                "-d", payload,
+            ]
+            try:
+                out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
+                data = json.loads(out)
+            except Exception as e:
+                self.last_error = str(e)[:160]
+                self.mark_fail(url, 5)
+                last_err = {"error": {"message": self.last_error}}
+                continue
+            if data.get("error"):
+                msg = str(data["error"])
+                self.last_error = msg[:160]
+                # rate limit / busy
+                cool = 12.0 if any(k in msg.lower() for k in ("rate", "limit", "429", "busy", "capacity")) else 4.0
+                self.mark_fail(url, cool)
+                last_err = data
+                continue
+            return data
+        return last_err
+
+
+def topic_to_address(topic: str) -> str | None:
+    if not topic or not isinstance(topic, str) or not topic.startswith("0x") or len(topic) != 66:
+        return None
+    return "0x" + topic[-40:]
+
+
+def decode_string_result(hexdata: str) -> str | None:
+    """Decode ABI-encoded string from eth_call result."""
+    if not isinstance(hexdata, str) or not hexdata.startswith("0x") or len(hexdata) < 2:
+        return None
+    raw = hexdata[2:]
+    if len(raw) == 0:
+        return None
+    try:
+        # bytes32 short string (some old tokens)
+        if len(raw) == 64:
+            b = bytes.fromhex(raw)
+            # if looks like ABI dynamic string offset, fall through
+            if b[0] == 0 and int.from_bytes(b[:32], "big") == 32:
+                pass
+            else:
+                # null-terminated bytes32
+                s = b.split(b"\x00", 1)[0].decode("utf-8", errors="ignore").strip()
+                if s and s.isprintable():
+                    return s
+        if len(raw) < 128:
+            return None
+        offset = int(raw[0:64], 16)
+        # offset usually 32
+        start = offset * 2
+        if start + 64 > len(raw):
+            start = 64  # fallback
+        length = int(raw[start : start + 64], 16)
+        if length > 256:
+            return None
+        data_start = start + 64
+        data_end = data_start + length * 2
+        b = bytes.fromhex(raw[data_start:data_end])
+        s = b.decode("utf-8", errors="ignore").strip("\x00").strip()
+        return s if s else None
+    except Exception:
+        return None
+
+
+def erc20_meta(pool: RpcPool, address: str) -> dict:
+    name = symbol = None
+    r = pool.call("eth_call", [{"to": address, "data": SEL_NAME}, "latest"], timeout=12)
+    if r.get("result"):
+        name = decode_string_result(r["result"])
+    r = pool.call("eth_call", [{"to": address, "data": SEL_SYMBOL}, "latest"], timeout=12)
+    if r.get("result"):
+        symbol = decode_string_result(r["result"])
+    return {"name": name, "symbol": symbol}
+
+
+def code_bytes(pool: RpcPool, address: str) -> int:
+    r = pool.call("eth_getCode", [address, "latest"], timeout=12)
+    code = r.get("result") or ""
+    if not isinstance(code, str) or not code.startswith("0x"):
+        return 0
+    return max(0, (len(code) - 2) // 2)
+
+
+def norm_sym(s: str | None) -> str:
+    if not s:
+        return ""
+    return re.sub(r"[^A-Z0-9]", "", s.strip().lstrip("$").upper())
+
+
+def norm_name(s: str | None) -> str:
+    if not s:
+        return ""
+    s = s.strip().lower()
+    s = re.sub(r"[\s_\-·•]+", " ", s)
+    return s
+
+
+
+def hkey(h: str | None) -> str:
+    return (h or "").lstrip("@").strip().lower()
+
+
+def load_launched_blocklist() -> set[str]:
+    """Handles soft-deleted as 已开盘 (restored=false). Never re-alert these."""
+    blocked: set[str] = set()
+    rem = load_json(REMOVED_LAUNCHED, {})
+    items = rem.get("items") if isinstance(rem, dict) else rem
+    for e in items or []:
+        if isinstance(e, dict) and not e.get("restored"):
+            blocked.add(hkey(e.get("handle")))
+    launched = load_json(LAUNCHED_DATA, {})
+    for e in (launched.get("items") if isinstance(launched, dict) else launched) or []:
+        if isinstance(e, dict):
+            blocked.add(hkey(e.get("handle")))
+    return {h for h in blocked if h}
+
+
+class Matcher:
+    def __init__(self):
+        self.reload()
+
+    def reload(self) -> None:
+        self.wallets = load_json(WALLET_WL, {})
+        self.tokens = load_json(TOKEN_WL, {})
+        self.blocked_handles = load_launched_blocklist()
+        # Drop launched/blocked projects from match indexes (Hatch etc. must not re-alert)
+        raw_by_addr = self.wallets.get("by_address") or {}
+        self.by_addr = {}
+        for addr, hits in raw_by_addr.items():
+            kept = []
+            for h in (hits or []):
+                if isinstance(h, str):
+                    if hkey(h) not in self.blocked_handles:
+                        kept.append({"handle": h, "project": h, "confidence": "medium"})
+                elif isinstance(h, dict) and hkey(h.get("handle")) not in self.blocked_handles:
+                    kept.append(h)
+            if kept:
+                self.by_addr[addr] = kept
+        raw_by_sym = self.tokens.get("by_symbol") or {}
+        self.by_symbol = {}
+        for sym, cands in raw_by_sym.items():
+            kept = []
+            for c in (cands or []):
+                if isinstance(c, str):
+                    # legacy bare-handle form
+                    if hkey(c) not in self.blocked_handles:
+                        kept.append({"handle": c, "project": c, "explicit": False, "ambiguous": False})
+                elif isinstance(c, dict) and hkey(c.get("handle")) not in self.blocked_handles:
+                    kept.append(c)
+            if kept:
+                self.by_symbol[sym] = kept
+        self.by_name: dict[str, list] = {}
+        for p in self.tokens.get("projects") or []:
+            if hkey(p.get("handle")) in self.blocked_handles:
+                continue
+            for n in p.get("match_names") or []:
+                self.by_name.setdefault(n, []).append({
+                    "project": p.get("project"),
+                    "handle": p.get("handle"),
+                    "ambiguous_symbols": p.get("ambiguous_symbols") or [],
+                })
+        self.ambiguous = set(self.tokens.get("ambiguous_set") or [])
+        self.loaded_at = now_iso()
+
+    def match_wallet(self, address: str) -> list[dict]:
+        return list(self.by_addr.get(address.lower()) or [])
+
+    def match_token(self, name: str | None, symbol: str | None) -> list[dict]:
+        """Return candidate project hits from name/symbol."""
+        hits: dict[str, dict] = {}
+        sym = norm_sym(symbol)
+        nam = norm_name(name)
+
+        if sym and sym in self.by_symbol:
+            ambiguous = sym in self.ambiguous or any(c.get("ambiguous") for c in self.by_symbol[sym])
+            for c in self.by_symbol[sym]:
+                key = (c.get("handle") or c.get("project") or "").lower()
+                hits[key] = {
+                    "project": c.get("project"),
+                    "handle": c.get("handle"),
+                    "via": f"symbol:{sym}",
+                    "explicit": bool(c.get("explicit")),
+                    "ambiguous": ambiguous or bool(c.get("ambiguous")),
+                }
+
+        if nam and nam in self.by_name:
+            for c in self.by_name[nam]:
+                key = (c.get("handle") or c.get("project") or "").lower()
+                if key in hits:
+                    hits[key]["via"] += f"+name:{nam}"
+                else:
+                    hits[key] = {
+                        "project": c.get("project"),
+                        "handle": c.get("handle"),
+                        "via": f"name:{nam}",
+                        "explicit": False,
+                        "ambiguous": False,
+                    }
+
+        # soft contains: token name contains project name_norm (min 5 chars)
+        if nam and len(nam) >= 5:
+            for nkey, cands in self.by_name.items():
+                if len(nkey) < 5:
+                    continue
+                if nkey in nam or nam in nkey:
+                    for c in cands:
+                        key = (c.get("handle") or c.get("project") or "").lower()
+                        if key not in hits:
+                            hits[key] = {
+                                "project": c.get("project"),
+                                "handle": c.get("handle"),
+                                "via": f"name_fuzzy:{nkey}",
+                                "explicit": False,
+                                "ambiguous": True,  # fuzzy => treat carefully
+                            }
+        return list(hits.values())
+
+
+def score_match(wallet_hits: list, token_hits: list) -> tuple[str, str, dict | None]:
+    """Return (confidence, reason, best_project_info).
+
+    confirmed = wallet + token agree on same project
+    high      = wallet hit only
+    medium    = non-ambiguous explicit symbol/name hit
+    low       = ambiguous / fuzzy name-only
+    """
+    # index token hits by handle
+    th = {(t.get("handle") or "").lower(): t for t in token_hits}
+    # wallet + token same project
+    for w in wallet_hits:
+        wh = (w.get("handle") or "").lower()
+        if wh and wh in th:
+            return "confirmed", f"wallet+token:{th[wh].get('via')}", {
+                "project": w.get("project") or th[wh].get("project"),
+                "handle": w.get("handle") or th[wh].get("handle"),
+                "wallet_confidence": w.get("confidence"),
+            }
+        # also match by project name
+        for t in token_hits:
+            if (w.get("project") or "").lower() and (w.get("project") or "").lower() == (t.get("project") or "").lower():
+                return "confirmed", f"wallet+token:{t.get('via')}", {
+                    "project": w.get("project"),
+                    "handle": w.get("handle") or t.get("handle"),
+                    "wallet_confidence": w.get("confidence"),
+                }
+
+    if wallet_hits:
+        w = wallet_hits[0]
+        return "high", "wallet_deployer", {
+            "project": w.get("project"),
+            "handle": w.get("handle"),
+            "wallet_confidence": w.get("confidence"),
+        }
+
+    # token only — prefer explicit non-ambiguous
+    good = [t for t in token_hits if t.get("explicit") and not t.get("ambiguous")]
+    if good:
+        t = good[0]
+        return "medium", t.get("via") or "token_meta", {
+            "project": t.get("project"), "handle": t.get("handle"),
+        }
+    ok = [t for t in token_hits if not t.get("ambiguous")]
+    if ok:
+        t = ok[0]
+        return "medium", t.get("via") or "token_meta", {
+            "project": t.get("project"), "handle": t.get("handle"),
+        }
+    if token_hits:
+        t = token_hits[0]
+        return "low", t.get("via") or "token_meta_ambiguous", {
+            "project": t.get("project"), "handle": t.get("handle"),
+        }
+    return "", "", None
+
+
+def extract_pair_tokens(log: dict) -> list[str]:
+    """Extract token addresses from PairCreated / PoolCreated style logs."""
+    addrs = []
+    topics = log.get("topics") or []
+    for t in topics[1:]:
+        a = topic_to_address(t)
+        if a and a.lower() not in BASE_TOKENS:
+            addrs.append(a)
+    data = (log.get("data") or "")[2:]
+    for i in range(0, len(data), 64):
+        word = data[i : i + 64]
+        if len(word) == 64 and word[:24] == "0" * 24:
+            a = "0x" + word[24:]
+            if a.lower() not in BASE_TOKENS and a != "0x" + "0" * 40:
+                addrs.append(a)
+    # dedupe
+    seen = set()
+    out = []
+    for a in addrs:
+        al = a.lower()
+        if al not in seen:
+            seen.add(al)
+            out.append(a)
+    return out
+
+
+
+class FactoryAbiCatalog:
+    """Load factory_abis/*.json and decode PairCreated / PoolCreated / Initialize / TokenCreated logs."""
+
+    def __init__(self):
+        self.by_address: dict[str, dict] = {}  # lower addr -> abi doc
+        self.topic_index: dict[str, list[tuple[str, dict]]] = {}  # topic0 -> [(addr, event)]
+        self.reload()
+
+    def reload(self) -> None:
+        self.by_address = {}
+        self.topic_index = {}
+        if not ABI_DIR.exists():
+            return
+        for path in ABI_DIR.glob("*.json"):
+            try:
+                doc = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            addr = (doc.get("address") or "").lower()
+            if not addr.startswith("0x"):
+                continue
+            self.by_address[addr] = doc
+            for ev in doc.get("events_of_interest") or []:
+                t0 = (ev.get("topic0") or "").lower()
+                if t0.startswith("0x") and len(t0) == 66:
+                    self.topic_index.setdefault(t0, []).append((addr, ev))
+
+    def known_topics(self) -> set[str]:
+        base = {PAIR_CREATED.lower(), POOL_CREATED.lower()}
+        base.update(self.topic_index.keys())
+        return base
+
+    def decode_log(self, factory_addr: str, log: dict) -> dict | None:
+        """Return {event, tokens[], pair_or_pool, raw_args, symbol?, name?} or None."""
+        topics = log.get("topics") or []
+        if not topics:
+            return None
+        t0 = (topics[0] if isinstance(topics[0], str) else "").lower()
+        fac = (factory_addr or "").lower()
+        doc = self.by_address.get(fac) or {}
+        # pick matching event def for this factory
+        ev_def = None
+        for e in doc.get("events_of_interest") or []:
+            if (e.get("topic0") or "").lower() == t0:
+                ev_def = e
+                break
+        if ev_def is None:
+            # fall back to global topic index
+            for addr, e in self.topic_index.get(t0, []):
+                if addr == fac:
+                    ev_def = e
+                    break
+        name = (ev_def or {}).get("name") or ""
+        args_meta = (ev_def or {}).get("args") or []
+        # Decode indexed address topics + non-indexed address words in data
+        decoded: dict = {}
+        tokens: list[str] = []
+        pair_or_pool = None
+        # Map indexed args from topics[1:]
+        topic_i = 1
+        data_hex = (log.get("data") or "0x")[2:]
+        data_words = [data_hex[i:i+64] for i in range(0, len(data_hex), 64) if len(data_hex[i:i+64]) == 64]
+        data_i = 0
+
+        def _addr_from_topic(t: str) -> str | None:
+            return topic_to_address(t)
+
+        def _addr_from_word(w: str) -> str | None:
+            if len(w) == 64 and w[:24] == "0" * 24:
+                a = "0x" + w[24:]
+                if a != "0x" + "0" * 40:
+                    return a
+            return None
+
+        def _uint_from_word(w: str) -> int | None:
+            try:
+                return int(w, 16)
+            except Exception:
+                return None
+
+        for arg in args_meta:
+            at = (arg.get("type") or "").lower()
+            an = arg.get("name") or f"arg{len(decoded)}"
+            indexed = bool(arg.get("indexed"))
+            if indexed:
+                if topic_i >= len(topics):
+                    break
+                raw_t = topics[topic_i]
+                topic_i += 1
+                if at == "address":
+                    a = _addr_from_topic(raw_t)
+                    decoded[an] = a
+                    if a and an.lower() in ("token0", "token1", "currency0", "currency1", "token", "tokenaddress", "memetoken", "memetokenaddress", "meme", "asset", "base", "market"):
+                        tokens.append(a)
+                else:
+                    decoded[an] = raw_t
+            else:
+                if data_i >= len(data_words):
+                    break
+                w = data_words[data_i]
+                data_i += 1
+                if at == "address":
+                    a = _addr_from_word(w)
+                    decoded[an] = a
+                    if a and an.lower() in ("pair", "pool", "token", "tokenaddress", "memetoken", "memetokenaddress", "meme", "asset", "collection", "base", "market"):
+                        if an.lower() in ("pair", "pool"):
+                            pair_or_pool = a
+                        else:
+                            tokens.append(a)
+                elif at.startswith("uint") or at.startswith("int"):
+                    decoded[an] = _uint_from_word(w)
+                else:
+                    decoded[an] = w
+
+        # Heuristic fallback when ABI args missing / incomplete
+        if not tokens and not pair_or_pool:
+            heur = extract_pair_tokens(log)
+            tokens = heur
+        else:
+            # still pull non-base tokens from topics/data if PairCreated-style
+            if t0 == PAIR_CREATED.lower() or name == "PairCreated":
+                # token0/token1 already; pair from data word0
+                if not pair_or_pool and data_words:
+                    pair_or_pool = _addr_from_word(data_words[0])
+            if t0 == POOL_CREATED.lower() or name == "PoolCreated":
+                # pool is last address in data (word1 typically)
+                if not pair_or_pool:
+                    for w in reversed(data_words):
+                        a = _addr_from_word(w)
+                        if a:
+                            pair_or_pool = a
+                            break
+
+        # Filter base tokens from token list (keep as context)
+        filtered = [a for a in tokens if a and a.lower() not in BASE_TOKENS]
+        if not filtered and tokens:
+            # both base? skip
+            filtered = []
+
+        return {
+            "event": name or ("PairCreated" if t0 == PAIR_CREATED.lower() else
+                              "PoolCreated" if t0 == POOL_CREATED.lower() else "Unknown"),
+            "topic0": t0,
+            "tokens": filtered or [a for a in tokens if a],
+            "all_tokens": tokens,
+            "pair_or_pool": pair_or_pool,
+            "args": decoded,
+            "token_name": decoded.get("name") if isinstance(decoded.get("name"), str) else None,
+            "token_symbol": decoded.get("symbol") if isinstance(decoded.get("symbol"), str) else None,
+        }
+
+
+_ABI_CATALOG: FactoryAbiCatalog | None = None
+
+
+def get_abi_catalog() -> FactoryAbiCatalog:
+    global _ABI_CATALOG
+    if _ABI_CATALOG is None:
+        _ABI_CATALOG = FactoryAbiCatalog()
+    return _ABI_CATALOG
+
+
+# Launchpad-like factories worth per-block log scans. Ambient DEX factories
+# (univ2/univ3/hyperswap) are too noisy for 1–3s polling; wallet-deploy path covers them.
+ALERTABLE_FACTORY_IDS = {
+    "nftx_public_gate_rh", "nftx_locker_rh",
+    "launchpad_meme_hyperevm", "launchpad_meme_bonding_hyperevm",
+    "spinup_memelaunchpad", "liquidlaunch_hyperevm",
+    # Quiet / high-signal DEX factories we still decode via ABI when logs appear
+    "univ4_pm_rh",
+    "univ4_pm_eth", "univ4_pm_base",
+    # Meme / agent launchpads (TokenCreated / TokenCreate / NewPersona)
+    "clanker_v4_base", "clanker_v3_1_base", "clanker_v4_eth",
+    "virtuals_agent_factory_base", "virtuals_bonding_base",
+    "fourmeme_tm2_bsc",
+}
+# Event names that warrant evaluating the emitted token even on ambient DEX factories
+HIGH_SIGNAL_EVENTS = {
+    "PairCreated", "PoolCreated", "Initialize", "TokenCreated", "CreateToken",
+    "TokenCreate", "NewPersona",
+    "MemeCreated", "MemeTokenCreated", "Launch", "LaunchCreated", "LaunchFinalized",
+    "TokenCreatedWithCurve", "TokenCreatedAndBought",
+    "CollectionCreated", "Created",
+}
+
+
+class ChainWatcher:
+    def __init__(self, chain: str, cfg: dict, factories: list[dict], matcher: Matcher):
+        self.chain = chain
+        self.cfg = cfg
+        self.pool = RpcPool(chain, list(cfg.get("rpc") or []))
+        self.factories = [f for f in factories if f.get("chain") == chain]
+        self.matcher = matcher
+        self.max_log_range = int(cfg.get("max_log_range") or 1000)
+        self.last_block: int | None = None
+        self._live_factories: list[dict] | None = None
+        self.stats = {
+            "blocks": 0, "creations": 0, "factory_logs": 0,
+            "matches": 0, "rpc_errors": 0, "last_latency_ms": 0,
+        }
+
+    def live_factories(self) -> list[dict]:
+        if self._live_factories is not None:
+            return self._live_factories
+        catalog = get_abi_catalog()
+        # Ambient mainnet UniV2/V3 is too noisy for 1–3s polls; wallet-create path covers them.
+        # Still watch: alertable launchpads, Ink DEX (project-heavy), UniV4 RH Initialize.
+        AMBIENT_OK_CHAINS = {"ink"}
+        TOKEN_CREATE_EVENTS = {
+            "TokenCreated", "CreateToken", "TokenCreate", "NewPersona",
+            "MemeCreated", "MemeTokenCreated",
+            "Launch", "LaunchCreated", "LaunchFinalized",
+            "TokenCreatedWithCurve", "TokenCreatedAndBought",
+            "CollectionCreated", "Created", "NewToken",
+        }
+        live = []
+        for fac in self.factories:
+            addr = fac.get("address")
+            if not addr:
+                continue
+            fid = fac.get("id") or ""
+            doc = catalog.by_address.get(addr.lower()) or {}
+            eoi_names = {e.get("name") for e in (doc.get("events_of_interest") or [])}
+            is_alertable = fid in ALERTABLE_FACTORY_IDS
+            is_token_factory = bool(eoi_names & TOKEN_CREATE_EVENTS)
+            is_ink_dex = fac.get("chain") in AMBIENT_OK_CHAINS and bool(eoi_names & HIGH_SIGNAL_EVENTS)
+            if not (is_alertable or is_token_factory or is_ink_dex):
+                continue
+            if code_bytes(self.pool, addr) > 0:
+                live.append(fac)
+        self._live_factories = live
+        return live
+
+    def head(self) -> int | None:
+        r = self.pool.call("eth_blockNumber", [], timeout=10)
+        result = r.get("result")
+        if result is None or result is False:
+            self.stats["rpc_errors"] += 1
+            return None
+        try:
+            if isinstance(result, int):
+                return result
+            s = str(result).strip()
+            if not s:
+                self.stats["rpc_errors"] += 1
+                return None
+            return int(s, 16) if s.lower().startswith("0x") else int(s)
+        except (TypeError, ValueError):
+            self.stats["rpc_errors"] += 1
+            return None
+
+    def process_block(self, bn: int, seen_addrs: set) -> list[dict]:
+        """Inspect one block for contract creations + factory logs. Return match events."""
+        t0 = time.time()
+        matches = []
+        # full txs to catch contract creations
+        r = self.pool.call("eth_getBlockByNumber", [hex(bn), True], timeout=12)
+        block = r.get("result")
+        if not isinstance(block, dict):
+            self.stats["rpc_errors"] += 1
+            return matches
+
+        txs = block.get("transactions") or []
+        for tx in txs:
+            if not isinstance(tx, dict):
+                continue
+            if tx.get("to") is not None:
+                continue  # not a creation
+            self.stats["creations"] += 1
+            tx_hash = tx.get("hash")
+            sender = tx.get("from")
+            # Fast path: only chase receipt when deployer is a watched wallet.
+            # Ambient creates are noise without a wallet lock (name match still
+            # covered via factory PairCreated/PoolCreated logs below).
+            if not sender or not self.matcher.match_wallet(sender):
+                continue
+            rr = self.pool.call("eth_getTransactionReceipt", [tx_hash], timeout=12)
+            receipt = rr.get("result") or {}
+            contract = receipt.get("contractAddress")
+            if not contract:
+                continue
+            if contract.lower() in seen_addrs:
+                continue
+            seen_addrs.add(contract.lower())
+            ev = self._evaluate(
+                address=contract, deployer=sender, tx_hash=tx_hash, block=bn,
+                via="contract_creation", factory=None,
+            )
+            if ev:
+                matches.append(ev)
+
+        # factory logs every 5th block (launchpads only) — wallet path is every block
+        if self.factories and (bn % 5 == 0):
+            for fac in self.live_factories():
+                addr = fac.get("address")
+                if not addr:
+                    continue
+                # skip placeholder with no code (checked lazily via state)
+                # No topic0 OR-list — public RPCs often hang on it. Pull block logs for
+                # the factory address and filter client-side.
+                filt = {"address": addr, "fromBlock": hex(bn), "toBlock": hex(bn)}
+                lr = self.pool.call("eth_getLogs", [filt], timeout=8)
+                logs = lr.get("result") if isinstance(lr.get("result"), list) else []
+                catalog = get_abi_catalog()
+                known = catalog.known_topics()
+                for log in logs:
+                    topics = log.get("topics") or []
+                    t0x = (topics[0] if topics else "").lower()
+                    fid = fac.get("id") or ""
+                    is_launchpad = fid.startswith(("nftx", "launchpad", "spinup", "liquidlaunch", "clanker", "fourmeme", "virtuals"))
+                    if t0x not in known and not is_launchpad:
+                        continue
+                    self.stats["factory_logs"] += 1
+                    decoded = catalog.decode_log(addr, log)
+                    if decoded:
+                        tokens = list(decoded.get("tokens") or [])
+                        event_name = decoded.get("event") or ""
+                        event_sym = decoded.get("token_symbol")
+                        event_name_str = decoded.get("token_name")
+                    else:
+                        tokens = extract_pair_tokens(log)
+                        event_name = "raw"
+                        event_sym = event_name_str = None
+                    # also get tx.from as potential deployer of the pool (not token)
+                    tx_hash = log.get("transactionHash")
+                    deployer = None
+                    if tx_hash:
+                        tr = self.pool.call("eth_getTransactionByHash", [tx_hash], timeout=12)
+                        deployer = (tr.get("result") or {}).get("from")
+                    # Prefer event-emitted token addresses; skip pure base-pair noise
+                    cand = [t for t in tokens if t and t.lower() not in BASE_TOKENS][:4]
+                    if not cand and is_launchpad:
+                        cand = tokens[:4]
+                    for tok in cand:
+                        if tok.lower() in seen_addrs:
+                            continue
+                        seen_addrs.add(tok.lower())
+                        ev = self._evaluate(
+                            address=tok, deployer=deployer, tx_hash=tx_hash, block=bn,
+                            via=f"factory:{fid}:{event_name}", factory=addr,
+                            event_symbol=event_sym, event_token_name=event_name_str,
+                        )
+                        if ev:
+                            matches.append(ev)
+
+        self.stats["last_latency_ms"] = int((time.time() - t0) * 1000)
+        self.stats["blocks"] += 1
+        return matches
+
+    def _evaluate(self, *, address, deployer, tx_hash, block, via, factory,
+                   event_symbol=None, event_token_name=None) -> dict | None:
+        wallet_hits = []
+        if deployer:
+            wallet_hits = self.matcher.match_wallet(deployer)
+        # also: if the contract itself is a watched wallet? skip
+        meta = {"name": event_token_name, "symbol": event_symbol}
+        nbytes = code_bytes(self.pool, address)
+        # Prefer on-chain ERC20 name()/symbol(); fall back to event-decoded strings
+        if nbytes > 0:
+            onchain = erc20_meta(self.pool, address)
+            meta = {
+                "name": onchain.get("name") or event_token_name,
+                "symbol": onchain.get("symbol") or event_symbol,
+            }
+        token_hits = self.matcher.match_token(meta.get("name"), meta.get("symbol"))
+
+        # If no wallet and no token hit, drop (ambient noise)
+        if not wallet_hits and not token_hits:
+            return None
+
+        conf, reason, proj = score_match(wallet_hits, token_hits)
+        if not conf or not proj:
+            return None
+        # Already 已开盘 / pruned — never emit ONCHAIN_LOCK or user relay
+        if hkey(proj.get("handle")) in getattr(self.matcher, "blocked_handles", set()):
+            self.stats["skipped_launched"] = self.stats.get("skipped_launched", 0) + 1
+            return None
+
+        self.stats["matches"] += 1
+        ev = {
+            "type": "ONCHAIN_LOCK",
+            "confidence": conf,
+            "reason": reason,
+            "project": proj.get("project"),
+            "handle": proj.get("handle"),
+            "address": address,
+            "deployer": deployer,
+            "chain": self.chain,
+            "tx": tx_hash,
+            "block": block,
+            "via": via,
+            "factory": factory,
+            "token_name": meta.get("name"),
+            "token_symbol": meta.get("symbol"),
+            "code_bytes": nbytes,
+            "wallet_hits": wallet_hits[:3],
+            "token_hits": token_hits[:3],
+            "source": "onchain_lock",
+            "at": now_iso(),
+        }
+        # Pre-alert gate: token already trading for hours (e.g. new pool on an old
+        # token) is 已开盘, not a new launch — log + auto-launch, no ONCHAIN_LOCK relay.
+        try:
+            from trading_check import check_trading
+            tr = check_trading(address, self.chain)
+            if tr.get("launched_old"):
+                # Only attribute an old trading token to the project when the deployer is the
+                # project's wallet OR DexScreener socials point at the project's X handle.
+                # A fuzzy name/symbol hit on an old token (e.g. dEURO vs @decentstreet) is noise.
+                own = bool(wallet_hits) or _dex_socials_match(address, proj.get("handle"))
+                if not own:
+                    self.stats["skipped_old_unrelated"] = self.stats.get("skipped_old_unrelated", 0) + 1
+                    return None
+                ev["type"] = "CA_ALREADY_TRADING"
+                ev["trading"] = {k: tr.get(k) for k in ("first_pair_at", "age_hours",
+                                 "liquidity_usd", "volume_h24", "dex_url", "chain")}
+                with (BASE / "onchain_already_trading.jsonl").open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+                from mark_launched_from_ca import force_launch
+                force_launch(handle=proj.get("handle"), project=proj.get("project"), ca=address,
+                             ca_chain=tr.get("chain") or self.chain, reason="already_trading",
+                             evidence=f"onchain match but token trading since {tr.get('first_pair_at')}",
+                             evidence_url=tr.get("dex_url"))
+                self.matcher.reload()
+                self.stats["skipped_trading"] = self.stats.get("skipped_trading", 0) + 1
+                return None
+        except Exception as _e:
+            ev["trading_gate_error"] = str(_e)[:120]
+        # HARD CA GATE: token CA → ONCHAIN_LOCK; NFT contract match → nft_mint_live 已开盘
+        try:
+            from ca_gate import verify_address
+            _v = verify_address(address, self.chain)
+            if _v.get("kind") == "nft":
+                # Project-matched NFT contract with bytecode = mint has started
+                from mark_launched_from_ca import force_launch
+                force_launch(
+                    handle=proj.get("handle"), project=proj.get("project"),
+                    ca=address, ca_chain=self.chain, reason="nft_mint_live",
+                    evidence=(f"onchain NFT contract matched ({_v.get('note')}); "
+                              f"auto-moved to 已开盘 as nft_mint_live"),
+                    evidence_url=None,
+                )
+                self.matcher.reload()
+                self.stats["nft_mint_live"] = self.stats.get("nft_mint_live", 0) + 1
+                ev["type"] = "NFT_MINT_LIVE"
+                ev["launched_reason"] = "nft_mint_live"
+                with (BASE / "onchain_nft_mint_live.jsonl").open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+                return None
+            if not _v.get("is_token"):
+                self.stats["skipped_not_token"] = self.stats.get("skipped_not_token", 0) + 1
+                ev["type"] = "ONCHAIN_NON_TOKEN"
+                ev["gate_note"] = _v.get("note")
+                with (BASE / "onchain_non_token.jsonl").open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+                return None
+        except Exception as _e:
+            ev["ca_gate_error"] = str(_e)[:120]
+            return None
+        append_alert(ev)
+        return ev
+
+
+
+def _dex_socials_match(address: str, handle: str | None) -> bool:
+    """True when any DexScreener pair for address lists x.com/<handle> in socials."""
+    import re as _re
+    import urllib.request as _ur
+    h = (handle or "").lstrip("@").lower()
+    if not h:
+        return False
+    try:
+        req = _ur.Request(f"https://api.dexscreener.com/latest/dex/tokens/{address}",
+                          headers={"User-Agent": "PadHunter/1.0"})
+        with _ur.urlopen(req, timeout=10) as r:
+            pairs = json.loads(r.read().decode("utf-8", "replace")).get("pairs") or []
+    except Exception:
+        return False
+    for pr in pairs:
+        for so in ((pr.get("info") or {}).get("socials") or []):
+            u = (so.get("url") or so.get("handle") or "").lower()
+            if _re.search(r"(x|twitter)\.com/" + _re.escape(h) + r"(/|$|\?)", u) or u.lstrip("@") == h:
+                return True
+    return False
+
+def load_active_setup(chains_filter: list[str] | None = None):
+    fac = load_json(FACTORIES, {})
+    chains_cfg = fac.get("chains") or {}
+    factories = fac.get("factories") or []
+    global POOL_CREATED, PAIR_CREATED
+    topics = fac.get("event_topics") or {}
+    if topics.get("PoolCreated_univ3"):
+        POOL_CREATED = topics["PoolCreated_univ3"]
+    if topics.get("PairCreated_univ2"):
+        PAIR_CREATED = topics["PairCreated_univ2"]
+
+    # which chains appear in watchlist
+    wl = load_json(WATCHLIST, {})
+    needed = set()
+    for p in wl.get("projects") or []:
+        ch = (p.get("chain") or "").lower()
+        for key, cid in (
+            ("eth", "ethereum"), ("base", "base"), ("bsc", "bsc"), ("bnb", "bsc"),
+            ("robinhood", "robinhood"), ("hyper", "hyperevm"), ("ink", "ink"),
+        ):
+            if key in ch:
+                needed.add(cid)
+        for ic in p.get("inferred_chains") or []:
+            if ic and ic != "unknown":
+                needed.add(ic)
+    # always include chains that have factories wired
+    for f in factories:
+        if f.get("chain"):
+            needed.add(f["chain"])
+    # always try the default set that have RPCs
+    wanted = [c for c in ACTIVE_CHAINS_DEFAULT if c in chains_cfg and (chains_cfg[c].get("rpc"))]
+    if chains_filter:
+        wanted = [c for c in wanted if c in chains_filter]
+    # prefer needed first but keep all with RPC
+    wanted = sorted(set(wanted), key=lambda c: (0 if c in needed else 1, c))
+    return chains_cfg, factories, wanted
+
+
+def write_status(watchers: list[ChainWatcher], extra: dict | None = None) -> None:
+    doc = {
+        "updated_at": now_iso(),
+        "pid": os.getpid(),
+        "chains": {
+            w.chain: {
+                "last_block": w.last_block,
+                "stats": w.stats,
+                "rpc": (w.pool.urls[0] if w.pool.urls else None),
+                "factories": len(w.factories),
+                "last_error": w.pool.last_error,
+            }
+            for w in watchers
+        },
+    }
+    if extra:
+        doc.update(extra)
+    save_json(STATUS, doc)
+
+
+def run_daemon(interval: float, rebuild_ca: bool, max_catchup: int) -> None:
+    matcher = Matcher()
+    chains_cfg, factories, wanted = load_active_setup()
+    watchers = [ChainWatcher(c, chains_cfg[c], factories, matcher) for c in wanted if c in chains_cfg]
+    state = load_json(STATE, {"chains": {}})
+    catalog = get_abi_catalog()
+    print(
+        f"[onchain_lock] start pid={os.getpid()} chains={','.join(w.chain for w in watchers)} "
+        f"interval={interval}s wallets={matcher.wallets.get('wallet_count')} "
+        f"token_projects={matcher.tokens.get('project_count')} "
+        f"factory_abis={len(catalog.by_address)} topics={len(catalog.topic_index)} at={now_iso()}",
+        flush=True,
+    )
+
+    # init last_block
+    for w in watchers:
+        st = (state.get("chains") or {}).get(w.chain) or {}
+        head = w.head()
+        if head is None:
+            print(f"[onchain_lock] {w.chain}: no head yet ({w.pool.last_error})", flush=True)
+            continue
+        prev = st.get("last_block")
+        if isinstance(prev, int) and prev > 0 and prev <= head:
+            w.last_block = prev
+        else:
+            # start from tip (don't backfill hours of ambient noise on first run)
+            w.last_block = head
+        print(f"[onchain_lock] {w.chain}: head={head} resume_from={w.last_block}", flush=True)
+
+    last_reload = time.time()
+    last_ca_build = 0.0
+    seen_addrs: set = set((state.get("seen_addrs") or [])[-5000:])  # bound memory
+    seen_lock = threading.Lock()
+    write_status(watchers, {"phase": "running"})
+
+    while True:
+        loop_t0 = time.time()
+        any_match = False
+        match_prints: list[dict] = []
+
+        def _tick(w: ChainWatcher):
+            local_matches = []
+            try:
+                head = w.head()
+                if head is None or w.last_block is None:
+                    return local_matches
+                if head <= w.last_block:
+                    return local_matches
+                behind = head - w.last_block
+                if behind > max(max_catchup * 5, 30):
+                    print(f"[onchain_lock] {w.chain}: behind={behind} -> skip to tip-1", flush=True)
+                    w.last_block = head - 1
+                start = w.last_block + 1
+                end = min(head, w.last_block + max_catchup)
+                # per-watcher seen set to avoid cross-thread mutation races on the shared set
+                local_seen = set()
+                for bn in range(start, end + 1):
+                    local_matches.extend(w.process_block(bn, local_seen))
+                    w.last_block = bn
+                with seen_lock:
+                    seen_addrs.update(local_seen)
+                state.setdefault("chains", {})[w.chain] = {
+                    "last_block": w.last_block,
+                    "updated_at": now_iso(),
+                }
+            except Exception as e:
+                w.stats["rpc_errors"] += 1
+                print(f"[onchain_lock] {w.chain} error: {e}", flush=True)
+                traceback.print_exc()
+            return local_matches
+
+        with ThreadPoolExecutor(max_workers=max(1, len(watchers))) as ex:
+            futs = [ex.submit(_tick, w) for w in watchers]
+            for fut in as_completed(futs):
+                for m in fut.result() or []:
+                    any_match = True
+                    match_prints.append(m)
+        for m in match_prints:
+            print(
+                f"LOCK {m['confidence']} {m['chain']} {m.get('project')} "
+                f"ca={m['address']} deployer={m.get('deployer')} "
+                f"sym={m.get('token_symbol')} via={m.get('via')} reason={m.get('reason')}",
+                flush=True,
+            )
+
+        state["seen_addrs"] = list(seen_addrs)[-5000:]
+        state["updated_at"] = now_iso()
+        save_json(STATE, state)
+        write_status(watchers, {
+            "phase": "running",
+            "wallet_count": matcher.wallets.get("wallet_count"),
+            "token_projects": matcher.tokens.get("project_count"),
+            "loop_ms": int((time.time() - loop_t0) * 1000),
+        })
+
+        if any_match and rebuild_ca and (time.time() - last_ca_build) > 5:
+            try:
+                subprocess.check_call(
+                    [sys.executable, str(BASE / "build_ca_finds.py")],
+                    cwd=str(BASE),
+                    timeout=60,
+                )
+                last_ca_build = time.time()
+                print("[onchain_lock] rebuilt ca_finds.json", flush=True)
+                # Soft-move radar handles with locked CAs into 已开盘, then push Pages.
+                try:
+                    subprocess.run(
+                        [sys.executable, str(BASE / "mark_launched_from_ca.py"), "--publish"],
+                        cwd=str(BASE),
+                        timeout=90,
+                        check=False,
+                    )
+                except Exception as e:
+                    print(f"[onchain_lock] mark_launched_from_ca soft-fail: {e}", flush=True)
+                try:
+                    subprocess.run(
+                        [sys.executable, str(BASE / "publish_ca_finds_pages.py")],
+                        cwd=str(BASE),
+                        timeout=90,
+                        check=False,
+                    )
+                except Exception as e:
+                    print(f"[onchain_lock] publish_ca_finds soft-fail: {e}", flush=True)
+            except Exception as e:
+                print(f"[onchain_lock] ca_finds rebuild failed: {e}", flush=True)
+
+        # reload watchlists + factory ABIs every 60s
+        if time.time() - last_reload > 60:
+            matcher.reload()
+            get_abi_catalog().reload()
+            last_reload = time.time()
+
+        elapsed = time.time() - loop_t0
+        time.sleep(max(0.2, interval - elapsed))
+
+
+def backtest() -> int:
+    """Prove matching against known ca_finds wallets/contracts."""
+    matcher = Matcher()
+    cf = load_json(BASE / "ca_finds.json", {})
+    chains_cfg, _factories, wanted = load_active_setup()
+    print(f"BACKTEST wallets_loaded={matcher.wallets.get('wallet_count')} "
+          f"token_projects={matcher.tokens.get('project_count')} chains={wanted}")
+    results = []
+    for f in cf.get("finds") or []:
+        addr = f.get("address")
+        if not addr or not addr.lower().startswith("0x") or len(addr) != 42:
+            continue
+        project = f.get("project")
+        handle = f.get("handle")
+        chain = f.get("chain") if f.get("chain") not in ("evm", "solana", None) else None
+        # pick a pool
+        pool_chain = chain if chain in chains_cfg and (chains_cfg[chain].get("rpc")) else None
+        if not pool_chain:
+            # try ethereum then others
+            for c in wanted:
+                pool_chain = c
+                break
+        if not pool_chain:
+            continue
+        pool = RpcPool(pool_chain, list(chains_cfg[pool_chain].get("rpc") or []))
+        nbytes = code_bytes(pool, addr)
+        meta = erc20_meta(pool, addr) if nbytes > 0 else {"name": None, "symbol": None}
+        wallet_as_self = matcher.match_wallet(addr)
+        token_hits = matcher.match_token(meta.get("name"), meta.get("symbol"))
+        # Also check: if this find is a wallet, it should be IN the wallet watchlist
+        in_wl = bool(wallet_as_self)
+        conf, reason, proj = score_match(
+            wallet_as_self if f.get("kind") == "wallet" else [],
+            token_hits,
+        )
+        # For known wallets: success = present in wallet watchlist under same project
+        ok_wallet = False
+        if f.get("kind") == "wallet":
+            ok_wallet = any(
+                (h.get("handle") or "").lower() == (handle or "").lower()
+                or (h.get("project") or "").lower() == (project or "").lower()
+                for h in wallet_as_self
+            )
+        ok_token = bool(proj and (
+            (proj.get("handle") or "").lower() == (handle or "").lower()
+            or (proj.get("project") or "").lower() == (project or "").lower()
+        ))
+        row = {
+            "project": project,
+            "handle": handle,
+            "address": addr,
+            "kind": f.get("kind"),
+            "chain_tried": pool_chain,
+            "code_bytes": nbytes,
+            "token_name": meta.get("name"),
+            "token_symbol": meta.get("symbol"),
+            "in_wallet_watchlist": in_wl,
+            "ok_wallet_assoc": ok_wallet,
+            "token_match_conf": conf,
+            "token_match_reason": reason,
+            "token_match_project": (proj or {}).get("project") if proj else None,
+            "ok_token_assoc": ok_token,
+        }
+        results.append(row)
+        flag = []
+        if ok_wallet:
+            flag.append("WALLET_WL_OK")
+        if ok_token:
+            flag.append(f"TOKEN_OK:{conf}")
+        if not flag:
+            flag.append("no_direct_match")
+        print(
+            f"  {project}: kind={f.get('kind')} code={nbytes} "
+            f"name={meta.get('name')!r} sym={meta.get('symbol')!r} -> {','.join(flag)}"
+        )
+
+    # Summary focused on Master Studios / Ink Daddy / HappyBlock
+    focus = {"Master Studios", "Ink Daddy", "HappyBlock", "Ink Pirates", "Timecard", "Superboard"}
+    print("--- focus ---")
+    for r in results:
+        if r["project"] in focus:
+            print(json.dumps(r, ensure_ascii=False))
+    out = BASE / "onchain_lock_backtest.json"
+    save_json(out, {"at": now_iso(), "results": results})
+    print(f"wrote {out}")
+    return 0
+
+
+def status_cmd() -> int:
+    st = load_json(STATUS, {})
+    print(json.dumps(st, ensure_ascii=False, indent=2))
+    return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Pad Hunter on-chain lock daemon")
+    ap.add_argument("--daemon", action="store_true", help="run forever")
+    ap.add_argument("--interval", type=float, default=float(os.environ.get("ONCHAIN_LOCK_INTERVAL", "2")),
+                    help="poll interval seconds (default 2)")
+    ap.add_argument("--max-catchup", type=int, default=4, help="max blocks per chain per loop")
+    ap.add_argument("--no-rebuild-ca", action="store_true")
+    ap.add_argument("--backtest", action="store_true")
+    ap.add_argument("--status", action="store_true")
+    ap.add_argument("--once", action="store_true", help="process new blocks once then exit")
+    args = ap.parse_args()
+
+    if args.status:
+        return status_cmd()
+    if args.backtest:
+        return backtest()
+    if args.daemon or args.once:
+        if args.once:
+            # single iteration variant
+            matcher = Matcher()
+            chains_cfg, factories, wanted = load_active_setup()
+            watchers = [ChainWatcher(c, chains_cfg[c], factories, matcher) for c in wanted]
+            state = load_json(STATE, {"chains": {}})
+            seen = set(state.get("seen_addrs") or [])
+            for w in watchers:
+                head = w.head()
+                if head is None:
+                    print(f"{w.chain}: no head")
+                    continue
+                prev = ((state.get("chains") or {}).get(w.chain) or {}).get("last_block")
+                w.last_block = prev if isinstance(prev, int) else head - 1
+                start = w.last_block + 1
+                end = min(head, w.last_block + args.max_catchup)
+                print(f"{w.chain}: processing {start}..{end} (head={head})")
+                for bn in range(start, end + 1):
+                    matches = w.process_block(bn, seen)
+                    w.last_block = bn
+                    for m in matches:
+                        print("LOCK", m.get("confidence"), m.get("project"), m.get("address"))
+                state.setdefault("chains", {})[w.chain] = {"last_block": w.last_block, "updated_at": now_iso()}
+            state["seen_addrs"] = list(seen)[-5000:]
+            state["updated_at"] = now_iso()
+            save_json(STATE, state)
+            write_status(watchers, {"phase": "once"})
+            return 0
+        run_daemon(args.interval, not args.no_rebuild_ca, args.max_catchup)
+        return 0
+    ap.print_help()
+    return 1
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print("interrupted", flush=True)
+        raise SystemExit(0)

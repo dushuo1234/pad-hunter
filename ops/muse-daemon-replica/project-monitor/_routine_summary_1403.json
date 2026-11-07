@@ -1,0 +1,161 @@
+{
+  "at": "2026-10-27T14:34:07+08:00",
+  "fired": "2026-10-27T06:03Z approx",
+  "pause": false,
+  "watchlist_before": 301,
+  "watchlist_after": 300,
+  "newly_locked": [],
+  "pruned": [
+    "MainstreetCX"
+  ],
+  "pipeline_exit": 0,
+  "elapsed_sec": 1239,
+  "approx_runtime_min": 20.6,
+  "new_js_ca": 0,
+  "js_matches": 0,
+  "site_js_change": 7,
+  "site_js_ambient": true,
+  "site_js_notes": "CircuitPay/Listen/Shielded-NakaPunks/Sojo/TapeFoundry×2/paperbird near_deploys=8 ambient-ish",
+  "new_ca": 0,
+  "new_deploys": "ambient_univ2_samples=28; none watchlist-relevant",
+  "onchain_lock_new": 4,
+  "onchain_lock_offset": 146758,
+  "onchain_lock_alerts": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Bad Place",
+      "handle": "badplace_",
+      "address": "0x3cffded2b23f39eb54bbc93d52ba3581b465ffff",
+      "chain": "bsc",
+      "reason": "symbol:BNB",
+      "confidence": "low",
+      "token_name": "一起BNB",
+      "token_symbol": "一起BNB",
+      "ambiguous": true,
+      "wallet_hits": 0,
+      "at": "2026-10-27T13:59:30+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Shift",
+      "handle": null,
+      "address": "0x098104298ad3e6cec5775243d021a4749665ffff",
+      "chain": "bsc",
+      "reason": "name_fuzzy:shift",
+      "confidence": "low",
+      "token_name": "Mine Shift",
+      "token_symbol": "Mine Shift",
+      "ambiguous": true,
+      "wallet_hits": 0,
+      "at": "2026-10-27T14:03:56+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Lumina Engine",
+      "handle": "LuminaEngine",
+      "address": "0xcacb918977d9f5356f0d6ae46bc360bb91f5df71",
+      "chain": "ethereum",
+      "reason": "symbol:LUMINA",
+      "confidence": "medium",
+      "token_name": "The Glow Nendroid",
+      "token_symbol": "LUMINA",
+      "ambiguous": false,
+      "wallet_hits": 0,
+      "at": "2026-10-27T14:09:58+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Asend.",
+      "handle": null,
+      "address": "0x8704eae7c562fab531135e22bb55033c02ec8fc9",
+      "chain": "base",
+      "reason": "symbol:ASEND",
+      "confidence": "medium",
+      "token_name": "ASEND",
+      "token_symbol": "ASEND",
+      "ambiguous": false,
+      "wallet_hits": 0,
+      "at": "2026-10-27T14:14:52+08:00"
+    }
+  ],
+  "newly_launched": [
+    {
+      "name": "Mainstreet Collective",
+      "handle": "MainstreetCX",
+      "chain": "solana",
+      "CA": "4hTexhP21Mj7MXAGc9aW1FvBM1vGhu2bSMcyhhW6pump",
+      "evidence": "already trading since 2026-10-27T07:00:26+08:00 (vol24 ~$99.5k) → 已开盘",
+      "source": "dexscreener/already_trading"
+    }
+  ],
+  "launched_total": 82,
+  "workbench_count": 71,
+  "listing_at_changes_published": [
+    {
+      "project": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "old": null,
+      "new": "2026-10-28T01:12:39+08:00",
+      "within_next_3_days": true,
+      "source": "x",
+      "raw": "$INK Daddy mint in 24 hours on OpenSea",
+      "evidence_url": "https://x.com/InkDaddynft/status/2114767173256094135",
+      "confidence": "medium"
+    }
+  ],
+  "x_refresh": {
+    "at": "2026-10-27T14:07:36+08:00",
+    "bios": 90,
+    "posts_handles": 4,
+    "posts_added_via_ingest": 37,
+    "pkc_bio_empty": true,
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "users": 437,
+    "note": "PKC bio empty; sticky launch-this-week; InkDaddy bio: october 27 on OpenSea"
+  },
+  "pkc_bio_empty": true,
+  "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+  "TRACE_CA": 4,
+  "TRACE_CA_note": "Hashgentic non-token CREATE contracts only",
+  "publish": [
+    {
+      "local": "launched.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: launched (MainstreetCX→已开盘)"
+    },
+    {
+      "local": "candidates.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: candidates (listing_at InkDaddy + prune)"
+    },
+    {
+      "local": "projects.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: projects refresh"
+    },
+    {
+      "local": "ca_finds.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: ca_finds refresh (onchain_lock)"
+    },
+    {
+      "local": "monitor_events.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: monitor_events"
+    },
+    {
+      "local": "listing_times.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: listing_times (InkDaddy mint+24h)"
+    }
+  ],
+  "actionable": true,
+  "user_ping": true,
+  "ping_text": "Mainstreet Collective @MainstreetCX 已开盘：Solana CA 4hTexhP21Mj7MXAGc9aW1FvBM1vGhu2bSMcyhhW6pump，证据 already trading 约7小时 vol24≈$9.95万（DexScreener）。另：Lumina Engine@LuminaEngine ethereum ONCHAIN_LOCK medium（symbol:LUMINA 0xcacb…df71，无钱包命中）；Asend.@AsendNow base ONCHAIN_LOCK medium（symbol:ASEND 0x8704…8fc9）；Ink Daddy 官推「24h后 OpenSea mint」listing_at→2026-10-28 01:12+8。"
+}

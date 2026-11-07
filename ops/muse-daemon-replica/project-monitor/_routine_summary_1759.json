@@ -1,0 +1,129 @@
+{
+  "routine": "开盘与CA预警",
+  "hhmm": "1759",
+  "at": "2026-10-30T18:30:04+08:00",
+  "timezone": "Asia/Shanghai",
+  "fired_at_utc": "2026-10-30T09:58:24Z",
+  "status": "ok",
+  "pause": "absent",
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "watchlist": {
+    "before": 430,
+    "after": 430,
+    "after_pipeline": 430,
+    "added": [],
+    "updated_meta": 3,
+    "npa_skipped": 43,
+    "kol_skipped": 1,
+    "incomplete": 179
+  },
+  "x_refresh": {
+    "mode": "6551",
+    "reason": "X daily read limit 1000 reached; used workbench_soon_x_fetch fetch-6551",
+    "reset_hint": "resets 2026-10-31T00:00Z / 2026-10-31 08:00 Asia/Shanghai",
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "CaravanRH",
+      "RealHappyBlock",
+      "OrpheusHL",
+      "Kaspaseal",
+      "Bunnypadfun",
+      "Foxoraxyz",
+      "LebrelAI",
+      "Glwadotfun",
+      "bopzopapp",
+      "Huemans_rh",
+      "tapeupio",
+      "Inktrons404",
+      "Graildotfamily",
+      "hashgentic"
+    ],
+    "posts_counts": {
+      "PrivateKeyCoin_": 4,
+      "CaravanRH": 11,
+      "RealHappyBlock": 20,
+      "OrpheusHL": 37,
+      "Kaspaseal": 8,
+      "Bunnypadfun": 14,
+      "Foxoraxyz": 13,
+      "LebrelAI": 14,
+      "Glwadotfun": 5,
+      "bopzopapp": 8,
+      "Huemans_rh": 7,
+      "tapeupio": 10,
+      "Inktrons404": 18,
+      "Graildotfamily": 30,
+      "hashgentic": 12
+    },
+    "not_found_this_fetch": [
+      "Huemans_rh",
+      "hashgentic"
+    ],
+    "ingest_note": "ingest_x_posts +6",
+    "user_count": 776,
+    "pkc_bio_snip": "(empty)"
+  },
+  "pipeline": {
+    "exit": 0,
+    "elapsed_s": 1595,
+    "elapsed_m": 26.6,
+    "trace_wallet": "timeout600 killed rc=124",
+    "onchain": "factories_live=27/28 with_recent_logs=14 new_hints=30",
+    "js": "new_js_ca=1 matches=0 site_changes=11",
+    "new_ca": 0,
+    "new_js_ca_scan": 1,
+    "prune_newly_removed": 0,
+    "mark_launched_newly": 0,
+    "ca_finds": 275
+  },
+  "onchain_lock_new": [],
+  "onchain_lock": {
+    "baseline_offset": 295,
+    "offset_at_finish": 295,
+    "alerts_lines": 295,
+    "new_alerts": 0,
+    "note": "no new ONCHAIN_LOCK since baseline; prior NY Token Exchange low/ambiguous already at offset before run"
+  },
+  "listing_at_published": [],
+  "listing_scan_snapshot": {
+    "checked_at": "2026-10-30 18:20:16 Asia/Shanghai",
+    "new_cas_n": 0,
+    "new_signals_n": 0,
+    "daemon_checked_at": "2026-10-30T18:20:16+08:00"
+  },
+  "prune": {
+    "removed": [],
+    "workbench_changed": true,
+    "pages_board_changed": false
+  },
+  "pages_published": {
+    "monitor_events": true,
+    "workbench_board_changed": false,
+    "listing_times_republish": "daemon cycle only; no listing_at delta this run"
+  },
+  "actionable": [],
+  "skipped_notes": {
+    "NEW_JS_CA_Frostlings": "re-detect FROST 0x990e…8888 robinhood (already in ca_finds_before conf=medium; status=改赠送NFT；ca_locked=false) — not brand-new",
+    "listing_NEW_CA_Nomio": "Nomio 0x48b5…6b40 already on watchlist+ca_finds_before; listing_scan fingerprint bump only",
+    "NEW_DEPLOY": "ambient univ2 samples only; none watchlist-relevant",
+    "SITE_JS_CHANGE": "11 changes; near_deploys ambient; Frostlings addrs 0→1 already-known CA",
+    "x_ca": "etheriisprotoco ETHRS + reapoxyz REAPO already known sticky",
+    "ONCHAIN_LOCK": "no new lines since offset 295 (prior NY Token Exchange low/ambiguous already consumed before this run)"
+  },
+  "errors_hangs": [
+    "trace_wallet_ca.py timeout 600s → killed rc=124 (hung on deep-trace; continued prune/mark/build_ca_finds)",
+    "build_ca_finds slow ~7m on robinhood eth_getLogs (completed)"
+  ],
+  "rpc_issues": [
+    "bsc: rpc_errors=814 last_error_snip={'code': -32001, 'message': \"You've reached the usage limit for your current pla",
+    "ethereum: rpc_errors=250 last_error_snip={'code': -32001, 'message': \"You've reached the usage limit for your current pla",
+    "hyperevm: rpc_errors=2015 last_error_snip={'code': -32005, 'message': 'rate limited'}",
+    "ink: rpc_errors=1990 last_error_snip={'message': 'Temporary internal error. Please retry, trace-id: 5a0634986eaea6ca8",
+    "robinhood: rpc_errors=569 last_error_snip=Command '['curl', '-sS', '--max-time', '8', '-X', 'POST', 'https://rpc.mainnet.c"
+  ],
+  "recommendation": "quiet",
+  "user_ping": false
+}

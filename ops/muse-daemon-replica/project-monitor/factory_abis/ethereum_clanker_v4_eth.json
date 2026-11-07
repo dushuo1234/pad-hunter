@@ -1,0 +1,201 @@
+{
+  "id": "clanker_v4_eth",
+  "address": "0x6C8599779B03B00AAaE63C6378830919Abb75473",
+  "chain": "ethereum",
+  "name": "Clanker v4 Token Factory (ETH)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "TokenCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "msgSender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "tokenAdmin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tokenImage",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenSymbol",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenMetadata",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "tokenContext",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "startingTick",
+          "type": "int24"
+        },
+        {
+          "indexed": false,
+          "name": "poolHook",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "poolId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "pairedToken",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "locker",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "mevModule",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "extensionsSupply",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "extensions",
+          "type": "address[]"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "TokenCreated",
+      "signature": "TokenCreated(address,address,address,string,string,string,string,string,int24,address,bytes32,address,address,address,uint256,address[])",
+      "topic0": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67",
+      "args": [
+        {
+          "name": "msgSender",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "tokenAdmin",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "tokenImage",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "tokenMetadata",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "tokenContext",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "startingTick",
+          "type": "int24",
+          "indexed": false
+        },
+        {
+          "name": "poolHook",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "poolId",
+          "type": "bytes32",
+          "indexed": false
+        },
+        {
+          "name": "pairedToken",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "locker",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "mevModule",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "extensionsSupply",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://etherscan.io/address/0x6C8599779B03B00AAaE63C6378830919Abb75473",
+  "explorer_api_used": null,
+  "source_note": "Clanker meme/token launches on Ethereum mainnet.",
+  "meta": {
+    "proxy_implementation": null,
+    "verified_how": null,
+    "note": null
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "docs_plus_topic0"
+}

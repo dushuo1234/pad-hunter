@@ -1,0 +1,203 @@
+{
+  "tag": "0757",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T08:39:21+08:00",
+  "fired_approx": "2026-10-28 07:57 Asia/Shanghai",
+  "pause_file": "absent",
+  "listing_daemon": {
+    "pid": 3446519,
+    "status": "running"
+  },
+  "onchain_lock_daemon": {
+    "pid": 889131,
+    "status": "running"
+  },
+  "pipeline": {
+    "command": "bash /workspace/project-monitor/run_listing_onchain_js.sh",
+    "exit": 0,
+    "started": "2026-10-28T08:01:03+08:00",
+    "elapsed_s": 2138,
+    "elapsed_min": 35.6,
+    "log": "/tmp/routine_0757_pipeline.log",
+    "summary": "extract_listing_times+scan_x_progress+extract_x_ca ok (locked ETHERIIS CA already known); scan_onchain NEW_DEPLOY ambient UniV2 only; scan_js new_js_ca=0 matches=0 site_js=15(addrs mostly noise); trace TRACE_CA=4 Hashgentic NFT/non-token noise (~26min RPC-slow); sol harvest=3 hits=0; prune newly_removed=0; mark newly=0; ca_finds=77; publish_monitor_events ok"
+  },
+  "watchlist_sync": {
+    "before": 311,
+    "after_sync": 312,
+    "after_pipeline": 312,
+    "locked_new_count": 1,
+    "locked_new": [
+      {
+        "name": "Oxus Trail",
+        "handle": "Oxustrail",
+        "chain": "未知",
+        "status": "即将启动",
+        "listing": "未开盘",
+        "locked_at": "2026-10-28T08:00:19+08:00"
+      }
+    ],
+    "updated_fields": 118,
+    "blocklist_skipped": 0,
+    "bak": "/workspace/project-monitor/watchlist.json.bak.pre_routine_resync_0757"
+  },
+  "X_refresh": {
+    "at": "2026-10-28T08:02:22+08:00",
+    "status": "ok",
+    "brief": "quota reset; refreshed ~60 priority bios + posts for PKC/RustLings/TerraGenesis/Caravan/PlayFarmFi/Oxustrail/InkDaddy; PlayFarmFi bio now has CA LIVE on Robinhood",
+    "probe": "get_users_by_usernames PrivateKeyCoin_ ok",
+    "resets": "2026-10-29T00:00:00Z / 08:00 Asia/Shanghai next day",
+    "cache_users": 540,
+    "cache_fetched_at": "2026-10-28T08:02:22+08:00",
+    "reads_left_approx": 987,
+    "notable": [
+      {
+        "handle": "PlayFarmFi",
+        "note": "bio+posts CA 0x8836a687003b81981cf4c011676b5bd1e7c86039 LIVE on Robinhood; Mint Oct 28 NFT"
+      },
+      {
+        "handle": "PrivateKeyCoin_",
+        "note": "bio still empty; Launching this week / Only CA in bio"
+      },
+      {
+        "handle": "Oxustrail",
+        "note": "new lock; free mint Charters; WL open"
+      }
+    ]
+  },
+  "new_onchain_lock_hits": [],
+  "new_onchain_lock_count": 0,
+  "actionable_findings": [],
+  "actionable_suppressed": [
+    {
+      "kind": "LISTING_SIGNAL",
+      "name": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "note": "same soon-tge theme; signal text churn only (OpenSea/soon tge ↔ grok wen-tge joke) — not strong/new"
+    },
+    {
+      "kind": "NEW_DEPLOY",
+      "note": "ambient UniV2 samples only; no watchlist-relevant deploy"
+    },
+    {
+      "kind": "SITE_JS_CHANGE",
+      "note": "15 site_js fingerprint changes; new_js_ca=0 matches=0; addrs noise/unchanged"
+    },
+    {
+      "kind": "TRACE_CA",
+      "name": "Hashgentic",
+      "handle": "hashgentic",
+      "note": "4 TRACE_CA create_derive / 非代币·非CA repeat noise"
+    },
+    {
+      "kind": "CA_FIND_NOISE",
+      "name": "CLAN",
+      "handle": "ClanFunXYZ",
+      "note": "non-address html fingerprint find 97e3f2… labeled 【非地址·非CA】 — not a CA"
+    },
+    {
+      "kind": "LISTING_AT_LOW_CONF",
+      "name": "kilnpad",
+      "handle": "kilnpad",
+      "note": "relative:today → 2026-10-28T00:00+08 low confidence already past; not within_next_3_days — not published as actionable"
+    },
+    {
+      "kind": "ALREADY_LAUNCHED",
+      "name": "FarmFi",
+      "handle": "PlayFarmFi",
+      "note": "X bio/posts show CA 0x8836… LIVE on Robinhood — already in launched/blocklist since 2026-10-27; skipped"
+    }
+  ],
+  "listing_at_published": [],
+  "within_next_3_days": [
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "listing_at": "2026-10-28T07:59:00+08:00",
+      "note": "race close not token listing; already known"
+    },
+    {
+      "project": "Fishesrh",
+      "handle": "Fishesrh",
+      "listing_at": "2026-10-29T01:00:00+08:00"
+    },
+    {
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "listing_at": "2026-10-29T01:00:00+08:00"
+    },
+    {
+      "project": "zkArgos",
+      "handle": "zkArgoseth",
+      "listing_at": "2026-10-31T00:00:00+08:00"
+    }
+  ],
+  "pruned_launched": [],
+  "延期": [],
+  "trace_ca": {
+    "count": 4,
+    "note": "Hashgentic create_derive / 非代币·非CA repeat noise"
+  },
+  "pages_published": "yes",
+  "pages_detail": {
+    "at": "2026-10-28T08:38:42+08:00",
+    "results": [
+      {
+        "file": "listing_times.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      },
+      {
+        "file": "ca_finds.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      },
+      {
+        "file": "monitor_events.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      }
+    ]
+  },
+  "errors": [
+    {
+      "severity": "info",
+      "kind": "rpc_rate_limits",
+      "note": "onchain_lock_daemon continues with free-RPC rate limits/timeouts; pipeline exit 0 (trace slow ~26min); NOT recommending pause",
+      "chains": [
+        {
+          "chain": "bsc",
+          "rpc_errors": 1743,
+          "last_error": "rate limit / allnodes"
+        },
+        {
+          "chain": "ethereum",
+          "rpc_errors": 757,
+          "last_error": "Cannot fulfill request"
+        },
+        {
+          "chain": "hyperevm",
+          "rpc_errors": 1420,
+          "last_error": "rate limited"
+        },
+        {
+          "chain": "ink",
+          "rpc_errors": 3390,
+          "last_error": "Temporary internal error"
+        },
+        {
+          "chain": "robinhood",
+          "rpc_errors": 4925,
+          "last_error": "curl timeout to robinhood rpc"
+        },
+        {
+          "chain": "base",
+          "rpc_errors": 4,
+          "last_error": "Nodies rate limit"
+        }
+      ]
+    }
+  ],
+  "wake_parent": false,
+  "wake_reason": null,
+  "memory_journal_draft": "2026-10-28 08:38 Asia/Shanghai 开盘与CA预警 (fired ~07:57): pause absent; listing daemon ok (pid 3446519); onchain_lock ok (pid 889131); watchlist 311→312 locked_new=Oxustrail soft_updates=118; X quota reset ok (~60 bios + priority posts); pipeline exit=0 ~36.2min; new_onchain_lock=0; actionable=0 (Ink Daddy LISTING_SIGNAL churn + ambient UniV2 + Hashgentic TRACE_CA noise suppressed; PlayFarmFi CA already launched); published monitor_events main+gh-pages (listing_times+ca_finds noop hash-unchanged); free-RPC rate-limits ambient — no pause; no user ping."
+}

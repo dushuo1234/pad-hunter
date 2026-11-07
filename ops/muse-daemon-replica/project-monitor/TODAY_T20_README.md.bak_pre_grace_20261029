@@ -1,0 +1,25 @@
+# 今日项目清单 · T-20 高频 CA
+
+## What
+For each item in `today_projects.json` whose `listing_at` is within the next **20 minutes**:
+- 6551 Twitter: prefer WSS (`watch_add` + subscribe); REST `user_tweets` every ~5s as fallback
+- Existing CA pipelines: read `ca_finds.json` every cycle; `today_projects_boost.json` marks T-20 handles so `workbench_soon_watch` scans site every **~5s** (today list otherwise ~15s)
+- High-confidence CA → workbench alert (`kind=ca|today_t20|x_post`, `t20=true`) + `alerts/today_t20_alerts.jsonl` + `_today_t20_highconf_msg.txt` + dry `fire_buy`
+- Official X CA → `mark_launched_from_ca.force_launch` → 已开盘, drop from today list, `_today_t20_launched_msg.txt`, stop watching that handle
+
+## Daemon
+```bash
+bash /workspace/project-monitor/today_t20_watch_daemon.sh ensure|status|stop|watchdog
+python3 /workspace/project-monitor/today_t20_watch.py status|once|watch
+```
+Hooked from `today_projects_tick.sh` via `ensure`.
+
+## Sniper
+`sniper_config.json` **dry_run=true** — never live-buys from this path.
+
+## Schedule (current 3, Asia/Shanghai)
+| Project | listing_at | T-20 starts |
+|---------|------------|-------------|
+| Stonk Agents @bStonkAgents | 2026-10-28 23:00 | **22:40** |
+| hoodora @hoodora_rh | 2026-10-29 01:00 | **00:40** |
+| Fishesrh @Fishesrh | 2026-10-29 01:00 | **00:40** |

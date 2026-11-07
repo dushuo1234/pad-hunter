@@ -1,0 +1,115 @@
+{
+  "routine": "开盘与CA预警",
+  "hhmm": "1500",
+  "at": "2026-10-30T15:36:24+08:00",
+  "timezone": "Asia/Shanghai",
+  "pause": "OPEN",
+  "pause_file": "ABSENT",
+  "fired_at_utc": "2026-10-30T07:00:31.967Z",
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "watchlist": {
+    "before": 428,
+    "after_sync": 428,
+    "after_pipeline": 428,
+    "locked_new": [],
+    "updated_meta": 56,
+    "npa_skipped": 40,
+    "kol_skipped": 0,
+    "incomplete": 97
+  },
+  "x_refresh": {
+    "at": "2026-10-30T15:06:58+08:00",
+    "bios_refreshed": 37,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "pixelblobsnft",
+      "Huemans_rh",
+      "tapeupio",
+      "Kaspaseal",
+      "bopzopapp",
+      "Graildotfamily",
+      "Inktrons404"
+    ],
+    "posts_counts": {
+      "PrivateKeyCoin_": 3,
+      "pixelblobsnft": 4,
+      "Huemans_rh": 5,
+      "tapeupio": 5,
+      "Kaspaseal": 5,
+      "bopzopapp": 5,
+      "Graildotfamily": 5,
+      "Inktrons404": 5
+    },
+    "not_found": [
+      "hashgentic",
+      "bloopersinknft",
+      "arscelareai"
+    ],
+    "pkc_bio_snip": "(empty)",
+    "highlights": [
+      "PrivateKeyCoin_: https://t.co/wH9i1AV0Pb",
+      "pixelblobsnft: tonight's the night. 🩸  1,111 pixel blobs · 0.05 HYPE 18:00 UTC on @kalosfun  🔗 https://t.co/lmhxHqElE8 https://t.co/vFO",
+      "Huemans_rh: RT @Huemans_rh: Tomorrow. 🎨  $HUE, the Huemans meme coin, launches on   @robinhoodapp.  Same faces. Same colors. Same vo",
+      "tapeupio: @xiaozhanyangx @Blonskr Builder 奖励的入口里面",
+      "Kaspaseal: @coinathlete Couldn’t agree more. That’s why we focused on UX first 🦭 Kasseal works on desktop and mobile (via @kaspirew",
+      "bopzopapp: Introducing bopzop.  Your group chat just became a trading terminal.  Launching NOVEMBER 1.  Discord access today 12PM E",
+      "Graildotfamily: 看到越来越多中国朋友加入我们，想跟大家简单介绍一下我们  Grail 是一个基于以太坊的隐私币发射平台。我们很快就要正式上线了，代币$GRAIL也即将推出  真的很感谢大家一直以来帮我们宣传、发帖支持！让我们一起赢下这场战斗！ https:",
+      "Inktrons404: This may be your last chance before the Inktrons auction goes live.  WL form closes: 31 October, 23:59 UTC Checker goes "
+    ],
+    "user_count": 773
+  },
+  "pipeline": {
+    "exit": 0,
+    "elapsed_s": 1724,
+    "elapsed_min": 28.7,
+    "trace_wallet": "timeout900 killed rc=term",
+    "new_js_ca": 0,
+    "js_factory_matches": 0,
+    "site_js_changes": 11,
+    "new_deploy_hints_ambient": 3,
+    "prune_newly_removed": 0,
+    "mark_launched_newly": 0,
+    "ca_finds": 274
+  },
+  "onchain_lock": {
+    "baseline_offset": 290,
+    "offset_at_finish": 290,
+    "new_alerts": 0,
+    "actionable": 0,
+    "skipped": "none"
+  },
+  "listing_scan_snapshot": {
+    "checked_at": "2026-10-30 15:22:21 Asia/Shanghai",
+    "new_cas_n": 0,
+    "new_signals_n": 3
+  },
+  "actionable": [],
+  "qualifying": 0,
+  "skipped_notes": {
+    "listing_signals_skipped": "tapeout_x 流片叙事噪音; boostbob TGE chat noise (count bump); heysoei live-now=隐私聊天文案非开盘; no listing_at publish",
+    "new_deploy_skipped": "3 univ2_eth ambient; NEW_DEPLOY none watchlist-relevant",
+    "site_js_changes_skipped": "11 SITE_JS_CHANGE; near_deploys ambient univ2_base only (AGENT ORDI addrs 0→3 but new_js_ca=0)",
+    "x_ca_locked_skipped": "etheriisprotoco ETHRS + reapoxyz REAPO already known sticky",
+    "pixelblobs_post": "tonight mint confirm already on today window; pixelblobsnft not in watchlist (today-list path); no NEW_CA",
+    "huemans_hue": "tomorrow $HUE already known prior run; CA not posted yet"
+  },
+  "today_windows": [
+    "Pixel Blobs mint tonight 18:00 UTC on kalosfun (post: tonight the night; 0.05 HYPE)",
+    "Huemans 2026-10-31T00:00:00+08:00 ($HUE tomorrow; Official contract will be posted here only — not yet)",
+    "TapeUP 2026-10-31T00:00:00+08:00 (周六见)",
+    "Hashgentic X handle not found",
+    "Kasseal/bopzop Nov 1 (bopzop Launching NOVEMBER 1)",
+    "Inktrons WL closes Oct 31 23:59 UTC; checker Nov 1"
+  ],
+  "rpc_notes": [
+    "base/bsc/eth publicnode intermittent rate limits on onchain daemon — transient, not pausing",
+    "trace_wallet hang-safe timeout ~900s killed; remaining pipeline continued"
+  ],
+  "wake_parent": false,
+  "user_ping": false,
+  "wakeparent_payload": "",
+  "journal_sentence": "2026-10-30 15:36 Asia/Shanghai 开盘与CA预警 (fired 07:00Z): pause absent; daemons ok (listing 6323, onchain_lock 5409); wl sync 428→428 locked_new=[] (npa40 incomplete97 meta56); x bios37 posts8 (PKC+today; hashgentic/bloopers/arscelareai nf); mirrors ok; pipeline EXIT=0 ~28.7m trace_wallet timeout900; new_ca0; lock_qual0; new_js0 matches0; SITE_JS×11 ambient-only skip; signals noise-only skip; newly已开盘0; listing_at_changed=0; qualifying=0; no user ping."
+}

@@ -1,0 +1,439 @@
+#!/usr/bin/env python3
+"""Pad Hunter workbench realtime API (Sentinel-style, workbench-only scanning).
+
+Runs on 127.0.0.1:8780 behind a cloudflared quick tunnel (see workbench_api_daemon.sh).
+The static GitHub Pages site syncs the browser workbench (localStorage
+`pad-hunter.workbench.v1`) here; fast_site_poll.py then polls only those sites at ~1s
+and drains workbench_check_queue.jsonl for manual 「检查」 requests.
+
+Auth: header X-Pad-Hunter-Token == workbench_api_token.txt (never committed).
+/health is public (no secrets) so the site can show "API online".
+Also receives Helius Solana webhooks at POST /hooks/helius/solana.
+All timestamps Asia/Shanghai.
+"""
+from __future__ import annotations
+
+import json
+import os
+import secrets
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Optional
+from zoneinfo import ZoneInfo
+
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+VERSION = "1.2.0"
+BASE = Path("/workspace/project-monitor")
+TOKEN_PATH = BASE / "workbench_api_token.txt"
+WORKBENCH_PATH = BASE / "workbench_active.json"
+CHECK_QUEUE_PATH = BASE / "workbench_check_queue.jsonl"
+STATE_PATH = BASE / "fast_site_state.json"
+ALERTS_PATH = BASE / "fast_site_alerts.jsonl"
+POLL_PID = BASE / "fast_site_poll.pid"
+WATCHLIST = BASE / "watchlist.json"
+LISTING_TIMES = BASE / "listing_times.json"
+CA_FINDS = BASE / "ca_finds.json"
+PUBLIC_URL_PATH = BASE / "workbench_api_public_url.txt"
+SH = ZoneInfo("Asia/Shanghai")
+WRITE_LOCK = threading.Lock()
+QUEUED: dict[str, float] = {}       # handle -> epoch queued (API side, for instant "checking")
+CHECK_MIN_GAP = 3.0                 # per-handle manual check debounce
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def norm(h: Optional[str]) -> str:
+    return (h or "").strip().lstrip("@").strip().lower()
+
+
+def load_json(p: Path, default):
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def write_json_atomic(p: Path, obj) -> None:
+    tmp = p.with_suffix(p.suffix + ".tmp")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(p)
+
+
+def get_token() -> str:
+    if not TOKEN_PATH.exists() or not TOKEN_PATH.read_text().strip():
+        TOKEN_PATH.write_text(secrets.token_urlsafe(32) + "\n")
+        os.chmod(TOKEN_PATH, 0o600)
+    return TOKEN_PATH.read_text().strip()
+
+
+TOKEN = get_token()
+
+
+def require_token(x_pad_hunter_token: Optional[str] = Header(default=None)) -> None:
+    if not x_pad_hunter_token or not secrets.compare_digest(x_pad_hunter_token.strip(), TOKEN):
+        raise HTTPException(status_code=401, detail="invalid or missing X-Pad-Hunter-Token")
+
+
+def poller_alive() -> bool:
+    try:
+        pid = POLL_PID.read_text().strip()
+        cmd = Path(f"/proc/{pid}/cmdline").read_bytes().decode(errors="ignore")
+        return "fast_site_poll.py" in cmd
+    except Exception:
+        return False
+
+
+app = FastAPI(title="Pad Hunter Workbench API", version=VERSION, docs_url=None, redoc_url=None)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=r"^(https://dushuo1234\.github\.io|https?://(localhost|127\.0\.0\.1)(:\d+)?|null)$",
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["X-Pad-Hunter-Token", "Content-Type", "ngrok-skip-browser-warning"],
+    expose_headers=["X-Pad-Hunter-Version"],
+    allow_credentials=False,
+    max_age=600,
+)
+
+
+@app.middleware("http")
+async def version_header(request, call_next):
+    resp = await call_next(request)
+    resp.headers["X-Pad-Hunter-Version"] = VERSION
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
+
+
+class WBItem(BaseModel):
+    handle: str = Field(min_length=1, max_length=64)
+    name: Optional[str] = Field(default=None, max_length=200)
+    sites: Optional[list[str]] = Field(default=None, max_length=20)
+    x_url: Optional[str] = Field(default=None, max_length=300)
+    chain: Optional[str] = Field(default=None, max_length=64)
+    notes: Optional[str] = Field(default=None, max_length=2000)
+    push: Optional[bool] = True
+
+
+class SyncBody(BaseModel):
+    items: list[WBItem] = Field(default_factory=list, max_length=300)
+    client_id: Optional[str] = Field(default=None, max_length=128)
+
+
+class CheckBody(BaseModel):
+    handle: str = Field(min_length=1, max_length=64)
+
+
+def workbench() -> dict:
+    return load_json(WORKBENCH_PATH, {"items": []}) or {"items": []}
+
+
+def listing_lookup() -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for it in (load_json(LISTING_TIMES, {}) or {}).get("items") or []:
+        if it.get("handle"):
+            out[norm(it["handle"])] = it
+    return out
+
+
+def watch_lookup() -> dict[str, dict]:
+    return {norm(p.get("handle")): p for p in (load_json(WATCHLIST, {}).get("projects") or []) if p.get("handle")}
+
+
+def pending_queue_handles() -> set[str]:
+    hs = set()
+    for p in (CHECK_QUEUE_PATH, CHECK_QUEUE_PATH.with_suffix(".processing")):
+        try:
+            for ln in p.read_text(encoding="utf-8").splitlines():
+                try:
+                    hs.add(norm(json.loads(ln).get("handle")))
+                except Exception:
+                    pass
+        except FileNotFoundError:
+            pass
+    return hs
+
+
+def site_status(s: dict) -> str:
+    if not s or not s.get("last_probe_at"):
+        return "unknown"
+    if s.get("last_error") or s.get("error_streak"):
+        return "down"
+    code = str(s.get("http_code") or "")
+    if code.isdigit() and 200 <= int(code) < 400:
+        return "up"
+    return "unknown"
+
+
+def epoch(iso: Optional[str]) -> float:
+    try:
+        return datetime.fromisoformat(iso).timestamp() if iso else 0.0
+    except Exception:
+        return 0.0
+
+
+def is_checking(h: str, s: dict, pend: set[str]) -> bool:
+    if s.get("checking") or h in pend:
+        return True
+    q = QUEUED.get(h)
+    if q and time.time() - q < 120 and epoch(s.get("last_manual_check_at")) < q - 1:
+        return True
+    return False
+
+
+def ca_for(h: str) -> list[dict]:
+    doc = load_json(CA_FINDS, {}) or {}
+    rows = doc.get("finds") or doc.get("items") or []
+    return [r for r in rows if norm(r.get("handle")) == h][:20]
+
+
+def build_row(it: dict, sites: dict, lt: dict, wl: dict, st: dict, pend: set[str]) -> dict:
+    h = norm(it.get("handle"))
+    s = sites.get(h) or {}
+    wp = wl.get(h) or {}
+    li = lt.get(h) or {}
+    listing_at = li.get("listing_at") or wp.get("listing_at") or None
+    addrs = s.get("last_addrs") or []
+    return {
+        "handle": it.get("handle"),
+        "name": it.get("name") or s.get("name") or wp.get("name") or it.get("handle"),
+        "url": s.get("site") or next((u for u in (it.get("sites") or wp.get("sites") or []) if "x.com" not in u and "twitter.com" not in u), None),
+        "polled": h in set(st.get("workbench_handles") or []) and st.get("target_mode") == "workbench",
+        "site_status": site_status(s),
+        "http_code": s.get("http_code"),
+        "last_error": s.get("last_error"),
+        "last_check_at": s.get("last_probe_at"),
+        "last_latency_ms": s.get("last_latency_ms"),
+        "interval_s": s.get("interval_s") or st.get("poll_interval_s"),
+        "change_count": int(s.get("change_count") or 0),
+        "last_change_at": s.get("last_change_at"),
+        "address_count": len(addrs),
+        "last_addresses": [{"type": a.get("type"), "address": a.get("address"), "source": a.get("source")} for a in addrs[:5]],
+        "low_confidence": bool(s.get("low_confidence")),
+        "push": it.get("push", True) is not False,
+        "listing_at": listing_at or "未知",
+        "listing_source": li.get("source") or None,
+        "listing_evidence_url": li.get("evidence_url") or None,
+        "already_listed": bool(li.get("already_listed")),
+        "checking": is_checking(h, s, pend),
+        "last_manual_check_at": s.get("last_manual_check_at"),
+        "last_manual_result": s.get("last_manual_result"),
+    }
+
+
+
+def _helius_secret_ok(secret_q: Optional[str], authorization: Optional[str]) -> bool:
+    """Accept ?secret= or Authorization: Bearer <secret> (Helius authHeader)."""
+    try:
+        from solana_helius_hook import get_webhook_secret
+        expected = get_webhook_secret()
+    except Exception:
+        return False
+    if not expected:
+        return False
+    if secret_q and secrets.compare_digest(secret_q.strip(), expected):
+        return True
+    if authorization:
+        raw = authorization.strip()
+        if raw.lower().startswith("bearer "):
+            raw = raw[7:].strip()
+        if secrets.compare_digest(raw, expected):
+            return True
+    return False
+
+
+@app.post("/hooks/helius/solana")
+async def helius_solana_hook(
+    request: Request,
+    secret: Optional[str] = Query(default=None),
+    authorization: Optional[str] = Header(default=None),
+    x_pad_hunter_synthetic: Optional[str] = Header(default=None),
+):
+    """Helius -> Pad Hunter Solana launch watcher (workbench-gated).
+
+    Auth: query ?secret= OR Authorization bearer matching .helius_webhook_secret.
+    Does not use X-Pad-Hunter-Token (Helius sets authHeader only).
+    Under solana_scan_pref mode=workbench_only, payloads are ignored unless
+    workbench_active has Solana items (mass Pump webhook should stay deleted).
+    """
+    if not _helius_secret_ok(secret, authorization):
+        raise HTTPException(status_code=401, detail="invalid webhook secret")
+    try:
+        payload = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="invalid json")
+    synthetic = (x_pad_hunter_synthetic or "").strip() in ("1", "true", "yes")
+    try:
+        from solana_helius_hook import process_payload
+        stats = process_payload(payload, synthetic=synthetic)
+    except Exception as e:
+        with (BASE / "helius_webhook_errors.jsonl").open("a", encoding="utf-8") as f:
+            f.write(json.dumps({"at": now_iso(), "error": str(e)[:300]}, ensure_ascii=False) + "\n")
+        return {"ok": False, "error": "processing_failed"}
+    return {"ok": True, **stats}
+
+
+@app.get("/health")
+def health():
+    wb = workbench()
+    st = load_json(STATE_PATH, {}) or {}
+    return {
+        "ok": True, "version": VERSION, "now": now_iso(),
+        "workbench_count": len(wb.get("items") or []),
+        "poller_alive": poller_alive(),
+        "poller_target_mode": st.get("target_mode"),
+        "poller_updated_at": st.get("updated_at"),
+    }
+
+
+
+def _reconcile_solana_webhook() -> dict:
+    """Best-effort: keep Helius Solana webhook scoped to workbench Solana pins.
+    Never fails the sync endpoint — returns {ok, ...} or {ok:False, error}.
+    """
+    try:
+        from solana_helius_setup import cmd_ensure
+        code = cmd_ensure(force_mass=False)
+        return {"ok": code == 0, "exit": code}
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:200]}
+
+
+@app.post("/v1/workbench/sync", dependencies=[Depends(require_token)])
+def sync(body: SyncBody):
+    # Strip 已开盘 / blocklisted handles so browser localStorage cannot re-pin them.
+    try:
+        from launched_blocklist import load_blocklist
+        blocked = load_blocklist()
+    except Exception:
+        blocked = set()
+    seen: dict[str, dict] = {}
+    dropped: list[dict] = []
+    for it in body.items:
+        h = norm(it.handle)
+        if not h:
+            continue
+        if h in blocked:
+            dropped.append({"handle": it.handle.strip().lstrip("@"), "name": it.name})
+            continue
+        d = it.model_dump()
+        d["handle"] = it.handle.strip().lstrip("@")
+        d["sites"] = [u.strip() for u in (it.sites or []) if isinstance(u, str) and u.strip()][:20]
+        seen[h] = d  # last one wins
+    with WRITE_LOCK:
+        prev = workbench()
+        prev_added = {norm(x.get("handle")): x.get("added_at") for x in prev.get("items") or []}
+        items = []
+        for h, d in seen.items():
+            d["added_at"] = prev_added.get(h) or now_iso()
+            items.append(d)
+        doc = {
+            "synced_at": now_iso(),
+            "timezone": "Asia/Shanghai",
+            "client_id": body.client_id,
+            "count": len(items),
+            "items": items,
+            "dropped_launched": dropped,
+            "note": "Realtime poller (fast_site_poll.py) polls only these sites; the 30-min "
+                    "listing/onchain/js pipeline still scans the full watchlist. "
+                    "Launched (removed_launched blocklist) handles are rejected on sync.",
+        }
+        write_json_atomic(WORKBENCH_PATH, doc)
+    solana_wh = _reconcile_solana_webhook()
+    return {
+        "ok": True,
+        "count": len(items),
+        "synced_at": doc["synced_at"],
+        "dropped_launched": dropped,
+        "solana_webhook": solana_wh,
+    }
+
+
+@app.get("/v1/workbench/status", dependencies=[Depends(require_token)])
+def status():
+    wb = workbench()
+    st = load_json(STATE_PATH, {}) or {}
+    sites = {norm(k): v for k, v in (st.get("sites") or {}).items()}
+    lt, wl, pend = listing_lookup(), watch_lookup(), pending_queue_handles()
+    rows = [build_row(it, sites, lt, wl, st, pend) for it in wb.get("items") or []]
+    return {
+        "now": now_iso(),
+        "synced_at": wb.get("synced_at"),
+        "poller": {
+            "alive": poller_alive(),
+            "target_mode": st.get("target_mode"),
+            "watched_count": st.get("watched_count"),
+            "poll_interval_s": st.get("poll_interval_s"),
+            "updated_at": st.get("updated_at"),
+            "last_cycle": st.get("last_cycle"),
+        },
+        "count": len(rows),
+        "items": rows,
+    }
+
+
+@app.post("/v1/workbench/check", dependencies=[Depends(require_token)])
+def check(body: CheckBody):
+    h = norm(body.handle)
+    if not h:
+        raise HTTPException(400, "handle required")
+    now = time.time()
+    if now - QUEUED.get(h, 0) < CHECK_MIN_GAP:
+        return {"queued": True, "deduped": True, "handle": body.handle}
+    QUEUED[h] = now
+    req = {"handle": body.handle.strip().lstrip("@"), "requested_at": now_iso(), "source": "workbench_api"}
+    with WRITE_LOCK:
+        with CHECK_QUEUE_PATH.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(req, ensure_ascii=False) + "\n")
+    return {"queued": True, "handle": req["handle"], "requested_at": req["requested_at"],
+            "poller_alive": poller_alive()}
+
+
+@app.get("/v1/workbench/detail", dependencies=[Depends(require_token)])
+def detail(handle: str = Query(min_length=1, max_length=64)):
+    h = norm(handle)
+    wb = workbench()
+    it = next((x for x in wb.get("items") or [] if norm(x.get("handle")) == h), {"handle": handle})
+    st = load_json(STATE_PATH, {}) or {}
+    sites = {norm(k): v for k, v in (st.get("sites") or {}).items()}
+    s = sites.get(h) or {}
+    row = build_row(it, sites, listing_lookup(), watch_lookup(), st, pending_queue_handles())
+    alerts = []
+    try:
+        for ln in ALERTS_PATH.read_text(encoding="utf-8").splitlines():
+            try:
+                ev = json.loads(ln)
+            except Exception:
+                continue
+            if norm(ev.get("handle")) == h:
+                alerts.append({k: ev.get(k) for k in ("type", "at", "site", "address", "addr_type", "source",
+                                                      "confidence", "reason", "address_count", "note")})
+    except FileNotFoundError:
+        pass
+    changes = list(s.get("recent_changes") or [])
+    changes += [{"at": a["at"], "kind": a["type"], **{k: v for k, v in a.items() if k not in ("at", "type") and v is not None}} for a in alerts]
+    changes.sort(key=lambda x: x.get("at") or "", reverse=True)
+    history = list(reversed(s.get("history") or []))[:100]
+    return {
+        "now": now_iso(),
+        "item": row,
+        "workbench_item": it,
+        "addresses": s.get("last_addrs") or [],
+        "ca_finds": ca_for(h),
+        "recent_changes": changes[:30],
+        "crawl_history": history,
+        "crawl_history_note": None if history else "no per-probe history yet (poller records it for polled sites)",
+        "last_full_at": s.get("last_full_at"),
+        "full_extract_cooldown_s": s.get("full_extract_cooldown_s"),
+    }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=int(os.environ.get("WORKBENCH_API_PORT", "8780")),
+                log_level="info", proxy_headers=True, forwarded_allow_ips="127.0.0.1")

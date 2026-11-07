@@ -1,0 +1,193 @@
+{
+  "at": "2026-10-23T21:32:58+08:00",
+  "fired_at": "2026-10-23T21:03:00+08:00",
+  "exit": 0,
+  "duration_s": 1322,
+  "duration_note": "pipeline ~22.0min (21:07:51→21:29:53 Asia/Shanghai); full routine incl. sync+X+lock+publish ~26min",
+  "pipeline_ok": "yes",
+  "watchlist": "217→219",
+  "watchlist_note": "pipeline pruned FlyingCarsNFT (216), then locked Illuminance/Squadz Protocol/Classic (+3) → 219",
+  "locked_new": [
+    {
+      "name": "Illuminance",
+      "handle": "illuminance",
+      "status": "开发中",
+      "origin": "proj",
+      "bio": "Illuminance is compute you can see. The first DePIN on @RobinHoodApp"
+    },
+    {
+      "name": "Squadz Protocol",
+      "handle": "Squadzdotfun",
+      "status": "开发中",
+      "origin": "proj",
+      "bio": "Decentralized fair launch protocol on Solana"
+    },
+    {
+      "name": "Classic",
+      "handle": "Classiclaunch",
+      "status": "开发中",
+      "origin": "proj",
+      "bio": "Make Memecoins Liquid Again"
+    }
+  ],
+  "candidates": "217→219",
+  "projects": "217→219",
+  "launched": 54,
+  "newly_launched": [
+    {
+      "name": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "reason": "nft_mint_live",
+      "evidence": "Whitelist mint is live! Free. 1 car per wallet. Runs until 25 Oct 12:45 UTC"
+    }
+  ],
+  "workbench": "47→47",
+  "workbench_note": "unchanged; FlyingCarsNFT was not pinned",
+  "x_refresh": {
+    "bios": 83,
+    "posts_merged": 8,
+    "handles_priority_posts": [
+      "PrivateKeyCoin_",
+      "QernApp",
+      "KaspaRocket",
+      "ETHERIISPROTOCO",
+      "drakhenRH",
+      "WalletV_io"
+    ],
+    "user_count": 324,
+    "pkc_bio_snip": "https://t.co/uN3ndszw6d (t.me/privatekeycoin; still no CA)",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "drakhen_bio_has_ca": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7"
+  },
+  "new_ca": [],
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "SITE_JS": [
+    "EmberWorld",
+    "Jitter"
+  ],
+  "SITE_JS_note": "EmberWorld fp change addrs 1→0; Jitter fp-only addrs 0→0; near_deploys ambient univ2/univ3/univ4 — skip",
+  "onchain_lock": {
+    "lines_before": 71,
+    "bytes_before": 60443,
+    "lines_after": 72,
+    "bytes_after": 61336,
+    "new": 1,
+    "effective_new_ca": 0,
+    "ca_finds_rebuilt": true,
+    "ca_finds_rebuild_note": "pipeline build_ca_finds ran; Color hit not qualifying so no extra rebuild",
+    "hits": [],
+    "non_qualifying": [
+      {
+        "project": "Color",
+        "handle": "colorapp",
+        "address": "0x8ecee10d427c843b9f16c610f8667185f36e5425",
+        "chain": "base",
+        "confidence": "low",
+        "token": "Vibrant Alpine Village Beneath a Colorful Sky",
+        "via": "factory:univ4_pm_base:Initialize",
+        "at": "2026-10-23T21:13:51+08:00",
+        "reason": "name_fuzzy:color",
+        "note": "ambiguous fuzzy name match; univ4 Initialize; NFT-style long name; confidence=low → alert_ok=false",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      }
+    ]
+  },
+  "NEW_DEPLOY_watchlist": null,
+  "NEW_DEPLOY_ambient": "univ2 ambient samples from scan_onchain; none watchlist-tied",
+  "borderline_kept": [
+    "BunnyPad (@Bunnypadfun): token-live wording but no own CA",
+    "ETHERIIS PROTOCOL (@ETHERIISPROTOCO): CA 0xa2399b22… no trading confirm; today posts ask for ETH micro-allocation (scammy)",
+    "Drakhen (@drakhenRH): CA 0x07d1efd7… in bio; beta live but prune kept (no explicit trading/live signal for fungible)"
+  ],
+  "LISTING_SIGNAL_NEW": [
+    "KickflipMotors @FlyingCarsNFT Whitelist mint is live → pruned to 已开盘 (nft_mint_live)"
+  ],
+  "LISTING_SIGNAL_repeats": [
+    "QernApp PRE-TGE airdrop counter ~732→738 + new Ryfinite campaign post (repeat)",
+    "buidlr almost live (repeat)",
+    "$PKC Launching this week sticky; bio still t.me link, no CA",
+    "KaspaRocket Launch day messaging but clarified no own token launch plans",
+    "WalletV_io within 3d 2026-10-24T20:00 already known"
+  ],
+  "within_3d": [
+    {
+      "name": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "listing_at": "2026-10-25T20:45:00+08:00",
+      "note": "whitelist mint window end; already moved to 已开盘"
+    },
+    {
+      "name": "Wallet V: Trade with AI Agents",
+      "handle": "WalletV_io",
+      "listing_at": "2026-10-24T20:00:00+08:00",
+      "note": "already known / re-confirmed"
+    }
+  ],
+  "listing_at_changes_published": [
+    {
+      "project": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "listing_at": "2026-10-25T20:45:00+08:00",
+      "shas": {
+        "main": "371d734",
+        "gh-pages": "a816294"
+      }
+    }
+  ],
+  "pages_publish": {
+    "listing_times": {
+      "main": "371d734",
+      "gh-pages": "a816294"
+    },
+    "ca_finds": {
+      "main": "bca4376",
+      "gh-pages": "df840b5"
+    },
+    "monitor_events": {
+      "main": "20fab83",
+      "gh-pages": "e7e68ea"
+    },
+    "board": {
+      "launched": {
+        "main": "skip(hash-match)",
+        "gh-pages": "0afa5f8"
+      },
+      "candidates": {
+        "main": "0d39c30",
+        "gh-pages": "fd73556"
+      },
+      "projects": "skip (hash-match both)"
+    }
+  },
+  "daemon_onchain_lock": {
+    "pid": 4515,
+    "ok": true
+  },
+  "rpc_auth_failures": false,
+  "rpc_note": "public-node rate-limit noise on base/etc; no credential auth failures",
+  "actionable": true,
+  "ACTIONABLE_ITEMS": [
+    {
+      "kind": "moved_to_已开盘",
+      "project": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "chain": "其他",
+      "ca": null,
+      "evidence": "Whitelist mint is live! Free. 1 car per wallet. Runs until 25 Oct 12:45 UTC → reason=nft_mint_live; removed from watchlist/candidates",
+      "source": "scan_listing_ca/prune_launched"
+    },
+    {
+      "kind": "published_listing_at_change",
+      "project": "KickflipMotors",
+      "handle": "FlyingCarsNFT",
+      "chain": "其他",
+      "ca": null,
+      "evidence": "listing_at set to 2026-10-25T20:45:00+08:00 (mint window end); published listing_times main=371d734 gh-pages=a816294",
+      "source": "extract_listing_times"
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "id": "launchpad_meme_bonding_hyperevm",
+  "address": "0x901AF9a66d4b947b7Be9384Bb2E69CEcB233FEf2",
+  "chain": "hyperevm",
+  "name": "launchpad.meme Bonding Factory (HyperEVM)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "TokenCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "symbol",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "TokenCreatedWithCurve",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "virtualNativeReserve",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "virtualTokenReserve",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "TokenCreatedAndBought",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "market",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "nativeIn",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "tokenOut",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "TokenCreated",
+      "signature": "TokenCreated(address,address,address,string,string)",
+      "topic0": "0xd911716c3fddc130bd228e9fc8082f495d0afacfab26b5e436e8c1a083af9427",
+      "args": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "creator",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "market",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "TokenCreatedWithCurve",
+      "signature": "TokenCreatedWithCurve(address,address,uint256,uint256)",
+      "topic0": "0x7471c7f99a949bee6d75e070c86b9f15e89dbf056c6b26bb7ec895abc4cd9b3c",
+      "args": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "market",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "virtualNativeReserve",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "virtualTokenReserve",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": false,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0x901AF9a66d4b947b7Be9384Bb2E69CEcB233FEf2",
+  "explorer_api_used": null,
+  "source_note": "Active factory from GET /api/evm/hype/status (factory_address). Source unverified on Sourcify/HyperEVMScan; events decoded from live tx 0x54ee3a0f… receipts. Docs still list legacy 0xc9f94a… separately.",
+  "meta": {
+    "verified_how": [
+      "launchpad.meme /api/evm/hype/status factory_address=0x901af9a6…fef2",
+      "tx 0x54ee3a0fb193… TokenCreated topic0 0xd911716c… name/symbol in data",
+      "TokenCreatedWithCurve topic0 0x7471c7f9… confirmed same tx"
+    ],
+    "fee_vault": "0x29448b20ed8fe6750d67b9e788e9c47c07383165"
+  },
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": 12843,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0xd911716c3fddc130bd228e9fc8082f495d0afacfab26b5e436e8c1a083af9427",
+      "count": null
+    },
+    {
+      "topic0": "0x7471c7f99a949bee6d75e070c86b9f15e89dbf056c6b26bb7ec895abc4cd9b3c",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "live_logs_plus_status_api"
+}

@@ -1,0 +1,70 @@
+{
+  "tag": "1130",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-29T12:17:48+08:00",
+  "fired": "2026-10-29T03:30:04.497Z",
+  "pause_file": "absent",
+  "listing_daemon": "running",
+  "onchain_lock_daemon": "running pid=5409",
+  "watchlist_sync": {
+    "before": 391,
+    "after": 391,
+    "locked_new": 0,
+    "bak": "watchlist.json.bak.pre_routine_resync_1132"
+  },
+  "X_refresh": {
+    "priority_bios": 8,
+    "posts_ingested": 2,
+    "cache_users": 682,
+    "quota_left_today": 772
+  },
+  "pipeline": {
+    "exit": 0,
+    "log": "/tmp/routine_1130_pipeline.log",
+    "elapsed_approx_min": 43,
+    "summary": "extract+x_progress+x_ca ok; onchain no non-ambient; js new_js_ca=0 matches=0 site_js=3(addrs unchanged); TRACE_CA citiland/hashgentic noise; prune newly=0 mark newly=0; ca_finds=228"
+  },
+  "new_onchain_lock_hits": [],
+  "actionable_findings": [],
+  "actionable_suppressed": [
+    {
+      "kind": "LISTING_SIGNAL",
+      "handle": "flaggies_world",
+      "note": "viewcount/age churn only"
+    },
+    {
+      "kind": "NEW_CA",
+      "handle": "ooq1079965",
+      "ca": "0x9c62b25c8772ca5c0e3dbee74638c71eae2977c5",
+      "note": "low/nft via site x.com; not token"
+    },
+    {
+      "kind": "listing_at",
+      "handle": "ooq1079965",
+      "note": "2026-11-01 → 2026-11-04; outside next-3-days window"
+    },
+    {
+      "kind": "SITE_JS_CHANGE",
+      "handles": [
+        "CUKE",
+        "E.T.A",
+        "STARX"
+      ],
+      "note": "fp churn addrs 0→0 near ambient"
+    },
+    {
+      "kind": "TRACE_CA",
+      "note": "24 mostly citiland non-token CREATE noise"
+    }
+  ],
+  "within_next_3_days": [
+    "Inktrons 2026-10-29T17:16",
+    "Tandem 2026-10-30",
+    "zkArgos 2026-10-31",
+    "Hashgentic 2026-10-31T21:00",
+    "Kasseal 2026-11-01",
+    "Grail 2026-11-01"
+  ],
+  "pruned_launched": [],
+  "user_ping": false
+}

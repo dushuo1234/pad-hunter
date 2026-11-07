@@ -1,0 +1,84 @@
+{
+  "updated_at": "2026-10-22T21:41:02+08:00",
+  "status": "helius_webhook_active",
+  "todo": [
+    "Receiver live at workbench /hooks/helius/solana",
+    "Matched mints -> solana_lock_alerts.jsonl + onchain_lock_alerts.jsonl",
+    "官网秒级CA快报 / ca-2 should also read solana_lock_alerts.jsonl",
+    "Optional later: Raydium AMM V4/CPMM/CLMM (high swap volume — not wired)"
+  ],
+  "rpc": [
+    "https://api.mainnet-beta.solana.com",
+    "https://solana-rpc.publicnode.com"
+  ],
+  "programs": [
+    {
+      "id": "pumpfun_bonding",
+      "name": "Pump.fun Bonding Curve",
+      "program_id": "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+      "kind": "launchpad",
+      "events_or_ix": [
+        "create",
+        "create_v2",
+        "migrate"
+      ],
+      "relevance": "Primary Solana meme launch path for Hatch/Master Studios/Ninetails-class projects.",
+      "explorer": "https://solscan.io/account/6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
+    },
+    {
+      "id": "pumpswap_amm",
+      "name": "Pump.fun PumpSwap AMM",
+      "program_id": "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+      "kind": "amm",
+      "relevance": "Post-graduation Pump.fun AMM.",
+      "explorer": "https://solscan.io/account/pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+    },
+    {
+      "id": "raydium_amm_v4",
+      "name": "Raydium AMM V4",
+      "program_id": "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8",
+      "kind": "amm",
+      "relevance": "Classic Raydium pool creates after Solana TGE.",
+      "explorer": "https://solscan.io/account/675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"
+    },
+    {
+      "id": "raydium_cpmm",
+      "name": "Raydium CPMM",
+      "program_id": "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C",
+      "kind": "amm",
+      "relevance": "Raydium constant-product AMM.",
+      "explorer": "https://solscan.io/account/CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C"
+    },
+    {
+      "id": "raydium_clmm",
+      "name": "Raydium CLMM",
+      "program_id": "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK",
+      "kind": "amm",
+      "relevance": "Raydium concentrated liquidity.",
+      "explorer": "https://solscan.io/account/CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+    },
+    {
+      "id": "raydium_launchlab",
+      "name": "Raydium LaunchLab",
+      "program_id": "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
+      "kind": "launchpad",
+      "relevance": "Raydium native launchpad.",
+      "explorer": "https://solscan.io/account/LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj"
+    },
+    {
+      "id": "moonshot_launchpad",
+      "name": "Moonshot Token Launchpad",
+      "program_id": "MoonCVVNZFSYkqNXP6bxHLPL6QQJiMagDL3qcqUQTrG",
+      "kind": "launchpad",
+      "relevance": "Alternate Solana launchpad.",
+      "explorer": "https://solscan.io/account/MoonCVVNZFSYkqNXP6bxHLPL6QQJiMagDL3qcqUQTrG"
+    }
+  ],
+  "helius_webhook_id": "af913a48-cf3f-42aa-8ca3-9f2e46e2271a",
+  "helius_watched_program_ids": [
+    "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
+    "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA",
+    "LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
+    "MoonCVVNZFSYkqNXP6bxHLPL6QQJiMagDL3qcqUQTrG"
+  ]
+}

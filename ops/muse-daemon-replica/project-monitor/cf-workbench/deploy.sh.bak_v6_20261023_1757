@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Deploy Pad Hunter cloud workbench sync. Does not print the token.
+set -euo pipefail
+cd "$(dirname "$0")"
+TOKEN_FILE="${TOKEN_FILE:-/workspace/project-monitor/workbench_api_token.txt}"
+if [[ ! -s "$TOKEN_FILE" ]]; then
+  echo "missing token file: $TOKEN_FILE" >&2
+  exit 1
+fi
+npm install --silent
+if ! npx wrangler whoami >/dev/null 2>&1; then
+  echo "BLOCKER: wrangler not logged in. Run: npx wrangler login" >&2
+  exit 2
+fi
+# Upsert secret without echoing value
+npx wrangler secret put WORKBENCH_TOKEN --name pad-hunter-workbench < "$TOKEN_FILE"
+npx wrangler deploy
+echo "https://api.adualpha.win" > /workspace/project-monitor/workbench_api_public_url_cf.txt
+echo "Deployed. Public URL written to workbench_api_public_url_cf.txt"
