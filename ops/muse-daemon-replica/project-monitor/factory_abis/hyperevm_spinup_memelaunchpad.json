@@ -1,0 +1,302 @@
+{
+  "id": "spinup_memelaunchpad",
+  "address": "0x9246d27EA8059529a615a4ACF35351dF0fa6168e",
+  "chain": "hyperevm",
+  "name": "SpinUp MEMELaunchpad (Hyperpie)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "LaunchCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "memeTokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "memeTokenCreator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "curveType",
+          "type": "uint8"
+        },
+        {
+          "indexed": true,
+          "name": "depositTokenAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "depositTokenAmountTarget",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "initialMemeTokenPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "launchTimestamp",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "totalTokens",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "creatorMemeTokenBuyAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "creatorMemeTokenBuyAmountNative",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "curveCalculator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "tags",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "name": "tokenURI",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "LaunchFinalized",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "pair",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "MemeTokenBuy",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "memeToken",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "depositTokenAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "memeTokenAmountRec",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "MemeTokenSell",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "memeToken",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "memeTokenAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "depositTokenAmountRec",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "LaunchCreated",
+      "signature": "LaunchCreated(address,address,uint8,address,uint256,uint256,uint256,uint256,uint256,uint256,address,uint8,string)",
+      "topic0": "0x498edb35d804742a9759cec7bf2aef33f4b6256380d177f8e364bc0d98145170",
+      "args": [
+        {
+          "name": "memeTokenAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "memeTokenCreator",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "curveType",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "name": "depositTokenAddress",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "depositTokenAmountTarget",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "initialMemeTokenPrice",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "launchTimestamp",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "totalTokens",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "creatorMemeTokenBuyAmount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "creatorMemeTokenBuyAmountNative",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "curveCalculator",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "tags",
+          "type": "uint8",
+          "indexed": false
+        },
+        {
+          "name": "tokenURI",
+          "type": "string",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "LaunchFinalized",
+      "signature": "LaunchFinalized(address,address)",
+      "topic0": "0x259e7e20bd2fa15a88aa3a8f7895503dc1cbf5845616623edd5a88b075deb5c4",
+      "args": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "pair",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "MemeTokenBuy",
+      "signature": "MemeTokenBuy(address,address,uint256,uint256)",
+      "topic0": "0xa0a84a835300fe8ca774e5990a2da21d9e45eba2a414f052865b5bf18573135e",
+      "args": [
+        {
+          "name": "memeToken",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "user",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "depositTokenAmount",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "memeTokenAmountRec",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0x9246d27EA8059529a615a4ACF35351dF0fa6168e",
+  "explorer_api_used": null,
+  "source_note": "Proxy TransparentUpgradeableProxy; implementation verified Exact Match on HyperEVMScan. Create = LaunchCreated (memeTokenAddress indexed).",
+  "meta": {
+    "verified_how": [
+      "HyperEVMScan Exact Match on impl 0xdDa54A47…023bA893",
+      "LaunchCreated topic0 matched keccak of ABI signature",
+      "MemeTokenBuy topic0 0xa0a84a83… matched live explorer logs + DefiLlama hyperpie-launchpad adapter"
+    ],
+    "proxy_implementation": "0xdDa54A478f77Dc0e2aD8C4131D39C1Dc023bA893"
+  },
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": 2837,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x498edb35d804742a9759cec7bf2aef33f4b6256380d177f8e364bc0d98145170",
+      "count": null
+    },
+    {
+      "topic0": "0x259e7e20bd2fa15a88aa3a8f7895503dc1cbf5845616623edd5a88b075deb5c4",
+      "count": null
+    },
+    {
+      "topic0": "0xa0a84a835300fe8ca774e5990a2da21d9e45eba2a414f052865b5bf18573135e",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "hyperevmscan_verified_impl"
+}

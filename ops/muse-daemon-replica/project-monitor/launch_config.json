@@ -1,0 +1,50 @@
+{
+  "updated_at": "2026-10-24T23:55:00+08:00",
+  "launch_definition": "first_external_buy",
+  "launch_definition_zh": "「开盘」= 该代币链上第一笔外部买入的时间（不含创建交易里的开发者买入）；即买家在与建币不同的交易里从池子/bonding 买走代币的时间。不是加池时间，也不是发射台页面上架时间",
+  "user_confirmed_at": "2026-10-24T23:15:00+08:00",
+  "listing_time_field": "listing_time = first_external_buy_time（无外部买入则为 null）；first_buy_time 另存为含创建交易开发者买入的原始首笔",
+  "listing_time_estimate_field": "listing_time_estimate 来自 listing_times.json 的预告开盘时间，仅作估计，不参与 lead_seconds",
+  "lead_seconds_rule": "lead_seconds = listing_time(第一笔外部买入) - lock_time，必须 > 0 才算开盘前锁定；listing_time 为 null 时 lead_seconds 也为 null",
+  "lock_time_rule": "lock_time = 系统首次把该 CA 判为 confirmed 的依据来源的最早 detected_at",
+  "primary_chains": [
+    "base",
+    "ethereum",
+    "robinhood",
+    "bsc",
+    "solana"
+  ],
+  "primary_launchpads": [
+    "univ4_pm_base",
+    "univ4_pm_eth",
+    "univ4_pm_rh",
+    "fourmeme_tm2_bsc",
+    "virtuals_bonding_base",
+    "solana"
+  ],
+  "excluded": [
+    "tapeout (finished, do not revive)"
+  ],
+  "watched_wallet_ttl_days_after_listing": 7,
+  "watched_wallet_default_ttl_days": 30,
+  "p1": {
+    "note_zh": "P1：创建者钱包监控接入工厂匹配；低/中可信钱包不得单独或与名称匹配升 confirmed；开盘前 confirmed 需 ≥2 条硬证据；冲突标 conflict 交用户",
+    "hard_evidence_min": 2,
+    "name_match_is_hard_evidence": false,
+    "official_x_is_trigger_gate": false
+  },
+  "e1": {
+    "note_zh": "E1：资金关联线。H2=资金关联硬证据（直接 high/medium 或共享非公开资助方）；公共名单排除；>90天不计；无 tx/金额/时间不计。H3 名称匹配仍为 assist_only（与 §4.2 / P1 一致，与 §7.1 H3 冲突已记录）。",
+    "hard_evidence_includes_funding": true,
+    "name_match_is_hard_evidence": false,
+    "public_funders_file": "e1_staging/known_public_funders.json",
+    "funding_gaps": [
+      "base",
+      "bsc",
+      "robinhood",
+      "hyperevm",
+      "solana"
+    ],
+    "spec_conflict_note_zh": "规格 §7.1 H3 把「名称/符号完全一致」列为硬证据，但 §4.2 与 P1 launch_config 规定 name_match: assist_only。E1 保持 assist_only，不把 H3 算硬证据。"
+  }
+}

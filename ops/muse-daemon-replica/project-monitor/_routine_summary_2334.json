@@ -1,0 +1,111 @@
+{
+  "at": "2026-10-28T00:15:12+08:00",
+  "fired_routine": "开盘与CA预警",
+  "start_utc": "2026-10-27T15:34:33Z",
+  "pipeline_start_utc": "2026-10-27T15:37:39Z",
+  "pipeline_end_utc": "2026-10-27T16:11:34Z",
+  "pause": "OPEN",
+  "daemons": {
+    "listing": 3446519,
+    "onchain_lock": 889131,
+    "ok": true
+  },
+  "watchlist": "309→313(+4 lock)→308 (prune -5)",
+  "locked_new": [
+    "ENRA_BAW",
+    "Fabric_AI_",
+    "OKOK_MEME",
+    "elysiumant"
+  ],
+  "wallets": "68→71 (build 68; sol harvest +3 →71)",
+  "token_symbols": 922,
+  "x": {
+    "bios": 48,
+    "posts_handles": 16,
+    "users": 532,
+    "pkc_bio_empty": true,
+    "highlights": [
+      "PKC bio empty/sticky Launching this week",
+      "Nonce mint live again",
+      "Rebate $REBATE 17:00 UTC Robinhood",
+      "FarmFi $FARMFI LIVE CA 0x8836… (already 已开盘)",
+      "FUGAZY mint live",
+      "CLAN agents presale",
+      "PlayFarmFi/ENRA mint traffic"
+    ]
+  },
+  "pipeline_exit": 0,
+  "pipeline_elapsed_min": 34,
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "SITE_JS_CHANGE": 6,
+  "NEW_DEPLOY_watchlist": null,
+  "ambient_univ2_samples": 29,
+  "TRACE_CA": 4,
+  "TRACE_CA_note": "Hashgentic create_derive 非CA (4)",
+  "onchain_lock": {
+    "offset_before": 169130,
+    "offset_after": 170582,
+    "new_lines": 2,
+    "qualifying_medium": 2,
+    "hits": [
+      {
+        "project": "Kivo",
+        "handle": "kivoagentxyz",
+        "chain": "ethereum",
+        "address": "0x9aa669deb053c2a101879b11aee79d5db00dccac",
+        "confidence": "medium",
+        "reason": "symbol:PAPER",
+        "via": "univ4_pm_eth:Initialize",
+        "token": "Paperclash",
+        "note": "explicit ticker PAPER for Kivo"
+      },
+      {
+        "project": "ONE LIFE",
+        "handle": "LifeOneFun",
+        "chain": "ethereum",
+        "address": "0x2e765e6b1f6b840ff1a63dee01ae7a783a6756ea",
+        "confidence": "medium",
+        "reason": "symbol:ONE",
+        "via": "univ4_pm_eth:Initialize",
+        "token": "one coin",
+        "note": "common ticker ONE; possible UniV4 ambient noise"
+      }
+    ]
+  },
+  "prune": {
+    "newly_removed_this_pipeline": [
+      {
+        "name": "FUGAZY",
+        "handle": "fugazy_nft",
+        "reason": "nft_mint_live"
+      }
+    ],
+    "also_removed_during_run_window": [
+      {
+        "name": "Nonce",
+        "handle": "nonceprotocol",
+        "reason": "nft_mint_live"
+      },
+      {
+        "name": "Elysian Fields",
+        "handle": "elysianfieldnft",
+        "reason": "nft_mint_live"
+      },
+      {
+        "name": "ElyAnt",
+        "handle": "elysiumant",
+        "reason": "nft_mint_live"
+      },
+      {
+        "name": "FA",
+        "handle": "Fabric_AI_",
+        "reason": "already_trading"
+      }
+    ],
+    "watchlist_final": 308,
+    "launched": 95
+  },
+  "listing_at_publishes": [],
+  "actionable": true
+}

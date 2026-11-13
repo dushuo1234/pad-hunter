@@ -1,0 +1,3389 @@
+{
+  "generated_at": "2026-10-24T23:29:45+08:00",
+  "timezone": "Asia/Shanghai",
+  "tapeout_watch": {
+    "label": "TapeRobot/TapeOut watch — 钱包·非CA",
+    "chain": "bsc",
+    "factory": "0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+    "watcher": "tapeout_watch.py (daemon) — alerts on TapeOut/four.meme creates or CREATE deploys by these wallets",
+    "wallets": [
+      {
+        "address": "0x0a68f9ffc1d4d988bfa3ad72ef1b383062cf0527",
+        "role": "game_deployer",
+        "note": "TapeRobot game deployer + owner",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
+        "role": "transistor_creator",
+        "note": "Created TapeRobot TapeOut processor/transistors",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0xEe99666BeD3349C9De498789dd536FC179719973",
+        "role": "treasury",
+        "note": "Funded game deployer",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0xb1503a4c2d40e462c7a2bff3d8d93a191560332e",
+        "role": "coordinator_owner",
+        "note": "Coordinator owner; linked to deployer",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
+        "role": "holding",
+        "note": "Holding wallet funded by deployer (nonce 0)",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0xee55127712b65de22c9bb983a18cbb403bcd9fde",
+        "role": "coordinator_funded",
+        "note": "0.07 BNB from coordinator owner",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0xa5d93964ecfec04d9bfa2ca22f4eba91f253d556",
+        "role": "coordinator_funded",
+        "note": "0.07 BNB from coordinator owner",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0xe4686f1cd2aa42c20ef8bfb56ef17d4bd92ae426",
+        "role": "coordinator_funded",
+        "note": "0.07 BNB from coordinator owner",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      },
+      {
+        "address": "0x5336870737c4bcc1e5289951a7f42e26ccadbf85",
+        "role": "coordinator_funded",
+        "note": "0.07 BNB from coordinator owner",
+        "label_zh": "扫出钱包·TapeOut监控",
+        "is_ca": false
+      }
+    ]
+  },
+  "project_count": 23,
+  "wallet_count": 51,
+  "projects": [
+    {
+      "project": "【扫出钱包·非CA】0-0.city",
+      "handle": "0_0city",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0xddb587d88c0afa42317e033bdd11edc2462b873f",
+          "address_norm": "0xddb587d88c0afa42317e033bdd11edc2462b873f",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+            "js_site:js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "fast_site:https://0-0.city/",
+            "js_site:js:https://0-0.city/_next/static/chunks/d49b0b8341734a90.js",
+            "js_site:js:https://0-0.city/_next/static/chunks/6cb296ba05f9f0c1.js",
+            "js_site:js:https://0-0.city/_next/static/chunks/badf9d46f371f6f3.js"
+          ],
+          "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": null,
+      "handle": "1264768226124169216",
+      "chain": null,
+      "wallets": [
+        {
+          "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+          "address_norm": "0xa65cb66b48be8bc52ba982bb92bf7177112153fc",
+          "chain": null,
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "x_cache:x_posts_cache.json"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/1264768226124169216",
+          "first_seen": "2026-10-23T16:33:34+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": null,
+      "handle": "2081610323170066432",
+      "chain": null,
+      "wallets": [
+        {
+          "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "chain": null,
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "x_cache:x_posts_cache.json"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/2081610323170066432",
+          "first_seen": "2026-10-24T12:33:31+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "老7🌞tapeout💎bem",
+      "handle": "bemer77",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+          "address_norm": "0xcc6b5acac871bcb1f60cce29d5917266d8fb956d",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:site:https://x.com/bemer77",
+            "listing_scan:site:https://x.com/bemer77",
+            "watchlist.ca"
+          ],
+          "note": "unclassified EVM from ca_finds; locked on watchlist — verify wallet vs contract via trace",
+          "evidence_url": "https://x.com/bemer77",
+          "first_seen": "2026-10-21T08:23:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "CircuitPay",
+      "handle": "CircuitPay_",
+      "chain": null,
+      "wallets": [
+        {
+          "address": "0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+          "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+          "chain": null,
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://circuitpay.cc/",
+            "js_site:inline:https://circuitpay.cc/"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/CircuitPay_",
+          "first_seen": "2026-10-23T02:04:46+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Drakhen",
+      "handle": "drakhenRH",
+      "chain": "robinhood",
+      "wallets": [
+        {
+          "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+          "address_norm": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+          "chain": "robinhood",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://x.com/drakhenRH",
+            "watchlist.ca",
+            "x_cache:x_posts_cache.json"
+          ],
+          "note": "locked on watchlist — verify wallet vs contract via trace",
+          "evidence_url": "https://x.com/drakhenRH",
+          "first_seen": "2026-10-23T09:24:49+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x34Eaa249f8A2F897884da9c411AAc67fb1C8d3Ac",
+          "address_norm": "0x34eaa249f8a2f897884da9c411aac67fb1c8d3ac",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:site:https://x.com/drakhenRH",
+            "listing_scan:site:https://x.com/drakhenRH",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/drakhenRH",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0x13a130b336400409c956df042c128238f1486ddd",
+          "address_norm": "0x13a130b336400409c956df042c128238f1486ddd",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:inline:https://elysiumnameservice.xyz/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:inline:https://elysiumnameservice.xyz/"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/ElysiumNames",
+          "first_seen": "2026-10-20T21:55:43+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+          "address_norm": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:inline:https://elysiumnameservice.xyz/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:inline:https://elysiumnameservice.xyz/"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/ElysiumNames",
+          "first_seen": "2026-10-20T21:55:43+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+          "address_norm": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:inline:https://elysiumnameservice.xyz/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:inline:https://elysiumnameservice.xyz/"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/ElysiumNames",
+          "first_seen": "2026-10-20T21:55:43+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xa434b4d98dc9e35205bf186b1750ed2961791f2d",
+          "address_norm": "0xa434b4d98dc9e35205bf186b1750ed2961791f2d",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://elysiumnameservice.xyz/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "js_site:inline:https://elysiumnameservice.xyz/"
+          ],
+          "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://elysiumnameservice.xyz/",
+          "first_seen": "2026-10-21T18:07:34+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【扫出钱包·非CA】EmberWorld",
+      "handle": "EmberWorldX",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0x452ed78dacf94892e26b22f89b7c40132b04b88a",
+          "address_norm": "0x452ed78dacf94892e26b22f89b7c40132b04b88a",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://1-2-300.tapeoutscan.io/",
+            "js_site:inline:https://1-2-300.tapeoutscan.io/",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://1-2-300.tapeoutscan.io/",
+          "first_seen": "2026-10-24T17:08:58+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xe326b8fabc5082b4c29ac9d865505724f46323fa",
+          "address_norm": "0xe326b8fabc5082b4c29ac9d865505724f46323fa",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://1-2-300.tapeoutscan.io/",
+            "js_site:inline:https://1-2-300.tapeoutscan.io/",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://1-2-300.tapeoutscan.io/",
+          "first_seen": "2026-10-24T17:08:58+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+          "address_norm": "0xa2399b22abac114435eccce8473b6ed4e2e0acc8",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://etheriis.netlify.app/",
+            "js_site:html:https://etheriis.netlify.app/",
+            "watchlist.ca",
+            "x_cache:x_posts_cache.json",
+            "ca_finds:https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "locked on watchlist — verify wallet vs contract via trace; 官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: ERC20 verified: ETHRS dec=18; 官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as contract (6011 bytes); ca_gate: ERC20 verified: ETHRS dec=18",
+          "evidence_url": "https://x.com/ETHERIISPROTOCO",
+          "first_seen": "2026-10-23T00:56:52+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+          "address_norm": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024124420G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:html:https://tapefoundry.xyz/",
+            "x_cache:x_posts_cache.json"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+          "address_norm": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+          "address_norm": "0xb4a7b988b77bd7b29e56f42229464a8dd72361bf",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xb69215ce68792eca5672b49196868369555ea181",
+          "address_norm": "0xb69215ce68792eca5672b49196868369555ea181",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/FoundryTape",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+          "address_norm": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "ca_finds:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "wallet_trace_events",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+          "evidence_url": "https://x.com/FoundryTape",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+          "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/FoundryTape",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0x2f74c2b482d47c559c46b6468d9540237192d91a",
+          "address_norm": "0x2f74c2b482d47c559c46b6468d9540237192d91a",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:config:https://hashgentic.work/api/contracts",
+            "js_site:config:https://hashgentic.work/api/contracts",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+          "address_norm": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:config:https://hashgentic.work/api/config",
+            "js_site:config:https://hashgentic.work/api/config"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x7d948882756270c20ce0983fb1ef58673984249d",
+          "address_norm": "0x7d948882756270c20ce0983fb1ef58673984249d",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:config:https://hashgentic.work/api/config",
+            "js_site:config:https://hashgentic.work/api/config",
+            "ca_finds:config:https://hashgentic.work/api/config",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "unclassified EVM from ca_finds; 【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA; 【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8218 bytes); CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA",
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "address_norm": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:config:https://hashgentic.work/api/config",
+            "js_site:config:https://hashgentic.work/api/config",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x35770ad303ec19c186789e413535ad96ca382f66",
+          "address_norm": "0x35770ad303ec19c186789e413535ad96ca382f66",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:config:https://hashgentic.work/api/config"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+          "address_norm": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:config:https://hashgentic.work/api/config",
+            "ca_finds:config:https://hashgentic.work/api/config",
+            "wallet_trace:classify",
+            "wallet_trace_events"
+          ],
+          "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8578 bytes); CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+          "address_norm": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:config:https://hashgentic.work/api/config"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+          "address_norm": "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:config:https://hashgentic.work/api/contracts"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/hashgentic",
+          "first_seen": "2026-10-23T23:06:44+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
+          "address_norm": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://ink-daddy.com/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "js_site:inline:https://ink-daddy.com/",
+            "ca_finds_unclassified:inline:https://ink-daddy.com/"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; unclassified EVM from ca_finds",
+          "evidence_url": "https://ink-daddy.com/",
+          "first_seen": "2026-10-20T18:21:27+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0xfc106657ac50c4e314a712808d06e0a7377710c0",
+          "address_norm": "0xfc106657ac50c4e314a712808d06e0a7377710c0",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+            "fast_site:https://kilnpad.xyz/",
+            "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+          ],
+          "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a",
+          "address_norm": "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+            "fast_site:https://kilnpad.xyz/",
+            "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+          ],
+          "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0",
+          "address_norm": "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+            "fast_site:https://kilnpad.xyz/",
+            "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+          ],
+          "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "paperbird",
+      "handle": "paperbird_lol",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0x6cd5661646289fb6e65ea5c032310fded797d0a2",
+          "address_norm": "0x6cd5661646289fb6e65ea5c032310fded797d0a2",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-22f03a72dc84109a6fec6d1505272b57.js",
+            "wallet_trace_events",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-d8b5a479c28706050a3b451279e5a30f.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-034282fe550ee7dc4ced152f76825360.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-9b90128581b269b5119cc4e058d6b38b.js",
+            "ca_finds:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-eb68429093fbab4cdad32e0040398de9.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-26362b9c9baa516f57b93bc4e18544d3.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
+            "wallet_trace:classify"
+          ],
+          "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/paperbird_lol",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x233ff29b239abc1d7748605da9b205c3e008626e",
+          "address_norm": "0x233ff29b239abc1d7748605da9b205c3e008626e",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-22f03a72dc84109a6fec6d1505272b57.js",
+            "wallet_trace_events",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-d8b5a479c28706050a3b451279e5a30f.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-034282fe550ee7dc4ced152f76825360.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-9b90128581b269b5119cc4e058d6b38b.js",
+            "ca_finds:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-eb68429093fbab4cdad32e0040398de9.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-26362b9c9baa516f57b93bc4e18544d3.js",
+            "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js"
+          ],
+          "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/paperbird_lol",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": null,
+      "handle": "qern_io",
+      "chain": null,
+      "wallets": [
+        {
+          "address": "0x6063d7671Afe30D5Cdfa9925e5D9712e52e30e82",
+          "address_norm": "0x6063d7671afe30d5cdfa9925e5d9712e52e30e82",
+          "chain": null,
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "x_cache:x_posts_cache.json"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/qern_io",
+          "first_seen": "2026-10-23T10:30:26+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "HappyBlock",
+      "handle": "RealHappyBlock",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+          "address_norm": "0xa65cb66b48be8bc52ba982bb92bf7177112153fc",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:x_post:https://x.com/RealHappyBlock",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "listing_scan:x_post",
+            "watchlist.ca",
+            "x_cache:x_posts_cache.json",
+            "ca_finds:x_post"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; locked on watchlist — verify wallet vs contract via trace; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://x.com/RealHappyBlock",
+          "first_seen": "2026-10-20T18:21:27+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Superboard",
+      "handle": "Superboard_",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
+          "address_norm": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://www.superboard.xyz/",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "js_site:inline:https://www.superboard.xyz/"
+          ],
+          "note": "appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://www.superboard.xyz/",
+          "first_seen": "2026-10-20T18:21:27+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "sway",
+      "handle": "swaydotfamily",
+      "chain": "evm",
+      "wallets": [
+        {
+          "address": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
+          "address_norm": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
+          "chain": "evm",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://x.com/swaydotfamily",
+            "watchlist.ca"
+          ],
+          "note": "locked on watchlist — verify wallet vs contract via trace",
+          "evidence_url": "https://x.com/swaydotfamily",
+          "first_seen": "2026-10-24T00:32:28+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:html:https://tapefoundry.xyz/"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/",
+          "first_seen": "2026-10-22T07:27:45+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+          "address_norm": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:html:https://tapefoundry.xyz/",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/",
+          "first_seen": "2026-10-22T07:27:45+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+          "address_norm": "0xb4a7b988b77bd7b29e56f42229464a8dd72361bf",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:html:https://tapefoundry.xyz/",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/",
+          "first_seen": "2026-10-22T07:27:45+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xb69215ce68792eca5672b49196868369555ea181",
+          "address_norm": "0xb69215ce68792eca5672b49196868369555ea181",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "listing_scan:site:https://tapefoundry.xyz/",
+            "js_site:html:https://tapefoundry.xyz/",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+            "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/TapeFoundry",
+          "first_seen": "2026-10-22T07:27:45+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+          "address_norm": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022034432A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022041531A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022061008B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022071006B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022111056B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022114704B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/TapeFoundry",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+          "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022034432A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022041531A",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022061008B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022071006B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022111056B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022114704B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "ca_finds:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+            "wallet_trace_events",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+          "evidence_url": "https://x.com/TapeFoundry",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+          "address_norm": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261022121627B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+            "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261022121627B",
+          "first_seen": "2026-10-22T21:30:36+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "【扫出钱包·非CA】TapeOutScan",
+      "handle": "TapeOutScan",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0x4367d06f5cc485a76f083676d6b4cd87269e4f95",
+          "address_norm": "0x4367d06f5cc485a76f083676d6b4cd87269e4f95",
+          "chain": "bsc",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+            "js_site:js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "fast_site:https://tapeoutscan.io/"
+          ],
+          "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+          "evidence_url": "https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch",
+      "chain": "bsc",
+      "wallets": [
+        {
+          "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+          "address_norm": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:factory:tapeout:creator_watched"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+          "first_seen": "2026-10-21T16:07:34+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        },
+        {
+          "address": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+          "address_norm": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+          "chain": "bsc",
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds_unclassified:factory:tapeout:creator_watched"
+          ],
+          "note": "unclassified EVM from ca_finds",
+          "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+          "first_seen": "2026-10-21T16:07:34+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Timecard",
+      "handle": "thetimecard",
+      "chain": "ethereum",
+      "wallets": [
+        {
+          "address": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
+          "address_norm": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
+          "chain": "ethereum",
+          "confidence": "high",
+          "sources": [
+            "previous_watchlist",
+            "ca_finds:inline:https://thetimecard.xyz",
+            "wallet_trace:classify",
+            "wallet_trace_events",
+            "ca_finds_unclassified:inline:https://thetimecard.xyz"
+          ],
+          "note": "classified as EOA/wallet via eth_getCode; classified as contract (13692 bytes); unclassified EVM from ca_finds; 【NFT合约·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: NFT contract (ERC721) — not a token CA; 【NFT合约·非CA】 classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+          "evidence_url": "https://thetimecard.xyz",
+          "first_seen": "2026-10-20T18:21:27+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    },
+    {
+      "project": "Newspad",
+      "handle": "usenewspadfun",
+      "chain": null,
+      "wallets": [
+        {
+          "address": "0x147e3b495c677a82521fd5368941c6a2c410de42",
+          "address_norm": "0x147e3b495c677a82521fd5368941c6a2c410de42",
+          "chain": null,
+          "confidence": "medium",
+          "sources": [
+            "previous_watchlist",
+            "js_site:js:https://www.newspad.fun/assets/index-B6TUyJ-k.js"
+          ],
+          "note": null,
+          "evidence_url": "https://x.com/usenewspadfun",
+          "first_seen": "2026-10-22T09:34:01+08:00",
+          "last_seen": "2026-10-24T23:29:45+08:00"
+        }
+      ]
+    }
+  ],
+  "wallets": [
+    {
+      "address": "0xddb587d88c0afa42317e033bdd11edc2462b873f",
+      "address_norm": "0xddb587d88c0afa42317e033bdd11edc2462b873f",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+        "js_site:js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "fast_site:https://0-0.city/",
+        "js_site:js:https://0-0.city/_next/static/chunks/d49b0b8341734a90.js",
+        "js_site:js:https://0-0.city/_next/static/chunks/6cb296ba05f9f0c1.js",
+        "js_site:js:https://0-0.city/_next/static/chunks/badf9d46f371f6f3.js"
+      ],
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】0-0.city",
+      "handle": "0_0city"
+    },
+    {
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "address_norm": "0xa65cb66b48be8bc52ba982bb92bf7177112153fc",
+      "chain": null,
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "x_cache:x_posts_cache.json"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/1264768226124169216",
+      "first_seen": "2026-10-23T16:33:34+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": null,
+      "handle": "1264768226124169216"
+    },
+    {
+      "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "chain": null,
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "x_cache:x_posts_cache.json"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/2081610323170066432",
+      "first_seen": "2026-10-24T12:33:31+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": null,
+      "handle": "2081610323170066432"
+    },
+    {
+      "address": "0xcC6b5AcAC871bcB1f60cce29D5917266d8fb956D",
+      "address_norm": "0xcc6b5acac871bcb1f60cce29d5917266d8fb956d",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:site:https://x.com/bemer77",
+        "listing_scan:site:https://x.com/bemer77",
+        "watchlist.ca"
+      ],
+      "note": "unclassified EVM from ca_finds; locked on watchlist — verify wallet vs contract via trace",
+      "evidence_url": "https://x.com/bemer77",
+      "first_seen": "2026-10-21T08:23:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "老7🌞tapeout💎bem",
+      "handle": "bemer77"
+    },
+    {
+      "address": "0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+      "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "chain": null,
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://circuitpay.cc/",
+        "js_site:inline:https://circuitpay.cc/"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/CircuitPay_",
+      "first_seen": "2026-10-23T02:04:46+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "CircuitPay",
+      "handle": "CircuitPay_"
+    },
+    {
+      "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+      "address_norm": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+      "chain": "robinhood",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://x.com/drakhenRH",
+        "watchlist.ca",
+        "x_cache:x_posts_cache.json"
+      ],
+      "note": "locked on watchlist — verify wallet vs contract via trace",
+      "evidence_url": "https://x.com/drakhenRH",
+      "first_seen": "2026-10-23T09:24:49+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Drakhen",
+      "handle": "drakhenRH"
+    },
+    {
+      "address": "0x34Eaa249f8A2F897884da9c411AAc67fb1C8d3Ac",
+      "address_norm": "0x34eaa249f8a2f897884da9c411aac67fb1c8d3ac",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:site:https://x.com/drakhenRH",
+        "listing_scan:site:https://x.com/drakhenRH",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/drakhenRH",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Drakhen",
+      "handle": "drakhenRH"
+    },
+    {
+      "address": "0x13a130b336400409c956df042c128238f1486ddd",
+      "address_norm": "0x13a130b336400409c956df042c128238f1486ddd",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:inline:https://elysiumnameservice.xyz/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:inline:https://elysiumnameservice.xyz/"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/ElysiumNames",
+      "first_seen": "2026-10-20T21:55:43+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames"
+    },
+    {
+      "address": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+      "address_norm": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:inline:https://elysiumnameservice.xyz/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:inline:https://elysiumnameservice.xyz/"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/ElysiumNames",
+      "first_seen": "2026-10-20T21:55:43+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames"
+    },
+    {
+      "address": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+      "address_norm": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:inline:https://elysiumnameservice.xyz/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:inline:https://elysiumnameservice.xyz/"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/ElysiumNames",
+      "first_seen": "2026-10-20T21:55:43+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames"
+    },
+    {
+      "address": "0xa434b4d98dc9e35205bf186b1750ed2961791f2d",
+      "address_norm": "0xa434b4d98dc9e35205bf186b1750ed2961791f2d",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://elysiumnameservice.xyz/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "js_site:inline:https://elysiumnameservice.xyz/"
+      ],
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://elysiumnameservice.xyz/",
+      "first_seen": "2026-10-21T18:07:34+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Elysium Name Service",
+      "handle": "ElysiumNames"
+    },
+    {
+      "address": "0x452ed78dacf94892e26b22f89b7c40132b04b88a",
+      "address_norm": "0x452ed78dacf94892e26b22f89b7c40132b04b88a",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://1-2-300.tapeoutscan.io/",
+        "js_site:inline:https://1-2-300.tapeoutscan.io/",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://1-2-300.tapeoutscan.io/",
+      "first_seen": "2026-10-24T17:08:58+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】EmberWorld",
+      "handle": "EmberWorldX"
+    },
+    {
+      "address": "0xe326b8fabc5082b4c29ac9d865505724f46323fa",
+      "address_norm": "0xe326b8fabc5082b4c29ac9d865505724f46323fa",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://1-2-300.tapeoutscan.io/",
+        "js_site:inline:https://1-2-300.tapeoutscan.io/",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://1-2-300.tapeoutscan.io/",
+      "first_seen": "2026-10-24T17:08:58+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】EmberWorld",
+      "handle": "EmberWorldX"
+    },
+    {
+      "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+      "address_norm": "0xa2399b22abac114435eccce8473b6ed4e2e0acc8",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://etheriis.netlify.app/",
+        "js_site:html:https://etheriis.netlify.app/",
+        "watchlist.ca",
+        "x_cache:x_posts_cache.json",
+        "ca_finds:https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "locked on watchlist — verify wallet vs contract via trace; 官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: ERC20 verified: ETHRS dec=18; 官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as contract (6011 bytes); ca_gate: ERC20 verified: ETHRS dec=18",
+      "evidence_url": "https://x.com/ETHERIISPROTOCO",
+      "first_seen": "2026-10-23T00:56:52+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO"
+    },
+    {
+      "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "address_norm": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261024124420G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:html:https://tapefoundry.xyz/",
+        "x_cache:x_posts_cache.json"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "address_norm": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+      "address_norm": "0xb4a7b988b77bd7b29e56f42229464a8dd72361bf",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0xb69215ce68792eca5672b49196868369555ea181",
+      "address_norm": "0xb69215ce68792eca5672b49196868369555ea181",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024327",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054516",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064652",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/FoundryTape",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "address_norm": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "ca_finds:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "wallet_trace_events",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "evidence_url": "https://x.com/FoundryTape",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024327A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031634A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054516G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064652G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/FoundryTape",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "foundrytape"
+    },
+    {
+      "address": "0x2f74c2b482d47c559c46b6468d9540237192d91a",
+      "address_norm": "0x2f74c2b482d47c559c46b6468d9540237192d91a",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:config:https://hashgentic.work/api/contracts",
+        "js_site:config:https://hashgentic.work/api/contracts",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+      "address_norm": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:config:https://hashgentic.work/api/config",
+        "js_site:config:https://hashgentic.work/api/config"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x7d948882756270c20ce0983fb1ef58673984249d",
+      "address_norm": "0x7d948882756270c20ce0983fb1ef58673984249d",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:config:https://hashgentic.work/api/config",
+        "js_site:config:https://hashgentic.work/api/config",
+        "ca_finds:config:https://hashgentic.work/api/config",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "unclassified EVM from ca_finds; 【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA; 【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8218 bytes); CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA",
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "address_norm": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:config:https://hashgentic.work/api/config",
+        "js_site:config:https://hashgentic.work/api/config",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x35770ad303ec19c186789e413535ad96ca382f66",
+      "address_norm": "0x35770ad303ec19c186789e413535ad96ca382f66",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:config:https://hashgentic.work/api/config"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "address_norm": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:config:https://hashgentic.work/api/config",
+        "ca_finds:config:https://hashgentic.work/api/config",
+        "wallet_trace:classify",
+        "wallet_trace_events"
+      ],
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8578 bytes); CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "address_norm": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:config:https://hashgentic.work/api/config"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      "address_norm": "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:config:https://hashgentic.work/api/contracts"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/hashgentic",
+      "first_seen": "2026-10-23T23:06:44+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic"
+    },
+    {
+      "address": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
+      "address_norm": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://ink-daddy.com/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "js_site:inline:https://ink-daddy.com/",
+        "ca_finds_unclassified:inline:https://ink-daddy.com/"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; unclassified EVM from ca_finds",
+      "evidence_url": "https://ink-daddy.com/",
+      "first_seen": "2026-10-20T18:21:27+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Ink Daddy",
+      "handle": "InkDaddynft"
+    },
+    {
+      "address": "0xfc106657ac50c4e314a712808d06e0a7377710c0",
+      "address_norm": "0xfc106657ac50c4e314a712808d06e0a7377710c0",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+        "fast_site:https://kilnpad.xyz/",
+        "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+      ],
+      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad"
+    },
+    {
+      "address": "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a",
+      "address_norm": "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+        "fast_site:https://kilnpad.xyz/",
+        "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+      ],
+      "note": "【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad"
+    },
+    {
+      "address": "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0",
+      "address_norm": "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "js_site:js:https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds:js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+        "fast_site:https://kilnpad.xyz/",
+        "js_site:js:https://kilnpad.xyz/assets/index-CcvheEWL.js"
+      ],
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://kilnpad.xyz/assets/index-Dh8iX4YH.js",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad"
+    },
+    {
+      "address": "0x6cd5661646289fb6e65ea5c032310fded797d0a2",
+      "address_norm": "0x6cd5661646289fb6e65ea5c032310fded797d0a2",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-22f03a72dc84109a6fec6d1505272b57.js",
+        "wallet_trace_events",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-d8b5a479c28706050a3b451279e5a30f.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-034282fe550ee7dc4ced152f76825360.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-9b90128581b269b5119cc4e058d6b38b.js",
+        "ca_finds:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-eb68429093fbab4cdad32e0040398de9.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-26362b9c9baa516f57b93bc4e18544d3.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js",
+        "wallet_trace:classify"
+      ],
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/paperbird_lol",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "paperbird",
+      "handle": "paperbird_lol"
+    },
+    {
+      "address": "0x233ff29b239abc1d7748605da9b205c3e008626e",
+      "address_norm": "0x233ff29b239abc1d7748605da9b205c3e008626e",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-22f03a72dc84109a6fec6d1505272b57.js",
+        "wallet_trace_events",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-d8b5a479c28706050a3b451279e5a30f.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-034282fe550ee7dc4ced152f76825360.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-9b90128581b269b5119cc4e058d6b38b.js",
+        "ca_finds:js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-eb68429093fbab4cdad32e0040398de9.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-26362b9c9baa516f57b93bc4e18544d3.js",
+        "js_site:js:https://paperbird.lol/_expo/static/js/web/__common-638069626e8e34032563440659442389.js"
+      ],
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/paperbird_lol",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "paperbird",
+      "handle": "paperbird_lol"
+    },
+    {
+      "address": "0x6063d7671Afe30D5Cdfa9925e5D9712e52e30e82",
+      "address_norm": "0x6063d7671afe30d5cdfa9925e5d9712e52e30e82",
+      "chain": null,
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "x_cache:x_posts_cache.json"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/qern_io",
+      "first_seen": "2026-10-23T10:30:26+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": null,
+      "handle": "qern_io"
+    },
+    {
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "address_norm": "0xa65cb66b48be8bc52ba982bb92bf7177112153fc",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:x_post:https://x.com/RealHappyBlock",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "listing_scan:x_post",
+        "watchlist.ca",
+        "x_cache:x_posts_cache.json",
+        "ca_finds:x_post"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; locked on watchlist — verify wallet vs contract via trace; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://x.com/RealHappyBlock",
+      "first_seen": "2026-10-20T18:21:27+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "HappyBlock",
+      "handle": "RealHappyBlock"
+    },
+    {
+      "address": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
+      "address_norm": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://www.superboard.xyz/",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "js_site:inline:https://www.superboard.xyz/"
+      ],
+      "note": "appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 appears as a ?ref= referral parameter — likely a wallet, not a token CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://www.superboard.xyz/",
+      "first_seen": "2026-10-20T18:21:27+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Superboard",
+      "handle": "Superboard_"
+    },
+    {
+      "address": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
+      "address_norm": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
+      "chain": "evm",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://x.com/swaydotfamily",
+        "watchlist.ca"
+      ],
+      "note": "locked on watchlist — verify wallet vs contract via trace",
+      "evidence_url": "https://x.com/swaydotfamily",
+      "first_seen": "2026-10-24T00:32:28+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "sway",
+      "handle": "swaydotfamily"
+    },
+    {
+      "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "address_norm": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:html:https://tapefoundry.xyz/"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/",
+      "first_seen": "2026-10-22T07:27:45+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "address_norm": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:html:https://tapefoundry.xyz/",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/",
+      "first_seen": "2026-10-22T07:27:45+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+      "address_norm": "0xb4a7b988b77bd7b29e56f42229464a8dd72361bf",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:html:https://tapefoundry.xyz/",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:html:https://tapefoundry.xyz/",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/",
+      "first_seen": "2026-10-22T07:27:45+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0xb69215ce68792eca5672b49196868369555ea181",
+      "address_norm": "0xb69215ce68792eca5672b49196868369555ea181",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "listing_scan:site:https://tapefoundry.xyz/",
+        "js_site:html:https://tapefoundry.xyz/",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022141718",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022161943",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022171430",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022181128",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261022195356",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023024255",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031551",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023031719",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023053222",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023074721",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023080244",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023104714",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023112851",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023145257",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023155023",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023170446",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023175142",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023184649",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023200245",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023214236",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023221742",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023224631",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261023234842",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024000634",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024010521",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024013511",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024054443",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024064306",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024074833",
+        "js_site:js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024124420"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/TapeFoundry",
+      "first_seen": "2026-10-22T07:27:45+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "address_norm": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022034432A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022041531A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022061008B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022071006B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022111056B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022114704B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/TapeFoundry",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "address_norm": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022034432A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022041531A",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022061008B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022071006B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022111056B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022114704B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "ca_finds:js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+        "wallet_trace_events",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA; 【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "evidence_url": "https://x.com/TapeFoundry",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "address_norm": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:js:https://tapefoundry.xyz/buy.js?v=20261022121627B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022131522B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022141718B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022161943B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022171430B",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022181128P",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261022195356A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023024255A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031551A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023031719A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023053222A3",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023074721G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023080244G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023104714G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023112851G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023145257G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023155023G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023170446G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023175142G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023184649G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023200245G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023214236G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023221742G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023224631G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261023234842G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024000634G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024010521G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024013511G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024054443G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024064306G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024074833G",
+        "js_site:js:https://tapefoundry.xyz/buy.js?v=20261024124420G"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://tapefoundry.xyz/buy.js?v=20261022121627B",
+      "first_seen": "2026-10-22T21:30:36+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "tapefoundry"
+    },
+    {
+      "address": "0x4367d06f5cc485a76f083676d6b4cd87269e4f95",
+      "address_norm": "0x4367d06f5cc485a76f083676d6b4cd87269e4f95",
+      "chain": "bsc",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+        "js_site:js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "fast_site:https://tapeoutscan.io/"
+      ],
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet; 【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "evidence_url": "https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "【扫出钱包·非CA】TapeOutScan",
+      "handle": "TapeOutScan"
+    },
+    {
+      "address": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "address_norm": "0x37e41a9841f56d2ce71d927251966813447ca8f0",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:factory:tapeout:creator_watched"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+      "first_seen": "2026-10-21T16:07:34+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch"
+    },
+    {
+      "address": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "address_norm": "0xcd28c21d3382ec72d0693a7187eec0287f7e5174",
+      "chain": "bsc",
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds_unclassified:factory:tapeout:creator_watched"
+      ],
+      "note": "unclassified EVM from ca_finds",
+      "evidence_url": "https://bscscan.com/tx/0x573983b23f364e8a99ddd74246699ffea60d2319075f581cfbbc159429fd8e73",
+      "first_seen": "2026-10-21T16:07:34+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "TapeRobot·TapeOut监控",
+      "handle": "TapeOutWatch"
+    },
+    {
+      "address": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
+      "address_norm": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
+      "chain": "ethereum",
+      "confidence": "high",
+      "sources": [
+        "previous_watchlist",
+        "ca_finds:inline:https://thetimecard.xyz",
+        "wallet_trace:classify",
+        "wallet_trace_events",
+        "ca_finds_unclassified:inline:https://thetimecard.xyz"
+      ],
+      "note": "classified as EOA/wallet via eth_getCode; classified as contract (13692 bytes); unclassified EVM from ca_finds; 【NFT合约·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: NFT contract (ERC721) — not a token CA; 【NFT合约·非CA】 classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "evidence_url": "https://thetimecard.xyz",
+      "first_seen": "2026-10-20T18:21:27+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Timecard",
+      "handle": "thetimecard"
+    },
+    {
+      "address": "0x147e3b495c677a82521fd5368941c6a2c410de42",
+      "address_norm": "0x147e3b495c677a82521fd5368941c6a2c410de42",
+      "chain": null,
+      "confidence": "medium",
+      "sources": [
+        "previous_watchlist",
+        "js_site:js:https://www.newspad.fun/assets/index-B6TUyJ-k.js"
+      ],
+      "note": null,
+      "evidence_url": "https://x.com/usenewspadfun",
+      "first_seen": "2026-10-22T09:34:01+08:00",
+      "last_seen": "2026-10-24T23:29:45+08:00",
+      "project": "Newspad",
+      "handle": "usenewspadfun"
+    }
+  ],
+  "by_address": {
+    "0xddb587d88c0afa42317e033bdd11edc2462b873f": [
+      {
+        "project": "【扫出钱包·非CA】0-0.city",
+        "handle": "0_0city",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0xa65cb66b48be8bc52ba982bb92bf7177112153fc": [
+      {
+        "project": null,
+        "handle": "1264768226124169216",
+        "confidence": "medium",
+        "chain": null
+      },
+      {
+        "project": "HappyBlock",
+        "handle": "RealHappyBlock",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x5a4eaff589c9e410260a61d658a893876710ba83": [
+      {
+        "project": null,
+        "handle": "2081610323170066432",
+        "confidence": "medium",
+        "chain": null
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0xcc6b5acac871bcb1f60cce29d5917266d8fb956d": [
+      {
+        "project": "老7🌞tapeout💎bem",
+        "handle": "bemer77",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x68224f668083c29e9800be2a646d42d18cedf7e2": [
+      {
+        "project": "CircuitPay",
+        "handle": "CircuitPay_",
+        "confidence": "medium",
+        "chain": null
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7": [
+      {
+        "project": "Drakhen",
+        "handle": "drakhenRH",
+        "confidence": "medium",
+        "chain": "robinhood"
+      }
+    ],
+    "0x34eaa249f8a2f897884da9c411aac67fb1c8d3ac": [
+      {
+        "project": "Drakhen",
+        "handle": "drakhenRH",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x13a130b336400409c956df042c128238f1486ddd": [
+      {
+        "project": "Elysium Name Service",
+        "handle": "ElysiumNames",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x1da6a196405dcc455195eb00b4f7d17106164e0a": [
+      {
+        "project": "Elysium Name Service",
+        "handle": "ElysiumNames",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xe99d7a5cb301f023849888d5f34a43bb7f39d841": [
+      {
+        "project": "Elysium Name Service",
+        "handle": "ElysiumNames",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xa434b4d98dc9e35205bf186b1750ed2961791f2d": [
+      {
+        "project": "Elysium Name Service",
+        "handle": "ElysiumNames",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x452ed78dacf94892e26b22f89b7c40132b04b88a": [
+      {
+        "project": "【扫出钱包·非CA】EmberWorld",
+        "handle": "EmberWorldX",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xe326b8fabc5082b4c29ac9d865505724f46323fa": [
+      {
+        "project": "【扫出钱包·非CA】EmberWorld",
+        "handle": "EmberWorldX",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xa2399b22abac114435eccce8473b6ed4e2e0acc8": [
+      {
+        "project": "ETHERIIS PROTOCOL",
+        "handle": "ETHERIISPROTOCO",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x8c4081c73f19a74a7cee543d422937954c120c07": [
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc": [
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0xb4a7b988b77bd7b29e56f42229464a8dd72361bf": [
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0xb69215ce68792eca5672b49196868369555ea181": [
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "medium",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f": [
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "foundrytape",
+        "confidence": "high",
+        "chain": "bsc"
+      },
+      {
+        "project": "【NFT合约·非CA】TapeFoundry",
+        "handle": "tapefoundry",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x2f74c2b482d47c559c46b6468d9540237192d91a": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0x60b9262456de011f7d15a54cdd8c48baaa8b022f": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x7d948882756270c20ce0983fb1ef58673984249d": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0x35770ad303ec19c186789e413535ad96ca382f66": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0xe6bad0f60514f8b924c854f36c0460814ee53d0f": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0x08bded51bd830655db14c2a42df25f56a0f9a5ad": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee": [
+      {
+        "project": "【扫出钱包·非CA】Hashgentic",
+        "handle": "hashgentic",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b": [
+      {
+        "project": "Ink Daddy",
+        "handle": "InkDaddynft",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xfc106657ac50c4e314a712808d06e0a7377710c0": [
+      {
+        "project": "【扫出钱包·非CA】kilnpad",
+        "handle": "kilnpad",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a": [
+      {
+        "project": "【扫出钱包·非CA】kilnpad",
+        "handle": "kilnpad",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0": [
+      {
+        "project": "【扫出钱包·非CA】kilnpad",
+        "handle": "kilnpad",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x6cd5661646289fb6e65ea5c032310fded797d0a2": [
+      {
+        "project": "paperbird",
+        "handle": "paperbird_lol",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x233ff29b239abc1d7748605da9b205c3e008626e": [
+      {
+        "project": "paperbird",
+        "handle": "paperbird_lol",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x6063d7671afe30d5cdfa9925e5d9712e52e30e82": [
+      {
+        "project": null,
+        "handle": "qern_io",
+        "confidence": "medium",
+        "chain": null
+      }
+    ],
+    "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde": [
+      {
+        "project": "Superboard",
+        "handle": "Superboard_",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x14bb48d197bf0c139580da26f456f9f7a8d13675": [
+      {
+        "project": "sway",
+        "handle": "swaydotfamily",
+        "confidence": "medium",
+        "chain": "evm"
+      }
+    ],
+    "0x4367d06f5cc485a76f083676d6b4cd87269e4f95": [
+      {
+        "project": "【扫出钱包·非CA】TapeOutScan",
+        "handle": "TapeOutScan",
+        "confidence": "high",
+        "chain": "bsc"
+      }
+    ],
+    "0x37e41a9841f56d2ce71d927251966813447ca8f0": [
+      {
+        "project": "TapeRobot·TapeOut监控",
+        "handle": "TapeOutWatch",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0xcd28c21d3382ec72d0693a7187eec0287f7e5174": [
+      {
+        "project": "TapeRobot·TapeOut监控",
+        "handle": "TapeOutWatch",
+        "confidence": "medium",
+        "chain": "bsc"
+      }
+    ],
+    "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777": [
+      {
+        "project": "Timecard",
+        "handle": "thetimecard",
+        "confidence": "high",
+        "chain": "ethereum"
+      }
+    ],
+    "0x147e3b495c677a82521fd5368941c6a2c410de42": [
+      {
+        "project": "Newspad",
+        "handle": "usenewspadfun",
+        "confidence": "medium",
+        "chain": null
+      }
+    ]
+  },
+  "notes": [
+    "Incremental: re-running keeps previous wallets, except launched-handle wallets are dropped.",
+    "high = eth_getCode-confirmed EOA; medium = scraped candidate; low = noisy/feed.",
+    "onchain_lock.py matches tx.from / deployer against by_address."
+  ]
+}

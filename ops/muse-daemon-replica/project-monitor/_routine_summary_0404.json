@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-30T04:45:02+08:00",
+  "hhmm": "0404",
+  "pause": false,
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "sync": {
+    "before": 425,
+    "after": 427,
+    "locked_new": [
+      "archerswapcore",
+      "eleosfun"
+    ],
+    "updated_meta": 17,
+    "npa_skipped": 39,
+    "kol_skipped": 1,
+    "incomplete": 146
+  },
+  "x": {
+    "bios": 93,
+    "posts_counts": {
+      "privatekeycoin_": 3,
+      "hexxxx2_0": 10,
+      "mitradotfun": 10,
+      "orpheushl": 10,
+      "rustlings_nft": 10,
+      "aegis_hedge": 10,
+      "kaspaseal": 10,
+      "archerswapcore": 10,
+      "eleosfun": 0,
+      "fxyzai": 10,
+      "alphaelysium": 10,
+      "bopzopapp": 10
+    },
+    "user_count": 765,
+    "pkc_bio_snip": "(empty)"
+  },
+  "pipeline_exit": 0,
+  "elapsed_s": 1869,
+  "elapsed_min": 31.1,
+  "onchain_lock_relay": {
+    "offset": 280
+  },
+  "onchain_lock_new": 0,
+  "onchain_lock_actionable": 0,
+  "new_js_ca": 1,
+  "new_js_ca_note": "KOAI 0x046e1f… already in baseline ca_finds — not newly actionable; SITE_JS×7 ambient near_deploys=8 skipped",
+  "js_factory_match": 0,
+  "newly_launched": 0,
+  "listing_at_changes": 0,
+  "crowded_new_ca": true,
+  "trace_wallet": "timeout rc=124 (900s hang-safe)",
+  "rpc_notes": [
+    "base publicnode: request limit reached (onchain daemon last_error) — transient, not pausing"
+  ],
+  "actionable": [
+    {
+      "type": "NEW_CA",
+      "project": "Crowded",
+      "handle": "crowdedfun",
+      "chain": "solana",
+      "ca": "H3iGq7KSqdzw7QG3xZo2mF4eaYsvihZqqoAkdXripump",
+      "evidence": "listing_scan NEW_CA via site x.com/Crowdedfun; SPL mint verified (Tokenz, dec=6); first entered ca_finds this run",
+      "source": "site:https://x.com/Crowdedfun",
+      "confidence": "high",
+      "is_token": true,
+      "ca_status": "candidate",
+      "note": "seen by listing daemon ~03:51; not in baseline ca_finds; not alerted in 0325 summary"
+    }
+  ],
+  "quiet": false,
+  "user_ping": true
+}

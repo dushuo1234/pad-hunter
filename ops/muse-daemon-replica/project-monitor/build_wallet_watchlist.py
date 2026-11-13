@@ -1,0 +1,457 @@
+#!/usr/bin/env python3
+"""Build wallet_watchlist.json — per-project candidate deployer/team wallets.
+
+Sources (read-only, incremental merge — never drops a previously seen wallet):
+  - ca_finds.json                 kind=wallet (or unclassified EVM with wallet-y notes)
+  - wallet_trace_latest.json      classification.kind=wallet
+  - wallet_trace_events.jsonl     WALLET_CLASSIFIED
+  - listing_scan_latest.json      cas[] EVM addresses (source tagged)
+  - js_factory_scan_latest.json   addresses from site JS
+  - fast_site_alerts.jsonl        SCANNED_WALLET / wallet-kind NEW_JS_CA
+  - watchlist.json                ca / ca_alt / mint when EVM
+  - onchain_scan_latest.json      new_deploy_hints addresses (factory-related, low)
+
+Confidence:
+  high   — classified wallet via eth_getCode, or locked watchlist.ca with wallet note
+  medium — appeared in X/site/JS scrape as address (not yet classified)
+  low    — factory ambient / referral-parameter / feed-style project
+
+Output: wallet_watchlist.json
+Also mirrors a slim copy next to publish-pages-data when --mirror.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+OUT = BASE / "wallet_watchlist.json"
+WATCHLIST = BASE / "watchlist.json"
+SH = ZoneInfo("Asia/Shanghai")
+EVM_RE = re.compile(r"^0x[a-fA-F0-9]{40}$")
+CONF_RANK = {"low": 0, "medium": 1, "high": 2}
+LOW_HANDLES = {"baodotla", "ballast"}
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def load(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def is_evm(addr: str | None) -> bool:
+    return bool(addr and isinstance(addr, str) and EVM_RE.match(addr.strip()))
+
+
+def norm(addr: str) -> str:
+    return addr.strip().lower()
+
+
+def jsonl(path: Path):
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            yield json.loads(line)
+        except Exception:
+            continue
+
+
+def chain_hint(proj: dict | None, fallback: str | None = None) -> str | None:
+    if not proj:
+        return fallback
+    for c in proj.get("inferred_chains") or []:
+        if c and c != "unknown":
+            return c
+    ch = (proj.get("chain") or "").strip()
+    mapping = {
+        "eth": "ethereum", "ethereum": "ethereum",
+        "base": "base", "bsc": "bsc", "bnb": "bsc", "bnb chain": "bsc",
+        "robinhood chain": "robinhood", "robinhood": "robinhood",
+        "hyperevm": "hyperevm", "hyperliquid": "hyperevm",
+        "ink": "ink",
+    }
+    key = ch.lower()
+    if key in mapping:
+        return mapping[key]
+    if "robinhood" in key:
+        return "robinhood"
+    if "hyper" in key:
+        return "hyperevm"
+    if "base" in key:
+        return "base"
+    if "bsc" in key or "bnb" in key:
+        return "bsc"
+    if "ink" in key:
+        return "ink"
+    if key in ("eth", "ethereum"):
+        return "ethereum"
+    return fallback or (proj.get("ca_chain") if proj.get("ca_chain") not in ("evm", "solana") else None)
+
+
+# P1: trust tier is derived from *where* a wallet came from, not from EOA-ness.
+#   high   = explicitly verified (official X states dev wallet / NFT deployer / manual verify)
+#   medium = official-X-sourced or curated watchlist field
+#   low    = official site / JS / config / listing scrape / trace of those (leads only)
+VERIFIED_SOURCE_PREFIXES = ("x_official_dev", "nft_deployer", "manual_verified", "tapeout_verified")
+
+
+def _is_x_source(src: str) -> bool:
+    s = (src or "").lower()
+    return s.startswith("x_cache:") or "x.com/" in s or "twitter.com/" in s or ":x_post" in s
+
+
+def trust_tier(sources, eoa_confirmed: bool = False) -> str:
+    srcs = [s for s in (sources or []) if s and s != "previous_watchlist"]
+    if any(s.startswith(VERIFIED_SOURCE_PREFIXES) for s in srcs):
+        return "high"
+    # official X explicitly posted this address AND it is a confirmed EOA -> X-stated wallet
+    if eoa_confirmed and any(s.startswith("ca_finds:") and _is_x_source(s) for s in srcs):
+        return "high"
+    if any(_is_x_source(s) or s.startswith("watchlist.") for s in srcs):
+        return "medium"
+    return "low"
+
+
+def build() -> dict:
+    wl = load(WATCHLIST, {})
+    projects = wl.get("projects") or []
+    by_handle = {(p.get("handle") or "").lower(): p for p in projects if p.get("handle")}
+    by_name = {(p.get("name") or "").lower(): p for p in projects if p.get("name")}
+
+    # (handle_lower, addr_lower) -> entry
+    wallets: dict[tuple[str, str], dict] = {}
+
+    def add(*, name, handle, address, chain, source, confidence, note=None, evidence_url=None):
+        if not is_evm(address):
+            return
+        address = address.strip()
+        proj = by_handle.get((handle or "").lower()) or by_name.get((name or "").lower()) or {}
+        name = name or proj.get("name")
+        handle = handle or proj.get("handle")
+        if not handle and not name:
+            return
+        key_h = (handle or name or "?").lower()
+        key = (key_h, norm(address))
+        if key_h in LOW_HANDLES:
+            confidence, note = "low", (note or "") + ("; feed-style project" if note else "feed-style project")
+        chain = chain or chain_hint(proj)
+        cur = wallets.get(key)
+        src_entry = {"source": source, "confidence": confidence, "at": now_iso()}
+        if cur is None:
+            wallets[key] = {
+                "project": name,
+                "handle": handle,
+                "address": address if address != address.lower() else address,
+                "address_norm": norm(address),
+                "chain": chain,
+                "confidence": confidence,
+                "sources": [source],
+                "source_detail": [src_entry],
+                "note": note,
+                "evidence_url": evidence_url or proj.get("x_url"),
+                "first_seen": now_iso(),
+                "last_seen": now_iso(),
+            }
+            return
+        # merge
+        cur["last_seen"] = now_iso()
+        if source not in cur["sources"]:
+            cur["sources"].append(source)
+        cur["source_detail"].append(src_entry)
+        if CONF_RANK.get(confidence, 0) > CONF_RANK.get(cur["confidence"], 0):
+            cur["confidence"] = confidence
+        if chain and (not cur.get("chain") or cur.get("chain") in ("evm", None)):
+            cur["chain"] = chain
+        if note and note not in (cur.get("note") or ""):
+            cur["note"] = f"{cur['note']}; {note}" if cur.get("note") else note
+        if evidence_url and not cur.get("evidence_url"):
+            cur["evidence_url"] = evidence_url
+        # prefer mixed-case display
+        if address != address.lower() and cur["address"] == cur["address"].lower():
+            cur["address"] = address
+
+    # Seed from previous watchlist (incremental — never drop)
+    prev = load(OUT, {})
+    for pe in prev.get("wallets") or []:
+        add(
+            name=pe.get("project"), handle=pe.get("handle"), address=pe.get("address"),
+            chain=pe.get("chain"), source="previous_watchlist",
+            confidence=pe.get("confidence") or "medium", note=pe.get("note"),
+            evidence_url=pe.get("evidence_url"),
+        )
+        # restore first_seen if present
+        key = ((pe.get("handle") or pe.get("project") or "?").lower(), norm(pe.get("address") or ""))
+        if key in wallets and pe.get("first_seen"):
+            wallets[key]["first_seen"] = pe["first_seen"]
+            # keep richer sources list from prev
+            for s in pe.get("sources") or []:
+                if s not in wallets[key]["sources"]:
+                    wallets[key]["sources"].append(s)
+
+    # 1) ca_finds wallets
+    cf = load(BASE / "ca_finds.json", {})
+    for f in cf.get("finds") or []:
+        kind = f.get("kind")
+        note = f.get("note") or ""
+        if kind == "wallet" or "EOA/wallet" in note or "likely a wallet" in note:
+            add(
+                name=f.get("project"), handle=f.get("handle"), address=f.get("address"),
+                chain=f.get("chain") if f.get("chain") not in ("evm", "solana") else None,
+                source=f"ca_finds:{f.get('source') or 'unknown'}",
+                confidence="high" if kind == "wallet" else "medium",
+                note=note or None, evidence_url=f.get("evidence_url"),
+            )
+        elif kind != "contract" and is_evm(f.get("address")):
+            # unclassified EVM — candidate, medium
+            add(
+                name=f.get("project"), handle=f.get("handle"), address=f.get("address"),
+                chain=f.get("chain") if f.get("chain") not in ("evm", "solana") else None,
+                source=f"ca_finds_unclassified:{f.get('source') or 'unknown'}",
+                confidence="medium", note="unclassified EVM from ca_finds",
+                evidence_url=f.get("evidence_url"),
+            )
+
+    # 2) wallet_trace_latest
+    wt = load(BASE / "wallet_trace_latest.json", {})
+    for r in wt.get("results") or []:
+        clf = r.get("classification") or {}
+        if clf.get("kind") == "wallet" and is_evm(r.get("address")):
+            add(
+                name=r.get("project"), handle=r.get("handle"), address=r.get("address"),
+                chain=clf.get("chain"), source="wallet_trace:classify",
+                confidence="high", note=r.get("note"), evidence_url=None,
+            )
+        # also ingest any previously traced deployed contracts' deployers already known
+        for d in r.get("deployed") or []:
+            # the wallet itself is the deployer — already added; skip contracts here
+            pass
+
+    # 3) wallet_trace_events
+    for ev in jsonl(BASE / "wallet_trace_events.jsonl"):
+        if ev.get("type") == "WALLET_CLASSIFIED" and is_evm(ev.get("address")):
+            add(
+                name=ev.get("project"), handle=ev.get("handle"), address=ev.get("address"),
+                chain=ev.get("chain"), source="wallet_trace_events",
+                confidence="high", note=ev.get("note"),
+            )
+
+    # 4) listing scan
+    ls = load(BASE / "listing_scan_latest.json", {})
+    for r in ls.get("results") or []:
+        for c in r.get("cas") or []:
+            addr = c.get("address")
+            if not is_evm(addr):
+                continue
+            src = c.get("source") or "listing_scan"
+            conf = "medium"
+            if "x.com/" in src or src.startswith("x_"):
+                conf = "medium"
+            add(
+                name=r.get("name"), handle=r.get("handle"), address=addr,
+                chain=None, source=f"listing_scan:{src}",
+                confidence=conf, note=None, evidence_url=src if src.startswith("http") else None,
+            )
+
+    # 5) js factory scan
+    js = load(BASE / "js_factory_scan_latest.json", {})
+    for r in js.get("results") or []:
+        for a in r.get("addresses") or []:
+            addr = a.get("address")
+            if not is_evm(addr):
+                continue
+            add(
+                name=r.get("name"), handle=r.get("handle"), address=addr,
+                chain=None, source=f"js_site:{a.get('source') or 'script'}",
+                confidence="medium", note=None,
+            )
+
+    # 6) fast site alerts — wallets only (contracts go to ca_finds, not watchlist)
+    for ev in jsonl(BASE / "fast_site_alerts.jsonl"):
+        et = ev.get("type")
+        if et not in ("NEW_JS_CA", "SCANNED_WALLET") or not is_evm(ev.get("address")):
+            continue
+        kind = (ev.get("kind") or ev.get("addr_kind") or "").lower()
+        if et == "NEW_JS_CA" and kind == "contract":
+            continue  # real CA — not a deployer wallet candidate
+        if et == "SCANNED_WALLET" or kind == "wallet":
+            conf, note = "high", ev.get("note") or "扫出钱包"
+        else:
+            conf, note = "medium", ev.get("note")
+        add(
+            name=ev.get("name"), handle=ev.get("handle"), address=ev.get("address"),
+            chain=ev.get("chain"), source=f"fast_site:{ev.get('site') or 'site'}",
+            confidence=conf, note=note,
+        )
+
+    # 7) watchlist locked CAs (EVM only — may be wallet or contract; tag as candidate)
+    for p in projects:
+        for fld in ("ca", "ca_alt", "mint"):
+            v = p.get(fld)
+            vals = v if isinstance(v, list) else ([v] if v else [])
+            for x in vals:
+                if is_evm(x):
+                    add(
+                        name=p.get("name"), handle=p.get("handle"), address=x,
+                        chain=chain_hint(p, p.get("ca_chain")),
+                        source=f"watchlist.{fld}",
+                        confidence="medium",
+                        note="locked on watchlist — verify wallet vs contract via trace",
+                        evidence_url=p.get("x_url"),
+                    )
+
+    # 8) X posts/bios addresses
+    for cache_name in ("x_posts_cache.json", "x_listing_posts_cache.json"):
+        xc = load(BASE / cache_name, {})
+        users = xc.get("users") or {}
+        for handle, u in users.items():
+            if not isinstance(u, dict):
+                continue
+            blob = json.dumps(u, ensure_ascii=False)
+            for m in re.finditer(r"0x[a-fA-F0-9]{40}", blob):
+                addr = m.group(0)
+                proj = by_handle.get(handle.lower())
+                add(
+                    name=(proj or {}).get("name"), handle=handle,
+                    address=addr, chain=chain_hint(proj),
+                    source=f"x_cache:{cache_name}",
+                    confidence="medium",
+                    evidence_url=f"https://x.com/{handle}",
+                )
+
+    # Drop wallets tied to 已开盘 handles (restored=false) — they must not match onchain_lock
+    try:
+        from onchain_lock import load_launched_blocklist, hkey as _hkey
+        _blk = load_launched_blocklist()
+    except Exception:
+        _blk = set()
+        def _hkey(h):
+            return (h or "").lstrip("@").strip().lower()
+    if _blk:
+        before = len(wallets)
+        wallets = {k: w for k, w in wallets.items() if _hkey(w.get("handle")) not in _blk}
+        dropped = before - len(wallets)
+        if dropped:
+            print(f"  dropped {dropped} wallets for launched handles", flush=True)
+
+    # P1: re-tier confidence by provenance (site/JS-scraped -> low). Keep EOA flag separately.
+    for w in wallets.values():
+        raw = w.get("confidence")
+        tier = trust_tier(w.get("sources"), eoa_confirmed=(raw == "high"))
+        if (w.get("handle") or w.get("project") or "?").lower() in LOW_HANDLES:
+            tier = "low"
+        if raw == "high" and tier != "high":
+            w["eoa_confirmed"] = True
+        w["confidence"] = tier
+
+    # Group by project
+    by_proj: dict[str, dict] = {}
+    for (_h, _a), w in wallets.items():
+        hk = (w.get("handle") or w.get("project") or "?").lower()
+        slot = by_proj.setdefault(hk, {
+            "project": w.get("project"),
+            "handle": w.get("handle"),
+            "chain": w.get("chain"),
+            "wallets": [],
+        })
+        if w.get("chain") and not slot.get("chain"):
+            slot["chain"] = w["chain"]
+        slot["wallets"].append({
+            "address": w["address"],
+            "address_norm": w["address_norm"],
+            "chain": w.get("chain"),
+            "confidence": w["confidence"],
+            "eoa_confirmed": bool(w.get("eoa_confirmed")),
+            "sources": w["sources"],
+            "note": w.get("note"),
+            "evidence_url": w.get("evidence_url"),
+            "first_seen": w.get("first_seen"),
+            "last_seen": w.get("last_seen"),
+        })
+
+    projects_out = sorted(by_proj.values(), key=lambda p: (p.get("handle") or "").lower())
+    flat = []
+    for p in projects_out:
+        for w in p["wallets"]:
+            flat.append({**w, "project": p.get("project"), "handle": p.get("handle")})
+
+    # index by address for onchain_lock
+    by_addr: dict[str, list] = {}
+    for w in flat:
+        by_addr.setdefault(w["address_norm"], []).append({
+            "project": w.get("project"),
+            "handle": w.get("handle"),
+            "confidence": w.get("confidence"),
+            "chain": w.get("chain"),
+        })
+
+    tw = load(BASE / "tapeout_watch_wallets.json", {})
+    tapeout_watch = {
+        "label": "TapeRobot/TapeOut watch — 钱包·非CA",
+        "chain": "bsc",
+        "factory": (tw.get("factory") or {}).get("address"),
+        "watcher": "tapeout_watch.py (daemon) — alerts on TapeOut/four.meme creates or CREATE deploys by these wallets",
+        "wallets": [{**w, "label_zh": "扫出钱包·TapeOut监控", "is_ca": False} for w in tw.get("wallets") or []],
+    }
+    return {
+        "generated_at": now_iso(),
+        "timezone": "Asia/Shanghai",
+        "tapeout_watch": tapeout_watch,
+        "project_count": len(projects_out),
+        "wallet_count": len(flat),
+        "projects": projects_out,
+        "wallets": flat,
+        "by_address": by_addr,
+        "notes": [
+            "Incremental: re-running keeps previous wallets, except launched-handle wallets are dropped.",
+            "P1: high = verified (official X dev wallet / NFT deployer / manual); medium = official-X or watchlist-sourced; low = site/JS-scraped lead. eoa_confirmed = eth_getCode EOA.",
+            "onchain_lock.py matches tx.from / deployer against by_address.",
+        ],
+    }
+
+
+def write(doc: dict) -> Path:
+    tmp = OUT.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(OUT)
+    return OUT
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--mirror", action="store_true", help="also copy to publish-pages-data dirs")
+    args = ap.parse_args()
+    doc = build()
+    write(doc)
+    print(
+        f"wallet_watchlist: projects_with_wallets={doc['project_count']} "
+        f"wallets={doc['wallet_count']} -> {OUT}"
+    )
+    if args.mirror:
+        for dest in (
+            Path("/workspace/publish-pages-data/wallet_watchlist.json"),
+            Path("/cursor/stores/store-b953e26e-8884-4159-b9a8-d2e6295761c8/publish-pages-data/wallet_watchlist.json"),
+        ):
+            try:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                print(f"  mirrored -> {dest}")
+            except Exception as e:
+                print(f"  mirror fail {dest}: {e}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

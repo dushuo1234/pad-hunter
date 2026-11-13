@@ -1,0 +1,23 @@
+name = "pad-hunter-workbench"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+account_id = "39aa42e1b4d8032bc706c322d114c9de"
+workers_dev = true
+
+# Prefer Workers Route on existing proxied DNS (does not require deleting the old tunnel CNAME).
+# custom_domain=true fails with code 100117 while api.adualpha.win still has tunnel-managed records.
+routes = [
+  { pattern = "api.adualpha.win/*", zone_name = "adualpha.win" }
+]
+
+[vars]
+VERSION = "1.6.0-cf"
+ROOM_NAME = "pad-hunter-v2"
+
+[[durable_objects.bindings]]
+name = "WORKBENCH"
+class_name = "WorkbenchRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["WorkbenchRoom"]

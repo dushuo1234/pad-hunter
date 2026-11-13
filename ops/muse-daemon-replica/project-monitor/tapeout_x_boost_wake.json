@@ -1,0 +1,16 @@
+{
+  "due": true,
+  "boost": true,
+  "at": "2026-11-04T14:10:57+08:00",
+  "x_interval_s": 45.0,
+  "targets": [
+    {
+      "handle": "TapeRobot_bsc",
+      "listing_at": "2026-10-21T16:00:00+08:00",
+      "mint_live": true,
+      "x_user_id": "3114058692",
+      "x_username": "TapeRobot_bsc"
+    }
+  ],
+  "instruction": "Call x get_users_posts id=<x_user_id> since_id=<tapeout_x_state.json.since_id> max_results=10 post.fields=created_at,entities,note_tweet (write_to_file), then python3 /workspace/project-monitor/tapeout_x_ingest.py <file>. Deduped via tapeout_push."
+}

@@ -1,0 +1,239 @@
+{
+  "tag": "1600",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T16:37:22.162909+08:00",
+  "fired_approx": "2026-10-28 16:00 Asia/Shanghai",
+  "pause_file": "absent",
+  "exit": 0,
+  "duration_s": 1934,
+  "duration_min": 32.2,
+  "pipeline": {
+    "command": "bash ./run_listing_onchain_js.sh",
+    "started": "2026-10-28T16:03:16+08:00",
+    "ended": "2026-10-28T16:35:30+08:00",
+    "exit": 0,
+    "elapsed_s": 1934,
+    "log": "/tmp/routine_1601_pipeline.log"
+  },
+  "daemons": {
+    "listing_scan_daemon": {
+      "pid": 44693,
+      "status": "running"
+    },
+    "onchain_lock_daemon": {
+      "pid": 1823,
+      "status": "running",
+      "note": "intermittent publicnode rate-limit on base/bsc; ethereum ankr Unauthorized noise; robinhood rpc_errors elevated; still advancing — not pause-worthy"
+    }
+  },
+  "watchlist": {
+    "before": 314,
+    "after_sync": 318,
+    "after_pipeline": 317,
+    "locked_new_count": 4,
+    "locked_new": [
+      "Mining Machine",
+      "blobs.meme",
+      "Mintra Protocol",
+      "Boiler.games"
+    ],
+    "locked_new_detail": [
+      {
+        "name": "Mining Machine",
+        "handle": "riggrid",
+        "status": "不明",
+        "chain": "未知"
+      },
+      {
+        "name": "blobs.meme",
+        "handle": "blobsdotmeme",
+        "status": "即将启动",
+        "chain": "ETH"
+      },
+      {
+        "name": "Mintra Protocol",
+        "handle": "mintrabnb",
+        "status": "即将启动",
+        "chain": "BSC"
+      },
+      {
+        "name": "Boiler.games",
+        "handle": "boilergame",
+        "status": "即将启动",
+        "chain": "未知"
+      }
+    ],
+    "blocklist_skipped": 104,
+    "updated_meta": 3
+  },
+  "newly_launched": [
+    {
+      "project": "Mobster",
+      "handle": "mobster_meme",
+      "ca": "0xe0165a1b3d8f9e276b0746adcb9c7094cbd05785",
+      "chain": "robinhood",
+      "reason": "onchain_ca_lock / mark_launched_from_ca",
+      "removed_at": "2026-10-28T16:31:34+08:00"
+    }
+  ],
+  "延期": [],
+  "workbench_delta": {
+    "before": 83,
+    "after": 84,
+    "added": [
+      "Boiler.games",
+      "blobs.meme"
+    ],
+    "removed": [
+      "kilnpad"
+    ]
+  },
+  "new_ca": [
+    {
+      "name": "Mobster",
+      "handle": "mobster_meme",
+      "type": "evm",
+      "address": "0xe0165a1b3d8f9e276b0746adcb9c7094cbd05785",
+      "chain": "robinhood",
+      "confidence": "high",
+      "source": "site:https://x.com/mobster_meme",
+      "disposition": "locked into ca_finds then mark_launched; now in launched_history + launched.json",
+      "already_reported_before_run": false,
+      "in_ca_finds_before": false,
+      "in_ca_finds_after": "launched_history (not active finds)",
+      "verify": "ERC20 Mob dec=18"
+    }
+  ],
+  "mobster": {
+    "ca": "0xe0165a1b3d8f9e276b0746adcb9c7094cbd05785",
+    "chain": "robinhood",
+    "confidence": "high",
+    "in_listing_scan": true,
+    "in_ca_finds_before": false,
+    "in_ca_finds_after": "launched_history",
+    "mark_launched": true,
+    "already_reported": false,
+    "actionable": true
+  },
+  "onchain_lock": {
+    "offset_before": 187301,
+    "offset_after": 188043,
+    "new": 1,
+    "qualifying": [],
+    "skipped": [
+      {
+        "project": "Trench",
+        "handle": "trench_agents",
+        "address": "0xb200000000000000000000945d99cb708675d59b",
+        "chain": "base",
+        "confidence": "low",
+        "reason": "name_fuzzy:trench",
+        "at": "2026-10-28T15:57:06+08:00",
+        "note": "low/ambiguous — not user-actionable"
+      }
+    ]
+  },
+  "NEW_DEPLOY": "none watchlist-relevant; ambient_univ2_samples=30",
+  "NEW_JS_CA": 0,
+  "JS_FACTORY": 0,
+  "TRACE_CA": {
+    "count": 4,
+    "note": "Hashgentic wallet CREATE-derived contracts on bsc (non-token / 扫出钱包·非CA) — not chat-relay",
+    "addresses": [
+      "0x7d948882756270c20ce0983fb1ef58673984249d",
+      "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "0x35770ad303ec19c186789e413535ad96ca382f66"
+    ]
+  },
+  "SITE_JS_CHANGE": {
+    "count": 10,
+    "note": "ambient/empty-addr or stable-addrs fingerprint churn (ApeCover/E.T.A/Reapo/Rooftop/Superboard/Tago/TapeFoundry×2/swirl/♱17-26) — suppressed"
+  },
+  "listing_at_changes_published": 0,
+  "listing_at_within_3_days": [
+    {
+      "project": "Stonk Agents",
+      "handle": "bStonkAgents",
+      "listing_at": "2026-10-28T23:00:00+08:00",
+      "source": "x",
+      "confidence": "high"
+    },
+    {
+      "project": "Fishesrh",
+      "handle": "Fishesrh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x",
+      "confidence": "high"
+    },
+    {
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x",
+      "confidence": "high"
+    },
+    {
+      "project": "zkArgos",
+      "handle": "zkArgoseth",
+      "listing_at": "2026-10-31T00:00:00+08:00",
+      "source": "x",
+      "confidence": "medium"
+    }
+  ],
+  "LISTING_SIGNAL_strong": [],
+  "LISTING_SIGNAL_weak_skipped": [
+    {
+      "name": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "note": "soon tge trivial delta — not strong"
+    }
+  ],
+  "x_refresh": {
+    "at": "2026-10-28T16:03:31.138949+08:00",
+    "bios_refreshed": 132,
+    "requested": 140,
+    "not_found": [
+      "BloopersInkNFT",
+      "ArscelareAi",
+      "myslabsfun",
+      "fourgefun",
+      "fomofc_sol",
+      "archiafun",
+      "bites_lab",
+      "senatorpad"
+    ],
+    "pkc_bio_empty": true,
+    "pkc_sticky": "Launching this week / Only CA in bio",
+    "pkc_id": "2106957602215116800",
+    "cache_users": 542,
+    "reads_left_approx": 381,
+    "pkc_posts": 2
+  },
+  "pages_publish": {
+    "cf_workbench_push": true,
+    "monitor_events": 1071,
+    "ca_finds_mirrored": true,
+    "mark_launched_newly": [
+      "mobster_meme"
+    ],
+    "prune_newly_removed": 0
+  },
+  "rpc_auth_failures_note": "Base publicnode request-limit / BSC remote error / ETH ankr Unauthorized noise / robinhood elevated rpc_errors — same ambient pattern as prior routines; daemons still advancing. Not recommending pause.",
+  "actionable": [
+    {
+      "project": "Mobster",
+      "handle": "mobster_meme",
+      "chain": "robinhood",
+      "ca": "0xe0165a1b3d8f9e276b0746adcb9c7094cbd05785",
+      "evidence": "NEW_CA via site/x bio→listing_scan; ERC20 verified Mob dec=18 on robinhood; ca_finds locked high; mark_launched_from_ca newly=1 (auto 已开盘). Risk note: 新注册小号粉丝极少. Was pending NEW_CA at 15:51 not yet in ca_finds before this run.",
+      "source": "listing_scan/site:https://x.com/mobster_meme + mark_launched_from_ca",
+      "kind": "NEW_CA_locked_then_launched",
+      "confidence": "high",
+      "symbol": "Mob"
+    }
+  ],
+  "actionable_count": 1,
+  "ping_user_hint": true,
+  "summary_path": "/workspace/project-monitor/_routine_summary_1600.json"
+}

@@ -1,0 +1,94 @@
+{
+  "routine": "开盘与CA预警",
+  "at": "2026-11-02T17:36:56+08:00",
+  "pause_file": "absent",
+  "listing_daemon": "running pid=6323",
+  "onchain_lock_daemon": "running pid=5409",
+  "pipeline": {
+    "exit": 0,
+    "start": "2026-11-02T17:06:38+08:00",
+    "end": "2026-11-02T17:34:26+08:00",
+    "elapsed_min": 27.8,
+    "trace_wallet": "killed ~15m hang_workaround (WARN)",
+    "steps": "extract_listing_times,scan_x_progress,extract_x_ca,scan_onchain,scan_js_factory_match,trace_wallet(fail),harvest_sol,solana_mints,prune_launched,mark_launched_from_ca,build_ca_finds,merge_site_completion,publish_monitor_events",
+    "js": {
+      "new_js_ca": 0,
+      "matches": 21,
+      "site_changes": 10,
+      "fetch_ok": 150
+    },
+    "ca_finds": 352,
+    "prune_newly": [
+      "AgentID_AI",
+      "AgentRuneBNB",
+      "OnlyAiToken"
+    ],
+    "mark_launched_newly": [
+      "devmaat",
+      "bsktsxyz",
+      "BSCookfun",
+      "CarolinaKager"
+    ]
+  },
+  "watchlist_sync": {
+    "before": 491,
+    "after_sync": 495,
+    "locked_new": [
+      "fluffbatsociety",
+      "MemeManSF",
+      "AgentRuneBNB",
+      "OnlyAiToken"
+    ],
+    "updated_meta": 4,
+    "npa": 44,
+    "kol": 2,
+    "incomplete": 257,
+    "final_after_prune": 485
+  },
+  "x_refresh": {
+    "at": "2026-11-02T17:08:47+08:00",
+    "bios_approx": 58,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "AgentRobRh",
+      "SENSEIAgent_",
+      "OnlyAiToken"
+    ],
+    "user_count": 804,
+    "pkc_bio": "(empty)",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "bio_cas": [
+      {
+        "handle": "SENSEIAgent_",
+        "ca": "0xa6839b3bc2483f8312466efa25ac8ccc8feb52da",
+        "note": "mint+LP live BSC"
+      },
+      {
+        "handle": "AgentRobRh",
+        "ca": "0x68b93afa31d59a0fddfac13576952ccc95f13df0",
+        "note": "trading live ROB/WETH"
+      }
+    ],
+    "listing_signals": [
+      {
+        "handle": "OnlyAiToken",
+        "signal": "Crystals NFT mint opens 2026-11-06 18:00 UTC (Asia/Shanghai 2026-11-07 02:00)"
+      }
+    ],
+    "missing": [
+      "RustLings_Nft(suspended)",
+      "BloopersInkNFT",
+      "hashgentic",
+      "4agent_ai",
+      "hexoses_",
+      "TurboKartBNB",
+      "CarolinaKager(suspended)"
+    ],
+    "quota_left_approx": "~884/1000"
+  },
+  "lock_alerts": {
+    "new": 0,
+    "offset": 329
+  },
+  "recommendation": "WAKE_USER"
+}

@@ -1,0 +1,605 @@
+#!/usr/bin/env python3
+"""Scan locked Pad Hunter projects for listing signals and contract addresses (CA).
+
+Sources (in order of use):
+  1) TG snapshot raw_text from projects.jsonl
+  2) Official site HTML (curl)
+  3) Optional X cache: x_posts_cache.json  (bios + recent posts)
+     Populate via MCP x tools (get_users_by_usernames / get_users_posts);
+     this script never invents API tokens.
+
+Writes:
+  listing_scan_latest.json
+  listing_scan_previous.json  (prior latest, for change detect)
+  updates watchlist.json ca / listing_signal / last_checked
+
+Prints a short digest: NEW_CA / LISTING_SIGNAL / none
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import time
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+WATCHLIST = BASE / "watchlist.json"
+LATEST = BASE / "listing_scan_latest.json"
+PREV = BASE / "listing_scan_previous.json"
+X_CACHE = BASE / "x_posts_cache.json"
+PROJECTS_JSON = Path("/workspace/push-radar/data/projects.json")
+TG_JSONL = Path("/home/box/.tg-monitor/projects.jsonl")
+TG_PROJECTS = Path("/home/box/.tg-monitor/projects.json")
+SH = ZoneInfo("Asia/Shanghai")
+UA = "Mozilla/5.0 (compatible; PadHunterListingScan/1.0)"
+
+EVM_RE = re.compile(r"(?<![a-fA-F0-9])(0x[a-fA-F0-9]{40})(?![a-fA-F0-9])")
+# Solana-ish base58; filtered further by context
+SOL_RE = re.compile(r"\b([1-9A-HJ-NP-Za-km-z]{32,44})\b")
+
+LISTING_KW = [
+    "开盘", "上线", "即将开盘", "马上开盘", "今日开盘", "明天开盘", "本周发射", "今晚发射",
+    "TGE", "listing", "listed", "live now", "trading live", "trading now",
+    "mint live", "mint is live", "minting now", "token live", "ca is", "ca:",
+    "contract address", "合约地址", "合约已部署", "已开盘", "开始交易",
+]
+# strong listing intent (surface in digest even without CA)
+STRONG_LISTING = [
+    "开盘", "即将开盘", "马上开盘", "今日开盘", "本周发射", "今晚发射",
+    "TGE", "listing", "live now", "trading live", "trading now",
+    "mint live", "mint is live", "minting now", "token live",
+    "合约地址", "合约已部署", "已开盘", "开始交易",
+    "launching this week", "mint is imminent", "only ca will be posted",
+    "ca will be posted in bio", "stand by",
+    "almost live", "public launch soon", "gates open soon", "presale whitelist",
+    "打新", "流片", "创世打新", "即将揭晓",
+]
+CA_CONTEXT = [
+    "ca", "contract", "合约", "地址", "mint", "token address", "contract address",
+    "合约地址", "token:", "ca:", "$",
+]
+
+# noisy base58 lookalikes to drop
+SOL_BLOCKLIST = {
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "11111111111111111111111111111111",
+}
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def now_label() -> str:
+    return datetime.now(SH).strftime("%Y-%m-%d %H:%M:%S Asia/Shanghai")
+
+
+def load_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def snippet_around(text: str, idx: int, width: int = 80) -> str:
+    start = max(0, idx - width)
+    end = min(len(text), idx + width)
+    s = text[start:end].replace("\n", " ").strip()
+    return s[:200]
+
+
+def find_listing_signals(text: str) -> list[dict]:
+    if not text:
+        return []
+    found = []
+    lower = text.lower()
+    seen = set()
+    for kw in STRONG_LISTING:
+        key = kw.lower()
+        pos = 0
+        while True:
+            i = lower.find(key, pos)
+            if i < 0:
+                break
+            sig = {"keyword": kw, "snippet": snippet_around(text, i)}
+            sig_key = (kw, sig["snippet"][:60])
+            if sig_key not in seen:
+                seen.add(sig_key)
+                found.append(sig)
+            pos = i + len(key)
+            if len(found) >= 5:
+                return found
+    return found
+
+
+def near_ca_context(text: str, start: int, end: int, window: int = 60) -> bool:
+    left = text[max(0, start - window) : start].lower()
+    right = text[end : min(len(text), end + window)].lower()
+    blob = left + " " + right
+    return any(c in blob for c in CA_CONTEXT)
+
+
+def extract_evm(text: str, require_context: bool = False) -> list[dict]:
+    out = []
+    for m in EVM_RE.finditer(text or ""):
+        addr = m.group(1)
+        if addr.lower() == "0x0000000000000000000000000000000000000000":
+            continue
+        if require_context and not near_ca_context(text, m.start(), m.end()):
+            # still keep if explicit 0x40 — sites often just dump the address
+            pass
+        out.append({
+            "type": "evm",
+            "address": addr,
+            "snippet": snippet_around(text, m.start()),
+        })
+    # dedupe by lower address
+    seen = set()
+    uniq = []
+    for c in out:
+        k = c["address"].lower()
+        if k not in seen:
+            seen.add(k)
+            uniq.append(c)
+    return uniq
+
+
+def extract_sol(text: str) -> list[dict]:
+    """Only keep base58 strings that sit near CA/mint context (high FP otherwise)."""
+    out = []
+    for m in SOL_RE.finditer(text or ""):
+        addr = m.group(1)
+        if addr in SOL_BLOCKLIST:
+            continue
+        if addr.startswith("http") or "://" in addr:
+            continue
+        # reject if looks like hex without 0x (tx hash fragment) — already base58 charset
+        if not near_ca_context(text, m.start(), m.end(), window=80):
+            continue
+        # reject pure letters that are English words mashed — weak heuristic: need digit or mixed case density
+        if addr.isalpha() and addr.lower() == addr:
+            continue
+        out.append({
+            "type": "solana",
+            "address": addr,
+            "snippet": snippet_around(text, m.start()),
+        })
+    seen = set()
+    uniq = []
+    for c in out:
+        if c["address"] not in seen:
+            seen.add(c["address"])
+            uniq.append(c)
+    return uniq
+
+
+def fetch_site(url: str, max_bytes: int = 500_000) -> dict:
+    t0 = time.time()
+    try:
+        out = subprocess.run(
+            [
+                "curl", "-sS", "-L", "--max-time", "25",
+                "-A", UA,
+                "--max-filesize", str(max_bytes),
+                "-w", "\n__CURLMETA__%{http_code}|%{time_total}",
+                url,
+            ],
+            capture_output=True, text=True, timeout=35,
+        )
+        raw = out.stdout or ""
+        err = (out.stderr or "").strip()[:200]
+        meta = ""
+        body = raw
+        if "__CURLMETA__" in raw:
+            body, meta = raw.rsplit("__CURLMETA__", 1)
+        parts = meta.strip().split("|") if meta else []
+        code = parts[0] if parts else "000"
+        ttot = float(parts[1]) if len(parts) > 1 and parts[1] else round(time.time() - t0, 3)
+        ok = code.isdigit() and 200 <= int(code) < 400
+        # strip scripts/styles lightly for keyword scan
+        text = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", body)
+        text = re.sub(r"(?is)<[^>]+>", " ", text)
+        text = re.sub(r"\s+", " ", text)
+        return {
+            "url": url,
+            "ok": ok,
+            "http_code": code,
+            "time_s": round(ttot, 3),
+            "error": "" if ok else (err or f"http {code}"),
+            "text": text[:120_000],
+        }
+    except Exception as e:
+        return {
+            "url": url,
+            "ok": False,
+            "http_code": "000",
+            "time_s": round(time.time() - t0, 3),
+            "error": str(e)[:200],
+            "text": "",
+        }
+
+
+def load_tg_raw() -> dict[str, str]:
+    """Map project name -> raw_text from jsonl (preferred) or empty."""
+    by_name: dict[str, str] = {}
+    if TG_JSONL.exists():
+        for line in TG_JSONL.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                j = json.loads(line)
+            except Exception:
+                continue
+            name = j.get("name")
+            if name:
+                by_name[name] = j.get("raw_text") or ""
+    return by_name
+
+
+def load_x_cache() -> dict:
+    return load_json(X_CACHE, {"users": {}, "fetched_at": None})
+
+
+def scan_project(proj: dict, tg_raw: str, x_user: dict | None) -> dict:
+    name = proj["name"]
+    sources_checked = []
+    cas: list[dict] = []
+    signals: list[dict] = []
+
+    # 1) TG raw
+    if tg_raw:
+        sources_checked.append("tg")
+        for c in extract_evm(tg_raw) + extract_sol(tg_raw):
+            c["source"] = "tg"
+            cas.append(c)
+        for s in find_listing_signals(tg_raw):
+            # skip the static card field "开盘: 未开盘" / "开盘: 不明" as a listing signal
+            sn = s["snippet"]
+            if re.search(r"开盘\s*[:：]\s*(未开盘|不明)", sn):
+                continue
+            s["source"] = "tg"
+            signals.append(s)
+
+    # 2) sites
+    site_results = []
+    for url in proj.get("sites") or []:
+        sources_checked.append(f"site:{url}")
+        fr = fetch_site(url)
+        site_results.append({
+            "url": url,
+            "ok": fr["ok"],
+            "http_code": fr["http_code"],
+            "time_s": fr["time_s"],
+            "error": fr["error"],
+        })
+        if fr["text"]:
+            for c in extract_evm(fr["text"]) + extract_sol(fr["text"]):
+                c["source"] = f"site:{url}"
+                # Ballast etc. list OTHER tokens; do not treat as this project's CA
+                if "ballast.exchange" in url.lower():
+                    c["confidence"] = "launchpad_feed"  # other tokens on the pad UI
+                else:
+                    c["confidence"] = "site"
+                cas.append(c)
+            for s in find_listing_signals(fr["text"]):
+                s["source"] = f"site:{url}"
+                signals.append(s)
+
+    # 3) X cache (bio + posts)
+    x_bits = []
+    if x_user:
+        sources_checked.append("x_cache")
+        bio = x_user.get("description") or x_user.get("bio") or ""
+        if bio:
+            x_bits.append(("x_bio", bio))
+        for post in x_user.get("posts") or []:
+            text = post.get("text") or post.get("full_text") or ""
+            if text:
+                x_bits.append(("x_post", text))
+        for src_label, text in x_bits:
+            for c in extract_evm(text) + extract_sol(text):
+                c["source"] = src_label
+                cas.append(c)
+            for s in find_listing_signals(text):
+                s["source"] = src_label
+                signals.append(s)
+
+    # dedupe CAs
+    seen_ca = set()
+    uniq_cas = []
+    for c in cas:
+        k = (c["type"], c["address"].lower())
+        if k not in seen_ca:
+            seen_ca.add(k)
+            uniq_cas.append(c)
+
+    # dedupe signals by keyword+snippet prefix
+    seen_sig = set()
+    uniq_sigs = []
+    for s in signals:
+        k = (s["keyword"].lower(), s["snippet"][:80])
+        if k not in seen_sig:
+            seen_sig.add(k)
+            uniq_sigs.append(s)
+
+    # pick primary CA: prefer EVM, then sol; prefer x_bio / tg / site
+    primary = None
+    if uniq_cas:
+        def rank(c):
+            if c.get("confidence") == "launchpad_feed":
+                return (9, 9)  # never primary for the pad itself
+            src = c.get("source") or ""
+            src_rank = 0
+            if src == "x_bio":
+                src_rank = 0
+            elif src == "tg":
+                src_rank = 1
+            elif src.startswith("site:"):
+                src_rank = 2
+            elif src == "x_post":
+                src_rank = 3
+            else:
+                src_rank = 4
+            type_rank = 0 if c["type"] == "evm" else 1
+            return (type_rank, src_rank)
+        ranked = sorted(uniq_cas, key=rank)
+        primary = next((c for c in ranked if c.get("confidence") != "launchpad_feed"), None)
+
+    signal_summary = None
+    if uniq_sigs:
+        top = uniq_sigs[0]
+        signal_summary = f"{top['keyword']}: {top['snippet'][:100]}"
+
+    # also surface TG status that implies near-listing (mint / 即将启动 / 本周发射 in summary)
+    status = proj.get("status") or ""
+    listing = proj.get("listing") or ""
+    if not signal_summary and status in ("mint进行中", "即将启动"):
+        signal_summary = f"status={status}; listing={listing}"
+
+    return {
+        "name": name,
+        "handle": proj.get("handle"),
+        "chain": proj.get("chain"),
+        "status": status,
+        "listing": listing,
+        "sources_checked": sources_checked,
+        "sites": site_results,
+        "cas": uniq_cas,
+        "signals": uniq_sigs[:8],
+        "primary_ca": primary,
+        "listing_signal": signal_summary,
+        "x_cache_hit": bool(x_user),
+    }
+
+
+
+def maybe_mark_mint_live(name: str, handle: str, signals: list) -> None:
+    """If X/site signals say NFT mint or token fair-mint is live → 已开盘."""
+    import re
+    from mark_launched_from_ca import force_launch
+    NFT = re.compile(r"(public\s+mint\s+is\s+live|free\s+mint\s+is\s+(?:live|open)|mint\s+is\s+(?:now\s+)?(?:still\s+)?(?:live|open)|minting\s+is\s+(?:now\s+)?live|铸造(?:已)?(?:开始|开启|进行中|上线|开放))", re.I)
+    FAIR = re.compile(r"(fair\s+mint\s+is\s+live|free\s+claim\s+is\s+live|\$[A-Za-z][A-Za-z0-9]{1,11}\s+free\s+claim\s+is\s+live)", re.I)
+    for sig in signals or []:
+        text = (sig.get("snippet") or sig.get("signal") or "") if isinstance(sig, dict) else str(sig)
+        if FAIR.search(text):
+            reason = "token_claim_live" if re.search(r"claim\s+is\s+live", text, re.I) else "token_fair_mint_live"
+            force_launch(handle=handle, project=name, ca=None, ca_chain=None, reason=reason,
+                         evidence=f"listing probe: {text[:240]}", evidence_url=(sig.get("source") if isinstance(sig, dict) else None))
+            return
+        if NFT.search(text):
+            force_launch(handle=handle, project=name, ca=None, ca_chain=None, reason="nft_mint_live",
+                         evidence=f"listing probe: {text[:240]}", evidence_url=(sig.get("source") if isinstance(sig, dict) else None))
+            return
+
+
+def gate_new_ca(c: dict) -> str:
+    """Pre-alert gate shared with fast_site/onchain: wallet -> 扫出钱包,
+    already-trading CA -> CA_ALREADY_TRADING (auto 已开盘),
+    project CA-locked -> CA_LOCKED_SKIP, else NEW_CA."""
+    addr = c.get("address") or ""
+    # PROJECT CA LOCK first (before verify) — official X exception if source is the project's own post
+    try:
+        from ca_confidence import should_skip_ca, log_locked_skip, is_from_official_x
+        ox = is_from_official_x(c.get("source"), handle=c.get("handle"), post_url=c.get("source") if str(c.get("source") or "").startswith("http") else None)
+        skip, why = should_skip_ca(handle=c.get("handle"), name=c.get("name"), address=addr,
+                                   source=c.get("source"), from_official_x=ox)
+        if skip:
+            log_locked_skip(handle=c.get("handle"), name=c.get("name"), address=addr,
+                            source=c.get("source"), reason=why)
+            c["gate_note"] = why
+            return "CA_LOCKED_SKIP"
+        if ox and not skip:
+            # official X attach → record lock (verify happens below; soft if verify fails later)
+            pass
+    except Exception as e:
+        c["ca_lock_error"] = str(e)[:120]
+    try:
+        from ca_gate import verify_address
+        v = verify_address(addr, c.get("chain"), snippet=c.get("snippet"), source=c.get("source"))
+        c["addr_kind"], c["chain"], c["label_zh"] = v.get("kind"), v.get("chain") or c.get("chain"), v.get("label_zh")
+        if v.get("kind") == "wallet":
+            c["gate_note"] = "ca_gate: wallet → 扫出钱包 (tracing deploys)"
+            return "扫出钱包"
+        if not v.get("is_token"):
+            c["gate_note"] = f"ca_gate: {v.get('note')} → not a token CA"
+            return "NFT_CONTRACT" if v.get("kind") == "nft" else "UNVERIFIED_ADDR"
+        from trading_check import check_trading
+        tr = check_trading(addr, c.get("chain"))
+        if tr.get("launched_old"):
+            c["gate_note"] = (f"already trading since {tr.get('first_pair_at')} "
+                              f"({tr.get('age_hours')}h, vol24 ${tr.get('volume_h24')}) → 已开盘")
+            try:
+                from mark_launched_from_ca import force_launch
+                force_launch(handle=c.get("handle") or c.get("name"), project=c.get("name"),
+                             ca=addr, ca_chain=tr.get("chain"), reason="already_trading",
+                             evidence=c["gate_note"], evidence_url=tr.get("dex_url"))
+            except Exception as e:
+                c["gate_note"] += f" (force_launch failed: {e})"
+            return "CA_ALREADY_TRADING"
+    except Exception as e:
+        c["gate_note"] = f"gate error: {e}"
+        return "UNVERIFIED_ADDR"
+    return "NEW_CA"
+
+def main() -> int:
+    wl = load_json(WATCHLIST, None)
+    if not wl or not wl.get("projects"):
+        print("ERROR no watchlist at", WATCHLIST)
+        return 1
+
+    projects = wl["projects"]
+    tg_raw_map = load_tg_raw()
+    x_cache = load_x_cache()
+    x_users = x_cache.get("users") or {}
+
+    # index x cache by handle lower
+    x_by_handle = {}
+    for k, v in x_users.items():
+        x_by_handle[k.lower().lstrip("@")] = v
+        un = (v.get("username") or v.get("handle") or k)
+        x_by_handle[str(un).lower().lstrip("@")] = v
+
+    prev_report = load_json(LATEST, {})
+    prev_by_name = {r["name"]: r for r in (prev_report.get("results") or [])}
+
+    results = []
+    new_cas = []
+    new_signals = []
+
+    for proj in projects:
+        handle = (proj.get("handle") or "").lower().lstrip("@")
+        x_user = x_by_handle.get(handle)
+        tg_raw = tg_raw_map.get(proj["name"], "")
+        r = scan_project(proj, tg_raw, x_user)
+        r["checked_at"] = now_iso()
+        results.append(r)
+
+        old = prev_by_name.get(proj["name"]) or {}
+        old_cas = {(c.get("type"), (c.get("address") or "").lower()) for c in (old.get("cas") or [])}
+        for c in r["cas"]:
+            key = (c["type"], c["address"].lower())
+            if key not in old_cas:
+                new_cas.append({
+                    "name": proj["name"],
+                    "handle": proj.get("handle"),
+                    **c,
+                })
+
+        old_sig = old.get("listing_signal")
+        if r.get("listing_signal") and r.get("listing_signal") != old_sig:
+            # treat first-ever or changed as noteworthy
+            if not old_sig or any(
+                k.lower() in (r["listing_signal"] or "").lower()
+                for k in ("开盘", "TGE", "listing", "live", "发射", "合约地址", "trading")
+            ):
+                new_signals.append({
+                    "name": proj["name"],
+                    "handle": proj.get("handle"),
+                    "signal": r["listing_signal"],
+                    "prev": old_sig,
+                })
+
+        # update watchlist fields
+        proj["last_checked"] = now_iso()
+        _pv = None
+        if r.get("primary_ca"):
+            try:
+                from ca_gate import verify_address
+                _pv = verify_address(r["primary_ca"]["address"], None,
+                                     snippet=r["primary_ca"].get("snippet"), source=r["primary_ca"].get("source"))
+            except Exception:
+                _pv = {"is_token": False, "kind": "unknown"}
+            if not _pv.get("is_token"):
+                # HARD CA GATE: never lock a wallet / NFT / unverified address as project CA
+                if _pv.get("kind") == "wallet":
+                    ws = proj.setdefault("scanned_wallets", [])
+                    if r["primary_ca"]["address"] not in ws:
+                        ws.append(r["primary_ca"]["address"])
+                r = {**r, "primary_ca": None}
+        if r.get("primary_ca") and not proj.get("ca"):
+            if r["primary_ca"].get("confidence") != "launchpad_feed":
+                _lock_skip = False
+                try:
+                    from ca_confidence import should_skip_ca, log_locked_skip, is_from_official_x, record_lock
+                    _src = r["primary_ca"].get("source")
+                    _ox = is_from_official_x(_src, handle=proj.get("handle"))
+                    skip, why = should_skip_ca(handle=proj.get("handle"), name=proj.get("name"),
+                                               address=r["primary_ca"]["address"], source=_src,
+                                               from_official_x=_ox)
+                    if skip:
+                        log_locked_skip(handle=proj.get("handle"), name=proj.get("name"),
+                                        address=r["primary_ca"]["address"], source=_src, reason=why)
+                        _lock_skip = True
+                    elif _ox:
+                        record_lock(handle=proj.get("handle"), name=proj.get("name"),
+                                    address=r["primary_ca"]["address"], post_url=_src if str(_src or "").startswith("http") else None)
+                except Exception:
+                    pass
+                if not _lock_skip:
+                    proj["ca"] = r["primary_ca"]["address"]
+                    proj["ca_chain"] = "evm" if r["primary_ca"]["type"] == "evm" else "solana"
+                    proj["ca_source"] = r["primary_ca"].get("source")
+        elif r.get("primary_ca") and proj.get("ca"):
+            # keep existing locked CA; note if different
+            if proj["ca"].lower() != r["primary_ca"]["address"].lower():
+                proj["ca_alt"] = r["primary_ca"]["address"]
+        if r.get("listing_signal"):
+            proj["listing_signal"] = r["listing_signal"]
+
+    report = {
+        "checked_at": now_label(),
+        "checked_at_iso": now_iso(),
+        "watchlist_count": len(projects),
+        "x_cache_fetched_at": x_cache.get("fetched_at"),
+        "x_cache_users": len(x_by_handle),
+        "new_cas": new_cas,
+        "new_listing_signals": new_signals,
+        "results": results,
+    }
+
+    if LATEST.exists():
+        PREV.write_text(LATEST.read_text(encoding="utf-8"), encoding="utf-8")
+    LATEST.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    wl["projects"] = projects
+    wl["last_scan_at"] = now_iso()
+    WATCHLIST.write_text(json.dumps(wl, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    # digest
+    if new_cas:
+        for c in new_cas:
+            tag = gate_new_ca(c)
+            c["alert_tag"] = tag
+            print(f"{tag} {c['name']} @{c.get('handle')} {c['type']} {c['address']} via {c.get('source')}")
+            print(f"  evidence: {c.get('snippet','')[:140]}")
+            if c.get("gate_note"):
+                print(f"  gate: {c['gate_note']}")
+    if new_signals:
+        for s in new_signals:
+            print(f"LISTING_SIGNAL {s['name']} @{s.get('handle')}: {s['signal'][:160]}")
+            try:
+                maybe_mark_mint_live(s.get("name") or "", s.get("handle") or "", [s])
+            except Exception as e:
+                print(f"  mint_live mark soft-fail: {e}")
+    if not new_cas and not new_signals:
+        print("none")
+
+    with_ca = sum(1 for r in results if r.get("cas"))
+    with_sig = sum(1 for r in results if r.get("signals") or (
+        r.get("listing_signal") and not str(r.get("listing_signal")).startswith("status=")
+    ))
+    print(
+        f"SUMMARY projects={len(results)} with_ca={with_ca} "
+        f"new_ca={len(new_cas)} new_signals={len(new_signals)} "
+        f"x_cache_users={len(x_users)} sites_probed={sum(len(p.get('sites') or []) for p in projects)}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

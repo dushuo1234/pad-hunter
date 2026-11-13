@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-29T14:20:22+08:00",
+  "fired_routine": "开盘与CA预警",
+  "fired_utc": "2026-10-29T05:30:26.387Z",
+  "pause_file": false,
+  "listing_daemon": "running pid=6323",
+  "onchain_lock_daemon": "running pid=5409",
+  "sync": {
+    "locked_new": 0,
+    "total_locks": 390,
+    "updated_meta": 217,
+    "skipped_unclassified": 64
+  },
+  "x_refresh": {
+    "at": "2026-10-29T13:36:13+08:00",
+    "bios_refreshed": 46,
+    "not_found": [],
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "reapoxyz",
+      "Inktrons404",
+      "TandemOnl",
+      "zkArgoseth",
+      "RBHHeroes"
+    ],
+    "posts_at": "2026-10-29T13:36:38+08:00"
+  },
+  "pipeline": {
+    "start": "2026-10-29T13:34:41+08:00",
+    "end": "2026-10-29T14:19:08+08:00",
+    "duration_min": 44.5,
+    "exit_code": 0,
+    "new_js_ca": 0,
+    "matches": 0,
+    "site_js_change": 4,
+    "ca_finds_total": 223,
+    "prune_newly_removed": 0,
+    "mark_newly": 0,
+    "onchain_lock_new_lines": 0,
+    "new_deploy_hints": 3
+  },
+  "listing_scan": {
+    "new_cas": [],
+    "new_listing_signals": [
+      {
+        "name": "BunnyPad",
+        "handle": "Bunnypadfun",
+        "signal": "status=mint进行中; listing=未开盘",
+        "prev": "token live: p in. 🐰 Launch a token in one tx - no seed, No graduation, no migration - every token lives in its.."
+      }
+    ]
+  },
+  "actionable": [],
+  "suppressed": [
+    "BunnyPad listing_signal churn (already mint进行中)",
+    "QernApp/agentsea_fun/OKOK_MEME 开发中→即将启动 (already pinged prior run)",
+    "Reapo live/CA signal (already pinged prior run; CA known)",
+    "Grail/over.computer/Reapo listing_at TG/X noise (past or push-time parse)",
+    "univ2_eth NEW_DEPLOY×3 ambient",
+    "SITE_JS_CHANGE×4 (PixieChess/Sojo/TapeFoundry×2) address fingerprint unchanged"
+  ],
+  "within_3d": [
+    "Inktrons404 10-29 17:16",
+    "TandemOnl 10-30 00:00",
+    "zkArgoseth 10-31 00:00",
+    "hashgentic 10-31 21:00",
+    "Kaspaseal 11-01 00:00"
+  ]
+}

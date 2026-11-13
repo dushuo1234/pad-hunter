@@ -1,0 +1,25 @@
+name = "pad-hunter-workbench"
+main = "src/index.ts"
+compatibility_date = "2025-10-01"
+account_id = "39aa42e1b4d8032bc706c322d114c9de"
+
+# Custom domain (Workers custom hostname). Requires zone adualpha.win on this account.
+routes = [
+  { pattern = "api.adualpha.win", custom_domain = true }
+]
+
+[vars]
+VERSION = "1.5.0-cf"
+ROOM_NAME = "pad-hunter"
+
+[[durable_objects.bindings]]
+name = "WORKBENCH"
+class_name = "WorkbenchRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["WorkbenchRoom"]
+
+# Secret (set after login, never commit):
+#   npx wrangler secret put WORKBENCH_TOKEN
+# Value = contents of /workspace/project-monitor/workbench_api_token.txt

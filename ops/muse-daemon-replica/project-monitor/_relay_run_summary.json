@@ -1,0 +1,54 @@
+{
+  "routine": "官网秒级CA快报",
+  "fired_at_utc": "2026-11-02T22:55:46.599Z",
+  "ran_at": "2026-11-03T06:57:57+08:00",
+  "pause": false,
+  "daemons": {
+    "site": "ok pid_alive 5938",
+    "onchain": "ok pid=5409",
+    "api": "ok pid=13589 + watchdog 7750",
+    "soon_watch": "ok pid=958548 + watchdog 5673"
+  },
+  "offsets": {
+    "site": {
+      "old": 989,
+      "new": 989,
+      "delta": 0,
+      "last_ts": null
+    },
+    "onchain": {
+      "old": 343,
+      "new": 343,
+      "delta": 0,
+      "last_ts": null
+    },
+    "solana": {
+      "old": 4,
+      "new": 4,
+      "delta": 0,
+      "last_ts": null
+    },
+    "wallet_trace": {
+      "old": 25387,
+      "new": 25387,
+      "delta": 0,
+      "last_ts": null
+    },
+    "tapeout_activity": {
+      "old": 5453,
+      "new": 5453,
+      "delta": 0,
+      "last_ts": null
+    },
+    "tapeout_ca": {
+      "old": 8,
+      "new": 8,
+      "delta": 0,
+      "last_ts": null
+    }
+  },
+  "new_types": {},
+  "qualifying": 0,
+  "user_ping": false,
+  "note": "all sources at EOF; delta=0; qualifying=0; no user ping; restored line-based relay offsets after accidental byte-offset write"
+}

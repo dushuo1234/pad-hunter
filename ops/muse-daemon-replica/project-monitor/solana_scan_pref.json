@@ -1,0 +1,21 @@
+{
+  "updated_at": "2026-10-20T23:33:11+08:00",
+  "timezone": "Asia/Shanghai",
+  "mode": "workbench_only",
+  "user": "Ori",
+  "note": "Solana = workbench only. No mass Helius pump/raydium program webhook; no Solana RPC polling. workbench_api POST /hooks/helius/solana receiver stays alive. solana_helius_setup ensure is a no-op unless workbench has Solana items or --force-mass.",
+  "allowed": [
+    "workbench_api POST /hooks/helius/solana (receiver)",
+    "solana_helius_hook.process_payload when workbench has Solana items OR synthetic tests"
+  ],
+  "disabled": [
+    "Always-on Helius webhook watching Pump.fun / PumpSwap / LaunchLab / Moonshot (transactionTypes ANY)",
+    "Raydium AMM mass watch",
+    "solana_factories getProgramAccounts / full-chain poll (never wired; keep unwired)",
+    "scan_onchain.py Solana RPC attempts",
+    "onchain_lock Solana chain polling (never in ACTIVE_CHAINS; keep out)"
+  ],
+  "helius_webhook": "deleted_unless_workbench_solana",
+  "force_mass_flag": "--force-mass on solana_helius_setup.py ensure",
+  "helius_webhook_id_deleted": "ae2c0625-e8f6-4f13-a9ff-689f3c165679"
+}

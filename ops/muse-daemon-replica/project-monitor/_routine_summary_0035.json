@@ -1,0 +1,60 @@
+{
+  "at": "2026-10-29T00:38:37+08:00",
+  "fired_routine": "开盘与CA预警",
+  "start_utc": "2026-10-28T15:59:06Z",
+  "pause": "OPEN",
+  "daemons": {
+    "listing": 44693,
+    "onchain_lock": 1823,
+    "ok": true
+  },
+  "watchlist": "381→384(+floatpad_,TorusFi,carbiumio)→384",
+  "locked_new": [
+    "floatpad_",
+    "TorusFi",
+    "carbiumio"
+  ],
+  "wallets": "204→207 (build 204; sol harvest +3)",
+  "token_symbols": 1097,
+  "x": {
+    "skipped": "daily_quota_1000",
+    "resets": "2026-10-29T00:00Z / 08:00 Asia/Shanghai",
+    "cache_users": 668,
+    "cache_updated": "2026-10-28T20:06:21+08:00"
+  },
+  "pipeline_exit": 0,
+  "pipeline_elapsed_min": 34,
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "SITE_JS_CHANGE": 13,
+  "SITE_JS_CHANGE_note": "all near ambient univ2_base — skipped",
+  "NEW_DEPLOY_watchlist": null,
+  "ambient_univ2_samples": 30,
+  "TRACE_CA": 26,
+  "onchain_lock": {
+    "unread": 0,
+    "hits": []
+  },
+  "ca_finds": "231→233",
+  "prune": {
+    "newly_removed_this_pipeline": [],
+    "watchlist_final": 384,
+    "launched": 117
+  },
+  "listing_at_publishes": [],
+  "actionable": true,
+  "actionable_items": [
+    {
+      "type": "NEW_CA",
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "chain": "robinhood",
+      "ca": "0x95943745ac9ba4cb583685cbaef5d36681ddb5b0",
+      "confidence": "high",
+      "ca_status": "candidate/待确认",
+      "evidence": "Official CA on @hoodora_rh; ERC20 HOODORA dec=18",
+      "source": "site/X",
+      "note": "not ca_fixed; no auto-buy wake"
+    }
+  ]
+}

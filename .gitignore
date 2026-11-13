@@ -29,6 +29,10 @@ dist-ssr
 *.pem
 *token*
 .opentwitter_token
+# Replica tree: these filenames are code/state, not credentials.
+!ops/muse-daemon-replica/**/build_token_names.py
+!ops/muse-daemon-replica/**/token_name_watchlist.json
+!ops/muse-daemon-replica/**/onchain_non_token.jsonl
 
 # Telegram monitor — never commit credentials or Telethon sessions
 *.session

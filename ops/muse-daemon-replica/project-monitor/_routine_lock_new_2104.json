@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-23T21:30:37+08:00",
+  "prev_lines": 71,
+  "end_lines": 72,
+  "prev_bytes": 60443,
+  "end_bytes": 61336,
+  "new": 1,
+  "hits": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "name_fuzzy:color",
+      "project": "Color",
+      "handle": null,
+      "address": "0x8ecee10d427c843b9f16c610f8667185f36e5425",
+      "deployer": "0x501ef174b66883ba40f92e6fb24bfb49331d4d4c",
+      "chain": "base",
+      "tx": "0x6578ccfa07fe89fd2fb113e7fcc8311d61af8b7fa44ecb43e15b47ae97c3b499",
+      "block": 52985940,
+      "via": "factory:univ4_pm_base:Initialize",
+      "factory": "0x498581ff718922c3f8e6a244956af099b2652b2b",
+      "token_name": "Vibrant Alpine Village Beneath a Colorful Sky",
+      "token_symbol": "Vibrant Alpine Village Beneath a Colorful Sky",
+      "code_bytes": 45,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Color",
+          "handle": null,
+          "via": "name_fuzzy:color",
+          "explicit": false,
+          "ambiguous": true
+        },
+        {
+          "project": "Color",
+          "handle": "colorapp",
+          "via": "name_fuzzy:color",
+          "explicit": false,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-23T21:13:51+08:00"
+    }
+  ]
+}

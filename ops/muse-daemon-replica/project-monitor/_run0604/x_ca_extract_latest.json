@@ -1,0 +1,97 @@
+{
+  "generated_at": "2026-10-25T05:18:32+08:00",
+  "input": 3,
+  "verified": 2,
+  "rejected": 1,
+  "locked_to_watchlist": [
+    {
+      "handle": "etheriisprotoco",
+      "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8"
+    },
+    {
+      "handle": "drakhenrh",
+      "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7"
+    }
+  ],
+  "finds": [
+    {
+      "type": "evm",
+      "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+      "handle": "ETHERIISPROTOCO",
+      "snippet": ".  🌐 Portal: https://t.co/qXV2wDsIWp   📝Contract: 0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8  #DeFi #Ethereum #ETHRS #SupplyShock",
+      "evidence_url": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+      "strong_context": true,
+      "source": "x_post",
+      "gate": {
+        "chain": "ethereum",
+        "code_bytes": 6011,
+        "nonce": 1,
+        "symbol": "ETHRS",
+        "name": "ETHERIIS",
+        "decimals": 18,
+        "kind": "token",
+        "is_token": true,
+        "note": "ERC20 verified: ETHRS dec=18",
+        "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+        "label_zh": "合约CA",
+        "note_zh": "已确认 ERC20 · 符号 ETHRS · 精度 18 · 链 ethereum",
+        "_ts": 1792836309.01372
+      },
+      "verified_at": "2026-10-25T05:18:32+08:00",
+      "project": "ETHERIIS PROTOCOL",
+      "confidence": "high",
+      "source_label": "官推X"
+    },
+    {
+      "type": "evm",
+      "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+      "handle": "drakhenRH",
+      "snippet": "ts go straight from the buyer’s wallet to yours.  0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7 https://t.co/vdLkcKZd9q",
+      "evidence_url": "https://x.com/drakhenRH/status/2113443000630362513",
+      "strong_context": false,
+      "source": "x_post",
+      "gate": {
+        "chain": "robinhood",
+        "code_bytes": 3248,
+        "nonce": 1,
+        "symbol": "DRAK",
+        "name": "Drakhen",
+        "decimals": 18,
+        "kind": "token",
+        "is_token": true,
+        "note": "ERC20 verified: DRAK dec=18",
+        "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+        "label_zh": "合约CA",
+        "note_zh": "已确认 ERC20 · 符号 DRAK · 精度 18 · 链 robinhood",
+        "_ts": 1792836294.4979305
+      },
+      "verified_at": "2026-10-25T05:18:32+08:00",
+      "project": "Drakhen",
+      "confidence": "medium",
+      "source_label": "官推X"
+    }
+  ],
+  "rejects_sample": [
+    {
+      "type": "evm",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "handle": "RealHappyBlock",
+      "snippet": "@trasiaxyz https://t.co/Jtlt9le2iU Hype Address: 0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "evidence_url": "https://x.com/RealHappyBlock/status/2099794475862327384",
+      "strong_context": false,
+      "source": "x_post",
+      "gate": {
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "kind": "wallet",
+        "is_token": false,
+        "note": "eth_getCode empty / 7702 → EOA wallet",
+        "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+        "label_zh": "扫出钱包",
+        "note_zh": "链上无合约代码 → 钱包（EOA），不当作 CA；已进入关联钱包监控",
+        "_ts": 1792836092.13896
+      }
+    }
+  ]
+}

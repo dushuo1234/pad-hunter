@@ -1,0 +1,803 @@
+#!/usr/bin/env python3
+"""CA confidence model — decides whether a found address is a *confirmed* CA.
+
+P0/P1 rules kept. E1 (资金关联) additions per spec v2:
+  - H2 funding_link hard evidence when funding_links.is_hard_evidence (direct high/medium
+    or shared non-public funder; complete tx/amount/time; not public/mixer/bridge/faucet;
+    not >90d).
+  - Vetoes (§7.3 feasible set): multi same-name without creator/funding; public funder;
+    mixer/fresh withdrawal with no graph link; deploy far from expected window.
+  - Same-source signals do not double-count (site JS + HTML = one site_semantic_ca).
+  - Name/symbol remains assist_only (NOT H3). Spec §7.1 H3 conflicts with §4.2 /
+    launch_config name_match_is_hard_evidence=false — we keep P1 assist_only and note it.
+"""
+from __future__ import annotations
+
+STATUS_LABEL = {
+    "confirmed": "已确认CA",
+    "superseded": "非正式·官推未认",
+    "suspected_copycat": "疑似山寨",
+    "candidate": "待确认",
+    "not_ca": "非CA",
+}
+PROV_LABEL = {"wallet_factory": "监控钱包创建", "official_x": "官推确认", "both": "监控钱包创建+官推确认"}
+
+WALLET_ORIGINS = {"wallet_trace", "wallet_trace_events"}
+NAME_REASON_PREFIX = ("name", "symbol", "name_fuzzy", "token:")
+HARD_EVIDENCE_MIN = 2
+# site/js origins that can count as semantic CA evidence when source looks like a key
+SITE_ORIGINS = {"site_scan", "js_scan", "html_scan", "config_scan", "listing_scan", "js_factory_scan"}
+SEMANTIC_KEYS = ("token", "tokenaddress", "contract", "ca", "mint", "nftcontract", "collection",
+                 "erc20", "token_address", "contractaddress", "contract_address")
+
+
+def _src_is_official_x(s: dict, handle: str | None) -> bool:
+    src = str(s.get("source") or "").lower()
+    h = (handle or "").lstrip("@").lower()
+    if src.startswith("x:@") or src == "x_post":
+        return True
+    if h and f"x.com/{h}/status/" in src:
+        return True
+    return False
+
+
+def _norm_addr(a: str | None) -> str | None:
+    if not a:
+        return None
+    a = str(a).strip()
+    return a.lower() if a.lower().startswith("0x") else a
+
+
+def _wallet_tier(addr: str | None, wallet_meta: dict | None, watched_wallets: set[str]) -> str | None:
+    """Return 'high'|'medium'|'low'|None for a deployer address.
+    TapeOut legacy watched_wallets set (no meta) is treated as high."""
+    a = _norm_addr(addr)
+    if not a:
+        return None
+    meta = (wallet_meta or {}).get(a)
+    if meta:
+        c = str(meta.get("confidence") or "low").lower()
+        return c if c in ("high", "medium", "low") else "low"
+    if a in (watched_wallets or set()):
+        return "high"
+    return None
+
+
+def _via_factory_or_creation(find: dict) -> bool:
+    for s in find.get("sources") or []:
+        via = str(s.get("via") or s.get("reason") or s.get("source") or "").lower()
+        if via.startswith("factory:") or "contract_creation" in via or via in (
+            "wallet:create", "factory_create", "create",
+        ):
+            return True
+        if s.get("origin") in ("onchain_lock", "solana_lock", "tapeout_watch", "wallet_trace",
+                               "wallet_trace_events") and (
+            "factory" in via or "creation" in via or s.get("factory_id") or s.get("creator_watched")
+        ):
+            return True
+    return False
+
+
+def _site_semantic(find: dict) -> bool:
+    for s in find.get("sources") or []:
+        o = s.get("origin") or ""
+        if o not in SITE_ORIGINS and o not in ("site", "js", "html", "config", "inline"):
+            # also accept origin-less site scrapes recorded as source containing key=
+            src = str(s.get("source") or "").lower()
+            if any(k in src for k in SEMANTIC_KEYS) and ("site" in src or "js" in src or "config" in src):
+                return True
+            continue
+        src = str(s.get("source") or "").lower()
+        key = str(s.get("key") or s.get("field") or "").lower()
+        if any(k in key or k in src for k in SEMANTIC_KEYS):
+            return True
+        # conservative: a site/js origin that carried a verified token address counts
+        if o in SITE_ORIGINS or o in ("site", "js", "html", "config", "inline"):
+            return True
+    return False
+
+
+def collect_hard_evidence(find: dict, prov: dict, *, wallet_meta: dict | None = None,
+                          watched_wallets: set[str] | None = None,
+                          funding_link: dict | None = None) -> list[dict]:
+    """Independent hard evidences for pre-launch confirm (P1 + E1 H2).
+    Name/symbol match is intentionally NOT included (assist_only; not H3).
+    Site JS + HTML count as ONE site_semantic_ca (same-source, §7.2)."""
+    ev: list[dict] = []
+    seen: set[str] = set()
+
+    def add(kind: str, note_zh: str, **extra):
+        if kind in seen:
+            return
+        seen.add(kind)
+        row = {"kind": kind, "note_zh": note_zh}
+        row.update(extra)
+        ev.append(row)
+
+    if prov.get("official_x"):
+        add("official_x", "官推直接贴出该 CA", url=prov.get("x_url"))
+
+    tier = _wallet_tier(prov.get("creator"), wallet_meta, watched_wallets or set())
+    if tier == "high":
+        add("high_watched_deployer",
+            f"部署者 {(prov.get('creator') or '')[:10]}… 为高可信监控钱包",
+            creator=prov.get("creator"),
+            watch_source=((wallet_meta or {}).get(_norm_addr(prov.get("creator")) or "") or {}).get("source"))
+        if _via_factory_or_creation(find):
+            add("launchpad_factory", "高可信监控钱包经工厂/合约创建事件部署")
+
+    # H2: funding link (E1). Only when funding_links.is_hard_evidence.
+    fl = funding_link if funding_link is not None else find.get("funding_link")
+    if fl:
+        try:
+            from funding_links import is_hard_evidence, basis_zh
+        except Exception:
+            is_hard_evidence = lambda _x: False  # noqa: E731
+            basis_zh = lambda _x: None  # noqa: E731
+        if is_hard_evidence(fl):
+            add("funding_link", basis_zh(fl) or "资金关联硬证据",
+                kind_detail=fl.get("kind"), confidence=fl.get("confidence"),
+                from_addr=fl.get("from"), tx=fl.get("tx"))
+
+    if _site_semantic(find):
+        add("site_semantic_ca", "官网/JS/配置语义键含该 CA")
+
+    # official-linked contract metadata (TapeOut official registry / paired)
+    for s0 in find.get("sources") or []:
+        if s0.get("origin") in ("tapeout_official",) or s0.get("official_x") and s0.get("wallet_factory"):
+            add("official_metadata", "官方登记/官链元数据列出该 CA")
+            break
+
+    return ev
+
+
+def provenance(find: dict, *, official_x: dict, watched_wallets: set[str],
+               wallet_meta: dict | None = None) -> dict:
+    """Return provenance flags. P1: wallet_factory only when deployer is actually watched
+    at high tier (or TapeOut legacy set / explicit creator_watched / wallet_trace).
+    Reason strings containing 'wallet' alone do NOT set wallet_factory."""
+    a = (find.get("address") or "").lower()
+    handle = find.get("handle")
+    wf = xo = False
+    name_hit = False
+    soft_wallet = False
+    x_url = None
+    creator = _norm_addr(find.get("traced_from"))
+    wallet_meta = wallet_meta or {}
+
+    for s in find.get("sources") or []:
+        o = s.get("origin")
+        src = str(s.get("source") or "")
+        if o == "tapeout_watch":
+            if s.get("creator_watched") or src.endswith(":creator_watched") or src == "wallet:create":
+                wf = True
+            if src.startswith("x:"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if src.endswith(":name_match"):
+                name_hit = True
+        elif o in WALLET_ORIGINS:
+            # wallet_trace origins imply a watched wallet by construction
+            wf = True
+            if not creator:
+                creator = _norm_addr(s.get("wallet") or s.get("traced_from") or find.get("traced_from"))
+        elif o in ("onchain_lock", "solana_lock"):
+            reason = str(s.get("reason") or "")
+            # name/symbol signal (assist only)
+            if reason.startswith(NAME_REASON_PREFIX) or "name" in reason or "symbol" in reason:
+                name_hit = True
+            # do NOT set wf from reason substring "wallet" — look up deployer tier below
+        elif o in ("tapeout_official", "tapeout_superseded"):
+            if s.get("official_x"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if s.get("wallet_factory"):
+                wf = True
+        if _src_is_official_x(s, handle):
+            xo = True
+            x_url = x_url or s.get("post_url")
+    if a in official_x:
+        xo = True
+        x_url = x_url or official_x[a].get("post_url")
+
+    tier = _wallet_tier(creator, wallet_meta, watched_wallets)
+    if tier == "high":
+        wf = True
+    elif tier in ("medium", "low"):
+        soft_wallet = True  # candidate path only
+
+    # If tapeout/wallet_trace already set wf but meta says medium/low for same creator, keep wf
+    # only when tier is high or creator is in legacy TapeOut set / no meta (legacy = high).
+    if wf and creator and tier in ("medium", "low"):
+        # explicit creator_watched / wallet:create from TapeOut stays; soft site wallets don't
+        has_explicit = any(
+            (s.get("origin") == "tapeout_watch" and (
+                s.get("creator_watched") or str(s.get("source") or "") in ("wallet:create",)
+                or str(s.get("source") or "").endswith(":creator_watched")))
+            or s.get("origin") in WALLET_ORIGINS
+            for s in (find.get("sources") or [])
+        )
+        if not has_explicit:
+            wf = False
+            soft_wallet = True
+
+    return {
+        "wallet_factory": wf,
+        "official_x": xo,
+        "name_only": name_hit and not wf and not xo and not soft_wallet,
+        "soft_wallet": soft_wallet,
+        "wallet_confidence": tier,
+        "x_url": x_url,
+        "creator": creator,
+    }
+
+
+def _parse_ts_iso(v) -> float | None:
+    if v is None or v == "":
+        return None
+    try:
+        if isinstance(v, (int, float)):
+            return float(v)
+        from datetime import datetime
+        s = str(v).replace("Z", "+00:00")
+        return datetime.fromisoformat(s).timestamp()
+    except Exception:
+        return None
+
+
+def collect_vetoes(find: dict, prov: dict, *, funding_link: dict | None = None,
+                   sibling_same_name: list[dict] | None = None,
+                   expected_window: dict | None = None,
+                   project_categories: list[str] | None = None) -> list[dict]:
+    """Feasible §7.3 vetoes. Any hit → must not write pre-launch confirmed.
+
+    Implemented:
+      - multiple same-name tokens without creator/funding link
+      - funder in public list (excluded_reason on funding_link)
+      - mixer / fresh withdrawal with no graph link
+      - deploy far from expected window (when schedule known)
+    Deferred (need more data; listed as gaps):
+      - deployer rug/copycat history
+      - GameFi anchor unlink (needs game/NFT deployer graph beyond wallet_meta)
+      - code template mismatch
+    """
+    vetoes: list[dict] = []
+    fl = funding_link if funding_link is not None else find.get("funding_link")
+    has_creator = bool(prov.get("wallet_factory") or prov.get("soft_wallet") or prov.get("creator"))
+    has_funding = bool(fl) and not (fl or {}).get("excluded_reason")
+
+    # multi same-name without creator or funding
+    sibs = sibling_same_name
+    if sibs is None:
+        sibs = find.get("_siblings_same_name") or []
+    if len(sibs) >= 1 and not has_creator and not has_funding:
+        # find itself + >=1 other = multiple
+        vetoes.append({
+            "kind": "multi_same_name_no_link",
+            "note_zh": "同名代币已存在多个，且无创建者或资金链接",
+        })
+
+    if fl and fl.get("excluded_reason", "").startswith("public_funder:"):
+        reason = fl["excluded_reason"]
+        vetoes.append({
+            "kind": "public_funder",
+            "note_zh": f"资金关联资助方命中公共名单（{reason}）",
+            "excluded_reason": reason,
+        })
+        if "mixer" in reason:
+            vetoes.append({
+                "kind": "mixer_no_graph",
+                "note_zh": "资金来自混币器且与项目图谱无链接",
+            })
+
+    # fresh withdrawal / mixer with no graph: funder not in graph and excluded or unknown
+    if fl and fl.get("kind") == "direct" and not fl.get("excluded_reason") and fl.get("confidence") == "low":
+        # funder not in project graph (fresh / unknown) + name-only → veto
+        if prov.get("name_only"):
+            vetoes.append({
+                "kind": "fresh_withdrawal_no_graph",
+                "note_zh": "资金来自全新提币且与项目图谱完全没链接",
+            })
+
+    # deploy far from expected window
+    win = expected_window if expected_window is not None else find.get("expected_window")
+    dep = _parse_ts_iso(find.get("deployed_at") or find.get("detected_at") or (fl or {}).get("deployed_at"))
+    if win and dep is not None:
+        start = _parse_ts_iso(win.get("start") or win.get("from"))
+        end = _parse_ts_iso(win.get("end") or win.get("to"))
+        # "far" = more than 7d outside the window
+        far = 7 * 86400
+        if start is not None and end is not None:
+            if dep < start - far or dep > end + far:
+                vetoes.append({
+                    "kind": "deploy_far_from_window",
+                    "note_zh": "部署时间远离项目预期窗口",
+                    "deployed_at": find.get("deployed_at") or find.get("detected_at"),
+                    "window": win,
+                })
+        elif start is not None and dep < start - far:
+            vetoes.append({
+                "kind": "deploy_far_from_window",
+                "note_zh": "部署时间远离项目预期窗口",
+            })
+
+    return vetoes
+
+
+def matched_by_of(evidences: list[dict], prov: dict, funding_link: dict | None = None) -> list[str]:
+    """§9 matched_by tags derived from hard evidences / provenance."""
+    tags: list[str] = []
+    kinds = {e.get("kind") for e in (evidences or [])}
+    if "high_watched_deployer" in kinds or prov.get("wallet_factory"):
+        tags.append("creator_wallet")
+    if "funding_link" in kinds or (
+        funding_link and not funding_link.get("excluded_reason")
+        and funding_link.get("confidence") in ("high", "medium")
+    ):
+        tags.append("funding_link")
+    if "launchpad_factory" in kinds:
+        tags.append("launchpad_factory")
+    if "site_semantic_ca" in kinds:
+        tags.append("site_semantic")
+    if "official_x" in kinds or prov.get("official_x"):
+        tags.append("official_x")
+    if "official_metadata" in kinds:
+        tags.append("official_metadata")
+    if not tags and prov.get("name_only"):
+        tags.append("name_match")
+    return tags
+
+
+
+def assess(find: dict, *, verified_ok: bool, ca_role: str | None, prov: dict,
+           superseded_by: str | None = None, launched: bool = False,
+           wallet_meta: dict | None = None,
+           watched_wallets: set[str] | None = None,
+           conflict: bool = False,
+           funding_link: dict | None = None,
+           sibling_same_name: list[dict] | None = None,
+           expected_window: dict | None = None) -> dict:
+    """Return confidence fields. P1+E1: pre-launch confirmed needs >=2 hard evidences
+    and zero vetoes; official_x alone still confirms (事后验证); conflict/veto → never
+    pre-launch confirmed."""
+    wf, xo = prov["wallet_factory"], prov["official_x"]
+    tag = "both" if (wf and xo) else "wallet_factory" if wf else "official_x" if xo else None
+    fl = funding_link if funding_link is not None else find.get("funding_link")
+    evidences = collect_hard_evidence(find, prov, wallet_meta=wallet_meta,
+                                      watched_wallets=watched_wallets,
+                                      funding_link=fl)
+    hard_n = len(evidences)
+    vetoes = collect_vetoes(find, prov, funding_link=fl,
+                            sibling_same_name=sibling_same_name,
+                            expected_window=expected_window)
+    vetoed = bool(vetoes)
+
+    if not verified_ok:
+        status = "not_ca"
+    elif prov.get("name_only") and not prov.get("soft_wallet") and hard_n == 0:
+        status = "suspected_copycat"
+    elif superseded_by and not xo:
+        status = "superseded"
+    elif ca_role == "nft" and not xo:
+        # P0: project NFT confirmed only via official_x
+        status = "candidate"
+    elif conflict:
+        status = "candidate"
+    elif xo:
+        # 官推 = 事后验证通道，仍可 confirmed（不计开盘前提前量）；veto 不挡事后验证
+        status = "confirmed"
+    elif vetoed:
+        status = "candidate"
+    elif hard_n >= HARD_EVIDENCE_MIN:
+        status = "confirmed"
+    elif wf or prov.get("soft_wallet") or hard_n == 1:
+        status = "candidate"
+    else:
+        status = "candidate"
+
+    out = {
+        "ca_status": status,
+        "ca_status_zh": STATUS_LABEL[status],
+        "provenance": tag,
+        "provenance_zh": PROV_LABEL.get(tag) if tag else None,
+        "official_x_confirmed": bool(xo),
+        "wallet_factory_confirmed": bool(wf),
+        "ca_role": ca_role,
+        "alert_ok": status == "confirmed" and not launched and not conflict and not (vetoed and not xo),
+        "evidence": evidences,
+        "hard_evidence_count": hard_n,
+        "conflict": bool(conflict),
+        "matched_by": matched_by_of(evidences, prov, fl),
+    }
+    if fl:
+        out["funding_link"] = fl
+    if vetoes:
+        out["vetoes"] = vetoes
+        out["veto_note_zh"] = "；".join(v.get("note_zh") or v.get("kind") for v in vetoes)
+    if prov.get("creator"):
+        out["creator"] = prov["creator"]
+        meta = (wallet_meta or {}).get(_norm_addr(prov.get("creator")) or "") or {}
+        src = meta.get("source") or meta.get("watch_source")
+        if src:
+            out["creator_watch_source"] = src
+        elif prov.get("wallet_confidence"):
+            out["creator_watch_source"] = f"watchlist:{prov['wallet_confidence']}"
+    if prov.get("wallet_confidence"):
+        out["creator_watch_confidence"] = prov["wallet_confidence"]
+    if prov.get("soft_wallet"):
+        out["soft_wallet"] = True
+    if prov.get("x_url"):
+        out["official_x_url"] = prov["x_url"]
+    if superseded_by and status == "superseded":
+        out["superseded_by"] = superseded_by
+    if conflict:
+        out["conflict_note_zh"] = "同一项目出现多个有证据的 CA，已标冲突，请人工确认"
+    return out
+
+
+def mark_conflicts(rows: list[dict]) -> list[dict]:
+    """Same (project_key, ca_role) with >=2 distinct addresses that each have hard evidence
+    → mark conflict; demote non-X confirmed→candidate.
+
+    Different ca_role values (token / nft / transistors / processor) for the same project
+    are intentional (e.g. TapeOut) and do NOT conflict with each other.
+    """
+    from collections import defaultdict
+    by_key: dict[tuple, list[dict]] = defaultdict(list)
+    for f in rows:
+        if f.get("ca_status") in ("not_ca", "suspected_copycat", "superseded"):
+            continue
+        if (f.get("hard_evidence_count") or 0) < 1 and f.get("ca_status") != "confirmed":
+            continue
+        pk = project_key(f.get("handle"), f.get("project"))
+        if not pk:
+            continue
+        role = f.get("ca_role") or "token"
+        by_key[(pk, role)].append(f)
+    for (pk, role), group in by_key.items():
+        addrs = {(f.get("address") or "").lower() for f in group if f.get("address")}
+        if len(addrs) < 2:
+            continue
+        for f in group:
+            f["conflict"] = True
+            f["conflict_cas"] = sorted(addrs)
+            f["conflict_role"] = role
+            f["conflict_note_zh"] = f"同一项目同一角色（{role}）出现多个有证据的 CA，已标冲突，请人工确认"
+            if f.get("ca_status") == "confirmed" and not f.get("official_x_confirmed"):
+                f["ca_status"] = "candidate"
+                f["ca_status_zh"] = STATUS_LABEL["candidate"]
+                f["alert_ok"] = False
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# Project CA lock — once official X posts a verified CA, later CAs for that
+# project are suppressed (audit log only). Activity / WALLET_ACTIVITY untouched.
+# ---------------------------------------------------------------------------
+import fcntl
+import json
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+LOCK_PATH = BASE / "ca_project_lock.json"
+SKIP_LOG = BASE / "ca_locked_skip.jsonl"
+_SH = ZoneInfo("Asia/Shanghai")
+
+# Handles that share one lock (TapeRobot watch uses TapeOutWatch; project X is TapeRobot_bsc).
+PROJECT_ALIASES: dict[str, str] = {
+    "tapeoutwatch": "taperobot_bsc",
+    "taperobot": "taperobot_bsc",
+    "taperobot_bsc": "taperobot_bsc",
+}
+
+
+def project_key(handle: str | None, name: str | None = None) -> str | None:
+    h = (handle or "").lstrip("@").strip().lower()
+    if h in PROJECT_ALIASES:
+        return PROJECT_ALIASES[h]
+    if h:
+        return h
+    n = (name or "").strip().lower()
+    if not n:
+        return None
+    if "taperobot" in n.replace(" ", "") or "tapeout" in n.replace(" ", ""):
+        return "taperobot_bsc"
+    return n.replace(" ", "_")
+
+
+def _now() -> str:
+    return datetime.now(_SH).isoformat(timespec="seconds")
+
+
+def load_locks() -> dict:
+    try:
+        return json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {"updated_at": None, "projects": {}}
+
+
+def _save_locks(doc: dict) -> None:
+    LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOCK_PATH.touch(exist_ok=True)
+    with LOCK_PATH.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        tmp = LOCK_PATH.with_suffix(".tmp")
+        doc["updated_at"] = _now()
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(LOCK_PATH)
+        fcntl.flock(lf, fcntl.LOCK_UN)
+
+
+def get_lock(handle: str | None, name: str | None = None) -> dict | None:
+    """Return the lock entry for this project, or None."""
+    key = project_key(handle, name)
+    if not key:
+        return None
+    return (load_locks().get("projects") or {}).get(key)
+
+
+def is_project_locked(handle: str | None, name: str | None = None) -> bool:
+    return get_lock(handle, name) is not None
+
+
+def locked_cas(handle: str | None, name: str | None = None) -> set[str]:
+    lock = get_lock(handle, name) or {}
+    return {(c.get("address") or "").lower() for c in (lock.get("locked_cas") or []) if c.get("address")}
+
+
+
+
+def is_deployer_linked(find: dict | None) -> bool:
+    """True when CA is tied to a watched / funding-linked deployer (炼油条件①).
+
+    Requires a deployer address PLUS real watch/funding evidence.
+    Does NOT count: suspected_copycat, name/symbol-only matched_by, bare onchain_lock
+    (adu 2026-10-28 false positive: bStonkAgents 0xb200…7801 via symbol:SA).
+    """
+    if not isinstance(find, dict):
+        return False
+    if find.get("suspected_copycat") or str(find.get("ca_status") or "").lower() in (
+        "suspected_copycat", "not_ca", "superseded",
+    ):
+        return False
+    if find.get("official") is False and find.get("wallet_factory_confirmed") is not True:
+        # name_match_unconfirmed / copycat buckets stay out unless explicit watch flags below
+        status = str(find.get("status") or "").lower()
+        if status in ("name_match_unconfirmed", "suspected_copycat"):
+            return False
+    fl = find.get("funding_link") if isinstance(find.get("funding_link"), dict) else {}
+    deployer = (
+        find.get("traced_from")
+        or find.get("creator")
+        or find.get("deployer")
+        or fl.get("deployer")
+        or fl.get("from")
+        or fl.get("wallet")
+        or fl.get("address")
+    )
+    if not deployer:
+        return False
+    # Explicit watch / related-wallet flags only (not substring on onchain_lock / matched_by)
+    if find.get("wallet_factory_confirmed") or find.get("creator_watched"):
+        return True
+    if find.get("deployer_watched") or find.get("wallet_watched") or find.get("related_wallet"):
+        return True
+    cws = str(find.get("creator_watch_source") or "").lower()
+    if cws and "name" not in cws and "symbol" not in cws:
+        return True
+    mb = find.get("matched_by")
+    mb_s = " ".join(mb) if isinstance(mb, (list, tuple)) else str(mb or "")
+    mb_l = mb_s.lower()
+    if mb_l and not any(x in mb_l for x in ("name", "symbol", "fuzzy")):
+        if any(x in mb_l for x in ("wallet", "watch", "deployer", "funding", "trace")):
+            return True
+    # Hard funding evidence only
+    if fl:
+        try:
+            from funding_links import is_hard_evidence
+            if is_hard_evidence(fl):
+                return True
+        except Exception:
+            if fl.get("confidence") in ("high", "medium") and not fl.get("excluded_reason"):
+                return True
+    # onchain_lock / TRACE only when a source marks creator_watched / wallet:create
+    for s in find.get("sources") or []:
+        if not isinstance(s, dict):
+            continue
+        if s.get("creator_watched") or s.get("wallet_factory") or s.get("deployer_watched"):
+            return True
+        src = str(s.get("source") or "").lower()
+        if src in ("wallet:create",) or src.endswith(":creator_watched"):
+            return True
+    return False
+
+
+def is_ca_fixed(find: dict | None = None, *, official_x: bool | None = None, handle: str | None = None,
+                source: str | None = None, post_url: str | None = None) -> tuple[bool, str]:
+    """炼油「固定 CA」两条件（adu 2026-10-28）：
+    ① 部署者或关联钱包部署；或 ② 官推发出。
+    站点刮取 / 纯高置信候选 / 疑似山寨 / 仅电报已推 → 仍待确认（candidate）。
+    Returns (fixed, reason).
+    """
+    find = find if isinstance(find, dict) else {}
+    if find.get("suspected_copycat") or str(find.get("ca_status") or "").lower() == "suspected_copycat":
+        return False, "suspected_copycat"
+    if str(find.get("ca_status") or "").lower() in ("not_ca", "superseded"):
+        return False, str(find.get("ca_status"))
+    # must be token-shaped when classified
+    kind = str(find.get("kind") or "").lower()
+    if kind in ("nft", "hybrid_404", "hybrid", "wallet"):
+        return False, f"not_token:{kind or 'nft'}"
+    if find.get("is_token") is False and kind not in ("", "unknown", "token"):
+        return False, "not_token"
+    ox = official_x
+    if ox is None:
+        ox = bool(find.get("official_x_confirmed")) or is_from_official_x(
+            source or find.get("source") or find.get("origin"),
+            handle=handle or find.get("handle"),
+            post_url=post_url or find.get("official_x_url") or find.get("evidence_url") or find.get("tweet_url"),
+        )
+        if find.get("provenance") in ("official_x", "both"):
+            ox = True
+    if ox:
+        return True, "official_x"
+    if is_deployer_linked(find):
+        return True, "deployer_or_related"
+    return False, "candidate_not_fixed"
+
+
+def ca_fixed_fields(find: dict | None = None, **kwargs) -> dict:
+    ok, reason = is_ca_fixed(find, **kwargs)
+    return {"ca_fixed": ok, "ca_fixed_reason": reason, "ca_status_label": ("固定CA" if ok else "待确认")}
+
+def is_from_official_x(source: str | None, *, handle: str | None = None, post_url: str | None = None) -> bool:
+    """True when the CA came from the project's own X account (not a third-party scrape of x.com)."""
+    s = (source or "").strip()
+    sl = s.lower()
+    if sl.startswith("x:@"):
+        return True
+    if sl == "x_post":
+        return True
+    if post_url and handle:
+        h = handle.lstrip("@").lower()
+        if f"x.com/{h}/status/" in post_url.lower() or f"twitter.com/{h}/status/" in post_url.lower():
+            return True
+    if handle and ("x.com/" in sl or "twitter.com/" in sl):
+        h = handle.lstrip("@").lower()
+        if f"x.com/{h}/" in sl or f"twitter.com/{h}/" in sl:
+            return True
+    return False
+
+
+def should_skip_ca(*, handle: str | None, name: str | None = None, address: str | None,
+                   source: str | None = None, from_official_x: bool | None = None,
+                   post_url: str | None = None) -> tuple[bool, str | None]:
+    """After a project is locked, skip any later CA that did not come from official X
+    and is not already in locked_cas[]. Returns (skip, reason)."""
+    lock = get_lock(handle, name)
+    if not lock:
+        return False, None
+    a = (address or "").strip().lower()
+    if a and a in {(c.get("address") or "").lower() for c in (lock.get("locked_cas") or [])}:
+        return False, None  # already the locked CA — allow rebuild / re-confirm
+    ox = from_official_x if from_official_x is not None else is_from_official_x(source, handle=handle, post_url=post_url)
+    if ox:
+        return False, None  # exception: official X may attach another address by ca_role
+    return True, (f"project locked at {lock.get('locked_at')}; "
+                  f"locked_cas={[c.get('address') for c in (lock.get('locked_cas') or [])]}; "
+                  f"source={source or '?'}")
+
+
+def log_locked_skip(*, handle: str | None, name: str | None = None, address: str | None,
+                    source: str | None = None, reason: str | None = None,
+                    extra: dict | None = None) -> None:
+    key = project_key(handle, name)
+    lock = get_lock(handle, name) or {}
+    ev = {
+        "type": "CA_LOCKED_SKIP",
+        "at": _now(),
+        "project_key": key,
+        "handle": handle,
+        "name": name,
+        "address": address,
+        "source": source,
+        "reason": reason or "project_ca_locked",
+        "locked_at": lock.get("locked_at"),
+        "locked_by_official_x_url": lock.get("locked_by_official_x_url"),
+        **(extra or {}),
+    }
+    with SKIP_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+    print(f"[ca_lock] SKIP {key} {address} via {source}: {ev['reason']}", flush=True)
+
+
+def record_lock(*, handle: str | None, name: str | None = None, address: str,
+                ca_role: str | None = None, post_url: str | None = None,
+                verified: dict | None = None, aliases: list[str] | None = None,
+                note: str | None = None) -> dict:
+    """Create or update a project lock when official X posts a verified CA.
+    Adds address into locked_cas[] (by ca_role). Returns the lock entry."""
+    key = project_key(handle, name)
+    if not key:
+        raise ValueError("record_lock needs handle or name")
+    a = address.strip()
+    a_l = a.lower()
+    LOCK_PATH.touch(exist_ok=True)
+    with LOCK_PATH.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        try:
+            doc = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            doc = {"projects": {}}
+        projects = doc.setdefault("projects", {})
+        entry = projects.get(key) or {
+            "project_key": key,
+            "handle": (handle or "").lstrip("@") or None,
+            "name": name,
+            "aliases": [],
+            "locked_at": _now(),
+            "locked_by_official_x_url": post_url,
+            "locked_cas": [],
+            "note": note,
+        }
+        # aliases
+        alias_set = {x.lower().lstrip("@") for x in (entry.get("aliases") or []) if x}
+        if handle:
+            alias_set.add(handle.lstrip("@").lower())
+        for x in aliases or []:
+            alias_set.add(x.lstrip("@").lower())
+        # keep PROJECT_ALIASES reverse links in the entry too
+        for alias, canon in PROJECT_ALIASES.items():
+            if canon == key:
+                alias_set.add(alias)
+        entry["aliases"] = sorted(alias_set)
+        if handle and not entry.get("handle"):
+            entry["handle"] = handle.lstrip("@")
+        if name and not entry.get("name"):
+            entry["name"] = name
+        if post_url and not entry.get("locked_by_official_x_url"):
+            entry["locked_by_official_x_url"] = post_url
+        cas = entry.setdefault("locked_cas", [])
+        existing = next((c for c in cas if (c.get("address") or "").lower() == a_l), None)
+        if existing:
+            if ca_role and not existing.get("ca_role"):
+                existing["ca_role"] = ca_role
+            if post_url and not existing.get("post_url"):
+                existing["post_url"] = post_url
+            if verified:
+                existing["verified"] = {k: verified.get(k) for k in ("kind", "symbol", "name", "note") if verified.get(k) is not None}
+        else:
+            row = {"address": a, "ca_role": ca_role, "post_url": post_url, "added_at": _now()}
+            if verified:
+                row["verified"] = {k: verified.get(k) for k in ("kind", "symbol", "name", "note") if verified.get(k) is not None}
+            cas.append(row)
+            if post_url:
+                entry["locked_by_official_x_url"] = entry.get("locked_by_official_x_url") or post_url
+        if note and not entry.get("note"):
+            entry["note"] = note
+        projects[key] = entry
+        doc["updated_at"] = _now()
+        tmp = LOCK_PATH.with_suffix(".tmp")
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(LOCK_PATH)
+        fcntl.flock(lf, fcntl.LOCK_UN)
+    # keep live alias map in sync for this process
+    for alias in entry.get("aliases") or []:
+        PROJECT_ALIASES[alias] = key
+    return entry
+
+
+def lock_fields(handle: str | None, name: str | None = None) -> dict:
+    """Fields to merge into a ca_finds row for a locked project."""
+    lock = get_lock(handle, name)
+    if not lock:
+        return {"ca_locked": False}
+    return {
+        "ca_locked": True,
+        "ca_locked_at": lock.get("locked_at"),
+        "locked_by_official_x_url": lock.get("locked_by_official_x_url"),
+        "locked_cas": [c.get("address") for c in (lock.get("locked_cas") or [])],
+        "project_key": lock.get("project_key"),
+    }

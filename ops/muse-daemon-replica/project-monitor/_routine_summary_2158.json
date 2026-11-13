@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-28T22:42:17+08:00",
+  "tag": "2158",
+  "pipeline_ok": true,
+  "pipeline_elapsed_s": 2298,
+  "pipeline_exit": 0,
+  "watchlist": "381→381",
+  "watchlist_before": 381,
+  "watchlist_after": 381,
+  "locked_new_count": 0,
+  "locked_new": [],
+  "updated_meta": 4,
+  "blocklist_skipped": 0,
+  "x_refresh": {
+    "quota_blocked": true,
+    "bios_refreshed": 0,
+    "posts_skipped": true,
+    "brief": "X daily read limit 1000 exhausted; resets 2026-10-29T00:00:00Z / 08:00 Asia/Shanghai",
+    "resets": "2026-10-29T00:00:00Z / 08:00 Asia/Shanghai"
+  },
+  "onchain_lock_new_raw": 1,
+  "onchain_lock_actionable": [],
+  "onchain_lock_skipped_ambient": 1,
+  "pruned": [],
+  "pruned_count": 0,
+  "listing_at_changes": [],
+  "actionable": [
+    {
+      "kind": "NEW_CA",
+      "project": "Reapo",
+      "handle": "reapoxyz",
+      "chain": "robinhood",
+      "ca": "0xc53be8b12c11d30d7dd687e9444f4a4a6cea05e6",
+      "evidence": "NEW_JS_CA via html:https://reapo.xyz/; ERC20 verified REAPO dec=18; first_buy 21:55+08; X pinned WE ARE LIVE NOW! CA:0xc53b…",
+      "source": "js_factory+site+x",
+      "symbol": "REAPO",
+      "ca_status": "candidate",
+      "official_x_live": true
+    },
+    {
+      "kind": "LISTING_SIGNAL",
+      "project": "Reapo",
+      "handle": "reapoxyz",
+      "chain": "robinhood",
+      "ca": "0xc53be8b12c11d30d7dd687e9444f4a4a6cea05e6",
+      "evidence": "listing_signal ∅/即将启动 → WE ARE LIVE NOW! CA:0xc53b… (pinned @reapoxyz)",
+      "source": "listing_scan/x_site"
+    }
+  ],
+  "actionable_count": 2,
+  "quiet": false,
+  "pause_routine": false,
+  "errors": [],
+  "notes": [
+    "skip ambient ONCHAIN_LOCK Trench/TRENCHORS low name_fuzzy univ4_pm_base",
+    "skip CLAN listing_signal noise (junk text → status=即将启动)",
+    "Omikuzi 0x7cB696… NFT contract was baseline new_ca — not token NEW_CA",
+    "FishesRH 0x098e…9dbf remains candidate (not fixed) — no buy wake",
+    "SITE_JS_CHANGE×12 ambient/no new token CA (except Reapo 0→1 addr)",
+    "new_deploy_hints all ambient univ2_eth",
+    "pruned=0 mark_launched newly=0"
+  ],
+  "user_facing_zh": "发现 Reapo（@reapoxyz）已开打：官网/JS 扫到代币 CA `0xc53be8b12c11d30d7dd687e9444f4a4a6cea05e6`（Robinhood 链，ERC20 校验符号 REAPO），官推置顶 WE ARE LIVE NOW 并贴了同一 CA；约 21:55（Asia/Shanghai）已有首笔买入。来源：reapo.xyz + 官推。",
+  "daemons": {
+    "listing_scan": "running",
+    "onchain_lock": "running",
+    "site_scan_paused": false
+  },
+  "rpc_note": "onchain_lock daemon had intermittent public RPC errors (base limit / bsc curl / robinhood) but pipeline completed; no pause"
+}

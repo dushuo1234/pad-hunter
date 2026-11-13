@@ -1,0 +1,332 @@
+#!/usr/bin/env python3
+"""
+Auto-remove already-launched projects from the Pad Hunter project list (soft delete).
+
+launched = any of
+  A) token-trading evidence in the project's own X bio/posts/site snippets
+     (e.g. "$CROPZ is LIVE ... CA:", "RETICLE is live on Uniswap v4. CA ...",
+     已开盘/开始交易) AND an own CA in the same text or a high-confidence own
+     contract in ca_finds.json. A CA alone is NOT enough; NFT mint-live / claim-live
+     / product-live (wallet, API, scanner) do NOT count.
+  B) the project is itself a launchpad/feed that is already live and operating
+     (PLATFORM_LIVE below — verified from scan notes).
+  C) listing_times.json already_listed=true with explicit 已开盘/开始交易/trading-now
+     wording (not past-date heuristics).
+
+Soft delete: entries are appended to removed_launched.json (reason, evidence,
+removed_at Asia/Shanghai, full snapshot) and removed from:
+  - watchlist.json            (fast_site_poll reloads targets every 60s → stops polling)
+  - push-radar/data/candidates.json
+  - push-radar/data/projects.json
+Blocklist: every handle in removed_launched.json (unless "restored": true) is filtered
+out of those files on every run, so re-syncs cannot re-add them.
+Also writes push-radar/data/launched.json for the site's 「已开盘」 section.
+
+Restore: set "restored": true on the entry in removed_launched.json, then put the
+snapshot back into watchlist.json (and projects/candidates) — next run keeps it.
+"""
+from __future__ import annotations
+
+import json
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+WATCHLIST = BASE / "watchlist.json"
+REMOVED = BASE / "removed_launched.json"
+LISTING_TIMES = BASE / "listing_times.json"
+LISTING_SCAN = BASE / "listing_scan_latest.json"
+X_CACHE = BASE / "x_posts_cache.json"
+X_LISTING = BASE / "x_listing_posts_cache.json"
+CA_FINDS = BASE / "ca_finds.json"
+DATA = Path("/workspace/push-radar/data")
+CANDIDATES = DATA / "candidates.json"
+PROJECTS = DATA / "projects.json"
+LAUNCHED = DATA / "launched.json"
+TZ = ZoneInfo("Asia/Shanghai")
+
+# B) live platforms/feeds (verified 2026-10-20 from scan data)
+PLATFORM_LIVE = {
+    "baodotla": {
+        "reason": "platform_live",
+        "evidence": "bao.la is a live call/feed site listing other people's tokens "
+                    "(e.g. 'Call Market Cap $30.14K … 2 Calls 12m ago'); CAs on it belong to third parties",
+        "evidence_url": "https://bao.la/",
+    },
+    "launchbl": {
+        "reason": "platform_live",
+        "evidence": "Ballast launchpad UI live at ballast.exchange (GIWA bonding curve → Uniswap v4); "
+                    "tokens on the page are other projects' launches",
+        "evidence_url": "https://ballast.exchange/",
+    },
+    "letshatchfun": {
+        "reason": "platform_live",
+        "evidence": "Hatch Solana launchpad already operating: '$HATCH is officially LIVE' plus "
+                    "'We've officially passed 5 token launches on hatch.fun'; third-party tokens "
+                    "launch through the pad",
+        "evidence_url": "https://x.com/LetsHatchFun/status/2112231754538930314",
+    },
+    "giwadotfun": {
+        "reason": "platform_live",
+        "evidence": "User-confirmed live GiwaChain L2 launchpad: site https://giwadotfun.org/ "
+                    "title 'GIWAdotfun — LaunchPad on GiwaChain'; X bio 'Launch tokens in seconds / "
+                    "LaunchPad on GiwaChain L2' — third-party tokens launch through the pad",
+        "evidence_url": "https://giwadotfun.org/",
+    },
+}
+
+TRADE_RE = re.compile(
+    r"(已开盘|开始交易|"
+    r"\$[A-Za-z][A-Za-z0-9]{1,11}\s+(?:is\s+)?(?:now\s+)?(?:officially\s+)?live\b(?!\s*soon)|"
+    r"\b[A-Z][A-Z0-9]{2,11}\s+is\s+live\s+on\s+(?:uniswap|raydium|pons|pump\.?fun|meteora|aerodrome|pancake)|"
+    r"\bis\s+live\b[\s\S]{0,80}?\$[A-Za-z]{2,12}\s+swap|"
+    r"live\s+on\s+(?:uniswap|raydium|pons|pump\.?fun|meteora|aerodrome|pancakeswap)|"
+    r"trading\s+is\s+(?:now\s+)?live|token\s+(?:is\s+)?live)",
+    re.I,
+)
+NOT_TOKEN_RE = re.compile(r"\b(claim|mint|whitelist|wl\b|wallet will|api is live|playground)", re.I)
+CA_IN_TEXT = re.compile(r"\bCA\b\s*[:：]?\s*(0x[0-9a-fA-F]{40}|[1-9A-HJ-NP-Za-km-z]{32,44})")
+
+
+def now_iso() -> str:
+    return datetime.now(TZ).isoformat(timespec="seconds")
+
+
+def load(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def dump(path: Path, obj) -> None:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(path)
+
+
+def hkey(h: str | None) -> str:
+    return (h or "").lstrip("@").strip().lower()
+
+
+def texts_for(handle: str, x_users: dict, x_listing: dict, scan_by: dict) -> list[tuple[str, str, str | None]]:
+    out: list[tuple[str, str, str | None]] = []
+    u = next((v for k, v in x_users.items() if k.lower() == handle), None)
+    if u:
+        if u.get("description"):
+            out.append((u["description"], f"https://x.com/{u.get('username') or handle}", None))
+        for p in u.get("posts") or []:
+            if p.get("text"):
+                out.append((p["text"], p.get("url") or "", p.get("created_at")))
+    for p in x_listing.get(handle) or []:
+        if p.get("text"):
+            out.append((p["text"], p.get("url") or "", p.get("created_at")))
+    r = scan_by.get(handle)
+    if r:
+        for c in r.get("cas") or []:
+            if c.get("snippet"):
+                out.append((c["snippet"], (c.get("source") or "").replace("site:", ""), None))
+        for s in r.get("signals") or []:
+            if s.get("snippet"):
+                out.append((s["snippet"], (s.get("source") or "").replace("site:", ""), None))
+    return out
+
+
+def detect(projects: list[dict]) -> tuple[dict[str, dict], list[dict]]:
+    x_users = (load(X_CACHE, {}) or {}).get("users") or {}
+    x_listing = (load(X_LISTING, {}) or {}).get("users") or {}
+    scan_by = {hkey(r.get("handle")): r for r in (load(LISTING_SCAN, {}) or {}).get("results") or []}
+    finds = (load(CA_FINDS, {}) or {}).get("finds") or []
+    high_ca: dict[str, dict] = {}
+    for f in finds:
+        if f.get("confidence") == "high" and f.get("kind") != "wallet":
+            high_ca.setdefault(hkey(f.get("handle")), f)
+    lt_by = {hkey(i.get("handle")): i for i in (load(LISTING_TIMES, {}) or {}).get("items") or []}
+
+    hits: dict[str, dict] = {}
+    borderline: list[dict] = []
+    for p in projects:
+        h = hkey(p.get("handle"))
+        if not h:
+            continue
+        if h in PLATFORM_LIVE:
+            hits[h] = dict(PLATFORM_LIVE[h])
+            continue
+        hca = high_ca.get(h)
+        trade_hit = None
+        # prefer dated X posts first so listing_at can come from the post time
+        tx = sorted(texts_for(h, x_users, x_listing, scan_by), key=lambda z: (z[2] is None, z[2] or ""))
+        for text, url, created in tx:
+            m = TRADE_RE.search(text)
+            if not m:
+                continue
+            window = text[max(0, m.start() - 60): m.end() + 60]
+            if NOT_TOKEN_RE.search(window) and not re.search(r"已开盘|开始交易|uniswap|raydium|pons", window, re.I):
+                borderline.append({"project": p.get("name"), "handle": p.get("handle"),
+                                   "why_kept": "live wording is mint/claim/product, not token trading",
+                                   "evidence": re.sub(r"\s+", " ", text)[:200], "evidence_url": url})
+                continue
+            ca_m = CA_IN_TEXT.search(text)
+            if ca_m or hca:
+                trade_hit = (text, url, ca_m.group(1) if ca_m else hca.get("address"), created)
+                break
+            borderline.append({"project": p.get("name"), "handle": p.get("handle"),
+                               "why_kept": "token-live wording but no own CA confirmed",
+                               "evidence": re.sub(r"\s+", " ", text)[:200], "evidence_url": url})
+        if trade_hit:
+            text, url, ca, created = trade_hit
+            live_at = None
+            if created:
+                try:
+                    live_at = datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone(TZ).isoformat(timespec="seconds")
+                except Exception:
+                    live_at = None
+            hits[h] = {
+                "reason": "token_live_with_ca",
+                "evidence": re.sub(r"\s+", " ", text)[:300],
+                "evidence_url": url,
+                "ca": ca,
+                "ca_kind": (hca or {}).get("kind"),
+                "live_at": live_at,
+            }
+            continue
+        it = lt_by.get(h)
+        if it and it.get("already_listed") and re.search(
+            r"已开盘|开始交易|trading\s+(now|is\s+live)", it.get("listing_at_raw") or "", re.I
+        ) and (hca or CA_IN_TEXT.search(it.get("listing_at_raw") or "")):
+            hits[h] = {"reason": "already_listed", "evidence": it.get("listing_at_raw"),
+                       "evidence_url": it.get("evidence_url") or ""}
+            continue
+        if hca and not trade_hit:
+            borderline.append({"project": p.get("name"), "handle": p.get("handle"),
+                               "why_kept": "high-confidence CA but no explicit trading/live signal",
+                               "evidence": f"CA {hca.get('address')} ({hca.get('chain')}) via {hca.get('source')}",
+                               "evidence_url": hca.get("evidence_url") or ""})
+    # dedupe borderline per handle
+    seen, bl = set(), []
+    for b in borderline:
+        k = hkey(b["handle"])
+        if k in seen or k in hits:
+            continue
+        seen.add(k)
+        bl.append(b)
+    return hits, bl
+
+
+def main() -> int:
+    ts = now_iso()
+    wl = load(WATCHLIST, {})
+    projects = wl.get("projects") or []
+    removed_doc = load(REMOVED, {"items": []})
+    if isinstance(removed_doc, list):
+        removed_doc = {"items": removed_doc}
+    removed_items = removed_doc.setdefault("items", [])
+
+    hits, borderline = detect(projects)
+
+    by_h = {hkey(p.get("handle")): p for p in projects}
+    already_blocked = {hkey(e.get("handle")) for e in removed_items if not e.get("restored")}
+    restored = {hkey(e.get("handle")) for e in removed_items if e.get("restored")}
+    newly = []
+    for h, info in hits.items():
+        if h in already_blocked or h in restored:
+            continue
+        p = by_h.get(h) or {}
+        entry = {
+            "project": p.get("name"),
+            "handle": p.get("handle"),
+            "chain": p.get("chain"),
+            "category": p.get("category"),
+            "x_url": p.get("x_url"),
+            "sites": p.get("sites") or [],
+            "listing_at": info.get("live_at") or p.get("listing_at"),
+            "ca": info.get("ca") or p.get("ca"),
+            "ca_chain": p.get("ca_chain"),
+            "reason": info["reason"],
+            "evidence": info.get("evidence"),
+            "evidence_url": info.get("evidence_url"),
+            "removed_at": ts,
+            "restored": False,
+            "snapshot": p,
+        }
+        removed_items.append(entry)
+        newly.append(entry)
+
+    for e in removed_items:
+        info = hits.get(hkey(e.get("handle")))
+        if info and not e.get("listing_at") and info.get("live_at"):
+            e["listing_at"] = info["live_at"]
+    block = {hkey(e.get("handle")) for e in removed_items if not e.get("restored")}
+    removed_doc["updated_at"] = ts
+    removed_doc["note"] = ("Soft-deleted launched projects. Handles here are a blocklist for "
+                           "watchlist/candidates/projects. Set restored=true to bring one back.")
+    removed_doc["borderline_kept"] = borderline
+    dump(REMOVED, removed_doc)
+
+    # watchlist
+    before_w = len(projects)
+    wl["projects"] = [p for p in projects if hkey(p.get("handle")) not in block]
+    wl["count"] = len(wl["projects"])
+    wl["last_prune_at"] = ts
+    dump(WATCHLIST, wl)
+
+    # candidates
+    cand = load(CANDIDATES, None)
+    before_c = after_c = None
+    if isinstance(cand, dict) and isinstance(cand.get("candidates"), list):
+        before_c = len(cand["candidates"])
+        cand["candidates"] = [c for c in cand["candidates"] if hkey(c.get("handle")) not in block]
+        for i, c in enumerate(cand["candidates"], 1):
+            c["rank"] = i
+        after_c = len(cand["candidates"])
+        cand["pruned_launched_at"] = ts
+        dump(CANDIDATES, cand)
+
+    # projects.json (list of TG cards)
+    pj = load(PROJECTS, None)
+    before_p = after_p = None
+    if isinstance(pj, list):
+        before_p = len(pj)
+        pj = [x for x in pj if hkey(x.get("twitter_handle") or x.get("handle")) not in block]
+        after_p = len(pj)
+        dump(PROJECTS, pj)
+
+    # launched.json (dedupe by handle, newest first)
+    latest: dict[str, dict] = {}
+    for e in removed_items:
+        if e.get("restored"):
+            continue
+        k = hkey(e.get("handle"))
+        if k not in latest or (e.get("removed_at") or "") > (latest[k].get("removed_at") or ""):
+            latest[k] = e
+    items = sorted(latest.values(), key=lambda e: e.get("removed_at") or "", reverse=True)
+    launched = {
+        "generated_at": ts,
+        "count": len(items),
+        "items": [
+            {k: e.get(k) for k in ("project", "handle", "chain", "category", "x_url", "sites",
+                                   "listing_at", "ca", "ca_chain", "reason", "evidence", "removed_at")}
+            for e in items
+        ],
+    }
+    dump(LAUNCHED, launched)
+
+    print(f"prune_launched {ts}")
+    print(f"  newly_removed={len(newly)} blocklist={len(block)}")
+    for e in newly:
+        print(f"   - {e['project']} (@{e['handle']}) reason={e['reason']} :: {(e['evidence'] or '')[:120]}")
+    print(f"  watchlist {before_w} -> {len(wl['projects'])}")
+    print(f"  candidates {before_c} -> {after_c}")
+    print(f"  projects.json {before_p} -> {after_p}")
+    print(f"  launched.json count={launched['count']}")
+    print(f"  borderline_kept={len(borderline)}")
+    for b in borderline:
+        print(f"   ~ {b['project']} (@{b['handle']}): {b['why_kept']} :: {b['evidence'][:110]}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

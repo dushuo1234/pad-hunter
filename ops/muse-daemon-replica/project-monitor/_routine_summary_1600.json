@@ -1,0 +1,72 @@
+{
+  "routine": "开盘与CA预警",
+  "hhmm": "1600",
+  "at": "2026-11-03T16:48:04+08:00",
+  "timezone": "Asia/Shanghai",
+  "fired_at_utc": "2026-11-03T07:59:42.508Z",
+  "pause": "absent",
+  "daemons": {
+    "listing_scan": "running pid=3363194",
+    "onchain_lock": "running pid=3362881"
+  },
+  "watchlist": {
+    "before": 549,
+    "after": 551,
+    "locked_new": [
+      "Uniswap",
+      "yansuanprotocol"
+    ],
+    "updated_meta": 44
+  },
+  "x_stats": {
+    "mode": "x",
+    "bios_refreshed": 19,
+    "posts_handles": [
+      "privatekeycoin_",
+      "yansuanprotocol",
+      "oxustrail",
+      "playtimberia",
+      "playmooland",
+      "rbhheroes",
+      "lodepass"
+    ],
+    "posts_new_merged": 6,
+    "quota_approx": "~325/1000",
+    "PKC_bio_empty": true,
+    "yansuan_bio": "Only .ai agents can mint $YAN. Hold YAN, win automatically. BNB Chain",
+    "signals_note": [
+      "Oxustrail/Timberia/MooLand already within3d",
+      "PKC bio still empty",
+      "yansuan re-locked no CA"
+    ]
+  },
+  "pipeline_exit": 0,
+  "elapsed_s": 2566,
+  "hang_notes": [
+    "scan_js_factory_match hung@900s near Aequitas/HARDCORE; killed rc=137; js file stale (mtime 10:11)",
+    "trace_wallet_ca hung@900s; killed rc=137",
+    "build_ca_finds hung@600s; killed rc=137 but ca_finds mtime advanced with +38 EOA-wallet non-CA rows"
+  ],
+  "js_incomplete": true,
+  "trace_incomplete": true,
+  "build_ca_finds_incomplete": true,
+  "lock_offset": {
+    "before": 352,
+    "after": 352
+  },
+  "lock_qual": 0,
+  "listing_at_changed": 0,
+  "listing_at_published": 0,
+  "new_ca_high": 0,
+  "new_ca": [],
+  "new_js_ca": 0,
+  "prune_newly": 0,
+  "mark_newly": 0,
+  "ca_finds": 402,
+  "new_deploy_hints": 3,
+  "new_deploy_non_ambient": 0,
+  "actionable": [],
+  "qualifying_count": 0,
+  "wake_parent": false,
+  "journal_sentence": "2026-11-03 16:47 Asia/Shanghai 开盘与CA预警 (fired 07:59Z): pause absent; daemons ok (listing 3363194, onchain_lock 3362881); watchlist 549→551 locked_new=['Uniswap','yansuanprotocol']; X bios~19 posts7 mode=x quota~325/1000 (PKC bio仍空; yansuan bio=$YAN mint .ai-only; Oxustrail/Timberia/MooLand 已在 within3d); pipeline EXIT=0 ~2566s (js hung@Aequitas/HARDCORE killed@900s; trace_wallet killed@900s; build_ca_finds killed@600s → ca_finds 371→402 mostly EOA非CA); lock offset 352→352 lock_qual0; new_ca=0 listing_at_changed=0 prune_newly=0; qualifying=0; no user ping."
+}

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Routine entry: listing → listing times → onchain → JS/factory match → wallet→CA trace → prune launched → aggregate CA finds
+set -euo pipefail
+cd /workspace/project-monitor
+python3 scan_listing_ca.py
+# Structured 开盘时间 (sticky fill-forward; never wipes a found listing_at); never fails the routine
+python3 extract_listing_times.py || echo "WARN: extract_listing_times.py failed"
+python3 scan_onchain.py
+python3 scan_js_factory_match.py
+# Wallet EOA classify + deploy trace; never fails the routine
+python3 trace_wallet_ca.py --recent-window 0 || echo "WARN: trace_wallet_ca.py failed"
+# Soft-remove launched projects (blocklist) + push-radar/data/launched.json; never fails the routine
+python3 prune_launched.py || echo "WARN: prune_launched.py failed"
+# CA-locked / already-trading → 已开盘 (also strips workbench); never fails the routine
+python3 mark_launched_from_ca.py || echo "WARN: mark_launched_from_ca.py failed"
+# ca_finds.json (+ mirror); launched projects go to launched_history; never fails the routine
+python3 build_ca_finds.py || echo "WARN: build_ca_finds.py failed"
+
+# Rebuild Pages monitor timeline from latest scans (warn-only)
+python3 publish_monitor_events.py || echo "WARN: publish_monitor_events.py failed"

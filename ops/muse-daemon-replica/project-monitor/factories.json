@@ -1,0 +1,800 @@
+{
+  "updated_at": "2026-10-21T15:41:09+08:00",
+  "notes": "Public factory/router addresses for Pad Hunter early-warning + onchain_lock. Ink UniV2 corrected to 0xfe57…0c04. Expanded 2026-10-20: ETH UniV3/V4 + Clanker; Base UniV4 + Clanker v4/v3.1 + Virtuals; BSC Pancake V3 + four.meme TokenManager2. ABIs under factory_abis/. Prefer eth_getLogs + ABI event decode. Solana programs registered separately. HyperEVM pass 2026-10-20: SpinUp LaunchCreated verified; launchpad.meme bonding 0x901af9…; LiquidLaunch; HyperSwap V2; KittenSwap Pair/CL.",
+  "chains": {
+    "ethereum": {
+      "chain_id": 1,
+      "rpc": [
+        "https://ethereum.publicnode.com",
+        "https://1rpc.io/eth",
+        "https://eth.llamarpc.com",
+        "https://rpc.ankr.com/eth",
+        "https://cloudflare-eth.com"
+      ],
+      "explorer": "https://etherscan.io",
+      "explorer_api": null,
+      "max_log_range": 2000
+    },
+    "robinhood": {
+      "chain_id": 4663,
+      "rpc": [
+        "https://rpc.mainnet.chain.robinhood.com"
+      ],
+      "explorer": "https://robinhoodchain.blockscout.com",
+      "explorer_api": "https://robinhoodchain.blockscout.com/api",
+      "max_log_range": 2000,
+      "note": "Blockscout UI often Cloudflare-blocked from datacenter IPs; RPC works."
+    },
+    "hyperevm": {
+      "chain_id": 999,
+      "rpc": [
+        "https://rpc.hyperliquid.xyz/evm"
+      ],
+      "explorer": "https://hyperevmscan.io",
+      "explorer_api": null,
+      "max_log_range": 1000
+    },
+    "ink": {
+      "chain_id": 57073,
+      "rpc": [
+        "https://rpc-gel.inkonchain.com",
+        "https://ink.drpc.org"
+      ],
+      "explorer": "https://explorer.inkonchain.com",
+      "explorer_api": "https://explorer.inkonchain.com/api",
+      "max_log_range": 2000,
+      "note": "Ink L2 (OP Stack); used by INKTROPY / Ink Daddy / Inkwards crowd."
+    },
+    "ordinals": {
+      "chain_id": null,
+      "rpc": [],
+      "note": "Non-EVM (Bitcoin Ordinals). No EVM factory watching."
+    },
+    "kaspa": {
+      "chain_id": null,
+      "rpc": [],
+      "note": "Non-EVM. No EVM factory watching."
+    },
+    "elysium": {
+      "chain_id": null,
+      "rpc": [],
+      "note": "Enter_Elysium mentioned by Bitizens/ELYSA/monarchy; public factory address not confirmed in this pass."
+    },
+    "giwa": {
+      "chain_id": null,
+      "rpc": [],
+      "note": "Ballast launches on @GIWA_by_Upbit; treat ballast.exchange as a launchpad UI, not a single project CA source."
+    },
+    "base": {
+      "chain_id": 8453,
+      "rpc": [
+        "https://base.publicnode.com",
+        "https://mainnet.base.org",
+        "https://1rpc.io/base"
+      ],
+      "explorer": "https://basescan.org",
+      "explorer_api": null,
+      "max_log_range": 2000
+    },
+    "bsc": {
+      "chain_id": 56,
+      "rpc": [
+        "https://bsc.publicnode.com",
+        "https://1rpc.io/bnb"
+      ],
+      "explorer": "https://bscscan.com",
+      "explorer_api": null,
+      "max_log_range": 2000
+    },
+    "solana": {
+      "chain_id": null,
+      "rpc": [
+        "https://api.mainnet-beta.solana.com",
+        "https://solana-rpc.publicnode.com"
+      ],
+      "explorer": "https://solscan.io",
+      "explorer_api": null,
+      "max_log_range": null,
+      "note": "Non-EVM. Program IDs in solana_factories.json. Full getProgramAccounts poll not wired yet — see TODO there."
+    }
+  },
+  "event_topics": {
+    "PairCreated_univ2": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+    "PoolCreated_univ3": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+    "note": "topic0 values computed with keccak256; Clanker/four.meme/Virtuals verified against live logs or Sourcify ABI.",
+    "Initialize_univ4": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438",
+    "TokenCreated_clanker_v4": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67",
+    "TokenCreate_fourmeme": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+    "NewPersona_virtuals": "0xf9d151d23a5253296eb20ab40959cf48828ea2732d337416716e302ed83ca658",
+    "LaunchCreated_spinup": "0x498edb35d804742a9759cec7bf2aef33f4b6256380d177f8e364bc0d98145170",
+    "TokenCreated_launchpad_meme": "0xd911716c3fddc130bd228e9fc8082f495d0afacfab26b5e436e8c1a083af9427",
+    "TokenCreatedWithCurve_launchpad_meme": "0x7471c7f99a949bee6d75e070c86b9f15e89dbf056c6b26bb7ec895abc4cd9b3c",
+    "TokenCreated_liquidlaunch": "0x83892d59ff13e719b3155207d11f84a107107e7d5f68b14539ecfe5d3f9b01aa",
+    "PairCreated_solidly": "0xc4805696c66d7cf352fc1d6bb633ad5ee82f6cb577c453024b6e0eb8306c6fc9",
+    "MemeTokenBuy_spinup": "0xa0a84a835300fe8ca774e5990a2da21d9e45eba2a414f052865b5bf18573135e",
+    "TapeOut_ProcessorCreated": "0x2e8868f18a1eaf0222b5b09484fdf12163e9741393f8457cd79d2ae42b2d2290"
+  },
+  "factories": [
+    {
+      "id": "univ2_eth",
+      "chain": "ethereum",
+      "address": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "name": "Uniswap V2 Factory",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "Baseline ETH pair creations; QuantumPad claims private V4 hooks so may NOT emit here until reveal.",
+      "explorer": "https://etherscan.io/address/0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+      },
+      "abi_file": "ethereum_univ2_eth.json",
+      "source_verified": true
+    },
+    {
+      "id": "nftx_public_gate_rh",
+      "chain": "robinhood",
+      "address": "0xD8F7C0Bd089A8F42728a7CfC95B18B3636f37d75",
+      "name": "NFTX v4 Public Launch Gate (RH)",
+      "events": [
+        "collection/create style — decode from logs"
+      ],
+      "relevance": "RH NFT launches that go through NFTX public gate.",
+      "explorer": "https://robinhoodchain.blockscout.com/address/0xD8F7C0Bd089A8F42728a7CfC95B18B3636f37d75",
+      "abi_file": "robinhood_nftx_public_gate_rh.json",
+      "source_verified": false
+    },
+    {
+      "id": "nftx_locker_rh",
+      "chain": "robinhood",
+      "address": "0xb4C5b5235b98114E9DC227b54e088C11680b2385",
+      "name": "NFTX v4 Locker (RH)",
+      "events": [
+        "locker/collection events"
+      ],
+      "relevance": "Companion to launch gate; larger bytecode, better log surface.",
+      "explorer": "https://robinhoodchain.blockscout.com/address/0xb4C5b5235b98114E9DC227b54e088C11680b2385",
+      "abi_file": "robinhood_nftx_locker_rh.json",
+      "source_verified": false
+    },
+    {
+      "id": "univ4_pm_rh",
+      "chain": "robinhood",
+      "address": "0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "name": "Uniswap V4 PoolManager (RH)",
+      "events": [
+        "Initialize / pool lifecycle"
+      ],
+      "relevance": "New pools on RH; noisy — correlate with project tokens once CA known.",
+      "explorer": "https://robinhoodchain.blockscout.com/address/0x8366a39CC670B4001A1121B8F6A443A643e40951",
+      "event_signatures": {
+        "Initialize": "Initialize(bytes32,address,address,uint24,int24,address,uint160,int24)"
+      },
+      "event_topics": {
+        "Initialize": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438"
+      },
+      "abi_file": "robinhood_univ4_pm_rh.json",
+      "source_verified": false
+    },
+    {
+      "id": "launchpad_meme_hyperevm",
+      "chain": "hyperevm",
+      "address": "0xc9f94a2ca803a464b132ac72fb5896998fa8679c",
+      "name": "launchpad.meme Launch Factory legacy (HyperEVM)",
+      "events": [
+        "TokenCreated-like (undecoded)"
+      ],
+      "relevance": "Legacy address still in docs; status API now uses bonding factory 0x901af9…. Keep for heuristic.",
+      "explorer": "https://hyperevmscan.io/address/0xc9f94a2ca803a464b132ac72fb5896998fa8679c",
+      "abi_file": "hyperevm_launchpad_meme_hyperevm.json",
+      "source_verified": false,
+      "note": "Prefer launchpad_meme_bonding_hyperevm for TokenCreated decode."
+    },
+    {
+      "id": "hyperswap_v3_factory",
+      "chain": "hyperevm",
+      "address": "0xB1c0fa0B789320044A6F623cFe5eBda9562602E3",
+      "name": "HyperSwap V3 Factory",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "DEX pool creations after token deploy on HyperEVM.",
+      "explorer": "https://hyperevmscan.io/address/0xB1c0fa0B789320044A6F623cFe5eBda9562602E3",
+      "event_signatures": {
+        "FeeAmountEnabled": "FeeAmountEnabled(uint24,int24)",
+        "OwnerChanged": "OwnerChanged(address,address)",
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)"
+      },
+      "event_topics": {
+        "FeeAmountEnabled": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+        "OwnerChanged": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c",
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118"
+      },
+      "abi_file": "hyperevm_hyperswap_v3_factory.json",
+      "source_verified": false,
+      "note": "UniV3 ABI assumed; explorer-labeled."
+    },
+    {
+      "id": "spinup_memelaunchpad",
+      "chain": "hyperevm",
+      "address": "0x9246d27EA8059529a615a4ACF35351dF0fa6168e",
+      "name": "SpinUp MEMELaunchpad (Hyperpie)",
+      "events": [
+        "LaunchCreated",
+        "LaunchFinalized",
+        "MemeTokenBuy"
+      ],
+      "relevance": "HyperEVM meme bonding launchpad (Hyperpie). LaunchCreated emits meme token address.",
+      "explorer": "https://hyperevmscan.io/address/0x9246d27EA8059529a615a4ACF35351dF0fa6168e",
+      "event_signatures": {
+        "LaunchCreated": "LaunchCreated(address,address,uint8,address,uint256,uint256,uint256,uint256,uint256,uint256,address,uint8,string)",
+        "LaunchFinalized": "LaunchFinalized(address,address)",
+        "MemeTokenBuy": "MemeTokenBuy(address,address,uint256,uint256)"
+      },
+      "event_topics": {
+        "LaunchCreated": "0x498edb35d804742a9759cec7bf2aef33f4b6256380d177f8e364bc0d98145170",
+        "LaunchFinalized": "0x259e7e20bd2fa15a88aa3a8f7895503dc1cbf5845616623edd5a88b075deb5c4",
+        "MemeTokenBuy": "0xa0a84a835300fe8ca774e5990a2da21d9e45eba2a414f052865b5bf18573135e"
+      },
+      "abi_file": "hyperevm_spinup_memelaunchpad.json",
+      "source_verified": true,
+      "proxy_implementation": "0xdDa54A478f77Dc0e2aD8C4131D39C1Dc023bA893",
+      "verified_how": [
+        "HyperEVMScan Exact Match impl",
+        "LaunchCreated keccak",
+        "DefiLlama hyperpie-launchpad MemeTokenBuy"
+      ]
+    },
+    {
+      "id": "univ2_base",
+      "chain": "base",
+      "address": "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
+      "name": "Uniswap V2 Factory (Base)",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "Base pair creations.",
+      "explorer": "https://basescan.org/address/0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+      },
+      "abi_file": "base_univ2_base.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ3_base",
+      "chain": "base",
+      "address": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+      "name": "Uniswap V3 Factory (Base)",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "Base V3 pools.",
+      "explorer": "https://basescan.org/address/0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+      "event_signatures": {
+        "FeeAmountEnabled": "FeeAmountEnabled(uint24,int24)",
+        "OwnerChanged": "OwnerChanged(address,address)",
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)"
+      },
+      "event_topics": {
+        "FeeAmountEnabled": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+        "OwnerChanged": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c",
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118"
+      },
+      "abi_file": "base_univ3_base.json",
+      "source_verified": true
+    },
+    {
+      "id": "pancake_v2_bsc",
+      "chain": "bsc",
+      "address": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+      "name": "PancakeSwap V2 Factory (BSC)",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "BSC pair creations (Pancake V2 uses UniV2 PairCreated topic0).",
+      "explorer": "https://bscscan.com/address/0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+      },
+      "abi_file": "bsc_pancake_v2_bsc.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ2_ink",
+      "chain": "ink",
+      "address": "0xfe57a6ba1951f69ae2ed4abe23e0f095df500c04",
+      "name": "Uniswap V2 Factory (Ink)",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "Official UniV2 on Ink (57073). Verified via Uniswap v2-subgraph PR #219 + router.factory() + explorer source.",
+      "explorer": "https://explorer.inkonchain.com/address/0xfe57a6ba1951f69ae2ed4abe23e0f095df500c04",
+      "verified_how": [
+        "Uniswap/v2-subgraph commit: factory 0xfe57…0c04 @ block 524511",
+        "Router 0xb3fb…18b4 factory() returns 0xfe57…0c04",
+        "eth_getCode length 13859; explorer ContractName=UniswapV2Factory verified",
+        "ETH UniV2 0x5C69… has eth_getCode=0x on Ink (wrong placeholder removed)"
+      ],
+      "deployed_block": 524511,
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+      },
+      "abi_file": "ink_univ2_ink.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ3_ink",
+      "chain": "ink",
+      "address": "0x640887a9ba3a9c53ed27d0f7e8246a4f933f3424",
+      "name": "Uniswap V3 Factory (Ink)",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "Official UniV3 on Ink; from UniswapX playbook/chains/ink.md",
+      "explorer": "https://explorer.inkonchain.com/address/0x640887a9ba3a9c53ed27d0f7e8246a4f933f3424",
+      "verified_how": [
+        "UniswapX playbook/chains/ink.md lists v3 factory 0x6408…3424"
+      ],
+      "event_signatures": {
+        "FeeAmountEnabled": "FeeAmountEnabled(uint24,int24)",
+        "OwnerChanged": "OwnerChanged(address,address)",
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)"
+      },
+      "event_topics": {
+        "FeeAmountEnabled": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+        "OwnerChanged": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c",
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118"
+      },
+      "abi_file": "ink_univ3_ink.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ3_eth",
+      "chain": "ethereum",
+      "address": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "name": "Uniswap V3 Factory",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "ETH V3 pools after token deploy; ambient DEX (wallet path primary).",
+      "explorer": "https://etherscan.io/address/0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "event_signatures": {
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)",
+        "FeeAmountEnabled": "FeeAmountEnabled(uint24,int24)",
+        "OwnerChanged": "OwnerChanged(address,address)"
+      },
+      "event_topics": {
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+        "FeeAmountEnabled": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+        "OwnerChanged": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c"
+      },
+      "abi_file": "ethereum_univ3_eth.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ4_pm_eth",
+      "chain": "ethereum",
+      "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "name": "Uniswap V4 PoolManager (ETH)",
+      "events": [
+        "Initialize"
+      ],
+      "relevance": "ETH UniV4 pool Initialize; QuantumPad / V4 hooks land here. Noisy — wallet/name filter.",
+      "explorer": "https://etherscan.io/address/0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "event_signatures": {
+        "Initialize": "Initialize(bytes32,address,address,uint24,int24,address,uint160,int24)"
+      },
+      "event_topics": {
+        "Initialize": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438"
+      },
+      "abi_file": "ethereum_univ4_pm_eth.json",
+      "source_verified": true
+    },
+    {
+      "id": "clanker_v4_eth",
+      "chain": "ethereum",
+      "address": "0x6C8599779B03B00AAaE63C6378830919Abb75473",
+      "name": "Clanker v4 Token Factory (ETH)",
+      "events": [
+        "TokenCreated"
+      ],
+      "relevance": "Clanker meme/token launches on Ethereum mainnet.",
+      "explorer": "https://etherscan.io/address/0x6C8599779B03B00AAaE63C6378830919Abb75473",
+      "event_signatures": {
+        "TokenCreated": "TokenCreated(address,address,address,string,string,string,string,string,int24,address,bytes32,address,address,address,uint256,address[])"
+      },
+      "event_topics": {
+        "TokenCreated": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67"
+      },
+      "abi_file": "ethereum_clanker_v4_eth.json",
+      "source_verified": true
+    },
+    {
+      "id": "univ4_pm_base",
+      "chain": "base",
+      "address": "0x498581ff718922c3f8e6a244956af099b2652b2b",
+      "name": "Uniswap V4 PoolManager (Base)",
+      "events": [
+        "Initialize"
+      ],
+      "relevance": "Base UniV4 pools; Clanker v4 hooks create pools here too.",
+      "explorer": "https://basescan.org/address/0x498581ff718922c3f8e6a244956af099b2652b2b",
+      "event_signatures": {
+        "Initialize": "Initialize(bytes32,address,address,uint24,int24,address,uint160,int24)"
+      },
+      "event_topics": {
+        "Initialize": "0xdd466e674ea557f56295e2d0218a125ea4b4f0f6f3307b95f85e6110838d6438"
+      },
+      "abi_file": "base_univ4_pm_base.json",
+      "source_verified": true
+    },
+    {
+      "id": "clanker_v4_base",
+      "chain": "base",
+      "address": "0xE85A59c628F7d27878ACeB4bf3b35733630083a9",
+      "name": "Clanker v4 Token Factory (Base)",
+      "events": [
+        "TokenCreated"
+      ],
+      "relevance": "Highest-volume Base meme launchpad; TokenCreated emits CA + name/symbol.",
+      "explorer": "https://basescan.org/address/0xE85A59c628F7d27878ACeB4bf3b35733630083a9",
+      "event_signatures": {
+        "TokenCreated": "TokenCreated(address,address,address,string,string,string,string,string,int24,address,bytes32,address,address,address,uint256,address[])"
+      },
+      "event_topics": {
+        "TokenCreated": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67"
+      },
+      "abi_file": "base_clanker_v4_base.json",
+      "source_verified": true,
+      "verified_how": [
+        "clanker-devco/v4-contracts IClanker.sol TokenCreated",
+        "topic0 matched live Base logs"
+      ]
+    },
+    {
+      "id": "clanker_v3_1_base",
+      "chain": "base",
+      "address": "0x2A787b2362021cC3eEa3C24C4748a6cD5B687382",
+      "name": "Clanker v3.1 Token Factory (Base)",
+      "events": [
+        "TokenCreated"
+      ],
+      "relevance": "Legacy Clanker v3.1 still occasionally used; same TokenCreated family may differ — watch Create logs + wallet path.",
+      "explorer": "https://basescan.org/address/0x2A787b2362021cC3eEa3C24C4748a6cD5B687382",
+      "event_signatures": {
+        "TokenCreated": "TokenCreated(address,address,address,string,string,string,string,string,int24,address,bytes32,address,address,address,uint256,address[])"
+      },
+      "event_topics": {
+        "TokenCreated": "0x9299d1d1a88d8e1abdc591ae7a167a6bc63a8f17d695804e9091ee33aa89fb67"
+      },
+      "abi_file": "base_clanker_v3_1_base.json",
+      "source_verified": false,
+      "note": "v3.1 event ABI may differ from v4; registered for eth_getLogs + heuristic extract. Prefer v4."
+    },
+    {
+      "id": "virtuals_agent_factory_base",
+      "chain": "base",
+      "address": "0xc169a24010fd4d47ca7be4b4c7863b76520442a3",
+      "name": "Virtuals AgentFactoryV7 (Base)",
+      "events": [
+        "NewPersona"
+      ],
+      "relevance": "Virtuals Protocol agent token launches on Base (proxy → AgentFactoryV7).",
+      "explorer": "https://basescan.org/address/0xc169a24010fd4d47ca7be4b4c7863b76520442a3",
+      "event_signatures": {
+        "NewPersona": "NewPersona(uint256,address,address,address,address,address)"
+      },
+      "event_topics": {
+        "NewPersona": "0xf9d151d23a5253296eb20ab40959cf48828ea2732d337416716e302ed83ca658"
+      },
+      "abi_file": "base_virtuals_agent_factory.json",
+      "source_verified": true,
+      "proxy_implementation": "0x5e357d0219e3a15674f18a5a197fb45e93568ae9",
+      "verified_how": [
+        "Sourcify exact_match AgentFactoryV7 impl 0x5e357d…68ae9",
+        "NewPersona emits token"
+      ]
+    },
+    {
+      "id": "virtuals_bonding_base",
+      "chain": "base",
+      "address": "0x1A540088125d00dD3990f9dA45CA0859af4d3B01",
+      "name": "Virtuals Bonding Curve (Base)",
+      "events": [],
+      "relevance": "Official Virtuals launchpad bonding curve (proxy). Pair with AgentFactory NewPersona; graduation/liquidity events TBD (impl unverified on Sourcify).",
+      "explorer": "https://basescan.org/address/0x1A540088125d00dD3990f9dA45CA0859af4d3B01",
+      "event_signatures": {},
+      "event_topics": {},
+      "abi_file": "base_virtuals_bonding.json",
+      "source_verified": false,
+      "proxy_implementation": "0x20c124e13069889633fc4212e0797c95cb30db40"
+    },
+    {
+      "id": "pancake_v3_bsc",
+      "chain": "bsc",
+      "address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      "name": "PancakeSwap V3 Factory (BSC)",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "BSC V3 pools after token deploy / four.meme graduation.",
+      "explorer": "https://bscscan.com/address/0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      "event_signatures": {
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)",
+        "FeeAmountEnabled": "FeeAmountEnabled(uint24,int24)",
+        "OwnerChanged": "OwnerChanged(address,address)"
+      },
+      "event_topics": {
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+        "FeeAmountEnabled": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+        "OwnerChanged": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c"
+      },
+      "abi_file": "bsc_pancake_v3_bsc.json",
+      "source_verified": true
+    },
+    {
+      "id": "fourmeme_tm2_bsc",
+      "chain": "bsc",
+      "address": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "name": "four.meme TokenManager2 (BSC)",
+      "events": [
+        "TokenCreate"
+      ],
+      "relevance": "Dominant BSC meme launchpad; TokenCreate emits creator+token+name+symbol. Proxy → 0xf32ee25a…2eee.",
+      "explorer": "https://bscscan.com/address/0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "event_signatures": {
+        "TokenCreate": "TokenCreate(address,address,uint256,string,string,uint256,uint256,uint256)"
+      },
+      "event_topics": {
+        "TokenCreate": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20"
+      },
+      "abi_file": "bsc_fourmeme_tm2.json",
+      "source_verified": true,
+      "proxy_implementation": "0xf32ee25a7a94f5858692b90815493bda9f992eee",
+      "verified_how": [
+        "four-meme-community docs TokenCreate signature",
+        "live BSC logs topic0 0x396d5e90…cad20 confirmed",
+        "proxy impl 0xf32ee25a7a94f5858692b90815493bda9f992eee"
+      ]
+    },
+    {
+      "id": "launchpad_meme_bonding_hyperevm",
+      "chain": "hyperevm",
+      "address": "0x901AF9a66d4b947b7Be9384Bb2E69CEcB233FEf2",
+      "name": "launchpad.meme Bonding Factory (HyperEVM)",
+      "events": [
+        "TokenCreated",
+        "TokenCreatedWithCurve"
+      ],
+      "relevance": "Active launchpad.meme HYPE factory (status API). TokenCreated emits CA+name+symbol.",
+      "explorer": "https://hyperevmscan.io/address/0x901AF9a66d4b947b7Be9384Bb2E69CEcB233FEf2",
+      "event_signatures": {
+        "TokenCreated": "TokenCreated(address,address,address,string,string)",
+        "TokenCreatedWithCurve": "TokenCreatedWithCurve(address,address,uint256,uint256)"
+      },
+      "event_topics": {
+        "TokenCreated": "0xd911716c3fddc130bd228e9fc8082f495d0afacfab26b5e436e8c1a083af9427",
+        "TokenCreatedWithCurve": "0x7471c7f99a949bee6d75e070c86b9f15e89dbf056c6b26bb7ec895abc4cd9b3c"
+      },
+      "abi_file": "hyperevm_launchpad_meme_bonding.json",
+      "source_verified": false,
+      "verified_how": [
+        "/api/evm/hype/status factory_address",
+        "live tx TokenCreated topic0"
+      ]
+    },
+    {
+      "id": "hyperswap_v2_factory",
+      "chain": "hyperevm",
+      "address": "0x724412C00059bf7d6ee7d4a1d0D5cd4de3ea1C48",
+      "name": "HyperSwap V2 Factory",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "Primary HyperEVM UniV2-style DEX; graduation target for several launchpads.",
+      "explorer": "https://hyperevmscan.io/address/0x724412C00059bf7d6ee7d4a1d0D5cd4de3ea1C48",
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9"
+      },
+      "abi_file": "hyperevm_hyperswap_v2_factory.json",
+      "source_verified": true,
+      "verified_how": [
+        "docs.hyperswap.exchange V2 Factory",
+        "HyperEVMScan label"
+      ]
+    },
+    {
+      "id": "liquidlaunch_hyperevm",
+      "chain": "hyperevm",
+      "address": "0xDEC3540f5BA6f2aa3764583A9c29501FeB020030",
+      "name": "LiquidLaunch (liqd.ag)",
+      "events": [
+        "TokenCreated"
+      ],
+      "relevance": "Major HyperEVM bonding-curve launchpad; TokenCreated emits CA+name+symbol.",
+      "explorer": "https://hyperevmscan.io/address/0xDEC3540f5BA6f2aa3764583A9c29501FeB020030",
+      "event_signatures": {
+        "TokenCreated": "TokenCreated(address,address,string,string,string,string,string,string,string,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256)"
+      },
+      "event_topics": {
+        "TokenCreated": "0x83892d59ff13e719b3155207d11f84a107107e7d5f68b14539ecfe5d3f9b01aa"
+      },
+      "abi_file": "hyperevm_liquidlaunch.json",
+      "source_verified": false,
+      "proxy_implementation": "0x34bd18fccd187500bf1030cc2cfe3c41b7b950f4",
+      "verified_how": [
+        "docs.liqd.ag TokenCreated",
+        "proxy EIP-897 impl"
+      ]
+    },
+    {
+      "id": "kittenswap_pair_factory",
+      "chain": "hyperevm",
+      "address": "0xDa12F450580A4cc485C3b501BAB7b0B3cbc3B31B",
+      "name": "KittenSwap Pair Factory",
+      "events": [
+        "PairCreated"
+      ],
+      "relevance": "KittenSwap ve3,3 PairFactory; Solidly-style PairCreated after graduation/liquidity.",
+      "explorer": "https://hyperevmscan.io/address/0xDa12F450580A4cc485C3b501BAB7b0B3cbc3B31B",
+      "event_signatures": {
+        "PairCreated": "PairCreated(address,address,bool,address,uint256)"
+      },
+      "event_topics": {
+        "PairCreated": "0xc4805696c66d7cf352fc1d6bb633ad5ee82f6cb577c453024b6e0eb8306c6fc9"
+      },
+      "abi_file": "hyperevm_kittenswap_pair_factory.json",
+      "source_verified": false,
+      "verified_how": [
+        "kittenswap.gitbook deployed-contracts"
+      ]
+    },
+    {
+      "id": "kittenswap_cl_factory",
+      "chain": "hyperevm",
+      "address": "0x2E08F5Ff603E4343864B14599CAeDb19918BDCaF",
+      "name": "KittenSwap CL Factory",
+      "events": [
+        "PoolCreated"
+      ],
+      "relevance": "KittenSwap concentrated-liquidity factory (explorer label); UniV3-style pools.",
+      "explorer": "https://hyperevmscan.io/address/0x2E08F5Ff603E4343864B14599CAeDb19918BDCaF",
+      "event_signatures": {
+        "PoolCreated": "PoolCreated(address,address,uint24,int24,address)"
+      },
+      "event_topics": {
+        "PoolCreated": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118"
+      },
+      "abi_file": "hyperevm_kittenswap_cl_factory.json",
+      "source_verified": false,
+      "note": "CL address from HyperEVMScan label; ABI assumed UniV3."
+    },
+    {
+      "id": "tapeout_factory_bsc",
+      "chain": "bsc",
+      "address": "0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+      "name": "TapeOut Processor Factory (BSC)",
+      "events": [
+        "ProcessorCreated (topic0 0x2e8868f1…)"
+      ],
+      "relevance": "TapeRobot / TapeOut transistor+processor creates. Watched by tapeout_watch.py (not onchain_lock ca_gate token path).",
+      "explorer": "https://bscscan.com/address/0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+      "implementation": "0xa68ccf4931d98ad0a4be15ee40542edc0dec6422",
+      "event_topics": {
+        "ProcessorCreated": "0x2e8868f18a1eaf0222b5b09484fdf12163e9741393f8457cd79d2ae42b2d2290"
+      },
+      "event_layout": "topic1=processor, topic2=transistors, topic3=creator; data=name,supplyCap,mintPriceWei",
+      "source_verified": true,
+      "alertable_via": "tapeout_watch.py"
+    }
+  ],
+  "project_chain_hints": {
+    "QuantumPad V4": {
+      "chains": [
+        "ethereum"
+      ],
+      "notes": "Private ZK + Uniswap V4 hooks; public factory may stay dark until TGE."
+    },
+    "CaravanRH": {
+      "chains": [
+        "robinhood"
+      ],
+      "notes": "Robinhood Chain NFT mint"
+    },
+    "Terra Genesis": {
+      "chains": [
+        "robinhood"
+      ],
+      "notes": "Free mint @Robinhood"
+    },
+    "IDENTRA": {
+      "chains": [
+        "robinhood"
+      ],
+      "notes": "Built on RobinhoodApp"
+    },
+    "Noctrive": {
+      "chains": [
+        "robinhood"
+      ],
+      "notes": "Building for Robinhood Chain"
+    },
+    "RBH Heroes": {
+      "chains": [
+        "robinhood"
+      ],
+      "notes": "Pixel RPG on RobinhoodApp"
+    },
+    "HypeQ": {
+      "chains": [
+        "hyperevm"
+      ],
+      "notes": "AI agent launchpad on HyperEVM; watch LiquidLaunch / SpinUp / launchpad.meme bonding + HyperSwap for pools. Own factory still unknown."
+    },
+    "Ballast": {
+      "chains": [
+        "giwa"
+      ],
+      "notes": "Launchpad UI at ballast.exchange; tokens on page are OTHER launches, not Ballast CA"
+    },
+    "INKTROPY": {
+      "chains": [
+        "ink"
+      ],
+      "notes": "soon on @inkonchain"
+    },
+    "Bitizens": {
+      "chains": [
+        "elysium"
+      ],
+      "notes": "Enter_Elysium"
+    },
+    "ELYSA.FUN": {
+      "chains": [
+        "elysium"
+      ],
+      "notes": "enter_elysium testnet"
+    },
+    "monarchy": {
+      "chains": [
+        "elysium"
+      ],
+      "notes": "Enter_Elysium / AscendLaunch"
+    },
+    "Mannequin": {
+      "chains": [
+        "ordinals"
+      ],
+      "notes": "BTC Ordinals; mint imminent in bio"
+    },
+    "KCC Coordination Forum": {
+      "chains": [
+        "kaspa"
+      ],
+      "notes": "Kaspa ecosystem"
+    },
+    "$PKC": {
+      "chains": [
+        "unknown"
+      ],
+      "notes": "CA only in X bio; launching this week — watch bio, not factory"
+    }
+  },
+  "abi_dir": "factory_abis"
+}

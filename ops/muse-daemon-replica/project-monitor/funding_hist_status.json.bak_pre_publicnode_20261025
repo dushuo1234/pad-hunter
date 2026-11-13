@@ -1,0 +1,81 @@
+{
+  "chains": {
+    "base": {
+      "status": "paid_required",
+      "message": "Free API access is not supported for this chain. Please upgrade your api plan for full chain coverage. https://etherscan.io/apis",
+      "checked_at": "2026-10-25T00:22:08+08:00"
+    },
+    "ethereum": {
+      "status": "works",
+      "message": "",
+      "checked_at": "2026-10-25T00:22:08+08:00"
+    },
+    "hyperevm": {
+      "status": "works",
+      "message": "",
+      "checked_at": "2026-10-25T00:22:08+08:00"
+    },
+    "bsc": {
+      "status": "paid_required",
+      "message": "Free API access is not supported for this chain. Please upgrade your api plan for full chain coverage. https://etherscan.io/apis",
+      "checked_at": "2026-10-25T00:22:09+08:00"
+    },
+    "robinhood": {
+      "status": "paid_required",
+      "message": "Free API access is not supported for this chain. Please upgrade your api plan for full chain coverage. https://etherscan.io/apis",
+      "checked_at": "2026-10-25T00:22:09+08:00"
+    }
+  },
+  "updated_at": "2026-10-25T01:20:36+08:00",
+  "rpc_archive": {
+    "base": {
+      "rpcs": {
+        "mainnet.base.org": "archive_ok",
+        "base.drpc.org": "archive_ok",
+        "base-mainnet.public.blastapi.io": "archive_ok",
+        "base.gateway.tenderly.co": "archive_ok"
+      },
+      "trace_hosts": [
+        "base.drpc.org"
+      ],
+      "non_archive": [
+        "base.publicnode.com / base-rpc.publicnode.com (archive needs key)",
+        "1rpc.io/base (pruned)"
+      ],
+      "checked_at": "2026-10-25T01:20:36+08:00"
+    },
+    "bsc": {
+      "rpcs": {
+        "bsc-mainnet.public.blastapi.io": "archive_ok",
+        "bsc.drpc.org": "fail:rpc_failed:eth_blockNumber:You reached Public endpoint rate "
+      },
+      "trace_hosts": [
+        "bsc.drpc.org"
+      ],
+      "non_archive": [
+        "bsc.publicnode.com (archive needs key)",
+        "bsc-dataseed*.binance/defibit/ninicoin (pruned)",
+        "1rpc.io/bnb (pruned)",
+        "blockreq / blockvectra public (recent only)"
+      ],
+      "checked_at": "2026-10-25T01:20:36+08:00"
+    },
+    "robinhood": {
+      "rpcs": {
+        "rpc-robinhood.blockmachine.io": "archive_ok",
+        "robinhood.rpc.pinax.network": "archive_ok"
+      },
+      "trace_hosts": [
+        "rpc-robinhood.blockmachine.io",
+        "robinhood.rpc.pinax.network"
+      ],
+      "non_archive": [
+        "robinhood.drpc.org (state window only: 'Unknown state. First available …')",
+        "rpc.mainnet.chain.robinhood.com (no historical state)",
+        "robinhood-rpc.publicnode.com (archive needs key)",
+        "rpc.ordofi.network / daybreak / blockreq / blockvectra (no history)"
+      ],
+      "checked_at": "2026-10-25T01:20:36+08:00"
+    }
+  }
+}

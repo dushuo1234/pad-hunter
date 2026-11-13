@@ -1,0 +1,218 @@
+{
+  "id": "liquidlaunch_hyperevm",
+  "address": "0xDEC3540f5BA6f2aa3764583A9c29501FeB020030",
+  "chain": "hyperevm",
+  "name": "LiquidLaunch (liqd.ag)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "TokenCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "image_uri",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "website",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "twitter",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "telegram",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "discord",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "creationTimestamp",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "startingLiquidity",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "currentHypeReserves",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "currentTokenReserves",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "totalSupply",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "currentPrice",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "initialPurchaseAmount",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "TokenCreated",
+      "signature": "TokenCreated(address,address,string,string,string,string,string,string,string,string,uint256,uint256,uint256,uint256,uint256,uint256,uint256)",
+      "topic0": "0x83892d59ff13e719b3155207d11f84a107107e7d5f68b14539ecfe5d3f9b01aa",
+      "args": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "creator",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "image_uri",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "website",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "twitter",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "telegram",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "discord",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "creationTimestamp",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "startingLiquidity",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "currentHypeReserves",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "currentTokenReserves",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "totalSupply",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "currentPrice",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "initialPurchaseAmount",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": false,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0xDEC3540f5BA6f2aa3764583A9c29501FeB020030",
+  "explorer_api_used": null,
+  "source_note": "Proxy (EIP-897) → 0x34bd18fc…950f4. Impl not Sourcify-matched; TokenCreated ABI from docs.liqd.ag contract reference. Active launchpad (holds HYPE reserves).",
+  "meta": {
+    "verified_how": [
+      "docs.liqd.ag/liquidlaunch-integration/api-reference TokenCreated event",
+      "proxy impl from HyperEVMScan EIP-897 0x34bd18fc…950f4"
+    ],
+    "proxy_implementation": "0x34bd18fccd187500bf1030cc2cfe3c41b7b950f4"
+  },
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": 1001,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x83892d59ff13e719b3155207d11f84a107107e7d5f68b14539ecfe5d3f9b01aa",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "official_docs"
+}

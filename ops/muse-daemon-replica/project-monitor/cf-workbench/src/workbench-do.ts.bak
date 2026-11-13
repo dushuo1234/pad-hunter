@@ -1,0 +1,447 @@
+/**
+ * One Durable Object = one sync room ("pad-hunter").
+ * Holds pins + reviewed state in DO storage and fans out WebSocket updates.
+ */
+import {
+  emptyPins,
+  emptyReviewed,
+  mergeReviewed,
+  mergeWorkbench,
+  nowIso,
+  pinsPayload,
+  type PinsDoc,
+  type ReviewedDoc,
+  type ReviewedMark,
+  type Tombstone,
+  type WBItem,
+} from "./merge";
+import { originAllowed } from "./cors";
+
+import seedPins from "../seed-pins.json";
+import seedReviewed from "../seed-reviewed.json";
+
+export interface Env {
+  WORKBENCH: DurableObjectNamespace;
+  WORKBENCH_TOKEN: string;
+  VERSION: string;
+  ROOM_NAME: string;
+}
+
+type WsMeta = { authed: boolean };
+
+export class WorkbenchRoom implements DurableObject {
+  private pins: PinsDoc = emptyPins();
+  private reviewed: ReviewedDoc = emptyReviewed();
+  private loaded = false;
+  private pingTimer: ReturnType<typeof setInterval> | null = null;
+
+  constructor(
+    private readonly ctx: DurableObjectState,
+    private readonly env: Env,
+  ) {
+    this.ctx.setWebSocketAutoResponse(
+      new WebSocketRequestResponsePair(
+        '{"type":"ping"}',
+        '{"type":"pong","server_time":"auto"}',
+      ),
+    );
+  }
+
+  private async ensureLoaded(): Promise<void> {
+    if (this.loaded) return;
+
+    const pins = await this.ctx.storage.get<PinsDoc>("pins");
+    const reviewed = await this.ctx.storage.get<ReviewedDoc>("reviewed");
+    const seeded = await this.ctx.storage.get<boolean>("seeded");
+
+    if (pins) {
+      this.pins = pins;
+      this.reviewed = reviewed || emptyReviewed();
+    } else if (!seeded) {
+      const items = ((seedPins as PinsDoc).items || []) as WBItem[];
+      this.pins = {
+        synced_at: (seedPins as PinsDoc).synced_at || nowIso(),
+        timezone: "Asia/Shanghai",
+        client_id: (seedPins as PinsDoc).client_id ?? "seed",
+        count: items.length,
+        items,
+        removed: ((seedPins as PinsDoc).removed || []) as Tombstone[],
+        dropped_launched: [],
+        note: "Seeded from box workbench_active.json on first Durable Object boot.",
+      };
+      this.reviewed = {
+        synced_at: (seedReviewed as ReviewedDoc).synced_at || nowIso(),
+        timezone: "Asia/Shanghai",
+        client_id: (seedReviewed as ReviewedDoc).client_id ?? "seed",
+        marks: ((seedReviewed as ReviewedDoc).marks || {}) as Record<
+          string,
+          ReviewedMark
+        >,
+      };
+      await this.ctx.storage.put({
+        pins: this.pins,
+        reviewed: this.reviewed,
+        seeded: true,
+      });
+    } else {
+      this.pins = emptyPins();
+      this.reviewed = reviewed || emptyReviewed();
+    }
+
+    this.loaded = true;
+    this.ensurePingTimer();
+  }
+
+  private ensurePingTimer(): void {
+    if (this.pingTimer != null) return;
+    this.pingTimer = setInterval(() => {
+      const msg = JSON.stringify({ type: "ping", server_time: nowIso() });
+      for (const ws of this.ctx.getWebSockets()) {
+        try {
+          ws.send(msg);
+        } catch {
+          /* ignore */
+        }
+      }
+    }, 20_000);
+  }
+
+  private tokenOk(tok: string | null | undefined): boolean {
+    const expected = (this.env.WORKBENCH_TOKEN || "").trim();
+    if (!expected || !tok) return false;
+    const a = tok.trim();
+    if (a.length !== expected.length) return false;
+    let diff = 0;
+    for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ expected.charCodeAt(i);
+    return diff === 0;
+  }
+
+  private extractToken(request: Request, url: URL): string | null {
+    const q = url.searchParams.get("token");
+    if (q) return q;
+    const h = request.headers.get("X-Pad-Hunter-Token");
+    if (h) return h;
+    const auth = request.headers.get("Authorization");
+    if (auth && auth.toLowerCase().startsWith("bearer ")) return auth.slice(7).trim();
+    return null;
+  }
+
+  private requireAuth(request: Request, url: URL): Response | null {
+    if (!this.tokenOk(this.extractToken(request, url))) {
+      return Response.json(
+        { detail: "invalid or missing X-Pad-Hunter-Token" },
+        { status: 401 },
+      );
+    }
+    return null;
+  }
+
+  private broadcast(msg: unknown): void {
+    const raw = JSON.stringify(msg);
+    for (const ws of this.ctx.getWebSockets()) {
+      try {
+        const meta = ws.deserializeAttachment() as WsMeta | null;
+        if (meta && meta.authed === false) continue;
+        ws.send(raw);
+      } catch {
+        /* drop */
+      }
+    }
+  }
+
+  private pinsState() {
+    return pinsPayload(this.pins);
+  }
+
+  private reviewedState() {
+    return {
+      synced_at: this.reviewed.synced_at || nowIso(),
+      marks: this.reviewed.marks || {},
+    };
+  }
+
+  async fetch(request: Request): Promise<Response> {
+    await this.ensureLoaded();
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const origin = request.headers.get("Origin");
+
+    if (request.headers.get("Upgrade")?.toLowerCase() === "websocket") {
+      return this.handleWs(request, url, origin);
+    }
+
+    if (path === "/internal/health" || path === "/health") {
+      return Response.json({
+        ok: true,
+        version: this.env.VERSION || "1.5.0-cf",
+        now: nowIso(),
+        workbench_count: (this.pins.items || []).length,
+        reviewed_marks: Object.keys(this.reviewed.marks || {}).length,
+        ws_clients: this.ctx.getWebSockets().length,
+        backend: "cloudflare-workers-do",
+        room: this.env.ROOM_NAME || "pad-hunter",
+        poller_alive: null,
+        note: "Cloud sync only (pins + reviewed). Radar/helius stay on the box.",
+      });
+    }
+
+    const authErr = this.requireAuth(request, url);
+    if (authErr) return authErr;
+
+    if (path === "/v1/workbench/pins" && request.method === "GET") {
+      return Response.json(this.pinsState());
+    }
+
+    if (
+      (path === "/v1/workbench/sync" || path === "/v1/workbench/pins/sync") &&
+      request.method === "POST"
+    ) {
+      const body = (await request.json().catch(() => ({}))) as {
+        items?: WBItem[];
+        client_id?: string | null;
+        removed?: Tombstone[] | null;
+      };
+      return this.doPinsSync(body);
+    }
+
+    if (path === "/v1/workbench/reviewed" && request.method === "GET") {
+      return Response.json(this.reviewedState());
+    }
+
+    if (path === "/v1/workbench/reviewed/sync" && request.method === "POST") {
+      const body = (await request.json().catch(() => ({}))) as {
+        client_id?: string | null;
+        marks?: Record<string, ReviewedMark>;
+      };
+      return this.doReviewedSync(body);
+    }
+
+    return Response.json({ detail: "not found", path }, { status: 404 });
+  }
+
+  private async doPinsSync(body: {
+    items?: WBItem[];
+    client_id?: string | null;
+    removed?: Tombstone[] | null;
+  }): Promise<Response> {
+    const { doc } = mergeWorkbench(this.pins, body);
+    this.pins = doc;
+    await this.ctx.storage.put("pins", doc);
+    const state = this.pinsState();
+    this.broadcast({
+      type: "pins",
+      state,
+      origin_client_id: body.client_id ?? null,
+    });
+    return Response.json({
+      ...state,
+      count: doc.count,
+      dropped_launched: doc.dropped_launched,
+      client_id: doc.client_id,
+      timezone: doc.timezone,
+    });
+  }
+
+  private async doReviewedSync(body: {
+    client_id?: string | null;
+    marks?: Record<string, ReviewedMark>;
+  }): Promise<Response> {
+    const doc = mergeReviewed(this.reviewed, body);
+    this.reviewed = doc;
+    await this.ctx.storage.put("reviewed", doc);
+    const state = this.reviewedState();
+    this.broadcast({
+      type: "reviewed",
+      state,
+      origin_client_id: body.client_id ?? null,
+    });
+    return Response.json(state);
+  }
+
+  private async handleWs(
+    request: Request,
+    url: URL,
+    origin: string | null,
+  ): Promise<Response> {
+    if (origin !== null && !originAllowed(origin)) {
+      return new Response("forbidden origin", { status: 403 });
+    }
+
+    let authed = this.tokenOk(url.searchParams.get("token"));
+    let subproto: string | undefined;
+    if (!authed) {
+      const offered = (request.headers.get("Sec-WebSocket-Protocol") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      for (const s of offered) {
+        const cand = /^(token|bearer)\./i.test(s) ? s.split(".", 2)[1] : s;
+        if (this.tokenOk(cand)) {
+          authed = true;
+          subproto = s;
+          break;
+        }
+      }
+    }
+
+    const pair = new WebSocketPair();
+    const client = pair[0];
+    const server = pair[1];
+    this.ctx.acceptWebSocket(server);
+    server.serializeAttachment({ authed } satisfies WsMeta);
+
+    const headers: Record<string, string> = {};
+    if (subproto) headers["Sec-WebSocket-Protocol"] = subproto;
+
+    if (!authed && url.searchParams.get("token")) {
+      server.close(4401, "invalid token");
+      return new Response(null, { status: 101, webSocket: client, headers });
+    }
+
+    if (authed) {
+      this.sendHello(server);
+    } else {
+      server.serializeAttachment({ authed: false } satisfies WsMeta);
+      await this.ctx.storage.setAlarm(Date.now() + 5000);
+    }
+
+    return new Response(null, { status: 101, webSocket: client, headers });
+  }
+
+  private sendHello(ws: WebSocket): void {
+    try {
+      ws.send(
+        JSON.stringify({
+          type: "hello",
+          version: this.env.VERSION || "1.5.0-cf",
+          server_time: nowIso(),
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "pins",
+          state: this.pinsState(),
+          origin_client_id: null,
+        }),
+      );
+      ws.send(
+        JSON.stringify({
+          type: "reviewed",
+          state: this.reviewedState(),
+          origin_client_id: null,
+        }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async webSocketMessage(
+    ws: WebSocket,
+    message: string | ArrayBuffer,
+  ): Promise<void> {
+    await this.ensureLoaded();
+    const raw =
+      typeof message === "string"
+        ? message
+        : new TextDecoder().decode(message);
+
+    let m: Record<string, unknown>;
+    try {
+      m = JSON.parse(raw);
+    } catch {
+      ws.send(JSON.stringify({ type: "error", error: "invalid json" }));
+      return;
+    }
+
+    const meta =
+      (ws.deserializeAttachment() as WsMeta | null) || { authed: false };
+
+    if (!meta.authed) {
+      if (m.type === "auth" && this.tokenOk(String(m.token || ""))) {
+        ws.serializeAttachment({ authed: true });
+        this.sendHello(ws);
+        return;
+      }
+      ws.close(4401, "invalid token");
+      return;
+    }
+
+    const typ = m.type;
+    if (typ === "ping") {
+      ws.send(JSON.stringify({ type: "pong", server_time: nowIso() }));
+      return;
+    }
+    if (typ === "pong" || typ === "auth") return;
+
+    if (typ === "pins_sync") {
+      try {
+        await this.doPinsSync(
+          (m.body || {}) as {
+            items?: WBItem[];
+            client_id?: string | null;
+            removed?: Tombstone[] | null;
+          },
+        );
+      } catch (e) {
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            op: "pins_sync",
+            error: String(e).slice(0, 300),
+          }),
+        );
+      }
+      return;
+    }
+
+    if (typ === "reviewed_sync") {
+      try {
+        await this.doReviewedSync(
+          (m.body || {}) as {
+            client_id?: string | null;
+            marks?: Record<string, ReviewedMark>;
+          },
+        );
+      } catch (e) {
+        ws.send(
+          JSON.stringify({
+            type: "error",
+            op: "reviewed_sync",
+            error: String(e).slice(0, 300),
+          }),
+        );
+      }
+      return;
+    }
+
+    ws.send(
+      JSON.stringify({ type: "error", error: `unknown type ${String(typ)}` }),
+    );
+  }
+
+  async webSocketClose(_ws: WebSocket): Promise<void> {
+    /* hibernation cleans up */
+  }
+
+  async webSocketError(ws: WebSocket): Promise<void> {
+    try {
+      ws.close(1011, "error");
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async alarm(): Promise<void> {
+    for (const ws of this.ctx.getWebSockets()) {
+      const meta = ws.deserializeAttachment() as WsMeta | null;
+      if (meta && meta.authed === false) {
+        try {
+          ws.close(4401, "invalid token");
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+  }
+}

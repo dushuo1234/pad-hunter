@@ -1,0 +1,94 @@
+{
+  "updated_at": "2026-11-04T14:11:12+08:00",
+  "pid": 499936,
+  "chains": {
+    "base": {
+      "last_block": 53491650,
+      "stats": {
+        "blocks": 569,
+        "creations": 109,
+        "factory_logs": 4,
+        "matches": 0,
+        "rpc_errors": 0,
+        "last_latency_ms": 1423
+      },
+      "rpc": "https://base.publicnode.com",
+      "factories": 7,
+      "last_error": "{'code': -32011, 'message': 'request limit reached'}"
+    },
+    "bsc": {
+      "last_block": 131574536,
+      "stats": {
+        "blocks": 379,
+        "creations": 11,
+        "factory_logs": 2,
+        "matches": 0,
+        "rpc_errors": 4,
+        "last_latency_ms": 210
+      },
+      "rpc": "https://bsc.publicnode.com",
+      "factories": 4,
+      "last_error": "{'code': -32001, 'message': \"You've reached the usage limit for your current plan. To continue with higher limits and uninterrupted access, please upgrade here:"
+    },
+    "ethereum": {
+      "last_block": 26339569,
+      "stats": {
+        "blocks": 115,
+        "creations": 18,
+        "factory_logs": 0,
+        "matches": 0,
+        "rpc_errors": 3,
+        "last_latency_ms": 249
+      },
+      "rpc": "https://ethereum.publicnode.com",
+      "factories": 4,
+      "last_error": "{'code': -32046, 'message': 'Cannot fulfill request'}"
+    },
+    "hyperevm": {
+      "last_block": 50341127,
+      "stats": {
+        "blocks": 476,
+        "creations": 15,
+        "factory_logs": 0,
+        "matches": 0,
+        "rpc_errors": 15,
+        "last_latency_ms": 1710
+      },
+      "rpc": "https://rpc.hyperliquid.xyz/evm",
+      "factories": 8,
+      "last_error": "{'code': -32005, 'message': 'rate limited'}"
+    },
+    "ink": {
+      "last_block": 60274224,
+      "stats": {
+        "blocks": 495,
+        "creations": 2,
+        "factory_logs": 0,
+        "matches": 0,
+        "rpc_errors": 2,
+        "last_latency_ms": 1278
+      },
+      "rpc": "https://rpc-gel.inkonchain.com",
+      "factories": 2,
+      "last_error": "{'message': 'Temporary internal error. Please retry, trace-id: c702a08bb29c0dc48dfb84c51be8fb66', 'code': 19}"
+    },
+    "robinhood": {
+      "last_block": 105680867,
+      "stats": {
+        "blocks": 127,
+        "creations": 0,
+        "factory_logs": 0,
+        "matches": 0,
+        "rpc_errors": 29,
+        "last_latency_ms": 161
+      },
+      "rpc": "https://rpc.mainnet.chain.robinhood.com",
+      "factories": 3,
+      "last_error": ""
+    }
+  },
+  "phase": "running",
+  "wallet_count": 409,
+  "token_projects": 1659,
+  "loop_ms": 11407
+}

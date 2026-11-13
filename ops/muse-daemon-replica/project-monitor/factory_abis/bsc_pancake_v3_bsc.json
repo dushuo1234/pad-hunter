@@ -1,0 +1,172 @@
+{
+  "id": "pancake_v3_bsc",
+  "address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+  "chain": "bsc",
+  "name": "PancakeSwap V3 Factory (BSC)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "PoolCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "fee",
+          "type": "uint24"
+        },
+        {
+          "indexed": false,
+          "name": "tickSpacing",
+          "type": "int24"
+        },
+        {
+          "indexed": false,
+          "name": "pool",
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "FeeAmountEnabled",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "fee",
+          "type": "uint24"
+        },
+        {
+          "indexed": true,
+          "name": "tickSpacing",
+          "type": "int24"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "OwnerChanged",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "oldOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "PoolCreated",
+      "signature": "PoolCreated(address,address,uint24,int24,address)",
+      "topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+      "args": [
+        {
+          "name": "token0",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "token1",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "fee",
+          "type": "uint24",
+          "indexed": true
+        },
+        {
+          "name": "tickSpacing",
+          "type": "int24",
+          "indexed": false
+        },
+        {
+          "name": "pool",
+          "type": "address",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "name": "FeeAmountEnabled",
+      "signature": "FeeAmountEnabled(uint24,int24)",
+      "topic0": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+      "args": [
+        {
+          "name": "fee",
+          "type": "uint24",
+          "indexed": true
+        },
+        {
+          "name": "tickSpacing",
+          "type": "int24",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "name": "OwnerChanged",
+      "signature": "OwnerChanged(address,address)",
+      "topic0": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c",
+      "args": [
+        {
+          "name": "oldOwner",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://bscscan.com/address/0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+  "explorer_api_used": null,
+  "source_note": "BSC V3 pools after token deploy / four.meme graduation.",
+  "meta": {
+    "proxy_implementation": null,
+    "verified_how": null,
+    "note": null
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x783cca1c0412dd0d695e784568c96da2e9c22ff989357a2e8b1d9b2b4e6b7118",
+      "count": null
+    },
+    {
+      "topic0": "0xc66a3fdf07232cdd185febcc6579d408c241b47ae2f9907d84be655141eeaecc",
+      "count": null
+    },
+    {
+      "topic0": "0xb532073b38c83145e3e5135377a08bf9aab55bc0fd7c1179cd4fb995d2a5159c",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "docs_plus_topic0"
+}

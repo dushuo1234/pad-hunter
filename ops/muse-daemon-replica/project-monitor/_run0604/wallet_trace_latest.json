@@ -1,0 +1,2376 @@
+{
+  "generated_at": "2026-10-25T05:31:39+08:00",
+  "elapsed_s": 327.28,
+  "rpcs": {
+    "ethereum": "https://ethereum.publicnode.com",
+    "robinhood": "https://rpc.mainnet.chain.robinhood.com",
+    "hyperevm": "https://rpc.hyperliquid.xyz/evm",
+    "ink": "https://rpc-gel.inkonchain.com",
+    "base": "https://base.publicnode.com",
+    "bsc": "https://bsc.publicnode.com"
+  },
+  "limits": {
+    "recent_block_window": 0,
+    "create_derive": "enabled for wallet nonce>0 (classic CREATE)",
+    "factory_tx_from": "launchpad factory eth_getLogs + tx.from match (CREATE2/factory creates); ambient UniV2/V3 skipped",
+    "create2_salt": "derived for OZ cloneDeterministic/EIP-1167 (via=create2_derive); launchpad TokenCreated uses event token field (stronger); salt+initcode for unknown factory ABIs still limited",
+    "solana": "skipped in v1 — no free reliable mint-creation index without API keys",
+    "robinhood_explorer": "Blockscout Cloudflare-blocked; RPC-only",
+    "hyperevm_explorer": "no public API wired; RPC-only"
+  },
+  "counts": {
+    "inputs": 44,
+    "wallet": 15,
+    "contract": 29,
+    "unknown": 0,
+    "trace_ca": 4
+  },
+  "results": [
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 130,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 130,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 130,
+        "nonce": 2867,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 130,
+            "nonce": 2867,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 小型同站 JS 包中的地址赋值（中等置信）; classified as contract (8903 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 8903,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 8903,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 13991,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 13991,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】CircuitPay",
+      "handle": "CircuitPay_",
+      "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "inline:https://circuitpay.cc/",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 130,
+        "nonce": 2867,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 130,
+            "nonce": 2867,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 页面 HTML 中的地址; classified as contract (9571 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "config:https://hashgentic.work/api/contracts",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 9571,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 9571,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】paperbird",
+      "handle": "paperbird_lol",
+      "address": "0x6cd5661646289fb6e65ea5c032310fded797d0a2",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+      "classification": {
+        "kind": "contract",
+        "chain": "hyperevm",
+        "code_bytes": 925,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "hyperevm",
+            "bytes": 925,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0x68224f668083c29e9800be2a646d42d18cedf7e2",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 130,
+        "nonce": 2867,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 130,
+            "nonce": 2867,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0x6feebbebc07bcb90bd1ac8b0cf9baa4f0ff2b46f",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (130 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261021235752A",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 130,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 130,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】paperbird",
+      "handle": "paperbird_lol",
+      "address": "0x233ff29b239abc1d7748605da9b205c3e008626e",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (925 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://paperbird.lol/_expo/static/js/web/__common-31a81d96189991c6c94d8e087f8cf7f0.js",
+      "classification": {
+        "kind": "contract",
+        "chain": "hyperevm",
+        "code_bytes": 925,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "hyperevm",
+            "bytes": 925,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】Newspad",
+      "handle": "usenewspadfun",
+      "address": "0x147e3b495c677a82521fd5368941c6a2c410de42",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (10455 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://www.newspad.fun/assets/index-B6TUyJ-k.js",
+      "classification": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 10455,
+        "nonce": 2,
+        "tried": [
+          {
+            "chain": "robinhood",
+            "bytes": 10455,
+            "nonce": 2,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60e06040",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0xb69215ce68792eca5672b49196868369555ea181",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 contract bytecode but no ERC20 decimals/symbol — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (3228 bytes); ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 3228,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 3228,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "html:https://tapefoundry.xyz/",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "nonce": 524,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 295,
+            "nonce": 524,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【NFT合约·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "confidence": "low",
+      "note": "【NFT合约·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: NFT contract (ERC1155) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 295,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】TapeFoundry",
+      "handle": "FoundryTape",
+      "address": "0xb69215ce68792eca5672b49196868369555ea181",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 3228,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 3228,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】HappyBlock",
+      "handle": "RealHappyBlock",
+      "address": "0xa65cB66B48Be8bC52BA982bb92bf7177112153fC",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "x_post:https://x.com/RealHappyBlock",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "sway",
+      "handle": "swaydotfamily",
+      "address": "0x14bb48d197bf0c139580da26f456f9f7a8d13675",
+      "confidence": "high",
+      "note": "classified as contract (3248 bytes); ca_gate: ERC20 verified: SWAY dec=18",
+      "source": "site:https://x.com/swaydotfamily",
+      "classification": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 3248,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "robinhood",
+            "bytes": 3248,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】EmberWorld",
+      "handle": "EmberWorldX",
+      "address": "0x452ed78dacf94892e26b22f89b7c40132b04b88a",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://1-2-300.tapeoutscan.io/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】EmberWorld",
+      "handle": "EmberWorldX",
+      "address": "0xe326b8fabc5082b4c29ac9d865505724f46323fa",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://1-2-300.tapeoutscan.io/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x2f74c2b482d47c559c46b6468d9540237192d91a",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "config:https://hashgentic.work/api/contracts",
+      "classification": {
+        "kind": "wallet",
+        "chain": "bsc",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (4248 bytes); CREATE address for wallet nonce=1 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 4248,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 4248,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60406080",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+      "confidence": "medium",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (8756 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 8756,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 8756,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x7d948882756270c20ce0983fb1ef58673984249d",
+      "confidence": "medium",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; CREATE address for wallet nonce=0 has code on bsc; ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 8218,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 8218,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0x35770ad303ec19c186789e413535ad96ca382f66",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (5898 bytes); CREATE address for wallet nonce=6 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 5898,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 5898,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【合约(非代币)·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 代码/配置键或浏览器链接中的项目地址; classified as contract (8578 bytes); CREATE address for wallet nonce=3 has code on bsc; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 8578,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 8578,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "address": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "config:https://hashgentic.work/api/config",
+      "classification": {
+        "kind": "wallet",
+        "chain": "bsc",
+        "code_bytes": 0,
+        "nonce": 8,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 8,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [
+        {
+          "contract": "0x7d948882756270c20ce0983fb1ef58673984249d",
+          "tx_hash": null,
+          "deploy_nonce": 0,
+          "code_bytes": 8218,
+          "evidence_url": "https://bscscan.com/address/0x7d948882756270c20ce0983fb1ef58673984249d",
+          "via": "create_derive",
+          "chain": "bsc",
+          "note": "CREATE address for wallet nonce=0 has code on bsc"
+        },
+        {
+          "contract": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+          "tx_hash": null,
+          "deploy_nonce": 1,
+          "code_bytes": 4248,
+          "evidence_url": "https://bscscan.com/address/0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+          "via": "create_derive",
+          "chain": "bsc",
+          "note": "CREATE address for wallet nonce=1 has code on bsc"
+        },
+        {
+          "contract": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+          "tx_hash": null,
+          "deploy_nonce": 3,
+          "code_bytes": 8578,
+          "evidence_url": "https://bscscan.com/address/0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+          "via": "create_derive",
+          "chain": "bsc",
+          "note": "CREATE address for wallet nonce=3 has code on bsc"
+        },
+        {
+          "contract": "0x35770ad303ec19c186789e413535ad96ca382f66",
+          "tx_hash": null,
+          "deploy_nonce": 6,
+          "code_bytes": 5898,
+          "evidence_url": "https://bscscan.com/address/0x35770ad303ec19c186789e413535ad96ca382f66",
+          "via": "create_derive",
+          "chain": "bsc",
+          "note": "CREATE address for wallet nonce=6 has code on bsc"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "project": "Drakhen",
+      "handle": "drakhenrh",
+      "address": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+      "confidence": "high",
+      "note": "官推X扫到CA 0x07d1efd7…（已链上核验）; classified as contract (3248 bytes); ca_gate: ERC20 verified: DRAK dec=18",
+      "source": "https://x.com/drakhenRH/status/2113434693999759683",
+      "classification": {
+        "kind": "contract",
+        "chain": "robinhood",
+        "code_bytes": 3248,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "robinhood",
+            "bytes": 3248,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "ETHERIIS PROTOCOL",
+      "handle": "etheriisprotoco",
+      "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+      "confidence": "high",
+      "note": "官推X扫到CA 0xa2399b22…（已链上核验）; 代码/配置键或浏览器链接中的项目地址; classified as contract (6011 bytes); ca_gate: ERC20 verified: ETHRS dec=18",
+      "source": "https://x.com/ETHERIISPROTOCO/status/2113311948183937223",
+      "classification": {
+        "kind": "contract",
+        "chain": "ethereum",
+        "code_bytes": 6011,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 6011,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://ethereum.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0x8c4081c73f19a74a7cee543d422937954c120c07",
+      "confidence": "medium",
+      "note": "小型同站 JS 包中的地址赋值（中等置信）; classified as contract (8903 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/buy.js?v=20261022121627B",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 8903,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 8903,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad",
+      "address": "0xfc106657ac50c4e314a712808d06e0a7377710c0",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad",
+      "address": "0x18defd8b02b9cea88a5d5c031ee29573aa78c63a",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 小型同站 JS 包中的地址赋值（中等置信）; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】kilnpad",
+      "handle": "kilnpad",
+      "address": "0xbdbe6eee4e00b7baf7d2bac488a73ae48a5cd6f0",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "js:https://kilnpad.xyz/assets/index-CcvheEWL.js",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】TapeOutScan",
+      "handle": "TapeOutScan",
+      "address": "0x4367d06f5cc485a76f083676d6b4cd87269e4f95",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "js:https://tapeoutscan.io/tour-lessons.js?v=832242b9cc1d8e63",
+      "classification": {
+        "kind": "wallet",
+        "chain": "bsc",
+        "code_bytes": 0,
+        "nonce": 2379,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 2379,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 67,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 349,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 105,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 23,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】0-0.city",
+      "handle": "0_0city",
+      "address": "0xddb587d88c0afa42317e033bdd11edc2462b873f",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; 代码/配置键或浏览器链接中的项目地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "js:https://0-0.city/_next/static/chunks/3284daf5cc80d0ca.js",
+      "classification": {
+        "kind": "wallet",
+        "chain": "bsc",
+        "code_bytes": 23,
+        "nonce": 939,
+        "eip7702": true,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 23,
+            "nonce": 939,
+            "error": null,
+            "ok": true,
+            "eip7702": true,
+            "minimal_proxy": false,
+            "eoa_like_code": true,
+            "code_prefix": "0xef01006c",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0x5a4eaff589c9e410260a61d658a893876710ba83",
+      "confidence": "medium",
+      "note": "NFT contract (ERC721) — not a token CA; 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "html:https://tapefoundry.xyz/",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "nonce": 524,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 295,
+            "nonce": 524,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0x9039e4cd6ceba37522382eb1ad8076ba38c975dc",
+      "confidence": "medium",
+      "note": "NFT contract (ERC1155) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (295 bytes); ca_gate: NFT contract (ERC1155) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 295,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 295,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "TapeFoundry",
+      "handle": "tapefoundry",
+      "address": "0xB4A7B988B77Bd7b29E56F42229464a8dD72361bF",
+      "confidence": "medium",
+      "note": "NFT contract (ERC721) — not a token CA; 页面 HTML 中的地址; 代码/配置键或浏览器链接中的项目地址; classified as contract (13991 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "js:https://tapefoundry.xyz/assets/i18n.zh.js?v=20261024164408",
+      "classification": {
+        "kind": "contract",
+        "chain": "bsc",
+        "code_bytes": 13991,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "bsc",
+            "bytes": 13991,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60806040",
+            "rpc": "https://bsc.publicnode.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Elysium Name Service",
+      "handle": "ElysiumNames",
+      "address": "0xa434b4d98dc9e35205bf186b1750ed2961791f2d",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 eth_getCode empty / 7702 → EOA wallet; 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Elysium Name Service",
+      "handle": "ElysiumNames",
+      "address": "0x13a130b336400409c956df042c128238f1486ddd",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Elysium Name Service",
+      "handle": "ElysiumNames",
+      "address": "0x1da6a196405dcc455195eb00b4f7d17106164e0a",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Elysium Name Service",
+      "handle": "ElysiumNames",
+      "address": "0xe99d7a5cb301f023849888d5f34a43bb7f39d841",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 页面 HTML 中的地址; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://elysiumnameservice.xyz/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "address": "0x9a068ff448bc0743a7e85b72e703fe7ac650d63b",
+      "confidence": "medium",
+      "note": "代码/配置键或浏览器链接中的项目地址; classified as contract (45 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "inline:https://ink-daddy.com/",
+      "classification": {
+        "kind": "contract",
+        "chain": "ink",
+        "code_bytes": 45,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "ink",
+            "bytes": 45,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": true,
+            "eoa_like_code": false,
+            "code_prefix": "0x363d3d37",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "【扫出钱包·非CA】Superboard",
+      "handle": "Superboard_",
+      "address": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; eth_getCode empty / 7702 → EOA wallet; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; 来自推荐链接参数，多半是推荐人钱包而非 CA; 来自推荐链接 ?ref= 参数，多半是钱包而非代币 CA; classified as EOA/wallet via eth_getCode; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "source": "inline:https://www.superboard.xyz/",
+      "classification": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "nonce": 199,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 199,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 16,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 9,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 2,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 11,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    },
+    {
+      "project": "Timecard",
+      "handle": "thetimecard",
+      "address": "0x09a67e8a0f7d72dac7ae2a626aeda62fa227f777",
+      "confidence": "medium",
+      "note": "classified as contract (13692 bytes); ca_gate: NFT contract (ERC721) — not a token CA",
+      "source": "inline:https://thetimecard.xyz",
+      "classification": {
+        "kind": "contract",
+        "chain": "ink",
+        "code_bytes": 13692,
+        "nonce": 1,
+        "tried": [
+          {
+            "chain": "ink",
+            "bytes": 13692,
+            "nonce": 1,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x60808060",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    }
+  ],
+  "trace_finds": [
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "chain": "bsc",
+      "address": "0x7d948882756270c20ce0983fb1ef58673984249d",
+      "wallet": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "evidence_url": "https://bscscan.com/address/0x7d948882756270c20ce0983fb1ef58673984249d",
+      "tx_hash": null,
+      "detected_at": "2026-10-25T05:31:39+08:00",
+      "confidence": "medium",
+      "note": "CREATE address for wallet nonce=0 has code on bsc",
+      "note_zh": null,
+      "via": "create_derive",
+      "factory_id": null,
+      "origin": "wallet_trace"
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "chain": "bsc",
+      "address": "0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "wallet": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "evidence_url": "https://bscscan.com/address/0x08bded51bd830655db14c2a42df25f56a0f9a5ad",
+      "tx_hash": null,
+      "detected_at": "2026-10-25T05:31:39+08:00",
+      "confidence": "medium",
+      "note": "CREATE address for wallet nonce=1 has code on bsc",
+      "note_zh": null,
+      "via": "create_derive",
+      "factory_id": null,
+      "origin": "wallet_trace"
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "chain": "bsc",
+      "address": "0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "wallet": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "evidence_url": "https://bscscan.com/address/0xe6bad0f60514f8b924c854f36c0460814ee53d0f",
+      "tx_hash": null,
+      "detected_at": "2026-10-25T05:31:39+08:00",
+      "confidence": "medium",
+      "note": "CREATE address for wallet nonce=3 has code on bsc",
+      "note_zh": null,
+      "via": "create_derive",
+      "factory_id": null,
+      "origin": "wallet_trace"
+    },
+    {
+      "project": "【扫出钱包·非CA】Hashgentic",
+      "handle": "hashgentic",
+      "chain": "bsc",
+      "address": "0x35770ad303ec19c186789e413535ad96ca382f66",
+      "wallet": "0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "source": "wallet_trace:0xe0e63f601359329570a1cfbb041a3bc2a81aa88b",
+      "evidence_url": "https://bscscan.com/address/0x35770ad303ec19c186789e413535ad96ca382f66",
+      "tx_hash": null,
+      "detected_at": "2026-10-25T05:31:39+08:00",
+      "confidence": "medium",
+      "note": "CREATE address for wallet nonce=6 has code on bsc",
+      "note_zh": null,
+      "via": "create_derive",
+      "factory_id": null,
+      "origin": "wallet_trace"
+    }
+  ]
+}

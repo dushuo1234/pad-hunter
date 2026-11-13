@@ -1,0 +1,1674 @@
+{
+  "onchain_lock_new": [],
+  "relay": {
+    "offset": 210519,
+    "updated_at": "2026-10-29T06:51:22+08:00",
+    "last_new_count": 0
+  },
+  "new_ca_items": [
+    {
+      "project": "【扫出钱包·非CA】XO",
+      "handle": "xo_xlayer",
+      "chain": "ethereum",
+      "address": "0x393CF5AFB9500a7a4719F982161553BA5EBC1940",
+      "source": "watchlist.scanned_wallets",
+      "evidence_url": "https://x.com/xo_xlayer",
+      "detected_at": "2026-10-29T06:34:58+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-10-29T06:34:58+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "基础设施"
+      ],
+      "strategy": "基础设施",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null,
+      "_weak": true
+    }
+  ],
+  "ca_finds_count": 241,
+  "ca_finds_new_addrs": [
+    "0x393cf5afb9500a7a4719f982161553ba5ebc1940"
+  ],
+  "listing_new_cas": [],
+  "listing_signals": [],
+  "deploy_hints": [
+    {
+      "factory_id": "univ2_eth",
+      "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "chain": "ethereum",
+      "tx": "0x4ad1b8b127e79ca2f8b64af57946771cc5a084781948f044c64c920a05ce9be3",
+      "block": 26291157,
+      "topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "addresses": [
+        "0x9a2494d04899a1f44330b1645a3a16cc2a1fdb9c",
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "0x5ec055578023794ecd3447fa8a27a856e0abbc3a",
+        "0x0000000000000000000000000000000000080832"
+      ],
+      "note": "Ambient Uniswap V2 PairCreated (not matched to watchlist).",
+      "ambient": true
+    },
+    {
+      "factory_id": "univ2_eth",
+      "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "chain": "ethereum",
+      "tx": "0xfc1a5488593e7386b08a46d33b65ed45b75183a9ffd856bfa6b4729912557788",
+      "block": 26291238,
+      "topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "addresses": [
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "0xd7c74e65fb88bd70c2f51ec44ef026d729b623de",
+        "0xc46d6d1a352e046885dbd67050b2e1620865ff90",
+        "0x0000000000000000000000000000000000080833"
+      ],
+      "note": "Ambient Uniswap V2 PairCreated (not matched to watchlist).",
+      "ambient": true
+    },
+    {
+      "factory_id": "univ2_eth",
+      "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "chain": "ethereum",
+      "tx": "0x5b7a4a9bd1912446b7bb81c99eef74e053f67539ff186161d0406562e9689822",
+      "block": 26291268,
+      "topic0": "0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9",
+      "addresses": [
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "0xc697938eac9e393f857726006c274634d1886240",
+        "0xacd9d0229fc788d27bca8b4f7e699c49edadc7b2",
+        "0x0000000000000000000000000000000000080834"
+      ],
+      "note": "Ambient Uniswap V2 PairCreated (not matched to watchlist).",
+      "ambient": true
+    }
+  ],
+  "js_summary": {
+    "sites_fetch_ok": 136,
+    "sites_fetch_all_failed": 18,
+    "projects_with_js_addresses": 61,
+    "total_unique_addresses": 172,
+    "js_files_ok": 683,
+    "new_js_ca": 0,
+    "js_factory_match": 0,
+    "site_js_change": 12,
+    "high_completion_projects": 33,
+    "keyed_or_const_addresses": 116,
+    "noise_tagged_addresses": 1,
+    "elapsed_s": 311.0
+  },
+  "new_js_cas": [],
+  "js_matches": [],
+  "site_js_changes": [
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Agentic Pad",
+      "handle": "agenticsolfun",
+      "prev_fingerprint": "72ee110646bca1d53704988e8131aa9a",
+      "fingerprint": "439dd66da9d2ee808bf401740a118495",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Asend.",
+      "handle": "AsendNow",
+      "prev_fingerprint": "4572eb2cc4e17819741aeee22799b7f1",
+      "fingerprint": "db4c5d3094d9988c72cabe0a0c5a8747",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "E.T.A",
+      "handle": "entertheanime",
+      "prev_fingerprint": "03f9cbdda23d8fc205389702ba061444",
+      "fingerprint": "0d0fa16c3832fe4c3fa3a9ff1a9201bf",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "EmberWorld",
+      "handle": "EmberWorldX",
+      "prev_fingerprint": "3d160d7d3c3b17300dea2e9a08c7568d",
+      "fingerprint": "f2b6ebc5c7b938ea64ae64ebafea716b",
+      "prev_address_fingerprint": "ed44b5585b6fd8cbb6b6a2d02c17e02a",
+      "address_fingerprint": "c98f5668ed971f6c05318c9ac0c41b07",
+      "address_set_changed": true,
+      "address_count": 3,
+      "prev_address_count": 3,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Grokpad",
+      "handle": "Grokpadspace",
+      "prev_fingerprint": "d6ea7dee21d158a0ca8238eb87b65f78",
+      "fingerprint": "74454967c98efbc49ecd985a3143d00c",
+      "prev_address_fingerprint": "ad5b774cd343acf27faf40d65f5932e2",
+      "address_fingerprint": "ad5b774cd343acf27faf40d65f5932e2",
+      "address_set_changed": false,
+      "address_count": 1,
+      "prev_address_count": 1,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Index Network",
+      "handle": "indexnetwork_",
+      "prev_fingerprint": "12f6e03e70f27b264589cc0d7bfa40ef",
+      "fingerprint": "e6624e18711912bb0e24b3932e25e287",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Lightman",
+      "handle": "photonicmoney",
+      "prev_fingerprint": "c865e887929a77879655b2f5985ba498",
+      "fingerprint": "852449aa34278549a44a43fa19dd4312",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "NOIR Brokers",
+      "handle": "ToolyEVM",
+      "prev_fingerprint": "87bcf54731e780cbae2ffa810d91b9de",
+      "fingerprint": "bdf7245fc8ba6eea8e650d8af8f2a38d",
+      "prev_address_fingerprint": "9f3975d3dbfd827e0bbe57da5086db80",
+      "address_fingerprint": "9f3975d3dbfd827e0bbe57da5086db80",
+      "address_set_changed": false,
+      "address_count": 3,
+      "prev_address_count": 3,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Shot",
+      "handle": "shotmarkets",
+      "prev_fingerprint": "383c7e342a976aaf3ade9366d4e02bf3",
+      "fingerprint": "987ff5e4313c853e0c5fb78e7f98c5dc",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Uniq",
+      "handle": "uniqfun",
+      "prev_fingerprint": "7c11aa7d21fc0a93e28e6c9b55baf9ff",
+      "fingerprint": "dc2451d96b2ee9d77ee6f73a40b162e2",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Yieldtopia",
+      "handle": "Yieldtopia",
+      "prev_fingerprint": "b0bac7e0a83f55265228c36ad67063ac",
+      "fingerprint": "50cc63553e5f848b6d263d6a67470419",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x8e8f5340c3445eb2e376e2e807b53ced9ae230b0",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x0000000000000000000000000000000000002710",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x00000000000000000000000000000000000000c8",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x679b71485033a7ea100442e1045ce0b5d7a31f8a",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x63d969bb027c81fb5b10440473073d57916501eb",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x00000000000000000000000000000000000001f4",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x000000000000000000000000000000000000000a",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0xec72145c67bf4046493802734b12c49b7a619231",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "kilnpad",
+      "handle": "kilnpad",
+      "prev_fingerprint": "ab41f6b66170021d0124be185333ffef",
+      "fingerprint": "3b0a51576f3da51b7e1b5fc89d0b505f",
+      "prev_address_fingerprint": "6637ecaeed1b7040852768704d1d7849",
+      "address_fingerprint": "6637ecaeed1b7040852768704d1d7849",
+      "address_set_changed": false,
+      "address_count": 4,
+      "prev_address_count": 4,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    }
+  ],
+  "js_events": [
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Agentic Pad",
+      "handle": "agenticsolfun",
+      "prev_fingerprint": "72ee110646bca1d53704988e8131aa9a",
+      "fingerprint": "439dd66da9d2ee808bf401740a118495",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Asend.",
+      "handle": "AsendNow",
+      "prev_fingerprint": "4572eb2cc4e17819741aeee22799b7f1",
+      "fingerprint": "db4c5d3094d9988c72cabe0a0c5a8747",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "E.T.A",
+      "handle": "entertheanime",
+      "prev_fingerprint": "03f9cbdda23d8fc205389702ba061444",
+      "fingerprint": "0d0fa16c3832fe4c3fa3a9ff1a9201bf",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "kind": "invalid",
+      "label_zh": "非地址",
+      "gate_note": "hex string (hash / git SHA), not a Solana address",
+      "gate_note_zh": "十六进制哈希/非地址，已丢弃",
+      "type": "UNVERIFIED_ADDR",
+      "name": "EmberWorld",
+      "handle": "EmberWorldX",
+      "address": "4c78c9a48e3ef9246ce774185cb31452",
+      "addr_type": "solana",
+      "source": "html:https://1-2-300.tapeoutscan.io/",
+      "snippet": "fer data-tapeoutscan-gateway-nav data-tos-visit=\"1793225319.4c78c9a48e3ef9246ce774185cb31452.4729a1328539244ee5718a3b3df",
+      "extract_method": null,
+      "signal_tags": [],
+      "signal_confidence": null,
+      "signal_note_zh": null,
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "EmberWorld",
+      "handle": "EmberWorldX",
+      "prev_fingerprint": "3d160d7d3c3b17300dea2e9a08c7568d",
+      "fingerprint": "f2b6ebc5c7b938ea64ae64ebafea716b",
+      "prev_address_fingerprint": "ed44b5585b6fd8cbb6b6a2d02c17e02a",
+      "address_fingerprint": "c98f5668ed971f6c05318c9ac0c41b07",
+      "address_set_changed": true,
+      "address_count": 3,
+      "prev_address_count": 3,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Grokpad",
+      "handle": "Grokpadspace",
+      "prev_fingerprint": "d6ea7dee21d158a0ca8238eb87b65f78",
+      "fingerprint": "74454967c98efbc49ecd985a3143d00c",
+      "prev_address_fingerprint": "ad5b774cd343acf27faf40d65f5932e2",
+      "address_fingerprint": "ad5b774cd343acf27faf40d65f5932e2",
+      "address_set_changed": false,
+      "address_count": 1,
+      "prev_address_count": 1,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Index Network",
+      "handle": "indexnetwork_",
+      "prev_fingerprint": "12f6e03e70f27b264589cc0d7bfa40ef",
+      "fingerprint": "e6624e18711912bb0e24b3932e25e287",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Lightman",
+      "handle": "photonicmoney",
+      "prev_fingerprint": "c865e887929a77879655b2f5985ba498",
+      "fingerprint": "852449aa34278549a44a43fa19dd4312",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "NOIR Brokers",
+      "handle": "ToolyEVM",
+      "prev_fingerprint": "87bcf54731e780cbae2ffa810d91b9de",
+      "fingerprint": "bdf7245fc8ba6eea8e650d8af8f2a38d",
+      "prev_address_fingerprint": "9f3975d3dbfd827e0bbe57da5086db80",
+      "address_fingerprint": "9f3975d3dbfd827e0bbe57da5086db80",
+      "address_set_changed": false,
+      "address_count": 3,
+      "prev_address_count": 3,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Shot",
+      "handle": "shotmarkets",
+      "prev_fingerprint": "383c7e342a976aaf3ade9366d4e02bf3",
+      "fingerprint": "987ff5e4313c853e0c5fb78e7f98c5dc",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Uniq",
+      "handle": "uniqfun",
+      "prev_fingerprint": "7c11aa7d21fc0a93e28e6c9b55baf9ff",
+      "fingerprint": "dc2451d96b2ee9d77ee6f73a40b162e2",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "Yieldtopia",
+      "handle": "Yieldtopia",
+      "prev_fingerprint": "b0bac7e0a83f55265228c36ad67063ac",
+      "fingerprint": "50cc63553e5f848b6d263d6a67470419",
+      "prev_address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5",
+      "address_set_changed": false,
+      "address_count": 0,
+      "prev_address_count": 0,
+      "near_deploys": [
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x8e8f5340c3445eb2e376e2e807b53ced9ae230b0",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x0000000000000000000000000000000000002710",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x00000000000000000000000000000000000000c8",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x679b71485033a7ea100442e1045ce0b5d7a31f8a",
+          "tx": "0xf89c716156d5b7ac389400743c407232f25bdd6e243f486dff9c74c2b825f300",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x63d969bb027c81fb5b10440473073d57916501eb",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x00000000000000000000000000000000000001f4",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0x000000000000000000000000000000000000000a",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        },
+        {
+          "factory_id": "univ3_eth",
+          "address": "0xec72145c67bf4046493802734b12c49b7a619231",
+          "tx": "0xdf47730c50e5d978320e0d5c5ebafa08f5b61abf4fb4a0400c39d8150728f7cd",
+          "chain": "ethereum"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "name": "kilnpad",
+      "handle": "kilnpad",
+      "prev_fingerprint": "ab41f6b66170021d0124be185333ffef",
+      "fingerprint": "3b0a51576f3da51b7e1b5fc89d0b505f",
+      "prev_address_fingerprint": "6637ecaeed1b7040852768704d1d7849",
+      "address_fingerprint": "6637ecaeed1b7040852768704d1d7849",
+      "address_set_changed": false,
+      "address_count": 4,
+      "prev_address_count": 4,
+      "near_deploys": [
+        {
+          "factory_id": "univ2_base",
+          "address": "0x0f0d079079e11c579a3d5213d4f5b06afadbd896",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x3ac50c4bd140e4ad5cf622bd2dcbdc73b2b4f4e4",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56b",
+          "tx": "0x1917d5dadf002b1eb2ff518f002e6f46682ebfd0e7bbef0c7b78d1c9270d4b18",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x4a7c9f029f26bc58528233a2442724980f787d30",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xa515f78c1d6538fea9c5fd1e9c027e3fa3cf42d9",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0x00000000000000000000000000000000002ee56c",
+          "tx": "0x15ceb5a146a05d1e98516767863a62ec9b0d83f08dde9a7dc26663174ed35eac",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xb93619cd9d08286ccee5669d6d1744af44952129",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        },
+        {
+          "factory_id": "univ2_base",
+          "address": "0xad10a744fa70c73679e04c76f86cdb0233687f08",
+          "tx": "0xb0196a0ba62b23e91ac68dc04a6119dd28f83cae0605631154decb018aed01df",
+          "chain": "base"
+        }
+      ],
+      "at": "2026-10-29T06:12:16+08:00"
+    }
+  ],
+  "mark_launched_raw": "[mark_launched_from_ca] 2026-10-29T06:42:08+08:00 newly=0 []",
+  "newly_launched": [],
+  "warns": []
+}

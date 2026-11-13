@@ -1,0 +1,615 @@
+#!/usr/bin/env python3
+"""E1 funding-link line (spec v2 §5).
+
+For a candidate deployer wallet, look up:
+  - first native-coin inflow (from, amount, time, tx)
+  - most recent significant gas funding within 7d before deploy
+
+Kinds: direct | one_hop | shared_funder | pattern
+Hop/time decay per §5.3. Public funders (known_public_funders.json) excluded.
+No tx/amount/time → never hard evidence.
+
+Network: uses free explorer txlist where available (ethereum Blockscout, ink).
+Chains without a working history API degrade gracefully (see GAPS).
+Keys are never logged or written into funding_link objects.
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import time
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from typing import Callable
+from zoneinfo import ZoneInfo
+
+BASE = Path(__file__).resolve().parent.parent
+STAGING = Path(__file__).resolve().parent
+PUBLIC_FUNDERS = STAGING / "known_public_funders.json"
+CACHE = BASE / "funding_links_cache.json"
+FACTORIES = BASE / "factories.json"
+SH = ZoneInfo("Asia/Shanghai")
+UA = "PadHunterFunding/1.0"
+
+# Spec §5.3 time windows (seconds before deploy)
+WIN_STRONG = 7 * 86400
+WIN_MED = 30 * 86400
+WIN_WEAK = 90 * 86400
+
+NATIVE_ASSET = {
+    "ethereum": "ETH", "base": "ETH", "ink": "ETH", "robinhood": "ETH",
+    "bsc": "BNB", "hyperevm": "HYPE",
+}
+
+# Working free history APIs (probed 2026-10-24). Others = gaps.
+EXPLORER_TXLIST = {
+    "ethereum": "https://eth.blockscout.com/api",
+    "ink": "https://explorer.inkonchain.com/api",
+}
+
+GAPS = [
+    {"chain": "base", "gap": "no_free_txlist",
+     "note_zh": "base.blockscout.com CF 拦截；basescan 需 API key（本机无密钥）"},
+    {"chain": "bsc", "gap": "no_free_txlist",
+     "note_zh": "无可用免费 Blockscout；bscscan 需 API key"},
+    {"chain": "robinhood", "gap": "explorer_cf_blocked",
+     "note_zh": "robinhoodchain.blockscout.com Cloudflare 拦截（与 trace_wallet_ca 一致）"},
+    {"chain": "hyperevm", "gap": "no_txlist",
+     "note_zh": "无可用账户历史 API"},
+    {"chain": "solana", "gap": "no_evm_eoa",
+     "note_zh": "非 EVM，不能套同一 EOA；资金关联走元数据/发射台创建者（E2+）"},
+]
+
+CONF_RANK = {"high": 3, "medium": 2, "low": 1, None: 0, "": 0}
+
+
+def _norm(a: str | None) -> str | None:
+    if not a:
+        return None
+    a = str(a).strip().lower()
+    return a if re.fullmatch(r"0x[0-9a-f]{40}", a) else None
+
+
+def _iso(ts: int | float | str | None) -> str | None:
+    if ts is None or ts == "":
+        return None
+    try:
+        if isinstance(ts, str) and "T" in ts:
+            return ts
+        return datetime.fromtimestamp(int(ts), SH).isoformat(timespec="seconds")
+    except Exception:
+        return None
+
+
+def _parse_ts(iso_or_ts) -> int | None:
+    if iso_or_ts is None:
+        return None
+    try:
+        if isinstance(iso_or_ts, (int, float)):
+            return int(iso_or_ts)
+        s = str(iso_or_ts).strip()
+        if s.isdigit():
+            return int(s)
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=SH)
+        return int(dt.timestamp())
+    except Exception:
+        return None
+
+
+def load_public_funders(path: Path | None = None) -> dict[str, dict]:
+    """address_norm -> {kind, label, source, chain} (chain-agnostic index; same EOA across EVM)."""
+    p = path or PUBLIC_FUNDERS
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    out: dict[str, dict] = {}
+    for f in doc.get("funders") or []:
+        a = _norm(f.get("address"))
+        if not a or f.get("kind") == "stablecoin":
+            continue
+        out[a] = {
+            "kind": f.get("kind") or "exchange",
+            "label": f.get("label") or "",
+            "source": f.get("source") or "",
+            "chain": f.get("chain"),
+        }
+    return out
+
+
+def is_public_funder(addr: str | None, public: dict[str, dict] | None = None) -> dict | None:
+    a = _norm(addr)
+    if not a:
+        return None
+    pub = public if public is not None else load_public_funders()
+    return pub.get(a)
+
+
+def _curl_json(url: str, timeout: int = 18) -> dict | list | None:
+    cmd = ["curl", "-sS", "--max-time", str(timeout), "-A", UA, "-H", "accept: application/json", url]
+    try:
+        out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
+        if not out or out.lstrip().startswith("<!"):
+            return None
+        return json.loads(out)
+    except Exception:
+        return None
+
+
+def _txlist_url(chain: str) -> str | None:
+    if chain in EXPLORER_TXLIST:
+        return EXPLORER_TXLIST[chain]
+    try:
+        fx = json.loads(FACTORIES.read_text(encoding="utf-8"))
+        api = ((fx.get("chains") or {}).get(chain) or {}).get("explorer_api")
+        return api or None
+    except Exception:
+        return None
+
+
+def fetch_native_inflows(address: str, chain: str, *, limit: int = 100,
+                         sort: str = "asc") -> list[dict]:
+    """Return native inflows as [{from,to,tx,amount,funded_at,value_wei,block}].
+    Empty list on gap / error (never raises)."""
+    a = _norm(address)
+    if not a or not (chain or "").strip():
+        return []
+    api = _txlist_url(chain)
+    if not api:
+        return []
+    url = (f"{api}?module=account&action=txlist&address={a}"
+           f"&page=1&offset={int(limit)}&sort={sort}")
+    raw = _curl_json(url)
+    if not isinstance(raw, dict):
+        return []
+    rows = raw.get("result")
+    if not isinstance(rows, list):
+        return []
+    out = []
+    for t in rows:
+        try:
+            if str(t.get("isError") or "0") not in ("0", "false", ""):
+                continue
+            to = _norm(t.get("to"))
+            frm = _norm(t.get("from"))
+            if to != a or not frm or frm == a:
+                continue
+            val = int(t.get("value") or 0)
+            if val <= 0:
+                continue  # contract calls with 0 value aren't funding
+            ts = int(t.get("timeStamp") or 0)
+            out.append({
+                "from": frm,
+                "to": a,
+                "tx": t.get("hash"),
+                "amount": f"{val / 1e18:.8f}".rstrip("0").rstrip("."),
+                "value_wei": val,
+                "funded_at": _iso(ts),
+                "funded_ts": ts,
+                "block": int(t.get("blockNumber") or 0) or None,
+                "asset": NATIVE_ASSET.get(chain, "NATIVE"),
+                "chain": chain,
+            })
+        except Exception:
+            continue
+    return out
+
+
+def first_native_inflow(address: str, chain: str, *, fetcher=None) -> dict | None:
+    fn = fetcher or fetch_native_inflows
+    rows = fn(address, chain, limit=50, sort="asc") if fetcher else fetch_native_inflows(
+        address, chain, limit=50, sort="asc")
+    if fetcher and not isinstance(rows, list):
+        rows = list(rows or [])
+    if not rows:
+        # try with default fetcher signature when custom returns list directly
+        if fetcher:
+            try:
+                rows = fetcher(address, chain)
+            except TypeError:
+                rows = []
+    if not rows:
+        return None
+    return min(rows, key=lambda r: r.get("funded_ts") or 0)
+
+
+def recent_gas_funding(address: str, chain: str, deployed_at: str | int | None,
+                       *, within_s: int = WIN_STRONG, fetcher=None) -> dict | None:
+    """Most recent significant native inflow within `within_s` before deploy."""
+    dep = _parse_ts(deployed_at)
+    if dep is None:
+        return None
+    if fetcher:
+        try:
+            rows = fetcher(address, chain, limit=100, sort="desc")
+        except TypeError:
+            rows = fetcher(address, chain)
+    else:
+        rows = fetch_native_inflows(address, chain, limit=100, sort="desc")
+    best = None
+    for r in rows or []:
+        ts = r.get("funded_ts") or _parse_ts(r.get("funded_at"))
+        if ts is None:
+            continue
+        if ts > dep:
+            continue
+        delta = dep - ts
+        if delta > within_s:
+            continue
+        if best is None or ts > (best.get("funded_ts") or 0):
+            best = dict(r)
+            best["funded_ts"] = ts
+    return best
+
+
+def _decay_confidence(base: str, funded_at, deployed_at) -> str | None:
+    """Apply §5.3 time decay. Returns None if >90d (not hard evidence)."""
+    ft = _parse_ts(funded_at)
+    dt = _parse_ts(deployed_at)
+    if ft is None or dt is None:
+        return base  # incomplete time → caller must reject as hard evidence separately
+    delta = dt - ft
+    if delta < 0:
+        return None
+    if delta <= WIN_STRONG:
+        return base
+    if delta <= WIN_MED:
+        return base  # "次之" — keep tier
+    if delta <= WIN_WEAK:
+        # >30d → demote one level
+        return {"high": "medium", "medium": "low", "low": "low"}.get(base, "low")
+    return None  # >90d
+
+
+def _complete(link: dict) -> bool:
+    """§5.6: no tx/amount/time → not hard evidence."""
+    return bool(link.get("tx") and link.get("amount") and link.get("funded_at"))
+
+
+def score_direct(*, funder: str, deployer: str, tx: str, amount: str, funded_at,
+                 deployed_at, funder_tier: str | None, public: dict | None = None,
+                 asset: str = "ETH", chain: str | None = None) -> dict:
+    """Build a direct funding_link with exclusion + decay applied."""
+    pub = is_public_funder(funder, public)
+    link = {
+        "from": _norm(funder),
+        "to": _norm(deployer),
+        "hops": 0,
+        "kind": "direct",
+        "tx": tx,
+        "amount": str(amount),
+        "asset": asset,
+        "funded_at": _iso(funded_at) if not (isinstance(funded_at, str) and "T" in funded_at) else funded_at,
+        "deployed_at": _iso(deployed_at) if not (isinstance(deployed_at, str) and "T" in str(deployed_at)) else deployed_at,
+        "confidence": None,
+        "excluded_reason": "",
+        "chain": chain,
+    }
+    if pub:
+        link["excluded_reason"] = f"public_funder:{pub.get('kind')}:{pub.get('label')}"
+        link["confidence"] = None
+        return link
+    if not funder_tier:
+        # Not a hard evidence (assist only). excluded_reason reserved for public list (§5.4/5.6).
+        link["confidence"] = "low"
+        link["note_zh"] = "资助方不在项目图谱，不计硬证据"
+        return link
+    base = "high" if funder_tier == "high" else "medium" if funder_tier == "medium" else "low"
+    decayed = _decay_confidence(base, link["funded_at"], link["deployed_at"])
+    if decayed is None:
+        link["excluded_reason"] = "funding_older_than_90d"
+        link["confidence"] = None
+        return link
+    link["confidence"] = decayed
+    return link
+
+
+def score_shared_funder(*, shared: str, deployer: str, graph_wallet: str,
+                        deployer_tx: str, deployer_amount: str, deployer_funded_at,
+                        graph_tx: str | None, graph_amount: str | None, graph_funded_at,
+                        deployed_at, public: dict | None = None,
+                        asset: str = "ETH", chain: str | None = None) -> dict:
+    pub = is_public_funder(shared, public)
+    link = {
+        "from": _norm(shared),
+        "to": _norm(deployer),
+        "hops": 0,
+        "kind": "shared_funder",
+        "tx": deployer_tx,
+        "amount": str(deployer_amount),
+        "asset": asset,
+        "funded_at": _iso(deployer_funded_at) if not (isinstance(deployer_funded_at, str) and "T" in str(deployer_funded_at)) else deployer_funded_at,
+        "deployed_at": _iso(deployed_at) if not (isinstance(deployed_at, str) and "T" in str(deployed_at)) else deployed_at,
+        "confidence": None,
+        "excluded_reason": "",
+        "graph_wallet": _norm(graph_wallet),
+        "graph_fund_tx": graph_tx,
+        "chain": chain,
+    }
+    if pub:
+        link["excluded_reason"] = f"public_funder:{pub.get('kind')}:{pub.get('label')}"
+        return link
+    decayed = _decay_confidence("medium", link["funded_at"], link["deployed_at"])
+    if decayed is None:
+        link["excluded_reason"] = "funding_older_than_90d"
+        return link
+    link["confidence"] = decayed
+    return link
+
+
+def score_one_hop(*, team: str, intermediate: str, deployer: str,
+                  hop1_tx: str, hop1_amount: str, hop1_at,
+                  hop2_tx: str, hop2_amount: str, hop2_at,
+                  deployed_at, team_tier: str | None = "high",
+                  public: dict | None = None, asset: str = "ETH",
+                  chain: str | None = None) -> dict:
+    """A → mid → B. Confidence = medium demoted one level → low (assist only / not hard)."""
+    pub = is_public_funder(team, public) or is_public_funder(intermediate, public)
+    link = {
+        "from": _norm(team),
+        "to": _norm(deployer),
+        "hops": 1,
+        "kind": "one_hop",
+        "tx": hop2_tx,
+        "amount": str(hop2_amount),
+        "asset": asset,
+        "funded_at": _iso(hop2_at) if not (isinstance(hop2_at, str) and "T" in str(hop2_at)) else hop2_at,
+        "deployed_at": _iso(deployed_at) if not (isinstance(deployed_at, str) and "T" in str(deployed_at)) else deployed_at,
+        "confidence": None,
+        "excluded_reason": "",
+        "intermediate": _norm(intermediate),
+        "hop1_tx": hop1_tx,
+        "chain": chain,
+    }
+    if pub:
+        link["excluded_reason"] = f"public_funder:{(pub or {}).get('kind')}:{(pub or {}).get('label')}"
+        return link
+    # medium demoted one → low; never hard evidence alone
+    decayed = _decay_confidence("low", link["funded_at"], link["deployed_at"])
+    if decayed is None:
+        link["excluded_reason"] = "funding_older_than_90d"
+        return link
+    link["confidence"] = decayed
+    return link
+
+
+def score_pattern(*, funder: str, deployer: str, peers: list[str],
+                  tx: str, amount: str, funded_at, deployed_at,
+                  asset: str = "ETH", chain: str | None = None) -> dict:
+    """Amount/time pattern — assist only (low), never hard evidence."""
+    return {
+        "from": _norm(funder),
+        "to": _norm(deployer),
+        "hops": 0,
+        "kind": "pattern",
+        "tx": tx,
+        "amount": str(amount),
+        "asset": asset,
+        "funded_at": _iso(funded_at) if not (isinstance(funded_at, str) and "T" in str(funded_at)) else funded_at,
+        "deployed_at": _iso(deployed_at) if not (isinstance(deployed_at, str) and "T" in str(deployed_at)) else deployed_at,
+        "confidence": "low",
+        "excluded_reason": "",
+        "peers": [_norm(p) for p in peers if _norm(p)],
+        "chain": chain,
+    }
+
+
+def is_hard_evidence(link: dict | None) -> bool:
+    """True iff this funding_link counts as one hard evidence (H2)."""
+    if not link or link.get("excluded_reason"):
+        return False
+    if not _complete(link):
+        return False
+    kind = link.get("kind")
+    conf = link.get("confidence")
+    if kind == "direct" and conf in ("high", "medium"):
+        return True
+    if kind == "shared_funder" and conf in ("high", "medium"):
+        # §7.1 H2: shared non-public team wallet counts as H2
+        return True
+    # one_hop / pattern / low → not hard
+    return False
+
+
+def basis_zh(link: dict | None) -> str | None:
+    if not link or link.get("excluded_reason"):
+        return None
+    frm = (link.get("from") or "")[:10] + "…"
+    tx = (link.get("tx") or "")[:10] + "…"
+    kind = link.get("kind")
+    if kind == "direct":
+        return f"资金关联：代币部署者由团队钱包 {frm} 直接资助，交易 {tx}"
+    if kind == "shared_funder":
+        gw = (link.get("graph_wallet") or "")[:10] + "…"
+        return f"资金关联：代币部署者与图谱钱包 {gw} 共享资助方 {frm}，交易 {tx}"
+    if kind == "one_hop":
+        mid = (link.get("intermediate") or "")[:10] + "…"
+        return f"资金关联：一跳中转（经 {mid}），资助方 {frm}，交易 {tx}"
+    if kind == "pattern":
+        return f"资金关联：打款模式相似（辅助），资助方 {frm}，交易 {tx}"
+    return None
+
+
+def analyze_deployer(
+    deployer: str,
+    chain: str,
+    *,
+    deployed_at: str | int | None,
+    graph_wallets: dict[str, dict] | None,
+    public: dict[str, dict] | None = None,
+    fetcher: Callable | None = None,
+    max_one_hop: bool = True,
+) -> dict:
+    """Main entry: return {funding_link, candidates[], gap?, note_zh}.
+
+    graph_wallets: address_norm -> {confidence, handle?, ...} project graph.
+    """
+    a = _norm(deployer)
+    pub = public if public is not None else load_public_funders()
+    graph = {(_norm(k) or ""): v for k, v in (graph_wallets or {}).items() if _norm(k)}
+    out = {"funding_link": None, "candidates": [], "gap": None, "note_zh": None}
+
+    if not a:
+        out["note_zh"] = "部署者地址无效"
+        return out
+    if chain == "solana" or not str(chain or "").strip():
+        out["gap"] = "solana" if chain == "solana" else "no_chain"
+        out["note_zh"] = "非 EVM 或不支持的链，跳过资金关联"
+        return out
+    if not _txlist_url(chain) and fetcher is None:
+        out["gap"] = chain
+        out["note_zh"] = f"{chain} 无可用账户历史 API，资金关联降级"
+        return out
+
+    # 1) first native inflow
+    if fetcher:
+        try:
+            rows = fetcher(a, chain, limit=80, sort="asc")
+        except TypeError:
+            rows = fetcher(a, chain)
+    else:
+        rows = fetch_native_inflows(a, chain, limit=80, sort="asc")
+    rows = list(rows or [])
+    if not rows:
+        out["note_zh"] = "未查到原生币入账"
+        return out
+
+    first = min(rows, key=lambda r: r.get("funded_ts") or 0)
+    # prefer recent gas funding within 7d of deploy when available
+    gas = None
+    dep_ts = _parse_ts(deployed_at)
+    if dep_ts is not None:
+        for r in rows:
+            ts = r.get("funded_ts") or _parse_ts(r.get("funded_at"))
+            if ts is None or ts > dep_ts:
+                continue
+            if dep_ts - ts <= WIN_STRONG:
+                if gas is None or ts > (gas.get("funded_ts") or 0):
+                    gas = r
+    primary = gas or first
+
+    funder = _norm(primary.get("from"))
+    tier = None
+    if funder and funder in graph:
+        tier = str((graph.get(funder) or {}).get("confidence") or "low").lower()
+
+    direct = score_direct(
+        funder=funder or "",
+        deployer=a,
+        tx=primary.get("tx") or "",
+        amount=primary.get("amount") or "",
+        funded_at=primary.get("funded_at") or primary.get("funded_ts"),
+        deployed_at=deployed_at or primary.get("funded_at"),
+        funder_tier=tier,
+        public=pub,
+        asset=primary.get("asset") or NATIVE_ASSET.get(chain, "NATIVE"),
+        chain=chain,
+    )
+    out["candidates"].append(direct)
+
+    # 2) shared funder: first funder of deployer also funded a graph wallet
+    # Shared-C case requires running even when funder is NOT already in the graph.
+    if funder and not (direct.get("excluded_reason") or "").startswith("public_funder:"):
+        # For each graph wallet, check if its first inflow is from same funder
+        # (expensive on network — only when fetcher provided or small graph)
+        if funder and funder not in graph:
+            for gw, meta in list(graph.items())[:20]:
+                if gw == a:
+                    continue
+                if fetcher:
+                    try:
+                        grows = fetcher(gw, chain, limit=20, sort="asc")
+                    except TypeError:
+                        grows = fetcher(gw, chain)
+                else:
+                    # skip network amplification unless chain has free API and graph tiny
+                    if len(graph) > 8 or chain not in EXPLORER_TXLIST:
+                        continue
+                    grows = fetch_native_inflows(gw, chain, limit=20, sort="asc")
+                if not grows:
+                    continue
+                gfirst = min(grows, key=lambda r: r.get("funded_ts") or 0)
+                if _norm(gfirst.get("from")) == funder:
+                    shared = score_shared_funder(
+                        shared=funder, deployer=a, graph_wallet=gw,
+                        deployer_tx=primary.get("tx") or "",
+                        deployer_amount=primary.get("amount") or "",
+                        deployer_funded_at=primary.get("funded_at") or primary.get("funded_ts"),
+                        graph_tx=gfirst.get("tx"), graph_amount=gfirst.get("amount"),
+                        graph_funded_at=gfirst.get("funded_at"),
+                        deployed_at=deployed_at or primary.get("funded_at"),
+                        public=pub,
+                        asset=primary.get("asset") or NATIVE_ASSET.get(chain, "NATIVE"),
+                        chain=chain,
+                    )
+                    out["candidates"].append(shared)
+                    break
+
+    # 3) one-hop: funder not in graph, but funder's first inflow is from a graph wallet
+    if max_one_hop and funder and funder not in graph and not is_public_funder(funder, pub):
+        if fetcher:
+            try:
+                frows = fetcher(funder, chain, limit=20, sort="asc")
+            except TypeError:
+                frows = fetcher(funder, chain)
+        elif chain in EXPLORER_TXLIST:
+            frows = fetch_native_inflows(funder, chain, limit=20, sort="asc")
+        else:
+            frows = []
+        if frows:
+            ff = min(frows, key=lambda r: r.get("funded_ts") or 0)
+            team = _norm(ff.get("from"))
+            if team and team in graph:
+                hop = score_one_hop(
+                    team=team, intermediate=funder, deployer=a,
+                    hop1_tx=ff.get("tx") or "", hop1_amount=ff.get("amount") or "",
+                    hop1_at=ff.get("funded_at"),
+                    hop2_tx=primary.get("tx") or "", hop2_amount=primary.get("amount") or "",
+                    hop2_at=primary.get("funded_at"),
+                    deployed_at=deployed_at or primary.get("funded_at"),
+                    team_tier=str((graph.get(team) or {}).get("confidence") or "high"),
+                    public=pub,
+                    asset=primary.get("asset") or NATIVE_ASSET.get(chain, "NATIVE"),
+                    chain=chain,
+                )
+                out["candidates"].append(hop)
+
+    # Pick best candidate: prefer hard-evidence, then higher confidence, then direct>shared>one_hop>pattern
+    kind_rank = {"direct": 4, "shared_funder": 3, "one_hop": 2, "pattern": 1}
+
+    def rank(L):
+        return (
+            1 if is_hard_evidence(L) else 0,
+            CONF_RANK.get(L.get("confidence"), 0),
+            kind_rank.get(L.get("kind"), 0),
+            0 if L.get("excluded_reason") else 1,
+        )
+
+    best = max(out["candidates"], key=rank) if out["candidates"] else None
+    out["funding_link"] = best
+    if best and best.get("excluded_reason"):
+        out["note_zh"] = f"资金关联已排除：{best['excluded_reason']}"
+    elif best and is_hard_evidence(best):
+        out["note_zh"] = basis_zh(best)
+    elif best:
+        out["note_zh"] = basis_zh(best) or "资金关联为弱信号，不计硬证据"
+    return out
+
+
+def cross_chain_same_eoa(addr: str, graph_wallets: dict[str, dict]) -> list[dict]:
+    """§5.5: same EOA across EVM chains is itself a strong link (not funding, but related)."""
+    a = _norm(addr)
+    if not a:
+        return []
+    hits = []
+    for k, meta in (graph_wallets or {}).items():
+        if _norm(k) == a:
+            hits.append({"address": a, "meta": meta, "kind": "same_eoa_cross_chain"})
+    return hits
+
+
+def gaps() -> list[dict]:
+    return list(GAPS)

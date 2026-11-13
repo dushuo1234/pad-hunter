@@ -1,0 +1,157 @@
+{
+  "id": "fourmeme_tm2_bsc",
+  "address": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+  "chain": "bsc",
+  "name": "four.meme TokenManager2 (BSC)",
+  "abi": [
+    {
+      "type": "event",
+      "name": "TokenCreate",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "requestId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "name": "totalSupply",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "launchTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "launchFee",
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "name": "LiquidityAdded",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "base",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "offers",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "quote",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "funds",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "TokenCreate",
+      "signature": "TokenCreate(address,address,uint256,string,string,uint256,uint256,uint256)",
+      "topic0": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+      "args": [
+        {
+          "name": "creator",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "requestId",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "symbol",
+          "type": "string",
+          "indexed": false
+        },
+        {
+          "name": "totalSupply",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "launchTime",
+          "type": "uint256",
+          "indexed": false
+        },
+        {
+          "name": "launchFee",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": true,
+  "source_files": null,
+  "explorer_url": "https://bscscan.com/address/0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+  "explorer_api_used": null,
+  "source_note": "Dominant BSC meme launchpad; TokenCreate emits creator+token+name+symbol. Proxy → 0xf32ee25a…2eee.",
+  "meta": {
+    "proxy_implementation": "0xf32ee25a7a94f5858692b90815493bda9f992eee",
+    "verified_how": [
+      "four-meme-community docs TokenCreate signature",
+      "live BSC logs topic0 0x396d5e90…cad20 confirmed",
+      "proxy impl 0xf32ee25a7a94f5858692b90815493bda9f992eee"
+    ],
+    "note": null
+  },
+  "fetched_at": "2026-10-20T19:29:35+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0x396d5e902b675b032348d3d2e9517ee8f0c4a926603fbc075d3d282ff00cad20",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "docs_plus_topic0"
+}

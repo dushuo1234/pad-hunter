@@ -1,0 +1,116 @@
+{
+  "at": "2026-10-23T18:59:27+08:00",
+  "fired_at": "2026-10-23T18:33:00+08:00",
+  "exit": 0,
+  "duration_s": 1259,
+  "duration_note": "pipeline ~21.0min (18:36:13→18:57:12 Asia/Shanghai); full routine incl. sync+X+lock+publish ~25min",
+  "watchlist": "208→209",
+  "locked_new": [
+    {
+      "name": "XO",
+      "handle": "xo_xlayer",
+      "status": "开发中",
+      "origin": "proj"
+    }
+  ],
+  "candidates": "209→212",
+  "projects": "209→212",
+  "launched": 52,
+  "newly_launched": [],
+  "workbench": "46→46",
+  "workbench_note": "unchanged; prune newly_removed=0",
+  "x_refresh": {
+    "bios": 40,
+    "posts_merged": 24,
+    "handles_with_new_posts": [
+      "KaspaRocket",
+      "PrivateKeyCoin_",
+      "QernApp",
+      "WalletV_io",
+      "aegis_hedge",
+      "evmbot",
+      "pitchonchain",
+      "thebuidlr"
+    ],
+    "user_count": 315
+  },
+  "new_ca": [],
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "SITE_JS": [
+    "0-0.city",
+    "EmberWorld",
+    "Pitch",
+    "Shielded-NakaPunks",
+    "TapeFoundry",
+    "TapeFoundry(foundrytape)"
+  ],
+  "SITE_JS_note": "fp-only; address_set unchanged or no new addrs; near_deploys ambient/empty — skip",
+  "onchain_lock": {
+    "lines_before": 65,
+    "bytes_before": 55895,
+    "lines_after": 66,
+    "bytes_after": 56606,
+    "new": 1,
+    "effective_new_ca": 0,
+    "hits": [],
+    "non_qualifying": [
+      {
+        "project": "Pulse",
+        "address": "0xa25eed31035ebcc9de5546079befab89a4894d81",
+        "chain": "base",
+        "confidence": "medium",
+        "token": "CMC Market Pulse / PULSE",
+        "via": "factory:univ4_pm_base:Initialize",
+        "at": "2026-10-23T18:19:00+08:00",
+        "note": "not on watchlist; CMC Market Pulse unrelated to Bitcoin PulseX",
+        "source": "onchain_lock"
+      }
+    ]
+  },
+  "NEW_DEPLOY_watchlist": null,
+  "LISTING_SIGNAL_NEW": [
+    "XO newly locked (status=开发中; bio=The privacy layer for RWA. Powered by @XLayerOfficial — no CA/listing yet)"
+  ],
+  "LISTING_SIGNAL_repeats": [
+    "QernApp PRE-TGE airdrop counter 709→713 (repeat, not strong new)",
+    "$PKC Launching this week / CA in bio only sticky (bio now t.me/privatekeycoin, no CA)",
+    "Authority KEYS LAUNCH TOMORROW sticky (listing_at 2026-10-23T10:00 already_listed)",
+    "MarsMind Launch-in-2h sticky延期",
+    "KaspaRocket MAINNET/launchpad activity sticky",
+    "WalletV_io within 3d 2026-10-24T20:00 already published",
+    "buidlr almost live (repeat)",
+    "Drakhen/ETHERIIS X CA borderline_kept (no trading confirm for prune)"
+  ],
+  "within_3d": [
+    {
+      "name": "Wallet V: Trade with AI Agents",
+      "handle": "WalletV_io",
+      "listing_at": "2026-10-24T20:00:00+08:00",
+      "note": "already known / re-confirmed"
+    }
+  ],
+  "listing_at_changes_published": [],
+  "pages_publish": {
+    "listing_times": {
+      "main": "a198f67",
+      "gh-pages": "aad5eb2"
+    },
+    "ca_finds": {
+      "main": "10445ac",
+      "gh-pages": "6ee32e5"
+    },
+    "monitor_events": {
+      "main": "744bfcf",
+      "gh-pages": "af60093"
+    },
+    "board": "no (candidates/projects/launched hash-match publish-pages-data)"
+  },
+  "daemon": {
+    "onchain_lock": "ok pid=4515",
+    "rpc_note": "intermittent public RPC 429/limit on base/bsc/eth/robinhood — daemon still advancing; no repeated auth failure"
+  },
+  "actionable_for_user_ping": [],
+  "actionable_note": "none — Pulse ONCHAIN_LOCK suppressed; no NEW_CA/JS_FACTORY/qualifying lock; SITE_JS ambient; listing_at no new within-3d change"
+}

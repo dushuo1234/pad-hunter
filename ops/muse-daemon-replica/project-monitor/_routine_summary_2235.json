@@ -1,0 +1,223 @@
+{
+  "at": "2026-10-23T23:09:20+08:00",
+  "fired_at": "2026-10-23T22:35:00+08:00",
+  "exit": 0,
+  "duration_s": 1420,
+  "duration_note": "pipeline ~23.7min (22:39:02→23:02:42 Asia/Shanghai); full routine incl. sync+X+lock+publish ~29min",
+  "pipeline_ok": "yes",
+  "watchlist": "219→220",
+  "watchlist_note": "locked +3 (Hashgentic/FORGE/Boost Pad)→222; then Boost Pad+VAULTR moved 已开盘 →220",
+  "locked_new": [
+    {
+      "name": "Hashgentic",
+      "handle": "hashgentic",
+      "status": "mint进行中",
+      "origin": "proj",
+      "bio": ".ai agent-only proof-of-work collection on @BNBCHAIN https://hashgentic.work/ http://hashgentic.work"
+    },
+    {
+      "name": "FORGE",
+      "handle": "ForgeLaunchPad",
+      "status": "开发中",
+      "origin": "proj",
+      "bio": "Flexible token launchpad with custom curves, fees, burns, rewards, dividends, and charity tokens plu..."
+    },
+    {
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "status": "不明",
+      "origin": "proj",
+      "bio": "Every coin gets its own kart and a Mario Kart driver. Win races to level it up, 1 to 10. At $10k, $3..."
+    }
+  ],
+  "candidates": "222→220",
+  "projects": "222→220",
+  "launched": 56,
+  "newly_launched": [
+    {
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "reason": "onchain_ca_lock",
+      "ca": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
+      "chain": "solana"
+    },
+    {
+      "name": "VAULTR",
+      "handle": "VAULTRlol",
+      "reason": "onchain_ca_lock",
+      "ca": "6sdq3WwzhCtJhY2aoQAebYXhgQrZX8LHUNBcdKetpump",
+      "chain": "solana"
+    }
+  ],
+  "workbench": "47→47",
+  "workbench_note": "unchanged",
+  "x_refresh": {
+    "at": "2026-10-23T22:39:02+08:00",
+    "bios": 39,
+    "posts_merged": 8,
+    "handles_priority_posts": [
+      "PrivateKeyCoin_",
+      "hashgentic",
+      "Boostpadsol",
+      "ForgeLaunchPad",
+      "ETHERIISPROTOCO",
+      "drakhenRH"
+    ],
+    "user_count": 287,
+    "pkc_bio_snip": "https://t.co/uN3ndszw6d (t.me/privatekeycoin; still no CA)",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "boostpad_ca": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
+    "hashgentic_note": "NFT mint live (paid phase); agents-only PoW NFTs on BNB"
+  },
+  "new_ca": [
+    {
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "chain": "solana",
+      "address": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
+      "symbol": "$BOOSTPAD",
+      "source": "x_post",
+      "gate": "SPL mint verified dec=6",
+      "confidence": "high",
+      "ca_status": "confirmed",
+      "alert_ok": true,
+      "provenance": "official_x"
+    }
+  ],
+  "new_ca_nonqualifying": [
+    {
+      "name": "VAULTR",
+      "handle": "VAULTRlol",
+      "chain": "solana",
+      "address": "6sdq3WwzhCtJhY2aoQAebYXhgQrZX8LHUNBcdKetpump",
+      "source": "site:https://x.com/VAULTRlol",
+      "gate": "SPL mint verified dec=6",
+      "confidence": "high",
+      "ca_status": "candidate",
+      "alert_ok": false,
+      "note": "待确认 / not official_x_confirmed"
+    }
+  ],
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "SITE_JS": [
+    "Agent K",
+    "Jitter",
+    "Superboard",
+    "TapeFoundry",
+    "TapeFoundry"
+  ],
+  "SITE_JS_note": "fp changes addrs unchanged; near_deploys=8 ambient — skip",
+  "onchain_lock": {
+    "lines_before": 80,
+    "bytes_before": 67781,
+    "lines_after": 80,
+    "bytes_after": 67781,
+    "new": 0,
+    "effective_new_ca": 0,
+    "ca_finds_rebuilt": false,
+    "ca_finds_rebuild_note": "no new ONCHAIN_LOCK at lock-step offset; ca_finds published after pipeline Boost Pad/VAULTR",
+    "hits": [],
+    "non_qualifying_inter_routine": [
+      {
+        "project": "RaidLords",
+        "handle": "RaidLords",
+        "address": "0xd52d825aac313d3324db4652ea3d37b6fabb0ccf",
+        "chain": "robinhood",
+        "confidence": "medium",
+        "reason": "name:raidlords",
+        "token": "RaidLords / RAID",
+        "via": "factory:univ4_pm_rh:Initialize",
+        "at": "2026-10-23T22:49:35+08:00",
+        "alert_ok": false,
+        "note": "name-only match univ4_pm_rh Initialize; wallet_hits=[]; treat as suspected_copycat / suppress"
+      }
+    ],
+    "note": "lock-step offset already at EOF 67781 (fast-relay advanced during pipeline). Since routine baseline 67047: +1 RaidLords name-only univ4_rh suppressed. Earlier fast-relay Alpha/evmbot (pre-baseline) already consumed."
+  },
+  "NEW_DEPLOY_watchlist": null,
+  "NEW_DEPLOY_ambient_univ2_samples": 27,
+  "listing_at_changes_published": [],
+  "listing_at_published": true,
+  "within_3d": [
+    {
+      "name": "Wallet V: Trade with AI Agents",
+      "handle": "WalletV_io",
+      "listing_at": "2026-10-24T20:00:00+08:00"
+    }
+  ],
+  "borderline": [
+    {
+      "name": "BunnyPad",
+      "handle": "Bunnypadfun",
+      "note": "token-live wording but no own CA confirmed"
+    },
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO",
+      "note": "high-confidence CA but no explicit trading/live signal; CA 0xa2399b22…"
+    },
+    {
+      "name": "Drakhen",
+      "handle": "drakhenRH",
+      "note": "high-confidence CA but no explicit trading/live signal; CA 0x07d1efd7…"
+    }
+  ],
+  "nft_mint_live_note": {
+    "name": "Hashgentic",
+    "handle": "hashgentic",
+    "note": "NFT mint live (paid phase, agents-only PoW NFTs on BNB); not fungible-token CA; prune did not move to 已开盘"
+  },
+  "pages": {
+    "ca_finds": {
+      "main": "e1d2098",
+      "gh_pages": "c9f2b93"
+    },
+    "listing_times": {
+      "main": "919b12d",
+      "gh_pages": "b3d27b1"
+    },
+    "monitor_events": {
+      "main": "56e4240",
+      "gh_pages": "e927aef"
+    },
+    "launched": {
+      "main": "63c7eee",
+      "gh_pages": "252126a"
+    }
+  },
+  "daemon_onchain_lock": "running pid=4515",
+  "rpc_note": "daemon has rate-limit/timeout noise on bsc/eth/ink/robinhood/hyperevm public RPCs; still phase=running",
+  "actionable": [
+    {
+      "type": "NEW_CA",
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "chain": "solana",
+      "address": "6KKApb2yipew4iXmjgdTkDTXXC79A7TtV44LL6pkpump",
+      "detail": "官推确认 $BOOSTPAD; SPL verified; 已确认CA alert_ok=true → immediately 已开盘 (onchain_ca_lock)"
+    },
+    {
+      "type": "MOVED_LAUNCHED",
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "detail": "已开盘 via onchain_ca_lock; removed from watchlist/candidates/projects"
+    },
+    {
+      "type": "MOVED_LAUNCHED",
+      "name": "VAULTR",
+      "handle": "VAULTRlol",
+      "chain": "solana",
+      "address": "6sdq3WwzhCtJhY2aoQAebYXhgQrZX8LHUNBcdKetpump",
+      "detail": "CA from site X scrape; ca_finds was candidate/alert_ok=false but still moved 已开盘 via onchain_ca_lock"
+    },
+    {
+      "type": "LISTING_SIGNAL",
+      "name": "Boost Pad",
+      "handle": "Boostpadsol",
+      "detail": "$BOOSTPAD is live (overlaps NEW_CA / 已开盘)"
+    }
+  ],
+  "new_ca_nonqualifying_note": "VAULTR was candidate in ca_finds then auto-launched"
+}

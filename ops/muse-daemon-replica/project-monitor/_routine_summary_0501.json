@@ -1,0 +1,125 @@
+{
+  "at": "2026-10-25T05:38:13+08:00",
+  "fired_label": "2026-10-25 05:01 Asia/Shanghai 开盘与CA预警",
+  "actionable": false,
+  "actionable_items": [],
+  "wake_parent": false,
+  "watchlist": {
+    "before": 245,
+    "after": 245,
+    "locked_new": []
+  },
+  "x_refresh": {
+    "bios": 81,
+    "posts_files": 6,
+    "handles_priority_posts": [
+      "PrivateKeyCoin_",
+      "CaravanRH",
+      "hashgentic",
+      "RustLings_Nft",
+      "thetimecard",
+      "RebateLaunch"
+    ],
+    "user_count": 389,
+    "daily_reads_left": 250,
+    "pkc_bio": "(empty)",
+    "pkc_note": "sticky Launching this week / CA in bio only / Stand by; TG live; no CA in bio yet"
+  },
+  "pipeline": {
+    "runner": "/tmp/pipe0501.sh (stepwise timeouts)",
+    "start": "2026-10-25T05:03:35+08:00",
+    "end": "2026-10-25T05:33:42+08:00",
+    "timeouts": [],
+    "failures": [],
+    "ok": [
+      "scan_listing_ca",
+      "extract_listing_times",
+      "scan_x_progress",
+      "extract_x_ca",
+      "scan_onchain",
+      "scan_js_factory_match",
+      "trace_wallet_ca",
+      "harvest_sol_wallets",
+      "solana_wallet_mints",
+      "prune_launched",
+      "mark_launched_from_ca",
+      "build_ca_finds",
+      "merge_site_completion",
+      "publish_monitor_events",
+      "build_wallet_watchlist",
+      "build_token_names",
+      "onchain_lock_daemon ensure"
+    ],
+    "note": "all steps OK; prior-run timeouts (scan_listing_ca/trace_wallet_ca/build_ca_finds) succeeded with longer timeouts"
+  },
+  "daemon": {
+    "onchain_lock_pid": 889131,
+    "fast_site_pid": 889390,
+    "workbench_api_pid": 13715,
+    "onchain_lock_alive": true,
+    "fast_site_alive": true,
+    "workbench_api_alive": true,
+    "rpc_note": "publicnode rate-limit / usage-limit noise on base/bsc/eth/hyperevm; daemon still advancing; not hard fail"
+  },
+  "onchain_lock": {
+    "alerts_lines": 123,
+    "new_alerts": 0,
+    "high_priority_hits": [],
+    "last_alert": "2026-10-25T03:57:21+08:00 Superintelligence Reserve symbol:SR"
+  },
+  "listing_at_changes": [],
+  "listing_at_within_3d": [
+    {
+      "name": "Timecard",
+      "handle": "thetimecard",
+      "listing_at": "2026-10-27T21:00:00+08:00",
+      "unchanged": true
+    }
+  ],
+  "hashgentic_listing_at": "2026-10-31T21:00:00+08:00 (sticky; not within_3d; no Pages publish)",
+  "prune_launched": {
+    "newly_removed": 0,
+    "blocklist": 68,
+    "watchlist": "245→245",
+    "workbench": "53→53"
+  },
+  "newly_launched": [],
+  "counts": {
+    "newly_launched": 0,
+    "new_ca": 0,
+    "onchain_lock_new": 0,
+    "listing_at_changes": 0,
+    "listing_at_within_3d_new": 0,
+    "js_factory_matches_non_ambient": 0,
+    "new_js_ca": 0,
+    "deploys_tied_to_watchlist": 0,
+    "site_js_changes": 4,
+    "new_listing_signals_weak": 2,
+    "ambient_univ2_samples": 30,
+    "qualifying": 0,
+    "actionable": 0
+  },
+  "notes": {
+    "new_listing_signals": [
+      "QernApp: view-count churn on same PRE-TGE airdrop post (828→831) — not strong",
+      "hoodora_rh: status=即将启动 first seen in listing_scan (already locked prior run) — not strong NEW"
+    ],
+    "site_js_changes": [
+      "Listen",
+      "OpenApps",
+      "tom",
+      "♱ 17-26"
+    ],
+    "site_js_note": "addrs 0→0; near_deploys ambient only — not actionable",
+    "x_ca_repeats": [
+      "ETHERIISPROTOCO",
+      "drakhenRH"
+    ],
+    "pkc": "still no CA in bio; Launching this week sticky",
+    "board_changed": false,
+    "site_published": false,
+    "ca_finds": 46
+  },
+  "workbench": 53,
+  "launched": 68
+}

@@ -1,0 +1,229 @@
+{
+  "at": "2026-10-27T15:27:11+08:00",
+  "fired": "2026-10-27T07:00Z approx (scheduled 开盘与CA预警)",
+  "pause_file": "absent",
+  "daemons": {
+    "listing_scan": "running pid=3446519",
+    "onchain_lock": "running pid=889131"
+  },
+  "watchlist_before": 300,
+  "watchlist_after": 301,
+  "newly_locked": [
+    "Yieldtopia"
+  ],
+  "pruned": [],
+  "pipeline": {
+    "exit": 0,
+    "approx_runtime_min": 20.9,
+    "elapsed_sec": 1256,
+    "new_js_ca": 0,
+    "matches": 0,
+    "onchain_lock_new": 3,
+    "newly_launched": 0,
+    "listing_at_changes": 1,
+    "watchlist_delta": "300→301(+Yieldtopia)",
+    "site_js_change": 8,
+    "site_js_ambient": true,
+    "new_deploy": "ambient_univ2_samples=29; none watchlist-relevant",
+    "TRACE_CA": 4
+  },
+  "onchain_lock_offset": "151615→153867",
+  "onchain_lock_alerts": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "symbol:ID",
+      "project": "Ink Daddy",
+      "handle": null,
+      "address": "0x52d729a5b8ac8b6a1cf0110ab53a1b72fbd34444",
+      "deployer": "0xa63f613ad6e83ba8666b869d56e87ab0998558e6",
+      "chain": "bsc",
+      "tx": "0xeaa3d258dfbe3374a73b62486572a1f57d24cf05e0e07a2a81b1e3cfecd6b7e5",
+      "block": 130046500,
+      "via": "factory:fourmeme_tm2_bsc:Unknown",
+      "factory": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "token_name": "币安 ID",
+      "token_symbol": "币安 ID",
+      "code_bytes": 45,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Ink Daddy",
+          "handle": null,
+          "via": "symbol:ID",
+          "explicit": false,
+          "ambiguous": true
+        },
+        {
+          "project": "Ink Daddy",
+          "handle": "InkDaddynft",
+          "via": "symbol:ID",
+          "explicit": false,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:06:21+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "medium",
+      "reason": "symbol:LUMINA",
+      "project": "Lumina Engine",
+      "handle": "LuminaEngine",
+      "address": "0xa727ad163a58098716fbce31752e75f18613c8f8",
+      "deployer": null,
+      "chain": "ethereum",
+      "tx": "0x826690b06ab64e162e8349b6f9be732e116f0f30b7d4de7f46e88d01c48c2098",
+      "block": 26282445,
+      "via": "factory:univ4_pm_eth:Initialize",
+      "factory": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "token_name": "The Glow Nendroid",
+      "token_symbol": "LUMINA",
+      "code_bytes": 3580,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Lumina Engine",
+          "handle": "LuminaEngine",
+          "via": "symbol:LUMINA",
+          "explicit": false,
+          "ambiguous": false
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:07:57+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "symbol:BNB",
+      "project": "Bad Place",
+      "handle": "badplace_",
+      "address": "0x08200abb57d087f1c55d735e361f97aa4340ffff",
+      "deployer": "0xa3036c84b9d3f05ed0de6a5d25811c6a2491b0fb",
+      "chain": "bsc",
+      "tx": "0x339c902ddbc3f92b9c140b9e568fde748d14fa93499b3a512036a49a3c6aaf9b",
+      "block": 130048495,
+      "via": "factory:fourmeme_tm2_bsc:Unknown",
+      "factory": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "token_name": "BNB团队",
+      "token_symbol": "BNB团队",
+      "code_bytes": 45,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Bad Place",
+          "handle": "badplace_",
+          "via": "symbol:BNB",
+          "explicit": true,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:21:20+08:00"
+    }
+  ],
+  "onchain_lock_note": "all 3 name/symbol-only → ca_finds suspected_copycats (never alert); InkDaddy/BadPlace low noise; Lumina medium same Glow Nendroid pattern already pinged earlier today",
+  "newly_launched": [],
+  "listing_at_changes_published": [
+    {
+      "project": "King Idiot",
+      "handle": "IMSTUPIDcoin",
+      "old": null,
+      "new": "2027-04-01T10:00:00+08:00",
+      "within_next_3_days": false,
+      "source": "x",
+      "raw": "👑 King Idiot | I’m With Stupid ($IMSTUPID) 🚀 Launching April 1, 2027 • 10 AM PT 💬 Telegram: https://t.co/eZ43zUVF2v",
+      "evidence_url": "https://x.com/IMSTUPIDcoin",
+      "confidence": "high",
+      "already_listed": false
+    }
+  ],
+  "x_refresh": {
+    "at": "2026-10-27T15:01:57+08:00",
+    "bios": 303,
+    "posts_handles": 9,
+    "posts_added_via_ingest": 17,
+    "pkc_bio_empty": true,
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "users": 482,
+    "note": "routine 1457; bios~303; posts_handles=9 posts_added=17; PKC bio empty; sticky launch-this-week; Yieldtopia Coming soon RH; InkDaddy oct27 OpenSea; FarmFi today 14:00UTC; Rebate 27Oct 17:00UTC; Timecard free mint 13:00UTC OpenSea"
+  },
+  "pkc_bio_empty": true,
+  "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+  "publish": [
+    {
+      "local": "listing_times.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: listing_times (KingIdiot Apr2027)"
+    },
+    {
+      "local": "candidates.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: candidates (listing_at sync)"
+    },
+    {
+      "local": "projects.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: projects refresh"
+    },
+    {
+      "local": "ca_finds.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: ca_finds refresh"
+    },
+    {
+      "local": "monitor_events.json",
+      "main": 0,
+      "gh-pages": 0,
+      "msg": "data: monitor_events"
+    }
+  ],
+  "actionable": [],
+  "suppressed_onchain_lock": [
+    {
+      "project": "Ink Daddy",
+      "chain": "bsc",
+      "CA": "0x52d729a5b8ac8b6a1cf0110ab53a1b72fbd34444",
+      "evidence": "ONCHAIN_LOCK low symbol:ID token=币安 ID/币安 ID; wallet_hits=0 → 疑似山寨·同名未确认",
+      "source": "onchain_lock",
+      "kind": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "handle": null,
+      "at": "2026-10-27T15:06:21+08:00"
+    },
+    {
+      "project": "Lumina Engine",
+      "chain": "ethereum",
+      "CA": "0xa727ad163a58098716fbce31752e75f18613c8f8",
+      "evidence": "ONCHAIN_LOCK medium symbol:LUMINA token=LUMINA/The Glow Nendroid; wallet_hits=0 → 疑似山寨·同名未确认",
+      "source": "onchain_lock",
+      "kind": "ONCHAIN_LOCK",
+      "confidence": "medium",
+      "handle": "LuminaEngine",
+      "at": "2026-10-27T15:07:57+08:00"
+    },
+    {
+      "project": "Bad Place",
+      "chain": "bsc",
+      "CA": "0x08200abb57d087f1c55d735e361f97aa4340ffff",
+      "evidence": "ONCHAIN_LOCK low symbol:BNB token=BNB团队/BNB团队; wallet_hits=0 → 疑似山寨·同名未确认",
+      "source": "onchain_lock",
+      "kind": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "handle": "badplace_",
+      "at": "2026-10-27T15:21:20+08:00"
+    }
+  ],
+  "errors": [
+    "Base/BSC PublicNode usage-limit / request-limit errors intermittent (rpc_errors base=3 bsc=1290); daemon still advancing blocks — monitor, pause routine if auth fails repeatedly"
+  ],
+  "user_ping": false,
+  "wake_parent": false,
+  "journal": "2026-10-27 15:27 Asia/Shanghai 开盘与CA预警 (fired ~07:00Z): pause absent; listing pid=3446519 onchain pid=889131; watchlist 300→301(+Yieldtopia mint进行中); pipeline EXIT 0 ~20.9min; new_js_ca=0 matches=0 SITE_JS ambient×8; onchain_lock new=3 offset 151615→153867 (InkDaddy BSC low symbol:ID; Lumina eth medium symbol:LUMINA Glow Nendroid — already-pinged pattern; BadPlace BSC low symbol:BNB — all 疑似山寨 skipped); newly_launched=0; listing_at +KingIdiot→2027-04-01 (not within_3d); PKC bio empty sticky; no user ping."
+}

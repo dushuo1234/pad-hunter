@@ -1,0 +1,149 @@
+{
+  "tag": "1204",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T12:41:43+08:00",
+  "fired_approx": "2026-10-28 12:03 Asia/Shanghai",
+  "pause_file": "absent",
+  "listing_daemon": {
+    "pid": 44693,
+    "status": "running"
+  },
+  "onchain_lock_daemon": {
+    "pid": 1823,
+    "status": "running",
+    "note": "base/bsc last_error request-limit/limit-exceeded intermittent; still advancing"
+  },
+  "watchlist_sync": {
+    "before": 313,
+    "after_sync": 313,
+    "after_pipeline": 313,
+    "locked_new_count": 0,
+    "locked_new": [],
+    "updated_fields": 38,
+    "blocklist_skipped": 98,
+    "bak": "/workspace/project-monitor/watchlist.json.bak.pre_routine_resync_1204"
+  },
+  "wallets": {
+    "build": 78,
+    "after_sol_harvest": 81,
+    "sol_harvest_added": 3
+  },
+  "token_symbols": 925,
+  "X_refresh": {
+    "at": "2026-10-28T12:06:02+08:00",
+    "bios_refreshed": 128,
+    "priority": "PrivateKeyCoin_ + mint进行中/即将启动 (~136 requested, 128 returned)",
+    "pkc_bio_empty": true,
+    "pkc_sticky": "Launching this week / Only CA in bio",
+    "pkc_posts": 3,
+    "cache_users": 544,
+    "reads_left_approx": 709,
+    "notable": [
+      {
+        "handle": "PrivateKeyCoin_",
+        "note": "bio still empty; sticky Launching this week"
+      },
+      {
+        "handle": "FoundryTape",
+        "note": "bio Circuit Contract 0x5a4e… mint live (TapeFoundry NFT/non-token ambient)"
+      },
+      {
+        "handle": "zkArgoseth",
+        "note": "FREE MINT Ethereum; listing_at 2026-10-31"
+      }
+    ]
+  },
+  "pipeline": {
+    "command": "bash /workspace/project-monitor/run_listing_onchain_js.sh",
+    "exit": 0,
+    "started": "2026-10-28T12:06:24+08:00",
+    "ended": "2026-10-28T12:39:11+08:00",
+    "elapsed_s": 1967,
+    "elapsed_min": 32.8,
+    "log": "/tmp/routine_1204_pipeline.log"
+  },
+  "counters": {
+    "new_js_ca": 1,
+    "js_factory_matches": 0,
+    "SITE_JS_CHANGE": 14,
+    "SITE_JS_CHANGE_ambient": [
+      "E.T.A",
+      "TapeFoundry×2"
+    ],
+    "SITE_JS_CHANGE_other_near_univ2_ambient": 11,
+    "NEW_DEPLOY_watchlist": 0,
+    "ambient_univ2_samples": 28,
+    "TRACE_CA": 4,
+    "TRACE_CA_note": "Hashgentic wallet CREATEs only (non-project-tie)"
+  },
+  "onchain_lock": {
+    "offset_before": 185724,
+    "offset_after": 185724,
+    "new_lines": 0,
+    "hits": []
+  },
+  "listing_at_within_3_days": [
+    {
+      "project": "Fishesrh",
+      "handle": "Fishesrh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x"
+    },
+    {
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x"
+    },
+    {
+      "project": "zkArgos",
+      "handle": "zkArgoseth",
+      "listing_at": "2026-10-31T00:00:00+08:00",
+      "source": "x"
+    }
+  ],
+  "listing_at_publishes": [],
+  "prune": {
+    "newly_removed": 0,
+    "mark_launched_newly": 0,
+    "watchlist_final": 313,
+    "launched": 100,
+    "workbench": 78,
+    "board_changed": false
+  },
+  "actionable_items": [
+    {
+      "kind": "NEW_JS_CA",
+      "project": "BLOCK ZERO",
+      "handle": "Blockzerofun",
+      "chain": "bsc",
+      "CA": "0x04472cae5e9175a3678f659672901d93b1504620",
+      "evidence": "config.js platformToken ERC20 verified BZ dec=18; SITE_JS_CHANGE addrs 0→7 (near_deploys univ2_base ambient only)",
+      "source": "JS",
+      "note": "already high-conf candidate in ca_finds since ~03:13 Asia/Shanghai; prune borderline kept (no explicit trading/live)"
+    }
+  ],
+  "actionable_suppressed": [
+    {
+      "kind": "TRACE_CA",
+      "note": "Hashgentic×4 wallet CREATEs only"
+    },
+    {
+      "kind": "SITE_JS_CHANGE",
+      "note": "14 total; near univ2_base ambient — skip (E.T.A/TapeFoundry + fingerprint-only/others)"
+    },
+    {
+      "kind": "NEW_DEPLOY",
+      "note": "ambient univ2 only; none watchlist-tied"
+    },
+    {
+      "kind": "LISTING_SIGNAL",
+      "note": "PKC sticky Launching this week / bio empty — no new vs prior"
+    },
+    {
+      "kind": "listing_at",
+      "note": "within3 Fishesrh/hoodora/zkArgos sticky; pages listing_times not newly republished this run"
+    }
+  ],
+  "journal": "2026-10-28 12:39 Asia/Shanghai 开盘与CA预警 (fired ~12:03): pause absent; daemons ok (listing 44693, onchain 1823); watchlist 313 sync (0 added, 98 blocklisted); wallets 78→81 symbols 925; X refresh PKC+mint+soon bios (~128) PKC bio still empty; pipeline EXIT=0 ~32.8min (trace ~23min); new_js_ca=1 BLOCK ZERO 0x04472cae… BZ/bsc; matches=0; SITE_JS_CHANGE 14 near univ2 ambient; NEW_DEPLOY ambient only; TRACE_CA=4 Hashgentic wallet CREATEs only; onchain_lock offset 185724 new=0; listing_at within3 Fishesrh/hoodora/zkArgos (no new publish); prune newly=0"
+}
