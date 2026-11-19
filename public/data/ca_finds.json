@@ -1,34 +1,156 @@
 {
-  "generated_at": "2026-11-11T06:54:24+08:00",
+  "generated_at": "2026-11-19T17:03:10+08:00",
   "schema_version": 2,
   "confidence_model": "ca_confidence.py: confirmed = verified(token|TapeOut transistors/processor) AND provenance wallet_factory|official_x|both; name-only = suspected_copycat (疑似山寨); watched-wallet create contradicted by official X = superseded; site scrape only = candidate",
-  "count": 549,
-  "token_ca_count": 0,
-  "wallet_count": 77,
+  "count": 566,
+  "token_ca_count": 3,
+  "wallet_count": 95,
   "confirmed_count": 0,
-  "candidate_count": 0,
+  "candidate_count": 3,
   "status_counts": {
     "confirmed": 0,
-    "candidate": 0,
+    "candidate": 3,
     "superseded": 0,
-    "not_ca": 549
+    "not_ca": 563
   },
   "finds": [
     {
-      "project": "【合约(非代币)·非CA】WOO",
-      "handle": "Woohooworlds",
+      "project": "AlphaAI",
+      "handle": "AlphaAIBSC",
       "chain": "bsc",
-      "address": "0x9244708F469199C2e1bC613d31e615E33Bf87777",
+      "address": "0x8d976eba2b681309c44960f71accd2162c047777",
+      "source": "site:https://x.com/AlphaAIBSC",
+      "evidence_url": "https://x.com/AlphaAIBSC",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "high",
+      "note": "ca_gate: ERC20 verified: AlphaAI dec=18 via eip1167 proxy → impl 0x024f18294970b5c76c0691b87f138a0317156422",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/AlphaAIBSC",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "bsc",
+        "symbol": "AlphaAI",
+        "name": "AlphaAI",
+        "decimals": 18,
+        "code_bytes": 45,
+        "note": "ERC20 verified: AlphaAI dec=18 via eip1167 proxy → impl 0x024f18294970b5c76c0691b87f138a0317156422",
+        "implementation": "0x024f18294970b5c76c0691b87f138a0317156422",
+        "proxy_type": "eip1167"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】Block21",
+      "handle": "block21_",
+      "chain": "base",
+      "address": "0xb8b0DEf24534AA9a6Fa9f3989dA4A1E89ac97d68",
       "source": "watchlist.scanned_wallets",
-      "evidence_url": "https://x.com/Woohooworlds",
-      "detected_at": "2026-11-11T06:43:12+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 ; ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA",
+      "evidence_url": "https://x.com/block21_",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-11-11T06:43:12+08:00"
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "发射台"
+      ],
+      "strategy": "发射台",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【合约(非代币)·非CA】HyperHaul",
+      "handle": "HyperHaulio",
+      "chain": "robinhood",
+      "address": "0xe08619a54049ac5e7a5250326b8a1b2cdc551376",
+      "source": "site:https://x.com/HyperHaulio",
+      "evidence_url": "https://x.com/HyperHaulio",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 ; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/HyperHaulio",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
         }
       ],
       "kind": "contract",
@@ -37,17 +159,15 @@
       "is_token": false,
       "verify": {
         "kind": "contract",
-        "chain": "bsc",
-        "symbol": "WOOHOO ",
-        "name": "WOO",
+        "chain": "robinhood",
         "decimals": 18,
-        "code_bytes": 45,
-        "note": "contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA"
+        "code_bytes": 3248,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
       },
       "categories": [
-        "Meme币"
+        "GameFi"
       ],
-      "strategy": "Meme币",
+      "strategy": "GameFi",
       "watch_promoted": false,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
@@ -71,20 +191,133 @@
       "lead_seconds": null
     },
     {
-      "project": "【合约(非代币)·非CA】Murk.fun",
-      "handle": "murkfun",
-      "chain": "bsc",
-      "address": "0xbC9Aa4FB52bB07763a6396aEb53f03588581444c",
+      "project": "【扫出钱包·非CA】Origami",
+      "handle": "Elysium_Origami",
+      "chain": "ethereum",
+      "address": "0x93c72869f33796def577a7c37abaa2da6d6753e9",
       "source": "watchlist.scanned_wallets",
-      "evidence_url": "https://x.com/murkfun",
-      "detected_at": "2026-11-11T06:43:12+08:00",
-      "confidence": "low",
-      "note": "【合约(非代币)·非CA】 ; ca_gate: contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA",
+      "evidence_url": "https://x.com/Elysium_Origami",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "watchlist.scanned_wallets",
           "source": "watchlist.scanned_wallets",
-          "detected_at": "2026-11-11T06:43:12+08:00"
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "NFT铸造"
+      ],
+      "strategy": "NFT铸造",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】Elverse",
+      "handle": "elysiumverse",
+      "chain": "base",
+      "address": "0x8d01433748912a9d8087fa7a37543664934b3737",
+      "source": "watchlist.scanned_wallets",
+      "evidence_url": "https://x.com/elysiumverse",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "NFT铸造"
+      ],
+      "strategy": "NFT铸造",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【合约(非代币)·非CA】Murk.fun",
+      "handle": "murkfun",
+      "chain": "bsc",
+      "address": "0xbC9Aa4FB52bB07763a6396aEb53f03588581444c",
+      "source": "site:https://x.com/murkfun",
+      "evidence_url": "https://x.com/murkfun",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "low",
+      "note": "【合约(非代币)·非CA】 ; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/murkfun",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
         }
       ],
       "kind": "contract",
@@ -94,10 +327,9 @@
       "verify": {
         "kind": "contract",
         "chain": "bsc",
-        "symbol": "MURK",
-        "decimals": 18,
+        "name": "Murk",
         "code_bytes": 3193,
-        "note": "contract has decimals/symbol but missing ERC20 transfer/approve/allowance path — not a token CA"
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
       },
       "categories": [
         "发射台"
@@ -126,15 +358,788 @@
       "lead_seconds": null
     },
     {
-      "project": "【未确认地址·非CA】FOMO Fried Chicken",
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "base",
+      "address": "0xcbd06e5a2b0c65597161de254aa074e489deb510",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:11:35+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:11:35+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0xcb585250f852c6c6bf90434ab21a00f02833a4af",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:10:30+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:10:30+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0x2416092f143378750bb29b79ed961ab195cceea5",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:09:06+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as contract (2188 bytes); ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:09:06+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        },
+        {
+          "origin": "wallet_trace.classify",
+          "source": "live_queue",
+          "detected_at": "2026-11-19T16:11:07+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0xb6fe221fe9eef5aba221c348ba20a1bf5e73624c",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:07:35+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:07:35+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0x04c0599ae5a44757c0af6f9ec3b93da8976c150a",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:06:14+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:06:14+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:04:49+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:04:49+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:03:33+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:03:33+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "base",
+      "address": "0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T16:02:21+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:02:21+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "base",
+      "address": "0x820c137fa70c8691f0e44dc420a5e53c168921dc",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T15:58:26+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T15:58:26+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "base",
+      "address": "0x50c5725949a6f0c72e6c4a641f24049a917db0cb",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T15:57:09+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T15:57:09+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "base",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】bopzop",
+      "handle": "bopzopapp",
+      "chain": "robinhood",
+      "address": "0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T15:55:58+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T15:55:58+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "robinhood",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": true,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0xae7ab96520de3a18e5e111b5eaab095312d7fe84",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T15:52:45+08:00",
+      "confidence": "high",
+      "note": "ERC20 verified: None dec=18; ca_gate: ERC20 verified: None dec=18",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T15:52:45+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:49+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "name": "Liquid staked Ether 2.0",
+        "decimals": 18,
+        "code_bytes": 1035,
+        "note": "ERC20 verified: None dec=18"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": false,
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "lead_seconds": null
+    },
+    {
+      "project": "bopzop",
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "address": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
+      "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "detected_at": "2026-11-19T15:50:35+08:00",
+      "confidence": "high",
+      "note": "ERC20 verified: None dec=8; ca_gate: ERC20 verified: None dec=8",
+      "sources": [
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T15:50:35+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:55:44+08:00"
+        }
+      ],
+      "kind": "contract",
+      "label_zh": "合约CA",
+      "addr_kind": "contract",
+      "is_token": true,
+      "verify": {
+        "kind": "token",
+        "chain": "ethereum",
+        "decimals": 8,
+        "code_bytes": 1550,
+        "note": "ERC20 verified: None dec=8"
+      },
+      "categories": [
+        "其他"
+      ],
+      "strategy": "其他",
+      "watch_promoted": false,
+      "ca_status": "candidate",
+      "ca_status_zh": "待确认",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": "token",
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": "链上第一笔外部买入时间暂无法推出",
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】FOMO Fried Chicken",
       "handle": null,
       "chain": "robinhood",
       "address": "0x10bbd442f26f3ac0ac3a375b0278ff11e6de60a3",
       "source": "onchain_lock",
       "evidence_url": null,
       "detected_at": "2026-11-07T01:40:29+08:00",
-      "confidence": "low",
-      "note": "【未确认地址·非CA】 onchain_lock medium via symbol:FOMO; deployer=0x4337001fff419768e088ce247456c1b892888084; token=FOMO / Fomo Skeleton; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 onchain_lock medium via symbol:FOMO; deployer=0x4337001fff419768e088ce247456c1b892888084; token=FOMO / Fomo Skeleton; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -144,21 +1149,22 @@
           "via": "factory:univ4_pm_rh:Initialize"
         }
       ],
-      "kind": "unknown",
-      "label_zh": "未确认地址",
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
       "traced_from": "0x4337001fff419768e088ce247456c1b892888084",
-      "addr_kind": "unknown",
+      "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "robinhood",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "其他"
       ],
       "strategy": "其他",
-      "watch_promoted": false,
+      "watch_promoted": true,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -175,6 +1181,7 @@
       ],
       "creator": "0x4337001fff419768e088ce247456c1b892888084",
       "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "lock_time": null,
       "listing_time_estimate": null,
       "first_buy_time": null,
@@ -184,15 +1191,15 @@
       "lead_seconds": null
     },
     {
-      "project": "【未确认地址·非CA】Nexaria",
+      "project": "【扫出钱包·非CA】Nexaria",
       "handle": null,
       "chain": "robinhood",
       "address": "0xeae6d7921aea30ac9849eeea2a5aa8583a5f8888",
       "source": "onchain_lock",
       "evidence_url": null,
       "detected_at": "2026-11-07T00:10:14+08:00",
-      "confidence": "low",
-      "note": "【未确认地址·非CA】 onchain_lock medium via name:nexaria; deployer=0x76f415ebd1bd85cf0ae098f9f00713d634a64c68; token=XARIA / Nexaria; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 onchain_lock medium via name:nexaria; deployer=0x76f415ebd1bd85cf0ae098f9f00713d634a64c68; token=XARIA / Nexaria; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -202,21 +1209,22 @@
           "via": "factory:univ4_pm_rh:Initialize"
         }
       ],
-      "kind": "unknown",
-      "label_zh": "未确认地址",
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
       "traced_from": "0x76f415ebd1bd85cf0ae098f9f00713d634a64c68",
-      "addr_kind": "unknown",
+      "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "robinhood",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "其他"
       ],
       "strategy": "其他",
-      "watch_promoted": false,
+      "watch_promoted": true,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -233,6 +1241,7 @@
       ],
       "creator": "0x76f415ebd1bd85cf0ae098f9f00713d634a64c68",
       "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "lock_time": null,
       "listing_time_estimate": null,
       "first_buy_time": null,
@@ -242,15 +1251,15 @@
       "lead_seconds": null
     },
     {
-      "project": "【未确认地址·非CA】Bitcoin PulseX",
+      "project": "【扫出钱包·非CA】Bitcoin PulseX",
       "handle": "BitcoinPulseX",
       "chain": "robinhood",
       "address": "0x39dbed3a2bd333467115de45665cc57f813c4571",
       "source": "onchain_lock",
       "evidence_url": null,
       "detected_at": "2026-11-05T23:32:35+08:00",
-      "confidence": "low",
-      "note": "【未确认地址·非CA】 onchain_lock medium via symbol:PONS; deployer=0xf2bc825fb466136d00571b496e6eb1a601679919; token=PONS / Pons; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 onchain_lock medium via symbol:PONS; deployer=0xf2bc825fb466136d00571b496e6eb1a601679919; token=PONS / Pons; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -260,21 +1269,22 @@
           "via": "factory:univ4_pm_rh:Initialize"
         }
       ],
-      "kind": "unknown",
-      "label_zh": "未确认地址",
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
       "traced_from": "0xf2bc825fb466136d00571b496e6eb1a601679919",
-      "addr_kind": "unknown",
+      "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "robinhood",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "其他"
       ],
       "strategy": "其他",
-      "watch_promoted": false,
+      "watch_promoted": true,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -291,6 +1301,7 @@
       ],
       "creator": "0xf2bc825fb466136d00571b496e6eb1a601679919",
       "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "lock_time": null,
       "listing_time_estimate": null,
       "first_buy_time": null,
@@ -300,7 +1311,7 @@
       "lead_seconds": null
     },
     {
-      "project": "【未确认地址·非CA】Uniswap",
+      "project": "【合约(非代币)·非CA】Uniswap",
       "handle": "Uniswap",
       "chain": "ethereum",
       "address": "0x9bd82673c50acb4a3b883d61e070a3c8d9b08e10",
@@ -308,7 +1319,7 @@
       "evidence_url": null,
       "detected_at": "2026-11-04T18:34:57+08:00",
       "confidence": "low",
-      "note": "【未确认地址·非CA】 onchain_lock low via name_fuzzy:uniswap; deployer=None; token=UNI-V2 / Uniswap V2; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "note": "【合约(非代币)·非CA】 onchain_lock low via name_fuzzy:uniswap; deployer=None; token=UNI-V2 / Uniswap V2; ca_gate: contract bytecode but no ERC20 decimals/symbol — not a token CA",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -318,14 +1329,16 @@
           "via": "factory:univ4_pm_eth:Initialize:gapfill"
         }
       ],
-      "kind": "unknown",
-      "label_zh": "未确认地址",
-      "addr_kind": "unknown",
+      "kind": "contract",
+      "label_zh": "合约(非代币)",
+      "addr_kind": "contract",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "contract",
         "chain": "ethereum",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "name": "Uniswap V2",
+        "code_bytes": 11293,
+        "note": "contract bytecode but no ERC20 decimals/symbol — not a token CA"
       },
       "categories": [
         "其他"
@@ -356,15 +1369,15 @@
       "lead_seconds": null
     },
     {
-      "project": "【未确认地址·非CA】ALT L2",
+      "project": "【扫出钱包·非CA】ALT L2",
       "handle": "AltL2fun",
       "chain": "ethereum",
       "address": "0x8457ca5040ad67fdebbcc8edce889a335bc0fbfb",
       "source": "onchain_lock",
       "evidence_url": "https://x.com/AltL2fun",
       "detected_at": "2026-11-04T18:32:40+08:00",
-      "confidence": "low",
-      "note": "【未确认地址·非CA】 onchain_lock medium via symbol:ALT; deployer=0x064efbb4133ecbe0070154ffb7a6186f2759db7b; token=ALT / AltLayer Token; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 onchain_lock medium via symbol:ALT; deployer=0x064efbb4133ecbe0070154ffb7a6186f2759db7b; token=ALT / AltLayer Token; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "onchain_lock",
@@ -374,35 +1387,22 @@
           "via": "factory:univ4_pm_eth:Initialize:gapfill"
         }
       ],
-      "kind": "unknown",
-      "label_zh": "未确认地址",
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
       "traced_from": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
-      "addr_kind": "unknown",
+      "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "ethereum",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "基础设施"
       ],
       "strategy": "基础设施",
-      "watch_promoted": false,
-      "funding_link": {
-        "from": "0xdfd5293d8e347dfe59e90efd55b2956a1343963d",
-        "to": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x2caad9311335c7c687004d921a3ea52ecbdba6c55fd1cde226d36531f523c812",
-        "amount": "0.02292825",
-        "asset": "ETH",
-        "funded_at": "2026-07-02T18:29:35+08:00",
-        "deployed_at": "2026-11-04T18:32:40+08:00",
-        "confidence": null,
-        "excluded_reason": "public_funder:exchange:Binance 16",
-        "chain": "ethereum"
-      },
+      "watch_promoted": true,
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -417,16 +1417,9 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "public_funder",
-          "note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 16）",
-          "excluded_reason": "public_funder:exchange:Binance 16"
-        }
-      ],
-      "veto_note_zh": "资金关联资助方命中公共名单（public_funder:exchange:Binance 16）",
       "creator": "0x064efbb4133ecbe0070154ffb7a6186f2759db7b",
       "ca_locked": false,
+      "note_zh": "核验：EOA 钱包，已加入创建者监控",
       "lock_time": null,
       "listing_time_estimate": null,
       "first_buy_time": null,
@@ -444,7 +1437,7 @@
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "detected_at": "2026-11-04T15:09:42+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; classified as EOA/wallet via eth_getCode; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
@@ -452,9 +1445,9 @@
           "detected_at": "2026-11-04T15:09:42+08:00"
         },
         {
-          "origin": "wallet_trace.classify",
-          "source": "live_queue",
-          "detected_at": "2026-11-04T15:10:26+08:00"
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:58:51+08:00"
         }
       ],
       "kind": "wallet",
@@ -463,9 +1456,10 @@
       "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "base",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "其他"
@@ -509,12 +1503,17 @@
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "detected_at": "2026-11-04T15:09:20+08:00",
       "confidence": "medium",
-      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: no bytecode on probed EVM chains (may be other L1/L2 or placeholder)",
+      "note": "【扫出钱包·非CA】 扫出钱包; eth_getCode empty / 7702 → EOA wallet; ca_gate: eth_getCode empty / 7702 → EOA wallet",
       "sources": [
         {
           "origin": "fast_site_alerts",
           "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
           "detected_at": "2026-11-04T15:09:20+08:00"
+        },
+        {
+          "origin": "fast_site_alerts",
+          "source": "js:http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+          "detected_at": "2026-11-19T16:58:51+08:00"
         }
       ],
       "kind": "wallet",
@@ -523,9 +1522,10 @@
       "addr_kind": "wallet",
       "is_token": false,
       "verify": {
-        "kind": "unknown",
+        "kind": "wallet",
         "chain": "ethereum",
-        "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
       },
       "categories": [
         "其他"
@@ -623,7 +1623,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0xe7cd86e13ac4309349f30b3435a9d337750fc82d",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -644,7 +1644,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -683,7 +1683,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x111111d2bf19e43c34263401e0cad979ed1cdb61",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -704,7 +1704,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -743,7 +1743,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -764,7 +1764,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -803,7 +1803,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x3bd359c1119da7da1d913d1c4d2b7c461115433a",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -824,7 +1824,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -863,7 +1863,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0xce7de646e7208a4ef112cb6ed5038fa6cc6b12e3",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -884,7 +1884,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -923,7 +1923,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x0eb3a705fc54725037cc9e008bdede697f62f335",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -944,7 +1944,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -983,7 +1983,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x2859e4544c4bb03966803b044a93563bd2d0dd4d",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1004,7 +2004,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1043,7 +2043,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1064,7 +2064,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1103,7 +2103,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x3ee2200efb3400fabb9aacf31297cbdd1d435d47",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1124,7 +2124,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1163,7 +2163,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1184,7 +2184,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1223,7 +2223,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x1d2f0da169ceb9fc7b3144628db156f3f6c60dbe",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1244,7 +2244,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1283,7 +2283,7 @@
     {
       "project": "【扫出钱包·非CA】bopzop",
       "handle": "bopzopapp",
-      "chain": "ethereum",
+      "chain": "Solana",
       "address": "0x0782b6d8c4551b9760e74c0545a9bcd90bdc41e5",
       "source": "js:http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
@@ -1304,7 +2304,7 @@
       "is_token": false,
       "verify": {
         "kind": "unknown",
-        "chain": "ethereum",
+        "chain": "Solana",
         "note": "no bytecode on probed EVM chains (may be other L1/L2 or placeholder)"
       },
       "categories": [
@@ -1548,21 +2548,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x01c952174c24e1210d26961d456a77a39e1f0bb0",
-        "to": "0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5cd76a975c9b5ad3c09964d65fec62ed45bf939a65a4c2d86badfd7806d1c3eb",
-        "amount": "0.33757634",
-        "asset": "BNB",
-        "funded_at": "2025-05-04T22:16:54+08:00",
-        "deployed_at": "2026-11-03T17:33:41+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -1577,13 +2562,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x5edfe6be58c0ec56622a473f27e6b8cab3d0f44a",
       "ca_locked": false,
       "lock_time": null,
@@ -1628,21 +2606,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x0ada3111b866ff1ad0477f0c5d2e8ed35a36eb5b",
-        "to": "0xc10ddad0794b9125b7b1a2ae54b09e139a43a2fe",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x5aa43061959e4c30bfbd356e70e37f00a4892c0f5e54c0413e9e8f3532a45034",
-        "amount": "0.02980773",
-        "asset": "BNB",
-        "funded_at": "2025-11-04T02:40:26+08:00",
-        "deployed_at": "2026-11-03T17:15:49+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "bsc",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -1657,13 +2620,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xc10ddad0794b9125b7b1a2ae54b09e139a43a2fe",
       "ca_locked": false,
       "lock_time": null,
@@ -3563,21 +4519,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-11-03T15:58:22+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -3592,13 +4533,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "lock_time": null,
@@ -3643,21 +4577,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xca11bde05977b3631167028862be2a173976ca11",
-        "to": "0xf2b6601597a0341e980978fbdba9f9e6099c849d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x90860f9296674f9394fa63d7fe3ce6775ead15d989f374194cbe133635b8b3cb",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2025-06-11T23:55:01+08:00",
-        "deployed_at": "2026-11-03T11:54:05+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -3672,13 +4591,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf2b6601597a0341e980978fbdba9f9e6099c849d",
       "ca_locked": false,
       "lock_time": null,
@@ -3723,21 +4635,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x068c65b461bd0ff744f568d2ce7d45527b6baf45",
-        "to": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x813ba4d55478fbb59292bea50ccba8ca9648cff86a0e0eccd15a74a844cf531e",
-        "amount": "0.03",
-        "asset": "ETH",
-        "funded_at": "2025-09-01T01:08:11+08:00",
-        "deployed_at": "2026-11-03T11:48:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -3752,13 +4649,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
       "ca_locked": false,
       "lock_time": null,
@@ -16095,21 +16985,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x9642b23ed1e01df1092b92641051881a322f5d4e",
-        "to": "0x324cb0c42226d6f72fa4991095a58c2fde1c9e4d",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x68e0ca35f6a3f542fbcebe6edfd631e712d7f10ac5eb317ddb64d7e2fc401a13",
-        "amount": "0.004476",
-        "asset": "ETH",
-        "funded_at": "2026-09-19T21:41:11+08:00",
-        "deployed_at": "2026-11-02T18:50:57+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -16124,13 +16999,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x324cb0c42226d6f72fa4991095a58c2fde1c9e4d",
       "ca_locked": false,
       "lock_time": null,
@@ -20707,21 +21575,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0x068c65b461bd0ff744f568d2ce7d45527b6baf45",
-        "to": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x813ba4d55478fbb59292bea50ccba8ca9648cff86a0e0eccd15a74a844cf531e",
-        "amount": "0.03",
-        "asset": "ETH",
-        "funded_at": "2025-09-01T01:08:11+08:00",
-        "deployed_at": "2026-11-03T11:48:43+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "ethereum",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -20736,13 +21589,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0xf63ccbe48524404904b0f8fc3d5992521c3d4b8f",
       "ca_locked": false,
       "lock_time": null,
@@ -21889,21 +22735,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-11-03T15:58:22+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -21918,13 +22749,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "lock_time": null,
@@ -22376,21 +23200,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-11-03T15:58:22+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -22405,13 +23214,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "lock_time": null,
@@ -23736,21 +24538,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-11-03T15:58:22+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -23765,13 +24552,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "lock_time": null,
@@ -24860,21 +25640,6 @@
       ],
       "strategy": "其他",
       "watch_promoted": false,
-      "funding_link": {
-        "from": "0xd34ea7278e6bd48defe656bbe263aef11101469c",
-        "to": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
-        "hops": 0,
-        "kind": "direct",
-        "tx": "0x1bbbab6e15a0f8ab61d09cde4e458d9c918131577f2e894f322d38af42a17804",
-        "amount": "0.1",
-        "asset": "ETH",
-        "funded_at": "2024-11-15T04:14:39+08:00",
-        "deployed_at": "2026-11-03T15:58:22+08:00",
-        "confidence": "low",
-        "excluded_reason": "",
-        "chain": "base",
-        "note_zh": "资助方不在项目图谱，不计硬证据"
-      },
       "ca_status": "not_ca",
       "ca_status_zh": "非CA",
       "provenance": null,
@@ -24889,13 +25654,6 @@
       "matched_by": [
         "name_match"
       ],
-      "vetoes": [
-        {
-          "kind": "fresh_withdrawal_no_graph",
-          "note_zh": "资金来自全新提币且与项目图谱完全没链接"
-        }
-      ],
-      "veto_note_zh": "资金来自全新提币且与项目图谱完全没链接",
       "creator": "0x8d47ba07ff9ccccf58c7e8810ee42c0dc8b8b123",
       "ca_locked": false,
       "lock_time": null,
@@ -31438,8 +32196,172 @@
       "lead_seconds": null
     }
   ],
-  "launched_history_count": 99,
+  "launched_history_count": 102,
   "launched_history": [
+    {
+      "project": "【扫出钱包·非CA】Agentic x402",
+      "handle": "agentic_x402",
+      "chain": "ethereum",
+      "address": "0xA8E0E79868Ef9Fd074b6d00A7E459708428a1e53",
+      "source": "watchlist.scanned_wallets",
+      "evidence_url": "https://x.com/agentic_x402",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】Agentic x402",
+      "handle": "agentic_x402",
+      "chain": "ethereum",
+      "address": "0xc46fA20BC65C4Ce300e3c3480753e3BEF1F84c5F",
+      "source": "watchlist.scanned_wallets",
+      "evidence_url": "https://x.com/agentic_x402",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "AI代理"
+      ],
+      "strategy": "AI代理",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
+    {
+      "project": "【扫出钱包·非CA】WOO",
+      "handle": "Woohooworlds",
+      "chain": "ethereum",
+      "address": "0x9244708F469199C2e1bC613d31e615E33Bf87777",
+      "source": "site:https://x.com/Woohooworlds",
+      "evidence_url": "https://x.com/Woohooworlds",
+      "detected_at": "2026-11-19T16:52:56+08:00",
+      "confidence": "medium",
+      "note": "【扫出钱包·非CA】 ; ca_gate: eth_getCode empty / 7702 → EOA wallet",
+      "sources": [
+        {
+          "origin": "watchlist.ca",
+          "source": "site:https://x.com/Woohooworlds",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        },
+        {
+          "origin": "watchlist.scanned_wallets",
+          "source": "watchlist.scanned_wallets",
+          "detected_at": "2026-11-19T16:52:56+08:00"
+        }
+      ],
+      "kind": "wallet",
+      "label_zh": "扫出钱包",
+      "addr_kind": "wallet",
+      "is_token": false,
+      "verify": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "note": "eth_getCode empty / 7702 → EOA wallet"
+      },
+      "categories": [
+        "Meme币"
+      ],
+      "strategy": "Meme币",
+      "watch_promoted": false,
+      "ca_status": "not_ca",
+      "ca_status_zh": "非CA",
+      "provenance": null,
+      "provenance_zh": null,
+      "official_x_confirmed": false,
+      "wallet_factory_confirmed": false,
+      "ca_role": null,
+      "alert_ok": false,
+      "evidence": [],
+      "hard_evidence_count": 0,
+      "conflict": false,
+      "matched_by": [],
+      "ca_locked": false,
+      "lock_time": null,
+      "listing_time_estimate": null,
+      "first_buy_time": null,
+      "first_buy_in_creation_tx": false,
+      "listing_time": null,
+      "listing_time_basis_zh": null,
+      "lead_seconds": null
+    },
     {
       "project": "【未确认地址·非CA】Huemans",
       "handle": "huemans_rh",
@@ -37357,7 +38279,7 @@
     "taperobot_bsc",
     "zardlabspro"
   ],
-  "watched_wallet_count": 362,
+  "watched_wallet_count": 387,
   "watched_wallets": [
     {
       "handle": "",
@@ -37378,6 +38300,26 @@
       "evidence_url": null,
       "added_at": "2026-11-03T17:33:41+08:00",
       "expires_at": "2026-12-03T17:33:41+08:00"
+    },
+    {
+      "handle": "",
+      "chain": "robinhood",
+      "wallet": "0x10bbd442f26f3ac0ac3a375b0278ff11e6de60a3",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": null,
+      "added_at": "2026-11-07T01:40:29+08:00",
+      "expires_at": "2026-12-07T01:40:29+08:00"
+    },
+    {
+      "handle": "",
+      "chain": "robinhood",
+      "wallet": "0xeae6d7921aea30ac9849eeea2a5aa8583a5f8888",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": null,
+      "added_at": "2026-11-07T00:10:14+08:00",
+      "expires_at": "2026-12-07T00:10:14+08:00"
     },
     {
       "handle": "0_0city",
@@ -38010,6 +38952,16 @@
       "expires_at": "2026-12-03T10:03:10+08:00"
     },
     {
+      "handle": "altl2fun",
+      "chain": "ethereum",
+      "wallet": "0x8457ca5040ad67fdebbcc8edce889a335bc0fbfb",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://x.com/AltL2fun",
+      "added_at": "2026-11-04T18:32:40+08:00",
+      "expires_at": "2026-12-04T18:32:40+08:00"
+    },
+    {
       "handle": "archerswapcore",
       "chain": "ethereum",
       "wallet": "0x05fb00a7f695473e166616c3c3fc472dda95f2da",
@@ -38340,16 +39292,6 @@
       "expires_at": "2026-11-29T04:22:09+08:00"
     },
     {
-      "handle": "badplace_",
-      "chain": "bsc",
-      "wallet": "0x3cffded2b23f39eb54bbc93d52ba3581b465ffff",
-      "source": "site",
-      "confidence": "low",
-      "evidence_url": "https://x.com/badplace_",
-      "added_at": "2026-10-27T13:59:30+08:00",
-      "expires_at": "2026-11-14T00:00:00+08:00"
-    },
-    {
       "handle": "believepad",
       "chain": "ethereum",
       "wallet": "0x113D68C8CcA4fE5bA25f49c00784079D168E7777",
@@ -38388,6 +39330,26 @@
       "evidence_url": "https://x.com/BitcoinPulseX",
       "added_at": "2026-10-24T02:31:30+08:00",
       "expires_at": "2026-11-23T02:31:30+08:00"
+    },
+    {
+      "handle": "bitcoinpulsex",
+      "chain": "robinhood",
+      "wallet": "0x39dbed3a2bd333467115de45665cc57f813c4571",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": null,
+      "added_at": "2026-11-05T23:32:35+08:00",
+      "expires_at": "2026-12-05T23:32:35+08:00"
+    },
+    {
+      "handle": "block21_",
+      "chain": "base",
+      "wallet": "0xb8b0DEf24534AA9a6Fa9f3989dA4A1E89ac97d68",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://x.com/block21_",
+      "added_at": "2026-11-19T16:52:56+08:00",
+      "expires_at": "2026-12-19T16:52:56+08:00"
     },
     {
       "handle": "blockzerofun",
@@ -38451,6 +39413,166 @@
     },
     {
       "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x0782b6d8c4551b9760e74c0545a9bcd90bdc41e5",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:01:53+08:00",
+      "expires_at": "2026-12-04T15:01:53+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x0eb3a705fc54725037cc9e008bdede697f62f335",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:05:07+08:00",
+      "expires_at": "2026-12-04T15:05:07+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x111111d2bf19e43c34263401e0cad979ed1cdb61",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:07:53+08:00",
+      "expires_at": "2026-12-04T15:07:53+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:04:05+08:00",
+      "expires_at": "2026-12-04T15:04:05+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x1d2f0da169ceb9fc7b3144628db156f3f6c60dbe",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:02:05+08:00",
+      "expires_at": "2026-12-04T15:02:05+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x2859e4544c4bb03966803b044a93563bd2d0dd4d",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:04:21+08:00",
+      "expires_at": "2026-12-04T15:04:21+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x3bd359c1119da7da1d913d1c4d2b7c461115433a",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:07:10+08:00",
+      "expires_at": "2026-12-04T15:07:10+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x3ee2200efb3400fabb9aacf31297cbdd1d435d47",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:02:42+08:00",
+      "expires_at": "2026-12-04T15:02:42+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:07:32+08:00",
+      "expires_at": "2026-12-04T15:07:32+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:02:19+08:00",
+      "expires_at": "2026-12-04T15:02:19+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0xce7de646e7208a4ef112cb6ed5038fa6cc6b12e3",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:05:22+08:00",
+      "expires_at": "2026-12-04T15:05:22+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "Solana",
+      "wallet": "0xe7cd86e13ac4309349f30b3435a9d337750fc82d",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
+      "added_at": "2026-11-04T15:08:17+08:00",
+      "expires_at": "2026-12-04T15:08:17+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "base",
+      "wallet": "0x2ae3f1ec7f1f5012cfeab0185bfc7aa3cf0dec22",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:02:21+08:00",
+      "expires_at": "2026-12-19T16:02:21+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "base",
+      "wallet": "0x50c5725949a6f0c72e6c4a641f24049a917db0cb",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T15:57:09+08:00",
+      "expires_at": "2026-12-19T15:57:09+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "base",
+      "wallet": "0x820c137fa70c8691f0e44dc420a5e53c168921dc",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T15:58:26+08:00",
+      "expires_at": "2026-12-19T15:58:26+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "base",
+      "wallet": "0xcbd06e5a2b0c65597161de254aa074e489deb510",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:11:35+08:00",
+      "expires_at": "2026-12-19T16:11:35+08:00"
+    },
+    {
+      "handle": "bopzopapp",
       "chain": "base",
       "wallet": "0xea17e5a9efebf1477db45082d67010e2245217f1",
       "source": "site",
@@ -38468,6 +39590,16 @@
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "added_at": "2026-11-04T15:00:56+08:00",
       "expires_at": "2026-12-04T15:00:56+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "wallet": "0x04c0599ae5a44757c0af6f9ec3b93da8976c150a",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:06:14+08:00",
+      "expires_at": "2026-12-19T16:06:14+08:00"
     },
     {
       "handle": "bopzopapp",
@@ -38522,6 +39654,16 @@
     {
       "handle": "bopzopapp",
       "chain": "ethereum",
+      "wallet": "0x2416092f143378750bb29b79ed961ab195cceea5",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:09:06+08:00",
+      "expires_at": "2026-12-19T16:09:06+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
       "wallet": "0x2859e4544c4bb03966803b044a93563bd2d0dd4d",
       "source": "site",
       "confidence": "low",
@@ -38552,6 +39694,16 @@
     {
       "handle": "bopzopapp",
       "chain": "ethereum",
+      "wallet": "0x60a3e35cc302bfa44cb288bc5a4f316fdb1adb42",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:04:49+08:00",
+      "expires_at": "2026-12-19T16:04:49+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
       "wallet": "0x754704bc059f8c67012fed69bc8a327a5aafb603",
       "source": "site",
       "confidence": "low",
@@ -38562,12 +39714,42 @@
     {
       "handle": "bopzopapp",
       "chain": "ethereum",
+      "wallet": "0xb6fe221fe9eef5aba221c348ba20a1bf5e73624c",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:07:35+08:00",
+      "expires_at": "2026-12-19T16:07:35+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
       "wallet": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
       "source": "site",
       "confidence": "low",
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "added_at": "2026-11-04T15:02:19+08:00",
       "expires_at": "2026-12-04T15:02:19+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "wallet": "0xc1cba3fcea344f92d9239c08c0568f6f2f0ee452",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:03:33+08:00",
+      "expires_at": "2026-12-19T16:03:33+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "ethereum",
+      "wallet": "0xcb585250f852c6c6bf90434ab21a00f02833a4af",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T16:10:30+08:00",
+      "expires_at": "2026-12-19T16:10:30+08:00"
     },
     {
       "handle": "bopzopapp",
@@ -38608,6 +39790,16 @@
       "evidence_url": "http://bopzop.trade/_next/static/chunks/46144-c5ddcac076242409.js",
       "added_at": "2026-11-04T15:09:03+08:00",
       "expires_at": "2026-12-04T15:09:03+08:00"
+    },
+    {
+      "handle": "bopzopapp",
+      "chain": "robinhood",
+      "wallet": "0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "http://bopzop.trade/_next/static/chunks/87142-0a337a69922f6657.js",
+      "added_at": "2026-11-19T15:55:58+08:00",
+      "expires_at": "2026-12-19T15:55:58+08:00"
     },
     {
       "handle": "brawlers_nft",
@@ -39330,6 +40522,16 @@
       "expires_at": "2026-12-03T10:11:35+08:00"
     },
     {
+      "handle": "elysium_origami",
+      "chain": "ethereum",
+      "wallet": "0x93c72869f33796def577a7c37abaa2da6d6753e9",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://x.com/Elysium_Origami",
+      "added_at": "2026-11-19T16:52:56+08:00",
+      "expires_at": "2026-12-19T16:52:56+08:00"
+    },
+    {
       "handle": "elysiumnames",
       "chain": "ethereum",
       "wallet": "0x13a130b336400409c956df042c128238f1486ddd",
@@ -39378,6 +40580,16 @@
       "evidence_url": "https://elysiumnameservice.xyz/",
       "added_at": "2026-10-20T21:52:54+08:00",
       "expires_at": "2026-12-03T10:11:35+08:00"
+    },
+    {
+      "handle": "elysiumverse",
+      "chain": "base",
+      "wallet": "0x8d01433748912a9d8087fa7a37543664934b3737",
+      "source": "site",
+      "confidence": "low",
+      "evidence_url": "https://x.com/elysiumverse",
+      "added_at": "2026-11-19T16:52:56+08:00",
+      "expires_at": "2026-12-19T16:52:56+08:00"
     },
     {
       "handle": "elysworldsnft",
@@ -40380,36 +41592,6 @@
       "expires_at": "2026-11-27T03:14:12+08:00"
     },
     {
-      "handle": "nomiouk_",
-      "chain": "ethereum",
-      "wallet": "0x48b5e5573e76caaa41a893496de6c857720e6b40",
-      "source": "x_official",
-      "confidence": "medium",
-      "evidence_url": "https://nomio.uk",
-      "added_at": "2026-11-03T10:11:35+08:00",
-      "expires_at": "2026-11-15T00:00:00+08:00"
-    },
-    {
-      "handle": "nomiouk_",
-      "chain": "ethereum",
-      "wallet": "0x84b61d73e098e7d46b214bf0032e5c5cdfbac433",
-      "source": "site",
-      "confidence": "low",
-      "evidence_url": "https://nomio.uk/js/chain.js",
-      "added_at": "2026-11-03T10:11:35+08:00",
-      "expires_at": "2026-11-15T00:00:00+08:00"
-    },
-    {
-      "handle": "nomiouk_",
-      "chain": "ethereum",
-      "wallet": "0xcbee2612e3f3feb298b274e7119a6a9ce08871b9",
-      "source": "site",
-      "confidence": "low",
-      "evidence_url": "https://nomio.uk",
-      "added_at": "2026-11-03T10:11:35+08:00",
-      "expires_at": "2026-11-15T00:00:00+08:00"
-    },
-    {
       "handle": "nvidia",
       "chain": "bsc",
       "wallet": "0x56bdb1d541f5c83a220dd0d79d87194671a54444",
@@ -40678,16 +41860,6 @@
       "evidence_url": "https://superboard.xyz",
       "added_at": "2026-10-30T19:16:24+08:00",
       "expires_at": "2026-12-03T10:11:35+08:00"
-    },
-    {
-      "handle": "superboard_",
-      "chain": "base",
-      "wallet": "0xb7a1793100c8b4d42d7e424825c5c5bce5a65cde",
-      "source": "site",
-      "confidence": "low",
-      "evidence_url": "https://www.superboard.xyz/",
-      "added_at": "2026-10-20T14:05:53+08:00",
-      "expires_at": "2026-11-19T14:05:53+08:00"
     },
     {
       "handle": "tapeoutscan",
@@ -40981,27 +42153,32 @@
     }
   ],
   "strategy_stats": {
-    "Meme币": {
+    "AI代理": {
+      "projects": 2,
+      "confirmed": 0,
+      "candidate": 1
+    },
+    "发射台": {
+      "projects": 5,
+      "confirmed": 0,
+      "candidate": 0
+    },
+    "GameFi": {
       "projects": 1,
       "confirmed": 0,
       "candidate": 0
     },
-    "发射台": {
-      "projects": 4,
+    "NFT铸造": {
+      "projects": 2,
       "confirmed": 0,
       "candidate": 0
     },
     "其他": {
       "projects": 161,
       "confirmed": 0,
-      "candidate": 0
+      "candidate": 2
     },
     "基础设施": {
-      "projects": 1,
-      "confirmed": 0,
-      "candidate": 0
-    },
-    "AI代理": {
       "projects": 1,
       "confirmed": 0,
       "candidate": 0
