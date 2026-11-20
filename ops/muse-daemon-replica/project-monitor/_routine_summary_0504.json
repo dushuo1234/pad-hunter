@@ -1,0 +1,75 @@
+{
+  "at": "2026-10-30T05:36:18+08:00",
+  "hhmm": "0504",
+  "pause": false,
+  "daemons": {
+    "listing_scan": "running pid=6323",
+    "onchain_lock": "running pid=5409"
+  },
+  "sync": {
+    "before": 427,
+    "after": 427,
+    "locked_new": [],
+    "updated_meta": 3,
+    "npa_skipped": 39,
+    "kol_skipped": 1,
+    "incomplete": 146
+  },
+  "x": {
+    "bios": 93,
+    "posts_counts": {
+      "privatekeycoin_": 3,
+      "hexxxx2_0": 10,
+      "mitradotfun": 10,
+      "rustlings_nft": 10,
+      "pgofficial_888": 10,
+      "goblingang27": 10,
+      "mirage_exchange": 0,
+      "payphonenft": 10,
+      "orpheushl": 10,
+      "suiundeadsnft": 10,
+      "aegis_hedge": 10,
+      "bloopersinknft": 2
+    },
+    "user_count": 766,
+    "pkc_bio_snip": "(empty)",
+    "bio_errors": 7
+  },
+  "pipeline_exit": 0,
+  "elapsed_s": 1646,
+  "elapsed_min": 27.4,
+  "onchain_lock_relay": {
+    "offset": 280
+  },
+  "onchain_lock_new": 0,
+  "onchain_lock_actionable": 0,
+  "new_js_ca": 0,
+  "js_factory_match": 0,
+  "site_js_changes_ambient": 10,
+  "newly_launched": 1,
+  "newly_launched_handles": [
+    "crowdedfun"
+  ],
+  "listing_at_changes": 0,
+  "new_ca": 0,
+  "trace_wallet": "timeout rc=124 (900s hang-safe)",
+  "rpc_notes": [
+    "base publicnode: usage limit reached (onchain daemon last_error) — transient, not pausing"
+  ],
+  "actionable": [
+    {
+      "type": "已开盘",
+      "project": "Crowded",
+      "handle": "crowdedfun",
+      "chain": "solana",
+      "ca": "H3iGq7KSqdzw7QG3xZo2mF4eaYsvihZqqoAkdXripump",
+      "evidence": "mark_launched_from_ca newly=1; reason=onchain_ca_lock; high CA via site x.com/Crowdedfun; removed_at 05:31 Asia/Shanghai; watchlist 427→426",
+      "source": "site:https://x.com/Crowdedfun",
+      "confidence": "high",
+      "note": "Previously notified as NEW_CA candidate at 04:45; this run auto-moved to 已开盘 / launched.json"
+    }
+  ],
+  "quiet": false,
+  "user_ping": true,
+  "wakeparent_payload": "Crowded（@crowdedfun）已开盘 / moved to launched。\n链：solana\nCA：H3iGq7KSqdzw7QG3xZo2mF4eaYsvihZqqoAkdXripump\n证据：onchain_ca_lock（high）via site https://x.com/Crowdedfun；05:31 Asia/Shanghai 从 watchlist 移入 launched（reason=onchain_ca_lock）。\n来源：listing_scan / mark_launched_from_ca\n备注：04:45 已通知过 NEW_CA candidate；本轮确认固定并标已开盘。"
+}

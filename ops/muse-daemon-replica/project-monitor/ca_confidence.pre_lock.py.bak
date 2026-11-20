@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""CA confidence model (2026-10-21, TapeRobot retrospective) — single place that decides
+whether a found address is a *confirmed* CA.
+
+Rules
+  confirmed  : on-chain verify passed (ERC20 / SPL mint, or TapeOut transistors ERC-1155 /
+               processor from the factory) AND provenance has
+                 wallet_factory  — creator/deployer is a watched project wallet
+                                   (TapeOut factory create, contract creation, wallet trace,
+                                   onchain_lock wallet match), and/or
+                 official_x      — the project's own X account posted the address.
+               provenance_tag = wallet_factory | official_x | both
+  superseded : wallet_factory only, but official X later named a *different* address of the
+               same role for the same project (e.g. 0x6EF7/0x06CB by 0x8941 vs official 0x37e4/0xcd28).
+               Not confirmed, no alert.
+  suspected_copycat (疑似山寨): name/symbol match only, creator not watched, no official X.
+               Never a normal CA, never alerts; build moves it to suspected_copycats[].
+  candidate  : verified token but only site/JS/bio scrape evidence (待确认). Shown, no sound.
+  not_ca     : wallet (扫出钱包), plain NFT (not TapeOut), non-token contract, invalid, unknown.
+Hard gates kept: wallets are never CA; 已开盘 rows are history (build puts them in
+launched_history and alert_ok=False); NFT is never a token CA.
+"""
+from __future__ import annotations
+
+STATUS_LABEL = {
+    "confirmed": "已确认CA",
+    "superseded": "非正式·官推未认",
+    "suspected_copycat": "疑似山寨",
+    "candidate": "待确认",
+    "not_ca": "非CA",
+}
+PROV_LABEL = {"wallet_factory": "监控钱包创建", "official_x": "官推确认", "both": "监控钱包创建+官推确认"}
+
+WALLET_ORIGINS = {"wallet_trace", "wallet_trace_events"}
+NAME_REASON_PREFIX = ("name", "symbol", "name_fuzzy", "token:")
+
+
+def _src_is_official_x(s: dict, handle: str | None) -> bool:
+    src = str(s.get("source") or "").lower()
+    h = (handle or "").lstrip("@").lower()
+    if src.startswith("x:@") or src == "x_post":
+        return True
+    if h and f"x.com/{h}/status/" in src:
+        return True
+    return False
+
+
+def provenance(find: dict, *, official_x: dict, watched_wallets: set[str]) -> dict:
+    """Return {'wallet_factory': bool, 'official_x': bool, 'name_only': bool, 'x_url': str|None,
+    'creator': str|None}. official_x = {addr_lower: {post_url, handle,...}}."""
+    a = (find.get("address") or "").lower()
+    handle = find.get("handle")
+    wf = xo = False
+    name_hit = False
+    x_url = None
+    creator = (find.get("traced_from") or "").lower() or None
+    for s in find.get("sources") or []:
+        o = s.get("origin")
+        src = str(s.get("source") or "")
+        if o == "tapeout_watch":
+            if s.get("creator_watched") or src.endswith(":creator_watched") or src == "wallet:create":
+                wf = True
+            if src.startswith("x:"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if src.endswith(":name_match"):
+                name_hit = True
+        elif o in WALLET_ORIGINS:
+            wf = True
+        elif o in ("onchain_lock", "solana_lock"):
+            reason = str(s.get("reason") or "")
+            if "wallet" in reason:
+                wf = True
+            elif reason.startswith(NAME_REASON_PREFIX) or "name" in reason or "symbol" in reason:
+                name_hit = True
+        elif o in ("tapeout_official", "tapeout_superseded"):
+            if s.get("official_x"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if s.get("wallet_factory"):
+                wf = True
+        if _src_is_official_x(s, handle):
+            xo = True
+    if a in official_x:
+        xo = True
+        x_url = x_url or official_x[a].get("post_url")
+    if creator and creator in watched_wallets:
+        wf = True
+    return {"wallet_factory": wf, "official_x": xo, "name_only": name_hit and not wf and not xo,
+            "x_url": x_url, "creator": creator}
+
+
+def assess(find: dict, *, verified_ok: bool, ca_role: str | None, prov: dict,
+           superseded_by: str | None = None, launched: bool = False) -> dict:
+    """Return the confidence fields to merge into a ca_finds row."""
+    wf, xo = prov["wallet_factory"], prov["official_x"]
+    tag = "both" if (wf and xo) else "wallet_factory" if wf else "official_x" if xo else None
+    if not verified_ok:
+        status = "not_ca"
+    elif prov.get("name_only"):
+        status = "suspected_copycat"
+    elif superseded_by and not xo:
+        status = "superseded"
+    elif tag:
+        status = "confirmed"
+    else:
+        status = "candidate"
+    out = {
+        "ca_status": status,
+        "ca_status_zh": STATUS_LABEL[status],
+        "provenance": tag,
+        "provenance_zh": PROV_LABEL.get(tag) if tag else None,
+        "official_x_confirmed": bool(xo),
+        "wallet_factory_confirmed": bool(wf),
+        "ca_role": ca_role,
+        "alert_ok": status == "confirmed" and not launched,
+    }
+    if prov.get("x_url"):
+        out["official_x_url"] = prov["x_url"]
+    if superseded_by and status == "superseded":
+        out["superseded_by"] = superseded_by
+    return out

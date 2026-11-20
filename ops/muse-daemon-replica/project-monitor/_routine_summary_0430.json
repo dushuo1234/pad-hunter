@@ -1,0 +1,69 @@
+{
+  "at": "2026-10-25T04:55:39+08:00",
+  "actionable": false,
+  "actionable_items": [],
+  "counts": {
+    "newly_launched": 0,
+    "new_ca": 0,
+    "onchain_lock_new": 0,
+    "listing_at_changes": 1,
+    "listing_at_within_3d_new": 0,
+    "js_factory_matches_non_ambient": 0,
+    "deploys_tied_to_watchlist": 0,
+    "site_js_changes": 7,
+    "locked_new_watchlist": 2
+  },
+  "notes": {
+    "hashgentic_listing_at": "2026-10-31T21:00:00+08:00 (pool open; not within_3d; local candidates/watchlist updated; no Pages publish)",
+    "timecard_within_3d": "2026-10-27T21:00:00+08:00 (unchanged vs prior)",
+    "qernapp_status": "开发中→即将启动 already sticky from prior runs; not new this cycle",
+    "x_ca_repeats": [
+      "ETHERIISPROTOCO",
+      "drakhenRH"
+    ],
+    "site_published": false,
+    "board_changed": false
+  },
+  "pipeline": {
+    "runner": "/tmp/pipe0430.sh (stepwise timeouts)",
+    "start": "2026-10-25T04:33:00+08:00",
+    "end": "2026-10-25T04:52:31+08:00",
+    "timeouts": [
+      "scan_listing_ca.py rc=124",
+      "trace_wallet_ca.py rc=124",
+      "build_ca_finds.py rc=124"
+    ],
+    "ok": [
+      "extract_listing_times",
+      "scan_x_progress",
+      "extract_x_ca",
+      "scan_onchain",
+      "scan_js_factory_match",
+      "harvest_sol_wallets",
+      "solana_wallet_mints",
+      "prune_launched",
+      "mark_launched_from_ca",
+      "merge_site_completion",
+      "publish_monitor_events",
+      "build_wallet_watchlist",
+      "build_token_names",
+      "onchain_lock_daemon ensure"
+    ]
+  },
+  "daemon": {
+    "onchain_lock_pid": 889131,
+    "fast_site_pid": 889390,
+    "workbench_api_pid": 13715,
+    "rpc_note": "publicnode rate-limit noise on base/bsc/eth/hyperevm; daemon still advancing blocks; not a hard fail"
+  },
+  "watchlist": {
+    "before": 243,
+    "after": 245,
+    "locked_new": [
+      "DontSpendGame",
+      "hoodora_rh"
+    ]
+  },
+  "workbench": 53,
+  "launched": 68
+}

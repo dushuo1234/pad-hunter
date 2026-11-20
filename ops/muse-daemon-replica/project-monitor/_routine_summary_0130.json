@@ -1,0 +1,98 @@
+{
+  "at": "2026-10-28T02:09:21+08:00",
+  "fired_routine": "开盘与CA预警",
+  "start_utc": "2026-10-27T17:28:56Z",
+  "pipeline_start": "2026-10-28T01:32:22+08:00",
+  "pipeline_end": "2026-10-28T02:07:54+08:00",
+  "pause": "OPEN",
+  "daemons": {
+    "listing": 3446519,
+    "onchain_lock": 889131,
+    "ok": true
+  },
+  "watchlist": "310→311(+senatorpad)→309 (prune Rebate+tier1)",
+  "locked_new": [
+    "senatorpad"
+  ],
+  "wallets": "71→77 (build)→80 (sol harvest +3)",
+  "token_symbols": 921,
+  "x": {
+    "bios": 79,
+    "posts_handles": 12,
+    "users": 537,
+    "pkc_bio_empty": true
+  },
+  "pipeline_exit": 0,
+  "pipeline_elapsed_sec": 2132,
+  "new_js_ca": 0,
+  "js_factory_matches": 3,
+  "js_factory_note": "Tier1 0x55d398… BSC USDT via pancake_v2 — ambient skip",
+  "SITE_JS_CHANGE": 6,
+  "NEW_DEPLOY_watchlist": null,
+  "TRACE_CA": 4,
+  "TRACE_CA_note": "Hashgentic create_derive 非CA (4)",
+  "onchain_lock": {
+    "hits": [
+      {
+        "project": "Rebate",
+        "chain": "robinhood",
+        "address": "0x40a15dff5be4c9a09baa3ac9f7c0f712bad916a2",
+        "confidence": "low",
+        "reason": "name_fuzzy:rebate",
+        "token": "Rebate Cat",
+        "note": "not qualifying"
+      },
+      {
+        "project": "Optimum",
+        "chain": "base",
+        "address": "0x22fe8aacc6a30e7d359dce9176d7176ad590ba87",
+        "confidence": "low",
+        "reason": "symbol:ETH",
+        "note": "during pipeline; not qualifying"
+      }
+    ],
+    "qualifying": 0
+  },
+  "new_ca": [
+    {
+      "name": "Brawlers",
+      "handle": "brawlers_nft",
+      "ca": "0xbd8063188d0125da2759c63a6ffa117dbe1ae93d",
+      "chain": "evm",
+      "source": "X/site listing_daemon",
+      "confidence": "high",
+      "note": "LIVE NOW on Pons; still watchlist borderline_kept"
+    }
+  ],
+  "moved_launched": [
+    {
+      "name": "Rebate",
+      "handle": "RebateLaunch",
+      "reason": "token_live_with_ca",
+      "ca": "0xb7Ff57631B97000d950236ef63bD463da5bEBA7e",
+      "ok": true
+    },
+    {
+      "name": "Tier 1",
+      "handle": "tier1_x",
+      "reason": "onchain_ca_lock",
+      "ca": "0x55d398326f99059ff775485246999027b3197955",
+      "warning": "BSC USDT ambient — likely false prune; consider restore"
+    }
+  ],
+  "listing_at_within3_published": [
+    "play_blastoff 2026-10-28T07:59+08 high",
+    "fishesrh 2026-10-29T01:00+08 high",
+    "hoodora_rh 2026-10-29T01:00+08 high",
+    "zkArgoseth 2026-10-31T00:00+08 medium"
+  ],
+  "listing_at_changes_new": null,
+  "workbench": "78→77 (Rebate drop); Pages mirrors candidates/launched/monitor_events updated; cf_workbench push for RebateLaunch",
+  "actionable": true,
+  "actionable_items": [
+    "NEW_CA Brawlers @brawlers_nft 0xbd8063…ae93d (LIVE NOW on Pons; still on watchlist borderline)",
+    "已开盘 Rebate @RebateLaunch token_live_with_ca 0xb7Ff…BA7e",
+    "已开盘 Tier 1 @tier1_x onchain_ca_lock BUT CA=BSC USDT 0x55d398… — ambient false-positive risk",
+    "LISTING_SIGNAL Brawlers strong: $BRAWLERS is LIVE NOW on Pons"
+  ]
+}

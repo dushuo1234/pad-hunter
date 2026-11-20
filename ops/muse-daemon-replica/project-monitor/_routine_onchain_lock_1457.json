@@ -1,0 +1,101 @@
+{
+  "start_offset": 151615,
+  "end_offset": 153867,
+  "new_lines": 3,
+  "locks": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "symbol:ID",
+      "project": "Ink Daddy",
+      "handle": null,
+      "address": "0x52d729a5b8ac8b6a1cf0110ab53a1b72fbd34444",
+      "deployer": "0xa63f613ad6e83ba8666b869d56e87ab0998558e6",
+      "chain": "bsc",
+      "tx": "0xeaa3d258dfbe3374a73b62486572a1f57d24cf05e0e07a2a81b1e3cfecd6b7e5",
+      "block": 130046500,
+      "via": "factory:fourmeme_tm2_bsc:Unknown",
+      "factory": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "token_name": "币安 ID",
+      "token_symbol": "币安 ID",
+      "code_bytes": 45,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Ink Daddy",
+          "handle": null,
+          "via": "symbol:ID",
+          "explicit": false,
+          "ambiguous": true
+        },
+        {
+          "project": "Ink Daddy",
+          "handle": "InkDaddynft",
+          "via": "symbol:ID",
+          "explicit": false,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:06:21+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "medium",
+      "reason": "symbol:LUMINA",
+      "project": "Lumina Engine",
+      "handle": "LuminaEngine",
+      "address": "0xa727ad163a58098716fbce31752e75f18613c8f8",
+      "deployer": null,
+      "chain": "ethereum",
+      "tx": "0x826690b06ab64e162e8349b6f9be732e116f0f30b7d4de7f46e88d01c48c2098",
+      "block": 26282445,
+      "via": "factory:univ4_pm_eth:Initialize",
+      "factory": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "token_name": "The Glow Nendroid",
+      "token_symbol": "LUMINA",
+      "code_bytes": 3580,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Lumina Engine",
+          "handle": "LuminaEngine",
+          "via": "symbol:LUMINA",
+          "explicit": false,
+          "ambiguous": false
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:07:57+08:00"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "confidence": "low",
+      "reason": "symbol:BNB",
+      "project": "Bad Place",
+      "handle": "badplace_",
+      "address": "0x08200abb57d087f1c55d735e361f97aa4340ffff",
+      "deployer": "0xa3036c84b9d3f05ed0de6a5d25811c6a2491b0fb",
+      "chain": "bsc",
+      "tx": "0x339c902ddbc3f92b9c140b9e568fde748d14fa93499b3a512036a49a3c6aaf9b",
+      "block": 130048495,
+      "via": "factory:fourmeme_tm2_bsc:Unknown",
+      "factory": "0x5c952063c7fc8610FFDB798152D69F0B9550762b",
+      "token_name": "BNB团队",
+      "token_symbol": "BNB团队",
+      "code_bytes": 45,
+      "wallet_hits": [],
+      "token_hits": [
+        {
+          "project": "Bad Place",
+          "handle": "badplace_",
+          "via": "symbol:BNB",
+          "explicit": true,
+          "ambiguous": true
+        }
+      ],
+      "source": "onchain_lock",
+      "at": "2026-10-27T15:21:20+08:00"
+    }
+  ]
+}

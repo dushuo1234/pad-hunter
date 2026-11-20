@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+# Pad Hunter workbench API: uvicorn (127.0.0.1:8780) + public tunnel (ngrok / cloudflared) + watchdog.
+# Usage: workbench_api_daemon.sh start|stop|restart|status|ensure|url
+# NOTE: trycloudflare.com quick-tunnel and ngrok random URLs CHANGE whenever the tunnel
+#       restarts (set ngrok_domain.txt to a free ngrok static domain for a stable URL).
+#       Current URL is always in workbench_api_public_url.txt (and history in
+#       workbench_api_public_url.history). The frontend must be updated if it changes.
+set -uo pipefail
+DIR=/workspace/project-monitor
+PY="$DIR/.venv/bin/python"
+PORT="${WORKBENCH_API_PORT:-8780}"
+CF="$DIR/bin/cloudflared"
+API_PID="$DIR/workbench_api.pid";      API_LOG="$DIR/workbench_api.log"
+TUN_PID="$DIR/workbench_tunnel.pid";   TUN_LOG="$DIR/workbench_tunnel.log"
+WD_PID="$DIR/workbench_watchdog.pid";  WD_LOG="$DIR/workbench_watchdog.log"
+URL_FILE="$DIR/workbench_api_public_url.txt"
+URL_HIST="$DIR/workbench_api_public_url.history"
+cd "$DIR"
+ts() { TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S Asia/Shanghai'; }
+
+alive() { # pidfile pattern
+  [[ -f "$1" ]] || return 1
+  local pid; pid="$(tr -d ' \n' < "$1")"; [[ -n "$pid" ]] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -qE -- "$2"
+}
+
+start_api() {
+  alive "$API_PID" workbench_api.py && return 0
+  setsid nohup "$PY" "$DIR/workbench_api.py" >>"$API_LOG" 2>&1 < /dev/null &
+  echo $! > "$API_PID"
+  for _ in $(seq 1 30); do curl -fsS "http://127.0.0.1:$PORT/health" >/dev/null 2>&1 && break; sleep 0.3; done
+  echo "[$(ts)] api started pid=$(cat "$API_PID")" | tee -a "$WD_LOG"
+}
+
+# Tunnel provider.
+# ngrok DISABLED 2026-10-23: free bandwidth exhausted; site sync moved to
+# https://api.adualpha.win (Cloudflare Workers). Do not auto-restart ngrok.
+# cloudflared quick tunnel is also blocked here (box egress drops port 7844).
+# Override only if needed: TUNNEL_PROVIDER=ngrok|cloudflared|none
+NGROK="$DIR/bin/ngrok"
+NGROK_TOKEN_FILE="$DIR/ngrok_authtoken.txt"   # local only, never commit
+NGROK_DOMAIN_FILE="$DIR/ngrok_domain.txt"     # optional free static domain => stable URL
+NGROK_CFG="$DIR/ngrok.yml"                    # generated, chmod 600
+provider() {
+  # Default none: keep local API watched; skip public tunnel until explicitly re-enabled.
+  if [[ -n "${TUNNEL_PROVIDER:-}" ]]; then echo "$TUNNEL_PROVIDER"; return; fi
+  echo none
+}
+
+start_tunnel() {
+  alive "$TUN_PID" "cloudflared|ngrok" && return 0
+  local prov; prov="$(provider)"
+  : > "$TUN_LOG"
+  case "$prov" in
+    ngrok)
+      umask 077
+      printf 'version: "3"\nagent:\n  authtoken: %s\n  crl_noverify: true\n  web_addr: 127.0.0.1:4041\n' \
+        "$(tr -d ' \n' < "$NGROK_TOKEN_FILE")" > "$NGROK_CFG"
+      local dom=(); [[ -s "$NGROK_DOMAIN_FILE" ]] && dom=(--url "https://$(tr -d ' \n' < "$NGROK_DOMAIN_FILE" | sed 's#^https\?://##')")
+      setsid nohup "$NGROK" http "http://127.0.0.1:$PORT" "${dom[@]}" --config "$NGROK_CFG" \
+        --log stdout --log-format logfmt >>"$TUN_LOG" 2>&1 < /dev/null &
+      echo $! > "$TUN_PID" ;;
+    cloudflared)
+      setsid nohup "$CF" tunnel --no-autoupdate --url "http://127.0.0.1:$PORT" >>"$TUN_LOG" 2>&1 < /dev/null &
+      echo $! > "$TUN_PID" ;;
+    *)
+      echo "[$(ts)] tunnel: no provider (put ngrok authtoken in $NGROK_TOKEN_FILE); API is local-only" | tee -a "$WD_LOG"
+      return 0 ;;
+  esac
+  local url=""
+  for _ in $(seq 1 60); do
+    url="$(grep -oE 'https://[a-z0-9.-]+\.(trycloudflare\.com|ngrok-free\.app|ngrok-free\.dev|ngrok\.app|ngrok\.dev|ngrok\.io)' "$TUN_LOG" | head -1)"
+    [[ -n "$url" ]] && break
+    grep -q "ERR_NGROK" "$TUN_LOG" && break
+    sleep 0.5
+  done
+  if [[ -n "$url" ]]; then
+    echo "$url" > "$URL_FILE"; echo "$(ts) $prov $url" >> "$URL_HIST"; date +%s > "$DIR/.workbench_tunnel_started"; echo 0 > "$DIR/.workbench_tunnel_fail"
+    echo "[$(ts)] tunnel($prov) started pid=$(cat "$TUN_PID") url=$url" | tee -a "$WD_LOG"
+  else
+    echo "[$(ts)] tunnel($prov) pid=$(cat "$TUN_PID") no URL yet; see $TUN_LOG" | tee -a "$WD_LOG"
+    grep -oE "ERR_NGROK_[0-9]+" "$TUN_LOG" | head -1
+  fi
+}
+
+stop_pid() {
+  [[ -f "$1" ]] || return 0
+  local pid; pid="$(tr -d ' \n' < "$1")"
+  if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+    kill "$pid" 2>/dev/null; for _ in $(seq 1 10); do kill -0 "$pid" 2>/dev/null || break; sleep 0.3; done
+    kill -9 "$pid" 2>/dev/null || true
+  fi
+  rm -f "$1"
+}
+
+ensure() {
+  alive "$API_PID" workbench_api.py || start_api
+  [[ "$(provider)" == none ]] && return 0
+  alive "$TUN_PID" "cloudflared|ngrok" || start_tunnel
+  # public reachability: restart tunnel after 3 consecutive failures
+  local url; url="$(cat "$URL_FILE" 2>/dev/null)"
+  local started; started="$(cat "$DIR/.workbench_tunnel_started" 2>/dev/null || echo 0)"
+  # grace: new quick tunnels need ~1-2 min before the hostname resolves
+  if [[ -n "$url" ]] && (( $(date +%s) - started > 150 )); then
+    if curl -fsS -m 10 "$url/health" >/dev/null 2>&1; then
+      echo 0 > "$DIR/.workbench_tunnel_fail"
+    else
+      local n; n=$(( $(cat "$DIR/.workbench_tunnel_fail" 2>/dev/null || echo 0) + 1 ))
+      echo "$n" > "$DIR/.workbench_tunnel_fail"
+      if (( n >= 6 )); then
+        echo "[$(ts)] public $url failed $n times -> restarting tunnel (URL will change)" >> "$WD_LOG"
+        stop_pid "$TUN_PID"; start_tunnel; echo 0 > "$DIR/.workbench_tunnel_fail"
+      fi
+    fi
+  fi
+}
+
+watchdog_loop() {
+  while true; do ensure >/dev/null 2>&1; sleep 20; done
+}
+
+case "${1:-}" in
+  start)
+    start_api; start_tunnel
+    if ! alive "$WD_PID" "workbench_api_daemon.sh"; then
+      setsid nohup bash "$0" _watchdog >>"$WD_LOG" 2>&1 < /dev/null &
+      echo $! > "$WD_PID"
+    fi
+    bash "$(readlink -f "$0")" status ;;
+  _watchdog) watchdog_loop ;;
+  stop) stop_pid "$WD_PID"; stop_pid "$TUN_PID"; stop_pid "$API_PID"; echo "stopped" ;;
+  restart) bash "$(readlink -f "$0")" stop; bash "$(readlink -f "$0")" start ;;
+  ensure) ensure; bash "$(readlink -f "$0")" status ;;
+  url) cat "$URL_FILE" ;;
+  status)
+    alive "$API_PID" workbench_api.py && echo "api: running pid=$(cat "$API_PID") http://127.0.0.1:$PORT" || echo "api: not running"
+    alive "$TUN_PID" "cloudflared|ngrok" && echo "tunnel($(provider)): running pid=$(cat "$TUN_PID")" || echo "tunnel($(provider)): not running"
+    alive "$WD_PID" workbench_api_daemon.sh && echo "watchdog: running pid=$(cat "$WD_PID")" || echo "watchdog: not running"
+    echo "public_url: $(cat "$URL_FILE" 2>/dev/null || echo '-')" ;;
+  *) echo "Usage: $0 {start|stop|restart|status|ensure|url}"; exit 1 ;;
+esac

@@ -1,0 +1,122 @@
+{
+  "generated_at": "2026-11-04T13:48:49+08:00",
+  "elapsed_s": 13.48,
+  "rpcs": {
+    "ethereum": "https://ethereum.publicnode.com",
+    "robinhood": "https://rpc.mainnet.chain.robinhood.com",
+    "hyperevm": "https://rpc.hyperliquid.xyz/evm",
+    "ink": "https://rpc-gel.inkonchain.com",
+    "base": "https://base.publicnode.com",
+    "bsc": "https://bsc.publicnode.com"
+  },
+  "limits": {
+    "recent_block_window": 0,
+    "create_derive": "enabled for wallet nonce>0 (classic CREATE)",
+    "factory_tx_from": "launchpad factory eth_getLogs + tx.from match (CREATE2/factory creates); ambient UniV2/V3 skipped",
+    "create2_salt": "derived for OZ cloneDeterministic/EIP-1167 (via=create2_derive); launchpad TokenCreated uses event token field (stronger); salt+initcode for unknown factory ABIs still limited",
+    "solana": "skipped in v1 — no free reliable mint-creation index without API keys",
+    "robinhood_explorer": "Blockscout Cloudflare-blocked; RPC-only",
+    "hyperevm_explorer": "no public API wired; RPC-only"
+  },
+  "counts": {
+    "inputs": 1,
+    "wallet": 1,
+    "contract": 0,
+    "unknown": 0,
+    "trace_ca": 0
+  },
+  "results": [
+    {
+      "project": "agora_elysium",
+      "handle": "agora_elysium",
+      "address": "0x8829f66c9334b9e1008c5799bc29f0c66001098d",
+      "confidence": "medium",
+      "note": "queued from NEW_JS_CA",
+      "source": "live_queue",
+      "classification": {
+        "kind": "wallet",
+        "chain": "ethereum",
+        "code_bytes": 0,
+        "nonce": 0,
+        "eip7702": false,
+        "tried": [
+          {
+            "chain": "ethereum",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://ethereum.publicnode.com"
+          },
+          {
+            "chain": "bsc",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://bsc.publicnode.com"
+          },
+          {
+            "chain": "base",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://base.publicnode.com"
+          },
+          {
+            "chain": "robinhood",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.mainnet.chain.robinhood.com"
+          },
+          {
+            "chain": "hyperevm",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc.hyperliquid.xyz/evm"
+          },
+          {
+            "chain": "ink",
+            "bytes": 0,
+            "nonce": 0,
+            "error": null,
+            "ok": true,
+            "eip7702": false,
+            "minimal_proxy": false,
+            "eoa_like_code": false,
+            "code_prefix": "0x",
+            "rpc": "https://rpc-gel.inkonchain.com"
+          }
+        ]
+      },
+      "deployed": [],
+      "errors": []
+    }
+  ],
+  "trace_finds": []
+}

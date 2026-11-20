@@ -1,0 +1,65 @@
+{
+  "at": "2026-11-03T05:43:23+08:00",
+  "label": "0502",
+  "actionable": false,
+  "items": [],
+  "suppressed": [
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Tokenized Stonks",
+      "handle": null,
+      "chain": "base",
+      "ca": "0x2355fb35c8b9f3df4895a9ce2b2fe68c08eab6ea",
+      "symbol": "TSTONK",
+      "confidence": "medium",
+      "at": "2026-11-03T05:23:45+08:00",
+      "via": "factory:univ4_pm_base:Initialize",
+      "why": "name_match_unconfirmed / 疑似山寨·同名未确认; handle null; token_hit explicit=false; univ4_pm_base Initialize name-only — not watchlist-tied actionable"
+    },
+    {
+      "type": "NEW_DEPLOY",
+      "why": "3 univ2_eth ambient factory hints only — skipped",
+      "count": 3
+    },
+    {
+      "type": "SITE_JS_CHANGE",
+      "count": 8,
+      "handles": [
+        "agora_elysium",
+        "Cownagent",
+        "entertheanime",
+        "emberworldx",
+        "justpfpart",
+        "listendotmoney",
+        "twoprintlabs",
+        "eleosfun"
+      ],
+      "why": "fingerprint churn; near_deploys all ambient univ2_*; EmberWorld 0→1 addr is tapeoutscan gateway visit-id hash not token CA; address_set unchanged for most"
+    },
+    {
+      "type": "NEW_JS_CA",
+      "why": "new_js_ca=0 this run"
+    },
+    {
+      "type": "JS_FACTORY_MATCH",
+      "why": "matches=0"
+    },
+    {
+      "type": "listing_at",
+      "why": "no listing_at changes vs baseline timed hash; within_next_3_days still 7 sticky entries (PlayMooLand/Oxustrail/PlayTimberia/…)"
+    },
+    {
+      "type": "已开盘",
+      "why": "prune newly_removed=0; mark_launched newly=0; no watchlist listing/status →已开盘 moves"
+    }
+  ],
+  "notes": [
+    "pause absent; listing_scan_daemon pid ok; onchain_lock_daemon pid ok",
+    "watchlist sync 504→504 locked_new=0 updated_meta=4",
+    "X refresh soft-skipped: daily quota exhausted mode=6551 until 08:00 Asia/Shanghai; workbench 6551 covers official/soon",
+    "pipeline EXIT=0; trace_wallet_ca killed ~23.5min then WARN path continued remaining steps",
+    "onchain_lock relay offset 341→342 (1 new alert consumed by daemon mid-run; suppressed)",
+    "nothing actionable"
+  ],
+  "wake_parent": false
+}

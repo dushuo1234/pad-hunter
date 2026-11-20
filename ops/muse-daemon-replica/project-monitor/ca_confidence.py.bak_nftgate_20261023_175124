@@ -1,0 +1,350 @@
+#!/usr/bin/env python3
+"""CA confidence model (2026-10-21, TapeRobot retrospective) — single place that decides
+whether a found address is a *confirmed* CA.
+
+Rules
+  confirmed  : on-chain verify passed (ERC20 / SPL mint, or TapeOut transistors ERC-1155 /
+               processor from the factory) AND provenance has
+                 wallet_factory  — creator/deployer is a watched project wallet
+                                   (TapeOut factory create, contract creation, wallet trace,
+                                   onchain_lock wallet match), and/or
+                 official_x      — the project's own X account posted the address.
+               provenance_tag = wallet_factory | official_x | both
+  superseded : wallet_factory only, but official X later named a *different* address of the
+               same role for the same project (e.g. 0x6EF7/0x06CB by 0x8941 vs official 0x37e4/0xcd28).
+               Not confirmed, no alert.
+  suspected_copycat (疑似山寨): name/symbol match only, creator not watched, no official X.
+               Never a normal CA, never alerts; build moves it to suspected_copycats[].
+  candidate  : verified token but only site/JS/bio scrape evidence (待确认). Shown, no sound.
+  not_ca     : wallet (扫出钱包), plain NFT (not TapeOut), non-token contract, invalid, unknown.
+Hard gates kept: wallets are never CA; 已开盘 rows are history (build puts them in
+launched_history and alert_ok=False); NFT is never a token CA.
+"""
+from __future__ import annotations
+
+STATUS_LABEL = {
+    "confirmed": "已确认CA",
+    "superseded": "非正式·官推未认",
+    "suspected_copycat": "疑似山寨",
+    "candidate": "待确认",
+    "not_ca": "非CA",
+}
+PROV_LABEL = {"wallet_factory": "监控钱包创建", "official_x": "官推确认", "both": "监控钱包创建+官推确认"}
+
+WALLET_ORIGINS = {"wallet_trace", "wallet_trace_events"}
+NAME_REASON_PREFIX = ("name", "symbol", "name_fuzzy", "token:")
+
+
+def _src_is_official_x(s: dict, handle: str | None) -> bool:
+    src = str(s.get("source") or "").lower()
+    h = (handle or "").lstrip("@").lower()
+    if src.startswith("x:@") or src == "x_post":
+        return True
+    if h and f"x.com/{h}/status/" in src:
+        return True
+    return False
+
+
+def provenance(find: dict, *, official_x: dict, watched_wallets: set[str]) -> dict:
+    """Return {'wallet_factory': bool, 'official_x': bool, 'name_only': bool, 'x_url': str|None,
+    'creator': str|None}. official_x = {addr_lower: {post_url, handle,...}}."""
+    a = (find.get("address") or "").lower()
+    handle = find.get("handle")
+    wf = xo = False
+    name_hit = False
+    x_url = None
+    creator = (find.get("traced_from") or "").lower() or None
+    for s in find.get("sources") or []:
+        o = s.get("origin")
+        src = str(s.get("source") or "")
+        if o == "tapeout_watch":
+            if s.get("creator_watched") or src.endswith(":creator_watched") or src == "wallet:create":
+                wf = True
+            if src.startswith("x:"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if src.endswith(":name_match"):
+                name_hit = True
+        elif o in WALLET_ORIGINS:
+            wf = True
+        elif o in ("onchain_lock", "solana_lock"):
+            reason = str(s.get("reason") or "")
+            if "wallet" in reason:
+                wf = True
+            elif reason.startswith(NAME_REASON_PREFIX) or "name" in reason or "symbol" in reason:
+                name_hit = True
+        elif o in ("tapeout_official", "tapeout_superseded"):
+            if s.get("official_x"):
+                xo = True
+                x_url = x_url or s.get("post_url")
+            if s.get("wallet_factory"):
+                wf = True
+        if _src_is_official_x(s, handle):
+            xo = True
+    if a in official_x:
+        xo = True
+        x_url = x_url or official_x[a].get("post_url")
+    if creator and creator in watched_wallets:
+        wf = True
+    return {"wallet_factory": wf, "official_x": xo, "name_only": name_hit and not wf and not xo,
+            "x_url": x_url, "creator": creator}
+
+
+def assess(find: dict, *, verified_ok: bool, ca_role: str | None, prov: dict,
+           superseded_by: str | None = None, launched: bool = False) -> dict:
+    """Return the confidence fields to merge into a ca_finds row."""
+    wf, xo = prov["wallet_factory"], prov["official_x"]
+    tag = "both" if (wf and xo) else "wallet_factory" if wf else "official_x" if xo else None
+    if not verified_ok:
+        status = "not_ca"
+    elif prov.get("name_only"):
+        status = "suspected_copycat"
+    elif superseded_by and not xo:
+        status = "superseded"
+    elif tag:
+        status = "confirmed"
+    else:
+        status = "candidate"
+    out = {
+        "ca_status": status,
+        "ca_status_zh": STATUS_LABEL[status],
+        "provenance": tag,
+        "provenance_zh": PROV_LABEL.get(tag) if tag else None,
+        "official_x_confirmed": bool(xo),
+        "wallet_factory_confirmed": bool(wf),
+        "ca_role": ca_role,
+        "alert_ok": status == "confirmed" and not launched,
+    }
+    if prov.get("x_url"):
+        out["official_x_url"] = prov["x_url"]
+    if superseded_by and status == "superseded":
+        out["superseded_by"] = superseded_by
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Project CA lock — once official X posts a verified CA, later CAs for that
+# project are suppressed (audit log only). Activity / WALLET_ACTIVITY untouched.
+# ---------------------------------------------------------------------------
+import fcntl
+import json
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+LOCK_PATH = BASE / "ca_project_lock.json"
+SKIP_LOG = BASE / "ca_locked_skip.jsonl"
+_SH = ZoneInfo("Asia/Shanghai")
+
+# Handles that share one lock (TapeRobot watch uses TapeOutWatch; project X is TapeRobot_bsc).
+PROJECT_ALIASES: dict[str, str] = {
+    "tapeoutwatch": "taperobot_bsc",
+    "taperobot": "taperobot_bsc",
+    "taperobot_bsc": "taperobot_bsc",
+}
+
+
+def project_key(handle: str | None, name: str | None = None) -> str | None:
+    h = (handle or "").lstrip("@").strip().lower()
+    if h in PROJECT_ALIASES:
+        return PROJECT_ALIASES[h]
+    if h:
+        return h
+    n = (name or "").strip().lower()
+    if not n:
+        return None
+    if "taperobot" in n.replace(" ", "") or "tapeout" in n.replace(" ", ""):
+        return "taperobot_bsc"
+    return n.replace(" ", "_")
+
+
+def _now() -> str:
+    return datetime.now(_SH).isoformat(timespec="seconds")
+
+
+def load_locks() -> dict:
+    try:
+        return json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {"updated_at": None, "projects": {}}
+
+
+def _save_locks(doc: dict) -> None:
+    LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOCK_PATH.touch(exist_ok=True)
+    with LOCK_PATH.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        tmp = LOCK_PATH.with_suffix(".tmp")
+        doc["updated_at"] = _now()
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(LOCK_PATH)
+        fcntl.flock(lf, fcntl.LOCK_UN)
+
+
+def get_lock(handle: str | None, name: str | None = None) -> dict | None:
+    """Return the lock entry for this project, or None."""
+    key = project_key(handle, name)
+    if not key:
+        return None
+    return (load_locks().get("projects") or {}).get(key)
+
+
+def is_project_locked(handle: str | None, name: str | None = None) -> bool:
+    return get_lock(handle, name) is not None
+
+
+def locked_cas(handle: str | None, name: str | None = None) -> set[str]:
+    lock = get_lock(handle, name) or {}
+    return {(c.get("address") or "").lower() for c in (lock.get("locked_cas") or []) if c.get("address")}
+
+
+def is_from_official_x(source: str | None, *, handle: str | None = None, post_url: str | None = None) -> bool:
+    """True when the CA came from the project's own X account (not a third-party scrape of x.com)."""
+    s = (source or "").strip()
+    sl = s.lower()
+    if sl.startswith("x:@"):
+        return True
+    if sl == "x_post":
+        return True
+    if post_url and handle:
+        h = handle.lstrip("@").lower()
+        if f"x.com/{h}/status/" in post_url.lower() or f"twitter.com/{h}/status/" in post_url.lower():
+            return True
+    if handle and ("x.com/" in sl or "twitter.com/" in sl):
+        h = handle.lstrip("@").lower()
+        if f"x.com/{h}/" in sl or f"twitter.com/{h}/" in sl:
+            return True
+    return False
+
+
+def should_skip_ca(*, handle: str | None, name: str | None = None, address: str | None,
+                   source: str | None = None, from_official_x: bool | None = None,
+                   post_url: str | None = None) -> tuple[bool, str | None]:
+    """After a project is locked, skip any later CA that did not come from official X
+    and is not already in locked_cas[]. Returns (skip, reason)."""
+    lock = get_lock(handle, name)
+    if not lock:
+        return False, None
+    a = (address or "").strip().lower()
+    if a and a in {(c.get("address") or "").lower() for c in (lock.get("locked_cas") or [])}:
+        return False, None  # already the locked CA — allow rebuild / re-confirm
+    ox = from_official_x if from_official_x is not None else is_from_official_x(source, handle=handle, post_url=post_url)
+    if ox:
+        return False, None  # exception: official X may attach another address by ca_role
+    return True, (f"project locked at {lock.get('locked_at')}; "
+                  f"locked_cas={[c.get('address') for c in (lock.get('locked_cas') or [])]}; "
+                  f"source={source or '?'}")
+
+
+def log_locked_skip(*, handle: str | None, name: str | None = None, address: str | None,
+                    source: str | None = None, reason: str | None = None,
+                    extra: dict | None = None) -> None:
+    key = project_key(handle, name)
+    lock = get_lock(handle, name) or {}
+    ev = {
+        "type": "CA_LOCKED_SKIP",
+        "at": _now(),
+        "project_key": key,
+        "handle": handle,
+        "name": name,
+        "address": address,
+        "source": source,
+        "reason": reason or "project_ca_locked",
+        "locked_at": lock.get("locked_at"),
+        "locked_by_official_x_url": lock.get("locked_by_official_x_url"),
+        **(extra or {}),
+    }
+    with SKIP_LOG.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+    print(f"[ca_lock] SKIP {key} {address} via {source}: {ev['reason']}", flush=True)
+
+
+def record_lock(*, handle: str | None, name: str | None = None, address: str,
+                ca_role: str | None = None, post_url: str | None = None,
+                verified: dict | None = None, aliases: list[str] | None = None,
+                note: str | None = None) -> dict:
+    """Create or update a project lock when official X posts a verified CA.
+    Adds address into locked_cas[] (by ca_role). Returns the lock entry."""
+    key = project_key(handle, name)
+    if not key:
+        raise ValueError("record_lock needs handle or name")
+    a = address.strip()
+    a_l = a.lower()
+    LOCK_PATH.touch(exist_ok=True)
+    with LOCK_PATH.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        try:
+            doc = json.loads(LOCK_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            doc = {"projects": {}}
+        projects = doc.setdefault("projects", {})
+        entry = projects.get(key) or {
+            "project_key": key,
+            "handle": (handle or "").lstrip("@") or None,
+            "name": name,
+            "aliases": [],
+            "locked_at": _now(),
+            "locked_by_official_x_url": post_url,
+            "locked_cas": [],
+            "note": note,
+        }
+        # aliases
+        alias_set = {x.lower().lstrip("@") for x in (entry.get("aliases") or []) if x}
+        if handle:
+            alias_set.add(handle.lstrip("@").lower())
+        for x in aliases or []:
+            alias_set.add(x.lstrip("@").lower())
+        # keep PROJECT_ALIASES reverse links in the entry too
+        for alias, canon in PROJECT_ALIASES.items():
+            if canon == key:
+                alias_set.add(alias)
+        entry["aliases"] = sorted(alias_set)
+        if handle and not entry.get("handle"):
+            entry["handle"] = handle.lstrip("@")
+        if name and not entry.get("name"):
+            entry["name"] = name
+        if post_url and not entry.get("locked_by_official_x_url"):
+            entry["locked_by_official_x_url"] = post_url
+        cas = entry.setdefault("locked_cas", [])
+        existing = next((c for c in cas if (c.get("address") or "").lower() == a_l), None)
+        if existing:
+            if ca_role and not existing.get("ca_role"):
+                existing["ca_role"] = ca_role
+            if post_url and not existing.get("post_url"):
+                existing["post_url"] = post_url
+            if verified:
+                existing["verified"] = {k: verified.get(k) for k in ("kind", "symbol", "name", "note") if verified.get(k) is not None}
+        else:
+            row = {"address": a, "ca_role": ca_role, "post_url": post_url, "added_at": _now()}
+            if verified:
+                row["verified"] = {k: verified.get(k) for k in ("kind", "symbol", "name", "note") if verified.get(k) is not None}
+            cas.append(row)
+            if post_url:
+                entry["locked_by_official_x_url"] = entry.get("locked_by_official_x_url") or post_url
+        if note and not entry.get("note"):
+            entry["note"] = note
+        projects[key] = entry
+        doc["updated_at"] = _now()
+        tmp = LOCK_PATH.with_suffix(".tmp")
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(LOCK_PATH)
+        fcntl.flock(lf, fcntl.LOCK_UN)
+    # keep live alias map in sync for this process
+    for alias in entry.get("aliases") or []:
+        PROJECT_ALIASES[alias] = key
+    return entry
+
+
+def lock_fields(handle: str | None, name: str | None = None) -> dict:
+    """Fields to merge into a ca_finds row for a locked project."""
+    lock = get_lock(handle, name)
+    if not lock:
+        return {"ca_locked": False}
+    return {
+        "ca_locked": True,
+        "ca_locked_at": lock.get("locked_at"),
+        "locked_by_official_x_url": lock.get("locked_by_official_x_url"),
+        "locked_cas": [c.get("address") for c in (lock.get("locked_cas") or [])],
+        "project_key": lock.get("project_key"),
+    }

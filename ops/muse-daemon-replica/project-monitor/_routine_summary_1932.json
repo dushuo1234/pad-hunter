@@ -1,0 +1,154 @@
+{
+  "routine": "开盘与CA预警",
+  "at": "2026-10-27T20:20:35+08:00",
+  "fired": "2026-10-27T11:31:37Z",
+  "pause_file": "absent",
+  "daemons": {
+    "listing": "running pid=3446519",
+    "onchain_lock": "running pid=889131"
+  },
+  "watchlist_sync": {
+    "before": 306,
+    "after": 305,
+    "newly_locked": [
+      {
+        "name": "Bullshot",
+        "handle": "bullshot911",
+        "status": "开发中"
+      }
+    ],
+    "newly_launched_pruned": [
+      {
+        "name": "TapeFractal",
+        "handle": "tapefractal",
+        "reason": "nft_mint_live"
+      }
+    ],
+    "note": "306+Bullshot→307; prune TapeFractal (+justanideadev already_trading mid-window) →305; Bullshot retained"
+  },
+  "wallet_mirror": 60,
+  "wallet_list_count": 71,
+  "token_symbols": 907,
+  "sol_wallets_after_harvest": 71,
+  "x_refresh": {
+    "at": "2026-10-27T19:35:14+08:00",
+    "bios_refreshed": 39,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "TapeFractal",
+      "TollanUniverse",
+      "Bullshot911"
+    ],
+    "user_count": 495,
+    "pkc_bio": "",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "pkc_bio_empty": true,
+    "x_reads_left_approx": 484,
+    "notes": "PKC bio empty; TapeFractal 上线倒计时1小时 (freemint 20:00 Asia/Shanghai); Bullshot newly locked $7.7M raise; Tollan Space Stations mint more details soon",
+    "handles": [
+      "PrivateKeyCoin_",
+      "TapeFractal",
+      "TollanUniverse",
+      "Bullshot911",
+      "Agentai_ai",
+      "play_blastoff",
+      "AgentKinetiq",
+      "Derstar_options",
+      "RustLings_Nft",
+      "JackLabsHQ",
+      "aero_agent",
+      "justPFPart",
+      "TerraGenesis_RH",
+      "CaravanRH",
+      "Grimveil_nft",
+      "Noctrive",
+      "RBHHeroes",
+      "Bunnypadfun",
+      "SectorOneWorld",
+      "entertheanime",
+      "GiwaMemeCom",
+      "get_optimum",
+      "romadottrade",
+      "ElysiumOrbit",
+      "hashgentic",
+      "Blockzerofun",
+      "Jeerclub",
+      "distracted_bet",
+      "Mori_elysium",
+      "LifeOneFun",
+      "bStonkAgents",
+      "BuildHundred",
+      "zkArgoseth",
+      "nonceprotocol",
+      "Tinylegends_io",
+      "Yieldtopia",
+      "hexxxx2_0",
+      "mitradotfun",
+      "hypawwX"
+    ]
+  },
+  "pipeline": {
+    "EXIT": 0,
+    "duration_s": 2175,
+    "duration_min": 36.2,
+    "log": "logs/run_listing_onchain_js_20261027_1935.log",
+    "new_js_ca": 3,
+    "new_js_ca_note": "Bullshot JS scraped USDC/USDT stables only — not project CA; non-actionable",
+    "matches": 1,
+    "matches_note": "Bullshot×USDT BSC pancake_v3 — ambient/stable noise",
+    "NEW_DEPLOY": "ambient univ2_eth×3; no watchlist-tied",
+    "SITE_JS_CHANGE": [
+      "EmberWorld",
+      "Listen",
+      "TapeFoundry",
+      "tom"
+    ],
+    "SITE_JS_CHANGE_note": "fingerprint near ambient univ2_base — skip",
+    "TRACE_CA": 4,
+    "TRACE_CA_detail": "Hashgentic CREATE×4 BSC — 扫出钱包·非CA; non-actionable",
+    "onchain_lock_new": 0,
+    "onchain_lock_offset": 163513,
+    "newly_launched": 1,
+    "newly_launched_detail": [
+      "TapeFractal"
+    ],
+    "also_removed_mid_window": [
+      "justanideadev already_trading@19:45"
+    ],
+    "launched_count": 85,
+    "workbench": 73,
+    "listing_at_published": [],
+    "pages_published": true
+  },
+  "actionable": [
+    {
+      "type": "已开盘",
+      "project": "TapeFractal",
+      "handle": "TapeFractal",
+      "chain": "Fractal Bitcoin / 比特币",
+      "ca": null,
+      "evidence": "prune nft_mint_live: Freemint 2026/10/27-20:00 UTC+8 started; X 上线倒计时1小时; removed from watchlist/candidates/projects",
+      "source": "X / prune_launched",
+      "listing_at": "2026-10-27T20:00:00+08:00"
+    },
+    {
+      "type": "LISTING_SIGNAL",
+      "project": "Rebate",
+      "handle": "RebateLaunch",
+      "chain": "Robinhood",
+      "ca": null,
+      "evidence": "X: Launch day. $REBATE goes live today at 17:00 UTC on Robinhood Chain; CA will be posted on this account only. listing_at sticky 2026-10-28T01:00+08",
+      "source": "X",
+      "listing_at": "2026-10-28T01:00:00+08:00"
+    }
+  ],
+  "user_ping": true,
+  "draft_message": "🔔 TapeFractal 已开盘（Freemint 直播）\nChain: Fractal Bitcoin · CA: 未锁定代币CA（NFT mint）\nX 官宣 Freemint 2026/10/27 20:00 UTC+8，上线倒计时后已 prune→已开盘。\nSource: X @TapeFractal / prune_launched\n\n⚠️ Rebate ($REBATE) 今晚/凌晨开盘提醒\nChain: Robinhood · CA: 未出（官推称只在本账号发）\nX: goes live today 17:00 UTC (= 2026-10-28 01:00 Asia/Shanghai)\nSource: X @RebateLaunch\n\nTapeFractal freemint is live → moved to 已开盘. Rebate token launch 01:00 Asia/Shanghai with CA pending on official X.",
+  "non_actionable_notes": [
+    "Bullshot newly locked (开发中) — launchpad already live, JS stables only, no project token CA",
+    "PKC bio still empty; sticky launching-this-week",
+    "ONCHAIN_LOCK new=0; NEW_DEPLOY ambient univ2_eth×3; SITE_JS ambient univ2",
+    "TRACE_CA Hashgentic NFT×4 non-actionable",
+    "AgentAI listing_at 20:00 sticky; within_3d flipped false after wall-clock pass"
+  ]
+}

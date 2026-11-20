@@ -1,0 +1,151 @@
+{
+  "updated_at": "2026-10-21T15:40:37+08:00",
+  "timezone": "Asia/Shanghai",
+  "label": "TapeRobot/TapeOut watch",
+  "note": "EOA wallets only — never treat as CA. Alert on TapeOut factory creates by these addresses.",
+  "project": "TapeOutWatch",
+  "handle": "TapeOutWatch",
+  "chain": "bsc",
+  "factory": {
+    "id": "tapeout_factory_bsc",
+    "address": "0x68224F668083c29e9800Be2a646d42d18cedF7e2",
+    "implementation": "0xa68ccf4931d98ad0a4be15ee40542edc0dec6422",
+    "chain": "bsc",
+    "create_topic0": "0x2e8868f18a1eaf0222b5b09484fdf12163e9741393f8457cd79d2ae42b2d2290",
+    "create_layout": "topic1=processor, topic2=transistors, topic3=creator; data=name,supplyCap,mintPriceWei"
+  },
+  "wallets": [
+    {
+      "address": "0x0a68f9ffc1d4d988bfa3ad72ef1b383062cf0527",
+      "role": "game_deployer",
+      "note": "TapeRobot game deployer + owner"
+    },
+    {
+      "address": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
+      "role": "transistor_creator",
+      "note": "Created TapeRobot TapeOut processor/transistors"
+    },
+    {
+      "address": "0xEe99666BeD3349C9De498789dd536FC179719973",
+      "role": "treasury",
+      "note": "Funded game deployer"
+    },
+    {
+      "address": "0xb1503a4c2d40e462c7a2bff3d8d93a191560332e",
+      "role": "coordinator_owner",
+      "note": "Coordinator owner; linked to deployer"
+    },
+    {
+      "address": "0x88bcc5b698f58ab96833630ac78e0db4d800dd47",
+      "role": "holding",
+      "note": "Holding wallet funded by deployer (nonce 0)"
+    },
+    {
+      "address": "0xee55127712b65de22c9bb983a18cbb403bcd9fde",
+      "role": "coordinator_funded",
+      "note": "0.07 BNB from coordinator owner"
+    },
+    {
+      "address": "0xa5d93964ecfec04d9bfa2ca22f4eba91f253d556",
+      "role": "coordinator_funded",
+      "note": "0.07 BNB from coordinator owner"
+    },
+    {
+      "address": "0xe4686f1cd2aa42c20ef8bfb56ef17d4bd92ae426",
+      "role": "coordinator_funded",
+      "note": "0.07 BNB from coordinator owner"
+    },
+    {
+      "address": "0x5336870737c4bcc1e5289951a7f42e26ccadbf85",
+      "role": "coordinator_funded",
+      "note": "0.07 BNB from coordinator owner"
+    }
+  ],
+  "seed_seen": [
+    {
+      "tx": "0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35",
+      "processor": "0x06CBb481AE376FdF17a765c770233d5718E4F91F",
+      "transistors": "0x6EF766001d293848c0e4aa188539e01Eb4f25e26",
+      "creator": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
+      "name": "TapeRobot",
+      "note": "Existing TapeRobot create — seeded so watcher does not re-alert",
+      "token": "0x11e87D97A34f8000F710d054e4EaC30011A3ac8d"
+    }
+  ],
+  "boost": {
+    "enabled": true,
+    "pre_listing_minutes": 10,
+    "post_listing_minutes": 120,
+    "intervals": {
+      "normal": {
+        "factory_wallets_s": 8,
+        "x_s": 300
+      },
+      "boost": {
+        "factory_wallets_s": 2,
+        "x_s": 45
+      }
+    },
+    "note": "Boost = [listing_at-10min, listing_at+post] OR mint_live. Factory/wallets use daemon interval; X via tapeout_x_boost_wake.json for parent routine (MCP)."
+  },
+  "boost_targets": [
+    {
+      "project": "TapeRobot",
+      "handle": "TapeRobot_bsc",
+      "listing_at": "2026-10-21T16:00:00+08:00",
+      "mint_live": true,
+      "mint_live_note": "TapeOut transistors already minting (nft_mint_live); keep boost until post window ends or mint_live set false",
+      "x_user_id": "3114058692",
+      "x_username": "TapeRobot_bsc"
+    }
+  ],
+  "official": [
+    {
+      "address": "0x6EF766001d293848c0e4aa188539e01Eb4f25e26",
+      "role": "transistors",
+      "label_zh": "官方TapeRobot·晶体管合约(ERC-1155)",
+      "creator": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
+      "tx": "0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35",
+      "verified": "tapeout.net/old#p/0x06CB… page + processors.json"
+    },
+    {
+      "address": "0x06CBb481AE376FdF17a765c770233d5718E4F91F",
+      "role": "processor",
+      "label_zh": "官方TapeRobot·Processor(ERC-721)",
+      "creator": "0x89413b1005B0C2499f41663Ba27b9C909D89Fff1",
+      "tx": "0x77b29cb315f5558d8695c94dce457e1bfafe23ff61c5298fe936055979c5ac35",
+      "verified": "tapeout.net/old#p/0x06CB… page + processors.json"
+    }
+  ],
+  "copycats": [
+    {
+      "address": "0xb841e9c6cac146d903a2f5449a724cef4b0ae5e6",
+      "role": "processor",
+      "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "tx": "0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
+      "at": "2026-10-21T15:51:24+08:00"
+    },
+    {
+      "address": "0x8de74a7a93826b5158c17a880f45d55ab52dc64b",
+      "role": "transistors",
+      "creator": "0x2590782dd8c42f62b8e3b4ff788505fc64ed637e",
+      "tx": "0x312fec27ff44a13b6d9732ec3e86228888b9fb3a1f7f1e1218eb3b9c04a95f4a",
+      "at": "2026-10-21T15:51:24+08:00"
+    },
+    {
+      "address": "0xf1f87c8bba872bee0d2d7b0cf1ffeb426ad5945b",
+      "role": "processor",
+      "creator": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "tx": "0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
+      "at": "2026-10-21T15:57:13+08:00"
+    },
+    {
+      "address": "0xbc53a0c9d45972134063d05fdecdbf1a1bdd2fe4",
+      "role": "transistors",
+      "creator": "0x9379dc54624c42dff703054dee97ce3ad87cb4e0",
+      "tx": "0xf4a7c043738d74307a81e3aa10696c00c7f67c1aa299144ed56479f5257c0679",
+      "at": "2026-10-21T15:57:13+08:00"
+    }
+  ],
+  "copycat_rule": "name-only TapeOut/four.meme match with creator not in wallets and not confirmed by official X = name_match_unconfirmed (疑似山寨·同名非官方): logged only, never alert / Pages CA"
+}

@@ -1,0 +1,240 @@
+{
+  "routine": "开盘与CA预警",
+  "hhmm": "2135",
+  "at": "2026-10-29T22:08:42+08:00",
+  "timezone": "Asia/Shanghai",
+  "pause": "OPEN",
+  "daemons_ok": true,
+  "daemons": {
+    "listing_scan_pid": 6323,
+    "onchain_lock_pid": 5409
+  },
+  "sync": {
+    "before": 397,
+    "after_sync": 400,
+    "after_pipeline": 398,
+    "locked_new": [
+      {
+        "name": "Derive.xyz",
+        "handle": "DeriveXYZ",
+        "status": "开发中",
+        "chain": "ETH",
+        "category": "DeFi协议"
+      },
+      {
+        "name": "Ascenders ⚔️",
+        "handle": "PlayAscenders",
+        "status": "开发中 · 🔒 开盘: 未开盘",
+        "chain": "其他",
+        "category": "GameFi"
+      },
+      {
+        "name": "链向未来 $PPRGB 🐸",
+        "handle": "RGBDuizhang",
+        "status": "即将启动 · 🔒 开盘: 未开盘",
+        "chain": "其他",
+        "category": "基础设施"
+      }
+    ],
+    "locked_new_handles": [
+      "DeriveXYZ",
+      "PlayAscenders",
+      "RGBDuizhang"
+    ],
+    "updated_meta": 396,
+    "blocklist_skipped": 0,
+    "skipped_unclassified": 116
+  },
+  "x_refresh": {
+    "bios": 83,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "Noctrive",
+      "TandemOnl",
+      "zkArgoseth",
+      "tapeupio",
+      "hashgentic",
+      "DeriveXYZ",
+      "GhostTownBNB",
+      "Inktrons404",
+      "hexxxx2_0",
+      "OrpheusHL",
+      "aegis_hedge"
+    ],
+    "posts_counts": {
+      "PrivateKeyCoin_": 3,
+      "Noctrive": 10,
+      "TandemOnl": 10,
+      "zkArgoseth": 10,
+      "tapeupio": 10,
+      "hashgentic": 10,
+      "DeriveXYZ": 5,
+      "GhostTownBNB": 5,
+      "Inktrons404": 10,
+      "hexxxx2_0": 10,
+      "OrpheusHL": 10,
+      "aegis_hedge": 10
+    },
+    "pkc_bio": "(empty)",
+    "not_found": [
+      "BloopersInkNFT",
+      "ArscelareAi",
+      "myslabsfun",
+      "fourgefun",
+      "fomofc_sol"
+    ]
+  },
+  "pipeline": {
+    "exit": 0,
+    "elapsed_min": 28.3,
+    "start": "2026-10-29T21:37:53+08:00",
+    "end": "2026-10-29T22:06:10+08:00",
+    "hang_workaround": "killed trace_wallet_ca.py ~11m into Grok Grid deep-trace (SIGTERM rc=143); scan_js_factory_match OK 290s; remaining steps completed",
+    "note": "killing trace_wallet_ca 1195894 at 2026-10-29T21:56:16+08:00\nhang_workaround=trace_wallet_ca.py grok_grid_deep_trace\nhang_workaround=0\nhang_workaround=trace_wallet_ca.py grok_grid_deep_trace (SIGTERM rc=143); js_factory clean 290s"
+  },
+  "new_ca": [],
+  "new_ca_daemon_already_surfaced": [
+    {
+      "name": "VOZZ",
+      "handle": "vozzgpu",
+      "ca": "0x214a4dd7842d62b5e4bbd1beeba137e550a252b1"
+    },
+    {
+      "name": "Mewly",
+      "handle": "playmewly",
+      "ca": "0x3885a7eec5ec70637e248c01b7ff4d6a78266ea1"
+    }
+  ],
+  "new_js_ca": 0,
+  "js_matches": 0,
+  "TRACE_CA": 0,
+  "TRACE_CA_note": "trace killed mid-run; no fresh TRACE_CA this fire",
+  "SITE_JS": {
+    "count": 5,
+    "ambient": true,
+    "projects": [
+      "Chikun",
+      "EmberWorld",
+      "Grok Grid",
+      "Grokpad",
+      "NOIR Brokers"
+    ]
+  },
+  "NEW_DEPLOY": {
+    "watchlist_relevant": 0,
+    "ambient_univ2_samples": 30
+  },
+  "onchain_lock": {
+    "new_lines_since_fire": 2,
+    "qualifying_hits": [],
+    "non_qualifying": [
+      {
+        "handle": "trench_agents",
+        "address": "0xc71b950fb0b71c3dc1de45ec3fe77b92e1647ba3",
+        "confidence": "low",
+        "reason": "name_fuzzy:trench"
+      },
+      {
+        "handle": "trench_agents",
+        "address": "0x544bce77194c01e55d218eecc18711422f937ba3",
+        "confidence": "low",
+        "reason": "name_fuzzy:trench"
+      }
+    ],
+    "relay_offset": 272,
+    "alerts_lines": 273
+  },
+  "newly_launched": [
+    {
+      "name": "Grok Grid",
+      "handle": "GrokGrid",
+      "chain": "Solana",
+      "ca": "0xacc51ffdef63fb0c014c882267c3a17261a5ed50",
+      "ca_chain": "base",
+      "removed_at": "2026-10-29T21:56:19+08:00",
+      "reason": "onchain_ca_lock"
+    }
+  ],
+  "workbench": {
+    "count": 96,
+    "change": "unchanged"
+  },
+  "listing_at": {
+    "within_3d": [
+      {
+        "project": "Noctrive",
+        "handle": "Noctrive",
+        "listing_at": "2026-10-30T00:00:00+08:00",
+        "source": "x",
+        "confidence": "high"
+      },
+      {
+        "project": "Tandem",
+        "handle": "TandemOnl",
+        "listing_at": "2026-10-30T00:00:00+08:00",
+        "source": "x",
+        "confidence": "medium"
+      },
+      {
+        "project": "zkArgos",
+        "handle": "zkArgoseth",
+        "listing_at": "2026-10-30T02:00:00+08:00",
+        "source": "x",
+        "confidence": "high"
+      },
+      {
+        "project": "Hashgentic",
+        "handle": "hashgentic",
+        "listing_at": "2026-10-31T21:00:00+08:00",
+        "source": "x",
+        "confidence": "high"
+      },
+      {
+        "project": "Kasseal",
+        "handle": "Kaspaseal",
+        "listing_at": "2026-11-01T00:00:00+08:00",
+        "source": "x",
+        "confidence": "medium"
+      },
+      {
+        "project": "Grail",
+        "handle": "Graildotfamily",
+        "listing_at": "2026-11-01T00:00:00+08:00",
+        "source": "x",
+        "confidence": "medium"
+      },
+      {
+        "project": "Inktrons",
+        "handle": "Inktrons404",
+        "listing_at": "2026-11-01T07:59:00+08:00",
+        "source": "x",
+        "confidence": "high"
+      }
+    ],
+    "published_changes": [],
+    "extract_ran": true,
+    "note": "extract_listing_times refreshed sticky map; within_3d times (Noctrive/Tandem/zkArgos/Hashgentic/…) already known from earlier daemon extract — no new verified postponement/correction this run"
+  },
+  "pkc_signal_ambient": {
+    "handle": "PrivateKeyCoin_",
+    "signal": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "ambient_repeat": true
+  },
+  "actionable": true,
+  "ping_items": [
+    {
+      "kind": "newly_launched",
+      "project": "Grok Grid",
+      "handle": "GrokGrid",
+      "chain": "Solana",
+      "ca": "0xacc51ffdef63fb0c014c882267c3a17261a5ed50",
+      "ca_chain": "base",
+      "evidence": "mark_launched_from_ca newly=1; CA locked (medium) via inline pump.fun",
+      "source": "site",
+      "caution": "Solana/pump.fun project but locked CA is base — verify before any trade"
+    }
+  ],
+  "rpc_auth": "daemon shows intermittent public RPC errors (bsc limit / hyperevm / ink / ethereum); not repeated auth failure — do not pause",
+  "memory_update": "UpdateMemory tool unavailable in this executor; journal sentence written to files only",
+  "journal_sentence": "2026-10-29 22:08 Asia/Shanghai 开盘与CA预警: pause OPEN; daemons ok; wl sync 397→400(+DeriveXYZ/PlayAscenders/RGBDuizhang) pipeline后398; x bios83 posts12; pipeline exit0 ~28.3m hang_workaround=trace_wallet_ca/GrokGrid; new_ca0 lock_qual0 new_js0; newly已开盘 GrokGrid; actionable yes."
+}

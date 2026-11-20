@@ -1,0 +1,77 @@
+{
+  "at": "2026-10-30T02:03:30+08:00",
+  "fired_routine": "开盘与CA预警",
+  "pause": "OPEN",
+  "daemons": {
+    "listing": "ok",
+    "onchain_lock": "ok"
+  },
+  "watchlist": "401→415(+14)→414 (prune bnbs_ai)",
+  "locked_new": [
+    "silicon_dreamer",
+    "toshprotocol",
+    "elysdex",
+    "altl2fun",
+    "t1protocol",
+    "huemans_rh",
+    "_stockflow",
+    "fixtheonchain",
+    "bagmonapp",
+    "banditdotbot",
+    "fomogles",
+    "bnbs_ai",
+    "slymzcrew",
+    "hexoses_"
+  ],
+  "x": {
+    "bios_batches": 2,
+    "pkc_bio_empty": true,
+    "bnbs_posts": 9,
+    "users": 693
+  },
+  "pipeline_exit": 0,
+  "pipeline_elapsed_min": 25.8,
+  "hang_workaround": "trace_wallet_ca.py timeout=900",
+  "onchain_lock": {
+    "offset_before": 223790,
+    "offset_after": 224507,
+    "new_lines": 1,
+    "qualifying_medium": 1,
+    "raw_new": [
+      "Plea IMD"
+    ]
+  },
+  "new_js_ca": 0,
+  "actionable": [
+    {
+      "type": "NEW_CA+已开盘",
+      "project": "BNBS.AI",
+      "handle": "bnbs_ai",
+      "chain": "bsc",
+      "ca": "0x171f264f938d55d968afc5d6b133c4157a61f05f",
+      "symbol": "BNBS",
+      "evidence": "官推 bio/推文固定 CA；Mint has ended / Trading is now open（2026-10-29）；链上 ERC20 BNBS 已核验；mark_launched newly=bnbs_ai",
+      "source": "x_bio+x_post / mark_launched_from_ca",
+      "confidence": "high"
+    },
+    {
+      "type": "ONCHAIN_LOCK",
+      "project": "Plea IMD",
+      "handle": "Pleaimd",
+      "chain": "ethereum",
+      "ca": "0x6dad45978423ab00a8faa16494497587bfe0030a",
+      "evidence": "onchain_lock confidence=medium; match=symbol:PLEA",
+      "source": "onchain_lock",
+      "confidence": "medium"
+    },
+    {
+      "type": "listing_at_change",
+      "project": "Noctrive",
+      "handle": "noctrive",
+      "chain": null,
+      "ca": null,
+      "evidence": "2026-10-30T01:00:00+08:00 → 2026-10-30T02:00:00+08:00 (x)",
+      "source": "listing_times"
+    }
+  ]
+}

@@ -1,0 +1,468 @@
+#!/usr/bin/env python3
+"""Pad Hunter sniper — fast buy hook (dry_run default).
+
+HOW TO RUN
+  # one-shot inject (smoke):
+  python3 sniper_buy.py inject --project Demo --handle demo_x \\
+      --ca 0x1111111111111111111111111111111111111111 --chain bsc --source high_conf
+  # duplicate should skip:
+  python3 sniper_buy.py inject --project Demo --handle demo_x \\
+      --ca 0x1111111111111111111111111111111111111111 --chain bsc --source 6551
+  # different CA buys separately:
+  python3 sniper_buy.py inject --project Demo --handle demo_x \\
+      --ca 0x2222222222222222222222222222222222222222 --chain bsc --source 6551
+
+  # smoke self-test (high_conf then 6551 same CA → buy + skip):
+  python3 sniper_buy.py smoke
+
+LOGS: alerts/sniper_buys.jsonl  STATE: alerts/sniper_state.json
+CONFIG: sniper_config.json (dry_run=true hard default)
+
+LIVE flip later: set dry_run=false in config (or SNIPER_DRY_RUN=0). Real call is exactly:
+  baw market-order swap --binanceChainId <id> --fromTokenQty <amount> \\
+      --fromToken <USDT> --toToken <CA> --slippage auto --mev false --gasLevel HIGH
+Never runs that while dry_run is true.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path(__file__).resolve().parent
+SH = ZoneInfo("Asia/Shanghai")
+CFG_PATH = BASE / "sniper_config.json"
+
+# Pre-resolved BAW chain IDs + USDT (buy quote). Native sentinel if USDT unknown.
+NATIVE = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+CHAIN_MAP = {
+    # name variants → (binanceChainId, fromToken USDT-or-native, unit label)
+    "bsc": ("56", "0x55d398326f99059fF775485246999027B3197955", "USDT"),
+    "bnb": ("56", "0x55d398326f99059fF775485246999027B3197955", "USDT"),
+    "binance": ("56", "0x55d398326f99059fF775485246999027B3197955", "USDT"),
+    "ethereum": ("1", "0xdAC17F958D2ee523a2206206994597C13D831ec7", "USDT"),
+    "eth": ("1", "0xdAC17F958D2ee523a2206206994597C13D831ec7", "USDT"),
+    "base": ("8453", "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2", "USDT"),
+    "arbitrum": ("42161", "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", "USDT"),
+    "arb": ("42161", "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9", "USDT"),
+    "polygon": ("137", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", "USDT"),
+    "matic": ("137", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", "USDT"),
+    "robinhood": ("4663", NATIVE, "NATIVE"),  # RH: no standard USDT mapped yet → native stub
+    "rh": ("4663", NATIVE, "NATIVE"),
+    "solana": ("CT_501", "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "USDT"),
+    "sol": ("CT_501", "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", "USDT"),
+}
+
+_lock = threading.Lock()
+_bought: set[str] | None = None  # "handle|ca_norm" keys
+_cfg_cache: dict | None = None
+
+
+def _now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="milliseconds")
+
+
+def load_config() -> dict:
+    global _cfg_cache
+    if _cfg_cache is not None:
+        return _cfg_cache
+    cfg = {
+        "dry_run": True,
+        "amount": "20",
+        "amount_unit": "USDT",
+        "slippage": "auto",
+        "mev": "false",
+        "gasLevel": "HIGH",
+        "baw_bin": "baw",
+        "log_path": "alerts/sniper_buys.jsonl",
+        "state_path": "alerts/sniper_state.json",
+    }
+    try:
+        raw = json.loads(CFG_PATH.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            cfg.update(raw)
+    except Exception:
+        pass
+    # env overrides (dry_run stays true unless explicitly SNIPER_DRY_RUN=0 AND config false — still default true)
+    env_dry = os.environ.get("SNIPER_DRY_RUN")
+    if env_dry is not None:
+        cfg["dry_run"] = env_dry.strip() not in ("0", "false", "False", "no")
+    else:
+        cfg["dry_run"] = bool(cfg.get("dry_run", True))
+    if os.environ.get("SNIPER_AMOUNT"):
+        cfg["amount"] = os.environ["SNIPER_AMOUNT"]
+    _cfg_cache = cfg
+    return cfg
+
+
+def _paths(cfg: dict) -> tuple[Path, Path]:
+    log_p = Path(cfg["log_path"])
+    st_p = Path(cfg["state_path"])
+    if not log_p.is_absolute():
+        log_p = BASE / log_p
+    if not st_p.is_absolute():
+        st_p = BASE / st_p
+    log_p.parent.mkdir(parents=True, exist_ok=True)
+    st_p.parent.mkdir(parents=True, exist_ok=True)
+    return log_p, st_p
+
+
+def _norm_ca(ca: str) -> str:
+    a = (ca or "").strip()
+    if a.lower().startswith("0x"):
+        return a.lower()
+    return a  # solana case-sensitive base58 — keep as-is for key? use as given for display; lower only 0x
+
+
+def _dedupe_key(handle: str | None, project: str | None, ca: str) -> str:
+    h = (handle or "").strip().lstrip("@").lower() or (project or "").strip().lower() or "_"
+    return f"{h}|{_norm_ca(ca)}"
+
+
+def _load_bought(state_path: Path) -> set[str]:
+    global _bought
+    if _bought is not None:
+        return _bought
+    keys: set[str] = set()
+    try:
+        st = json.loads(state_path.read_text(encoding="utf-8"))
+        for k in st.get("bought_keys") or []:
+            keys.add(str(k))
+    except Exception:
+        pass
+    _bought = keys
+    return _bought
+
+
+def _persist_bought(state_path: Path, keys: set[str]) -> None:
+    tmp = state_path.with_suffix(".tmp")
+    payload = {
+        "updated_at": _now_iso(),
+        "timezone": "Asia/Shanghai",
+        "bought_keys": sorted(keys),
+        "count": len(keys),
+    }
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(state_path)
+
+
+def _append_log(log_path: Path, row: dict) -> None:
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def resolve_chain(chain: str | None) -> tuple[str | None, str | None, str, str | None]:
+    """→ (binanceChainId, fromToken, unit, error)."""
+    if not chain:
+        return None, None, "USDT", "missing_chain"
+    key = str(chain).strip().lower().replace(" ", "").replace("_", "")
+    # strip trailing "chain"
+    if key.endswith("chain"):
+        key = key[: -len("chain")]
+    hit = CHAIN_MAP.get(key)
+    if not hit:
+        # try substring
+        for k, v in CHAIN_MAP.items():
+            if k in key or key in k:
+                hit = v
+                break
+    if not hit:
+        return None, None, "USDT", f"unsupported_chain:{chain}"
+    return hit[0], hit[1], hit[2], None
+
+
+def build_baw_argv(cfg: dict, *, ca: str, chain_id: str, from_token: str, amount: str) -> list[str]:
+    """Production-shaped argv for `baw market-order swap`. Ready to fire."""
+    return [
+        cfg.get("baw_bin") or "baw",
+        "market-order",
+        "swap",
+        "--binanceChainId", str(chain_id),
+        "--fromTokenQty", str(amount),
+        "--fromToken", from_token,
+        "--toToken", ca if ca.startswith("0x") or ca.startswith("0X") else ca,
+        "--slippage", str(cfg.get("slippage") or "auto"),
+        "--mev", str(cfg.get("mev") or "false"),
+        "--gasLevel", str(cfg.get("gasLevel") or "HIGH"),
+    ]
+
+
+def fire_buy(
+    *,
+    ca: str,
+    chain: str,
+    project: str | None = None,
+    handle: str | None = None,
+    source: str = "high_conf",
+    amount: str | None = None,
+    extra: dict | None = None,
+) -> dict:
+    """Fast buy entry. dry_run=True → no baw spawn; still builds argv + logs would_buy.
+
+    Speed rules:
+      1) claim dedupe under lock (skip if already bought same project/CA)
+      2) resolve chain/fromToken from precomputed map (no network)
+      3) build baw argv
+      4) dry: instantaneous would_buy; live: subprocess baw (NOT called when dry_run)
+      5) append JSONL AFTER the fire/simulate step
+    """
+    t0 = time.perf_counter()
+    cfg = load_config()
+    log_path, state_path = _paths(cfg)
+    ca = (ca or "").strip()
+    if not ca:
+        return {"ok": False, "action": "error", "error": "missing_ca", "ms": 0}
+
+    key = _dedupe_key(handle, project, ca)
+    with _lock:
+        bought = _load_bought(state_path)
+        if key in bought:
+            ms = round((time.perf_counter() - t0) * 1000, 3)
+            row = {
+                "ts": _now_iso(),
+                "action": "skipped",
+                "skipped_reason": "duplicate_project_ca",
+                "dedupe_key": key,
+                "project": project,
+                "handle": handle,
+                "ca": ca,
+                "chain": chain,
+                "source": source,
+                "dry_run": bool(cfg.get("dry_run", True)),
+                "would_buy": False,
+                "ms": ms,
+            }
+            if extra:
+                row["extra"] = extra
+            _append_log(log_path, row)
+            return {**row, "ok": True}
+
+        # claim immediately so concurrent layers can't double-fire
+        bought.add(key)
+        try:
+            _persist_bought(state_path, bought)
+        except Exception:
+            pass
+
+    chain_id, from_token, unit, err = resolve_chain(chain)
+    amt = str(amount if amount is not None else cfg.get("amount") or "20")
+    dry = bool(cfg.get("dry_run", True))
+
+    if err or not chain_id or not from_token:
+        ms = round((time.perf_counter() - t0) * 1000, 3)
+        row = {
+            "ts": _now_iso(),
+            "action": "skipped",
+            "skipped_reason": err or "resolve_failed",
+            "dedupe_key": key,
+            "project": project,
+            "handle": handle,
+            "ca": ca,
+            "chain": chain,
+            "source": source,
+            "dry_run": dry,
+            "would_buy": False,
+            "amount": amt,
+            "amount_unit": unit,
+            "ms": ms,
+        }
+        if extra:
+            row["extra"] = extra
+        _append_log(log_path, row)
+        return {**row, "ok": False}
+
+    argv = build_baw_argv(cfg, ca=ca, chain_id=chain_id, from_token=from_token, amount=amt)
+    cmdline = " ".join(argv)
+
+    fire_ms = 0.0
+    baw_result = None
+    action = "would_buy"
+    error = None
+
+    t_fire = time.perf_counter()
+    if dry:
+        # production-shaped no-op: argv is ready; flipping dry_run→live executes argv as-is
+        action = "would_buy"
+    else:
+        # LIVE path — only when dry_run explicitly false. Still here so one-flag flip works.
+        try:
+            p = subprocess.run(
+                argv,
+                capture_output=True,
+                text=True,
+                timeout=60,
+                env={**os.environ, "BINANCE_BAW_DIR": os.environ.get("BINANCE_BAW_DIR", "")},
+            )
+            fire_ms = round((time.perf_counter() - t_fire) * 1000, 3)
+            baw_result = {
+                "returncode": p.returncode,
+                "stdout": (p.stdout or "")[:2000],
+                "stderr": (p.stderr or "")[:1000],
+            }
+            action = "bought" if p.returncode == 0 else "buy_failed"
+            if p.returncode != 0:
+                error = f"baw_exit_{p.returncode}"
+        except Exception as e:
+            fire_ms = round((time.perf_counter() - t_fire) * 1000, 3)
+            action = "buy_failed"
+            error = str(e)[:300]
+            baw_result = {"exception": error}
+
+    total_ms = round((time.perf_counter() - t0) * 1000, 3)
+    row = {
+        "ts": _now_iso(),
+        "action": action,
+        "dedupe_key": key,
+        "project": project,
+        "handle": handle,
+        "ca": ca,
+        "chain": chain,
+        "binanceChainId": chain_id,
+        "fromToken": from_token,
+        "toToken": ca,
+        "amount": amt,
+        "amount_unit": unit,
+        "source": source,
+        "dry_run": dry,
+        "would_buy": action == "would_buy",
+        "baw_argv": argv,
+        "baw_cmdline": cmdline,
+        "fire_ms": fire_ms,
+        "ms": total_ms,
+    }
+    if error:
+        row["error"] = error
+    if baw_result is not None:
+        row["baw_result"] = baw_result
+    if extra:
+        row["extra"] = extra
+    # log AFTER fire/simulate
+    _append_log(log_path, row)
+    return {**row, "ok": action in ("would_buy", "bought")}
+
+
+def is_high_conf_find(find: dict) -> bool:
+    """Reuse pipeline classification: confirmed + alert_ok, or confidence high/confirmed with is_token."""
+    if not isinstance(find, dict):
+        return False
+    if find.get("ca_status") == "confirmed" and find.get("alert_ok") is True:
+        return True
+    if find.get("ca_status") == "confirmed" and find.get("is_token"):
+        return True
+    conf = str(find.get("confidence") or "").lower()
+    if conf in ("high", "confirmed") and find.get("is_token") and find.get("alert_ok", True):
+        # exclude wallets / not_ca / copycats
+        if find.get("ca_status") in ("not_ca", "suspected_copycat", "superseded"):
+            return False
+        if find.get("kind") == "wallet" or find.get("addr_kind") == "wallet":
+            return False
+        return True
+    return False
+
+
+def fire_from_find(find: dict, *, source: str = "high_conf", require_fixed: bool = True) -> dict:
+    """炼油：默认仅「固定CA」(官推或部署者/关联钱包) 才进 sniper；纯高置信待确认。"""
+    if require_fixed:
+        try:
+            from ca_confidence import is_ca_fixed
+            ok, why = is_ca_fixed(find)
+        except Exception:
+            ok, why = False, "is_ca_fixed_unavailable"
+        if not ok:
+            return {
+                "action": "skipped",
+                "skipped_reason": f"not_fixed_ca:{why}",
+                "would_buy": False,
+                "ca": find.get("address") or find.get("ca"),
+                "source": source,
+            }
+    return fire_buy(
+        ca=str(find.get("address") or find.get("ca") or ""),
+        chain=str(find.get("chain") or ""),
+        project=find.get("project") or find.get("name"),
+        handle=find.get("handle"),
+        source=source,
+        extra={"ca_status": find.get("ca_status"), "confidence": find.get("confidence"), "ca_fixed": True},
+    )
+
+
+def cmd_smoke() -> int:
+    """Inject high_conf then 6551 same CA → buy + skip; then different CA → buy."""
+    # isolate state for smoke
+    cfg = load_config()
+    _, state_path = _paths(cfg)
+    log_path, _ = _paths(cfg)
+    # reset in-memory + wipe smoke keys only by using unique smoke handle
+    global _bought, _cfg_cache
+    tag = f"smoke_{int(time.time())}"
+    ca1 = "0x1111111111111111111111111111111111111111"
+    ca2 = "0x2222222222222222222222222222222222222222"
+    r1 = fire_buy(ca=ca1, chain="bsc", project="SmokeProj", handle=tag, source="high_conf")
+    r2 = fire_buy(ca=ca1, chain="bsc", project="SmokeProj", handle=tag, source="6551")
+    r3 = fire_buy(ca=ca2, chain="bsc", project="SmokeProj", handle=tag, source="6551")
+    print(json.dumps({"r1": {k: r1.get(k) for k in ("action", "ms", "would_buy", "baw_cmdline", "skipped_reason")},
+                      "r2": {k: r2.get(k) for k in ("action", "ms", "would_buy", "skipped_reason")},
+                      "r3": {k: r3.get(k) for k in ("action", "ms", "would_buy", "baw_cmdline")},
+                      "log": str(log_path),
+                      "dry_run": cfg.get("dry_run")}, ensure_ascii=False, indent=2))
+    ok = (r1.get("action") == "would_buy" and r2.get("action") == "skipped"
+          and r2.get("skipped_reason") == "duplicate_project_ca" and r3.get("action") == "would_buy")
+    return 0 if ok else 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(description="Pad Hunter sniper fast buy (dry_run default)")
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    inj = sub.add_parser("inject", help="Inject one CA event into fire_buy")
+    inj.add_argument("--project", default=None)
+    inj.add_argument("--handle", default=None)
+    inj.add_argument("--ca", required=True)
+    inj.add_argument("--chain", required=True)
+    inj.add_argument("--source", default="high_conf", choices=["high_conf", "6551", "manual", "test"])
+    inj.add_argument("--amount", default=None)
+
+    sub.add_parser("smoke", help="Self-test: high_conf buy + 6551 duplicate skip + new CA buy")
+
+    sh = sub.add_parser("show-cmd", help="Print the live baw cmdline that would run (no execute)")
+    sh.add_argument("--ca", required=True)
+    sh.add_argument("--chain", required=True)
+    sh.add_argument("--amount", default=None)
+
+    args = p.parse_args(argv)
+    if args.cmd == "smoke":
+        return cmd_smoke()
+    if args.cmd == "show-cmd":
+        cfg = load_config()
+        cid, ft, unit, err = resolve_chain(args.chain)
+        if err:
+            print(json.dumps({"error": err}), file=sys.stderr)
+            return 2
+        amt = args.amount or cfg.get("amount") or "20"
+        argv_l = build_baw_argv(cfg, ca=args.ca, chain_id=cid, from_token=ft, amount=amt)
+        print(" ".join(argv_l))
+        print(f"# dry_run={cfg.get('dry_run')} amount_unit={unit} (NOT executed by show-cmd)", file=sys.stderr)
+        return 0
+    if args.cmd == "inject":
+        r = fire_buy(
+            ca=args.ca,
+            chain=args.chain,
+            project=args.project,
+            handle=args.handle,
+            source=args.source,
+            amount=args.amount,
+        )
+        print(json.dumps(r, ensure_ascii=False, indent=2))
+        return 0 if r.get("ok") or r.get("action") == "skipped" else 1
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

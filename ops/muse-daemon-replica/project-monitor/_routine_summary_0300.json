@@ -1,0 +1,56 @@
+{
+  "at": "2026-10-29T03:41:49+08:00",
+  "fired_routine": "开盘与CA预警",
+  "tag": "0300",
+  "pause": "OPEN",
+  "pipeline_exit": 0,
+  "pipeline_elapsed_sec": 2369,
+  "watchlist": "390→389",
+  "locked_new": [
+    "Grokpadspace",
+    "aigenedotfun",
+    "agenticsolfun",
+    "heysoei"
+  ],
+  "x": {
+    "skipped": "daily_quota_1000",
+    "resets": "2026-10-29T00:00Z / 08:00 Asia/Shanghai"
+  },
+  "onchain_lock_new": 0,
+  "onchain_lock_qualifying": 0,
+  "ca_finds": "241→240",
+  "new_ca_finds_raw": 0,
+  "newly_launched": [
+    "lethe_eth"
+  ],
+  "js_new_events": 27,
+  "actionable": [
+    {
+      "type": "已开盘",
+      "project": "Lethe ΛΗΘΗ",
+      "handle": "lethe_eth",
+      "chain": "ethereum",
+      "ca": "0xAD93a361e7428a1C14bFbc786efC03A999113C24",
+      "confidence": "high",
+      "evidence": "CA locked (high) via site/X; auto-moved out of 即将开盘",
+      "source": "site/X → mark_launched_from_ca",
+      "removed_at": "2026-10-29T03:37:14+08:00"
+    }
+  ],
+  "verdict": "ACTIONABLE",
+  "health": {
+    "pause": "absent",
+    "listing_daemon": "running",
+    "onchain_lock": "running",
+    "x_quota": "blocked until 08:00 Asia/Shanghai",
+    "pipeline": "ok EXIT=0 ELAPSED_SEC=2369",
+    "js_new": "27 (17 ambient univ* skipped; 10 non-ambient but known CA / non-token / wallet — no NEW_JS_CA ping)",
+    "onchain_lock_new": 0,
+    "locked_new_cards": [
+      "Grokpadspace",
+      "aigenedotfun",
+      "agenticsolfun",
+      "heysoei"
+    ]
+  }
+}

@@ -1,0 +1,435 @@
+#!/usr/bin/env python3
+"""Aggregate every CA we have actually observed into ca_finds.json.
+
+Sources (read-only, never invents addresses):
+  - fast_site_alerts.jsonl      NEW_JS_CA (fast poller)
+  - js_factory_events.jsonl     NEW_JS_CA (30m batch history)
+  - js_factory_scan_latest.json results[].addresses
+  - listing_scan_latest.json    results[].cas
+  - watchlist.json              locked ca / ca_alt / mint
+  - wallet_trace_latest.json    TRACE_CA (wallet→deployed contract) + kind tags
+  - wallet_trace_events.jsonl   TRACE_CA history
+  - onchain_lock_alerts.jsonl   ONCHAIN_LOCK (wallet/token match on new deploys)
+  - solana_lock_alerts.jsonl    ONCHAIN_LOCK from Helius Solana webhooks
+
+Output schema:
+  { "generated_at": ISO, "count": N,
+    "finds": [ {project, handle, chain, address, source, evidence_url,
+                detected_at, confidence, note, kind?, traced_from?, sources[]} ] }
+  kind: "wallet" | "contract" | "unknown" when classified.
+  label_zh: 「扫出钱包」 for wallets, 「合约CA」 for contracts.
+  Wallet rows are KEPT (not treated as token CA for launch prune); TRACE_CA rows link via traced_from.
+Dedupe key: (handle.lower(), address) — EVM addresses compared lowercase,
+others (Solana base58) case-sensitive.
+Also mirrored to /workspace/push-radar/data/ca_finds.json.
+"""
+from __future__ import annotations
+
+import fcntl
+import json
+import shutil
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+OUT = BASE / "ca_finds.json"
+MIRROR = Path("/workspace/push-radar/data/ca_finds.json")
+LOCK = BASE / ".ca_finds.lock"
+SH = ZoneInfo("Asia/Shanghai")
+
+LOW_HANDLES = {"baodotla", "ballast"}
+LOW_NAMES = {"baola", "ballast"}
+LOW_NOTE = "low confidence: feed-style site that embeds third-party token icons/posts; likely not this project's own CA"
+CONF_RANK = {"low": 0, "medium": 1, "high": 2, "confirmed": 3}
+
+
+def _load(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def _jsonl(path: Path):
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            yield json.loads(line)
+        except Exception:
+            continue
+
+
+def _addr_type(addr: str) -> str:
+    return "evm" if addr.lower().startswith("0x") and len(addr) == 42 else "solana"
+
+
+def _norm(addr: str) -> str:
+    return addr.lower() if _addr_type(addr) == "evm" else addr
+
+
+def _evidence(source: str | None, fallback: str | None = None) -> str | None:
+    s = source or ""
+    for pre in ("inline:", "html:", "site:", "script:", "js:"):
+        if s.startswith(pre):
+            return s[len(pre):]
+    if s.startswith("http"):
+        return s
+    return fallback
+
+
+def _is_low(name: str | None, handle: str | None) -> bool:
+    return (handle or "").strip().lower() in LOW_HANDLES or (name or "").strip().lower() in LOW_NAMES
+
+
+def build() -> dict:
+    wl = _load(BASE / "watchlist.json", {})
+    projects = wl.get("projects") or []
+    by_handle = {(p.get("handle") or "").lower(): p for p in projects if p.get("handle")}
+    by_name = {(p.get("name") or "").lower(): p for p in projects if p.get("name")}
+
+    finds: dict[tuple[str, str], dict] = {}
+
+    def add(*, name, handle, address, source, detected_at, confidence, chain=None, note=None, origin, snippet=None, kind=None, traced_from=None, evidence_url=None, label_zh=None):
+        if not address or not isinstance(address, str):
+            return
+        address = address.strip()
+        proj = by_handle.get((handle or "").lower()) or by_name.get((name or "").lower()) or {}
+        name = name or proj.get("name")
+        handle = handle or proj.get("handle")
+        key = ((handle or name or "?").lower(), _norm(address))
+        low = _is_low(name, handle)
+        if low:
+            confidence, note = "low", LOW_NOTE
+        if not chain:
+            if proj.get("ca") and _norm(proj["ca"]) == _norm(address) and proj.get("ca_chain"):
+                chain = proj["ca_chain"]
+            else:
+                chain = _addr_type(address)
+        if _addr_type(address) == "solana" and address.endswith("pump") and address == address.lower():
+            extra = "address appears all-lowercase (taken from a URL); Solana is case-sensitive — verify exact mint"
+            note = f"{note}; {extra}" if note else extra
+        sn = (snippet or "").lower()
+        hint = None
+        if "ref=" in sn and _norm(address).lower() in sn.split("ref=", 1)[1][:60].lower():
+            hint = "appears as a ?ref= referral parameter — likely a wallet, not a token CA"
+        elif "tokenicon" in sn:
+            hint = "taken from a token-icon URL on the page (may be a third-party token)"
+        if hint and hint not in (note or ""):
+            note = f"{note}; {hint}" if note else hint
+        # wallet-referral note forces kind=wallet unless already contract
+        if hint and "wallet" in hint and not kind:
+            kind = "wallet"
+        ev_url = evidence_url or _evidence(source, proj.get("x_url"))
+        cur = finds.get(key)
+        entry_src = {"origin": origin, "source": source, "detected_at": detected_at}
+        if cur is None:
+            entry = {
+                "project": name,
+                "handle": handle,
+                "chain": chain,
+                "address": address,
+                "source": source,
+                "evidence_url": ev_url,
+                "detected_at": detected_at,
+                "confidence": confidence,
+                "note": note,
+                "sources": [entry_src],
+            }
+            if kind:
+                entry["kind"] = kind
+            if not label_zh and kind == "wallet":
+                label_zh = "扫出钱包"
+            elif not label_zh and kind == "contract":
+                label_zh = "合约CA"
+            if label_zh:
+                entry["label_zh"] = label_zh
+            if traced_from:
+                entry["traced_from"] = traced_from
+            finds[key] = entry
+            return
+        cur["sources"].append(entry_src)
+        if detected_at and (not cur["detected_at"] or detected_at < cur["detected_at"]):
+            cur["detected_at"] = detected_at
+        if not low and CONF_RANK.get(confidence, 0) > CONF_RANK.get(cur["confidence"], 0):
+            cur["confidence"] = confidence
+            cur["source"], cur["evidence_url"] = source, ev_url or cur["evidence_url"]
+        if cur.get("chain") in ("evm", "solana") and chain not in ("evm", "solana"):
+            cur["chain"] = chain
+        if note and note not in (cur.get("note") or ""):
+            cur["note"] = f"{cur['note']}; {note}" if cur.get("note") and LOW_NOTE not in note else note
+        # prefer mixed-case checksum form for EVM display
+        if address != address.lower() and cur["address"] == cur["address"].lower():
+            cur["address"] = address
+        # kind: contract wins over wallet; never drop wallet once set unless contract proven
+        if kind == "contract":
+            cur["kind"] = "contract"
+            cur["label_zh"] = label_zh or "合约CA"
+        elif kind == "wallet" and cur.get("kind") != "contract":
+            cur["kind"] = "wallet"
+            cur["label_zh"] = label_zh or "扫出钱包"
+        elif label_zh and not cur.get("label_zh"):
+            cur["label_zh"] = label_zh
+        if traced_from and not cur.get("traced_from"):
+            cur["traced_from"] = traced_from
+        if evidence_url and (not cur.get("evidence_url") or origin == "wallet_trace"):
+            if origin == "wallet_trace" or not cur.get("evidence_url"):
+                cur["evidence_url"] = evidence_url
+
+    # 1) fast poller alerts (NEW_JS_CA = contract/unknown; SCANNED_WALLET = EOA)
+    for ev in _jsonl(BASE / "fast_site_alerts.jsonl"):
+        et = ev.get("type")
+        if et not in ("NEW_JS_CA", "SCANNED_WALLET"):
+            continue
+        kind = ev.get("kind") or ("wallet" if et == "SCANNED_WALLET" else None)
+        conf = ev.get("confidence")
+        if conf == "low":
+            conf_out = "low"
+        elif et == "SCANNED_WALLET" or kind == "wallet":
+            conf_out = "high"  # classification high; not a token CA
+        elif conf in ("high", "confirmed"):
+            conf_out = "high"
+        elif conf in ("normal", "medium", None):
+            conf_out = "medium"
+        else:
+            conf_out = "medium"
+        add(name=ev.get("name"), handle=ev.get("handle"), address=ev.get("address"),
+            source=ev.get("source") or f"site:{ev.get('site')}", detected_at=ev.get("at"),
+            confidence=conf_out, chain=ev.get("chain"),
+            note=ev.get("note"), origin="fast_site_alerts", snippet=ev.get("snippet"),
+            kind=kind, label_zh=ev.get("label_zh") or ("扫出钱包" if kind == "wallet" else None))
+    # 2) batch JS event history
+    for ev in _jsonl(BASE / "js_factory_events.jsonl"):
+        if ev.get("type") == "NEW_JS_CA":
+            add(name=ev.get("name"), handle=ev.get("handle"), address=ev.get("address"),
+                source=ev.get("source"), detected_at=ev.get("at"), confidence="medium",
+                origin="js_factory_events", snippet=ev.get("snippet"))
+    # 3) latest batch JS scan
+    js = _load(BASE / "js_factory_scan_latest.json", {})
+    js_at = js.get("checked_at_iso") or js.get("checked_at")
+    for r in js.get("results") or []:
+        for a in r.get("addresses") or []:
+            add(name=r.get("name"), handle=r.get("handle"), address=a.get("address"),
+                source=a.get("source"), detected_at=js_at, confidence="medium",
+                origin="js_factory_scan_latest", snippet=a.get("snippet"))
+    # 4) listing scan CAs (X posts / bios / sites)
+    ls = _load(BASE / "listing_scan_latest.json", {})
+    ls_at = ls.get("checked_at_iso") or ls.get("checked_at")
+    for r in ls.get("results") or []:
+        for c in r.get("cas") or []:
+            src = c.get("source") or ""
+            conf = "high" if "x.com/" in src else "medium"
+            add(name=r.get("name"), handle=r.get("handle"), address=c.get("address"),
+                source=src, detected_at=r.get("checked_at") or ls_at, confidence=conf,
+                origin="listing_scan_latest", snippet=c.get("snippet"))
+    # 5) watchlist locked CAs
+    for p in projects:
+        when = p.get("last_checked") or p.get("locked_at")
+        if p.get("ca"):
+            src = p.get("ca_source") or "watchlist"
+            add(name=p.get("name"), handle=p.get("handle"), address=p["ca"],
+                source=src if src.startswith(("site:", "http")) else f"{src}:{p.get('x_url') or ''}".rstrip(":"),
+                detected_at=when, confidence="high", chain=p.get("ca_chain"),
+                origin="watchlist.ca")
+        for fld in ("ca_alt", "mint"):
+            v = p.get(fld)
+            vals = v if isinstance(v, list) else [v]
+            for x in vals:
+                if isinstance(x, str) and x:
+                    add(name=p.get("name"), handle=p.get("handle"), address=x,
+                        source=f"watchlist.{fld}", detected_at=when, confidence="medium",
+                        origin=f"watchlist.{fld}")
+
+    # 6) wallet → CA traces: tag existing finds with kind (never invent new rows from classify)
+    wt = _load(BASE / "wallet_trace_latest.json", {})
+    by_addr: dict[str, list] = {}
+    for key, cur in finds.items():
+        by_addr.setdefault(_norm(cur["address"]), []).append(cur)
+    for r in wt.get("results") or []:
+        clf = r.get("classification") or {}
+        kind = clf.get("kind")
+        addr = r.get("address")
+        if kind not in ("wallet", "contract") or not addr:
+            continue
+        targets = by_addr.get(_norm(addr)) or []
+        # Prefer same handle match; else tag all existing rows with this address
+        handle_l = (r.get("handle") or "").lower()
+        matched = [c for c in targets if (c.get("handle") or "").lower() == handle_l] or targets
+        note = ("classified as EOA/wallet via eth_getCode" if kind == "wallet"
+                else f"classified as contract ({clf.get('code_bytes')} bytes)")
+        for cur in matched:
+            if kind == "contract":
+                cur["kind"] = "contract"
+                cur["label_zh"] = "合约CA"
+            elif cur.get("kind") != "contract":
+                cur["kind"] = "wallet"
+                cur["label_zh"] = "扫出钱包"
+            if clf.get("chain") and cur.get("chain") in ("evm", "solana", None, "", "未知", "unknown"):
+                cur["chain"] = clf["chain"]
+            elif clf.get("chain") and kind == "contract":
+                cur["chain"] = clf["chain"]  # prefer chain where bytecode found
+            if note and note not in (cur.get("note") or ""):
+                cur["note"] = f"{cur['note']}; {note}" if cur.get("note") else note
+            cur.setdefault("sources", []).append({
+                "origin": "wallet_trace.classify",
+                "source": r.get("source") or "wallet_trace:classify",
+                "detected_at": wt.get("generated_at"),
+            })
+    for tf in wt.get("trace_finds") or []:
+        add(
+            name=tf.get("project"), handle=tf.get("handle"), address=tf.get("address"),
+            source=tf.get("source") or "wallet_trace",
+            detected_at=tf.get("detected_at") or wt.get("generated_at"),
+            confidence=tf.get("confidence") or "medium",
+            chain=tf.get("chain"),
+            note=tf.get("note"),
+            origin="wallet_trace", kind="contract",
+            traced_from=tf.get("wallet"),
+            evidence_url=tf.get("evidence_url"),
+        )
+    # 6b) classification events history (latest may be rebuilt without some rows)
+    latest_addrs = {_norm(r.get("address") or "") for r in (wt.get("results") or [])}
+    for ev in _jsonl(BASE / "wallet_trace_events.jsonl"):
+        if ev.get("type") not in ("WALLET_CLASSIFIED", "ADDR_CLASSIFIED"):
+            continue
+        a = ev.get("address") or ""
+        k = (ev.get("kind") or "").lower()
+        if not a or k not in ("wallet", "contract") or _norm(a) in latest_addrs:
+            continue
+        hl = (ev.get("handle") or "").lower()
+        for cur in by_addr.get(_norm(a)) or []:
+            if hl and (cur.get("handle") or "").lower() != hl:
+                continue
+            if k == "contract":
+                cur["kind"], cur["label_zh"] = "contract", "合约CA"
+            elif cur.get("kind") != "contract":
+                cur["kind"], cur["label_zh"] = "wallet", "扫出钱包"
+            if ev.get("chain") and ev["chain"] not in ("evm",) and cur.get("chain") in ("evm", None, ""):
+                cur["chain"] = ev["chain"]
+            n = ev.get("note") or ("classified as EOA/wallet via eth_getCode" if k == "wallet" else None)
+            if n and n not in (cur.get("note") or ""):
+                cur["note"] = f"{cur['note']}; {n}" if cur.get("note") else n
+    # 7) TRACE_CA event history (in case latest was rebuilt without a hit)
+    for ev in _jsonl(BASE / "wallet_trace_events.jsonl"):
+        if ev.get("type") != "TRACE_CA":
+            continue
+        add(
+            name=ev.get("project"), handle=ev.get("handle"), address=ev.get("address"),
+            source=f"wallet_trace:{ev.get('wallet')}",
+            detected_at=ev.get("at"),
+            confidence="high" if ev.get("tx_hash") else "medium",
+            chain=ev.get("chain"),
+            note=f"traced from wallet {ev.get('wallet')} via {ev.get('via')}",
+            origin="wallet_trace_events", kind="contract",
+            traced_from=ev.get("wallet"),
+            evidence_url=ev.get("evidence_url"),
+        )
+
+    # 8) on-chain lock alerts (wallet deployer and/or ERC20 name/symbol match)
+    for ev in _jsonl(BASE / "onchain_lock_alerts.jsonl"):
+        if ev.get("type") != "ONCHAIN_LOCK":
+            continue
+        if ev.get("synthetic"):
+            continue
+        conf = ev.get("confidence") or "medium"
+        if conf not in ("low", "medium", "high", "confirmed"):
+            conf = "medium"
+        # map confirmed -> high for ca_finds schema (CONF_RANK has no confirmed)
+        conf_out = "high" if conf == "confirmed" else conf
+        note = (
+            f"onchain_lock {conf} via {ev.get('reason') or ev.get('via')}; "
+            f"deployer={ev.get('deployer')}; "
+            f"token={ev.get('token_symbol') or ''} / {ev.get('token_name') or ''}"
+        ).strip()
+        add(
+            name=ev.get("project"), handle=ev.get("handle"), address=ev.get("address"),
+            source="onchain_lock",
+            detected_at=ev.get("at"),
+            confidence=conf_out,
+            chain=ev.get("chain"),
+            note=note,
+            origin="onchain_lock",
+            kind="contract",
+            traced_from=ev.get("deployer"),
+            evidence_url=None,
+        )
+
+
+    # 9) Solana Helius lock alerts (also dual-written to onchain_lock_alerts; re-read is idempotent via dedupe)
+    for ev in _jsonl(BASE / "solana_lock_alerts.jsonl"):
+        if ev.get("type") != "ONCHAIN_LOCK":
+            continue
+        if ev.get("synthetic"):
+            continue
+        conf = ev.get("confidence") or "medium"
+        if conf not in ("low", "medium", "high", "confirmed"):
+            conf = "medium"
+        conf_out = "high" if conf == "confirmed" else conf
+        note = (
+            f"helius_solana {conf} via {ev.get('reason') or ev.get('via')}; "
+            f"program={ev.get('program_id') or ev.get('factory')}; "
+            f"token={ev.get('token_symbol') or ''} / {ev.get('token_name') or ''}"
+        ).strip()
+        add(
+            name=ev.get("project"), handle=ev.get("handle"), address=ev.get("address"),
+            source="helius_solana",
+            detected_at=ev.get("at"),
+            confidence=conf_out,
+            chain=ev.get("chain") or "solana",
+            note=note,
+            origin="solana_lock",
+            kind="contract",
+            traced_from=ev.get("deployer"),
+            evidence_url=f"https://solscan.io/tx/{ev['tx']}" if ev.get("tx") else None,
+        )
+
+    out = sorted(finds.values(), key=lambda f: (f.get("detected_at") or ""), reverse=True)
+    for f in out:
+        k = (f.get("kind") or "").lower()
+        if k == "wallet":
+            f["label_zh"] = f.get("label_zh") or "扫出钱包"
+            f["addr_kind"] = "wallet"
+        elif k == "contract":
+            f["label_zh"] = f.get("label_zh") or "合约CA"
+            f["addr_kind"] = "contract"
+    # Launched/pruned projects (removed_launched.json blocklist): keep as history, not active finds
+    rem = _load(BASE / "removed_launched.json", {})
+    rem_items = rem.get("items", []) if isinstance(rem, dict) else (rem or [])
+    blocked = {(e.get("handle") or "").lstrip("@").lower() for e in rem_items if not e.get("restored")}
+    active = [f for f in out if (f.get("handle") or "").lstrip("@").lower() not in blocked]
+    history = [f for f in out if (f.get("handle") or "").lstrip("@").lower() in blocked]
+    return {
+        "generated_at": datetime.now(SH).isoformat(timespec="seconds"),
+        "count": len(active),
+        "finds": active,
+        "launched_history_count": len(history),
+        "launched_history": history,
+    }
+
+
+def write() -> dict:
+    LOCK.touch(exist_ok=True)
+    with LOCK.open("r+") as lf:
+        fcntl.flock(lf, fcntl.LOCK_EX)
+        doc = build()
+        tmp = OUT.with_suffix(".tmp")
+        tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp.replace(OUT)
+        try:
+            MIRROR.parent.mkdir(parents=True, exist_ok=True)
+            mtmp = MIRROR.with_suffix(".tmp")
+            shutil.copyfile(OUT, mtmp)
+            mtmp.replace(MIRROR)
+        except Exception as e:  # mirror is best-effort
+            print(f"ca_finds mirror failed: {e}")
+        fcntl.flock(lf, fcntl.LOCK_UN)
+    return doc
+
+
+if __name__ == "__main__":
+    d = write()
+    print(f"ca_finds.json: {d['count']} finds -> {OUT} (+ {MIRROR})")

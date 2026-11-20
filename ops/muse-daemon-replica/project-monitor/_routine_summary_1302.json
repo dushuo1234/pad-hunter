@@ -1,0 +1,109 @@
+{
+  "tag": "1302",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T13:36:38+08:00",
+  "fired_approx": "2026-10-28 12:59 Asia/Shanghai (fired 04:59:26Z)",
+  "pause_file": "absent",
+  "listing_daemon": {
+    "pid": 44693,
+    "status": "running"
+  },
+  "onchain_lock_daemon": {
+    "pid": 1823,
+    "status": "running",
+    "note": "intermittent publicnode rate-limit/limit-exceeded on base/bsc; still advancing"
+  },
+  "watchlist_sync": {
+    "before": 313,
+    "after_sync": 313,
+    "after_pipeline": 313,
+    "locked_new_count": 0,
+    "locked_new": [],
+    "updated_fields": 125,
+    "blocklist_skipped": 98,
+    "bak": "/workspace/project-monitor/watchlist.json.bak.pre_routine_resync_1302"
+  },
+  "wallets": {
+    "build": 78,
+    "after_sol_harvest": 81,
+    "sol_harvest_added": 3
+  },
+  "token_symbols": 925,
+  "X_refresh": {
+    "at": "2026-10-28T13:03:00+08:00",
+    "bios_refreshed": 79,
+    "priority": "PrivateKeyCoin_ + mint进行中/即将启动 (~84 requested, 79 returned, 5 not-found)",
+    "pkc_bio_empty": true,
+    "pkc_sticky": "Launching this week / Only CA in bio",
+    "pkc_posts": 3,
+    "cache_users": 545,
+    "reads_left_approx": 635
+  },
+  "pipeline": {
+    "command": "bash /workspace/project-monitor/run_listing_onchain_js.sh",
+    "exit": 0,
+    "started": "2026-10-28T13:04:13+08:00",
+    "ended": "2026-10-28T13:35:37+08:00",
+    "elapsed_s": 1884,
+    "elapsed_min": 31.4,
+    "log": "/tmp/routine_1302_pipeline.log"
+  },
+  "counters": {
+    "new_js_ca": 0,
+    "js_factory_matches": 0,
+    "SITE_JS_CHANGE": 5,
+    "SITE_JS_CHANGE_ambient_univ2": [
+      "0-0.city",
+      "E.T.A",
+      "TapeFoundry×2",
+      "♱ 17-26"
+    ],
+    "NEW_DEPLOY_watchlist": 0,
+    "ambient_univ2_samples": 29,
+    "new_deploy_hints_univ2_eth_only": 3,
+    "TRACE_CA": 4,
+    "TRACE_CA_note": "Hashgentic wallet CREATEs only (non-project-tie / 非CA)"
+  },
+  "onchain_lock": {
+    "offset_before": 185724,
+    "offset_after": 185724,
+    "new_lines": 0,
+    "hits": []
+  },
+  "listing_at_within_3_days": [
+    {
+      "project": "Fishesrh",
+      "handle": "Fishesrh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x"
+    },
+    {
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "listing_at": "2026-10-29T01:00:00+08:00",
+      "source": "x"
+    },
+    {
+      "project": "zkArgos",
+      "handle": "zkArgoseth",
+      "listing_at": "2026-10-31T00:00:00+08:00",
+      "source": "x"
+    }
+  ],
+  "listing_at_published_changes": 0,
+  "prune": {
+    "newly_removed": 0,
+    "mark_launched_newly": 0,
+    "workbench_publish": false
+  },
+  "listing_signals_new": [
+    {
+      "name": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "note": "soon tge (trivial prev→new delta; not strong)"
+    }
+  ],
+  "actionable": false,
+  "actionable_items": [],
+  "ping_user": false
+}

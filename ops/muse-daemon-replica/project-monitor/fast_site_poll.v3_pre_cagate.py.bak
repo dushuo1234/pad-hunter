@@ -1,0 +1,1200 @@
+#!/usr/bin/env python3
+"""Always-on lightweight official-site poller for Pad Hunter (Sentinel-style).
+
+Light layer (every --interval seconds, default 1, clamp 1–60), v2 concurrent:
+  One worker thread per site; conditional GET (If-None-Match / If-Modified-Since,
+  304 = unchanged) else stable HTML fingerprint. Per-host gate: <=1 req/s/host,
+  automatic backoff on 429/503 (Retry-After honoured) and on repeated errors.
+On change (or first baseline):
+  Full HTML + linked JS address extract via scan_js_factory_match.scan_one_project.
+Alerts (append-only fast_site_alerts.jsonl, Asia/Shanghai timestamps):
+  SITE_CHANGE   — HTML fingerprint/ETag/Last-Modified changed
+  NEW_JS_CA     — EVM/Solana address with on-chain contract bytecode (or Solana mint)
+  SCANNED_WALLET— EVM address eth_getCode empty → 「扫出钱包」; queued for deploy trace
+
+Does NOT invent CAs. Does not push GitHub. Does not break the 30m batch scanners.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import signal
+import subprocess
+import threading
+from collections import deque
+import statistics
+
+import requests
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
+
+# Reuse extract / usable-site / full scan helpers — do not duplicate deny lists.
+from scan_js_factory_match import (  # noqa: E402
+    HTML_MAX_BYTES,
+    INLINE_SCRIPT_RE,
+    SCRIPT_SRC_RE,
+    is_usable_site,
+    load_json,
+    now_iso,
+    now_label,
+    scan_one_project,
+)
+import re
+
+BASE = Path("/workspace/project-monitor")
+WATCHLIST = BASE / "watchlist.json"
+STATE_PATH = BASE / "fast_site_state.json"
+ALERTS_PATH = BASE / "fast_site_alerts.jsonl"
+WAKE_PATH = BASE / "fast_site_wake.json"
+PID_PATH = BASE / "fast_site_poll.pid"
+JS_BATCH_LATEST = BASE / "js_factory_scan_latest.json"
+# Workbench realtime mode (synced by workbench_api.py from the Pad Hunter site).
+WORKBENCH_PATH = BASE / "workbench_active.json"
+CHECK_QUEUE_PATH = BASE / "workbench_check_queue.jsonl"
+# WORKBENCH_ONLY: "auto" (default) = workbench sites when non-empty, else full
+# watchlist (official sites); "1" = workbench only (idle if empty); "0" = always full watchlist.
+WORKBENCH_MODE = os.environ.get("WORKBENCH_ONLY", "auto").strip().lower() or "auto"
+CURRENT_TARGET_MODE = {"mode": "full", "workbench_handles": []}
+HISTORY_MAX_WB = 100
+HISTORY_MAX_OTHER = 20
+CHANGES_MAX = 30
+MANUAL_CHECKING: set[str] = set()
+
+SH = ZoneInfo("Asia/Shanghai")
+UA = "Mozilla/5.0 (compatible; PadHunterFastSitePoll/1.0)"
+
+# Projects whose sites often embed third-party token icons / launchpad feeds.
+# NEW_JS_CA from these still alert but with confidence=low.
+LOW_CONFIDENCE_HANDLES = {
+    "baodotla",  # Baola — often shows other coins' icons
+    "ballast",   # Ballast launchpad feed (if/when it has a site)
+}
+LOW_CONFIDENCE_NAMES = {
+    "baola",
+    "ballast",
+}
+
+LIGHT_TIMEOUT = (3.05, 8)       # connect, read
+HOST_MIN_GAP = 1.0              # politeness: >=1s between requests to one host
+BACKOFF_BASE = 15.0             # first 429/503 pause
+BACKOFF_MAX = 300.0
+ERROR_BACKOFF_MAX = 60.0        # per-site pause cap after repeated network errors
+FULL_EXTRACT_COOLDOWN = 15.0    # min seconds between full extracts for one site
+FULL_EXTRACT_SLOTS = threading.Semaphore(3)
+RECENT_HASHES = 8
+SUMMARY_EVERY = 10.0
+SAVE_EVERY = 1.0
+RELOAD_EVERY = 60.0
+STATE_LOCK = threading.RLock()
+ALERT_LOCK = threading.Lock()
+RUNNING = True
+
+
+def clamp_interval(sec: float) -> float:
+    return max(1.0, min(60.0, float(sec)))
+
+
+def norm_handle(h: str | None) -> str:
+    return (h or "").strip().lstrip("@").strip().lower()
+
+
+def project_key(proj: dict) -> str:
+    return norm_handle(proj.get("handle")) or (proj.get("name") or "").strip().lower() or proj.get("name", "?")
+
+
+def is_low_confidence(proj: dict) -> bool:
+    h = (proj.get("handle") or "").lower().strip()
+    n = (proj.get("name") or "").lower().strip()
+    if h in LOW_CONFIDENCE_HANDLES:
+        return True
+    if n in LOW_CONFIDENCE_NAMES:
+        return True
+    return False
+
+
+def pick_site(proj: dict) -> str | None:
+    sites = [u for u in (proj.get("sites") or []) if is_usable_site(u)]
+    if not sites:
+        return None
+    # prefer https, then shorter path
+    sites = sorted(sites, key=lambda x: (0 if x.startswith("https") else 1, len(x), x))
+    preferred = []
+    seen = set()
+    for u in sites:
+        p = urlparse(u)
+        key = ((p.hostname or "").lower(), (p.path or "/").rstrip("/") or "/")
+        if key in seen:
+            continue
+        seen.add(key)
+        preferred.append(u)
+    return preferred[0] if preferred else None
+
+
+
+def stable_html_fp(html: str) -> str:
+    """Light fingerprint: prefer external script src list (Vite/hashed bundles).
+
+    When a page has no external scripts, fall back to a shell hash with
+    <script> bodies stripped so inline nonces hurt less.
+    """
+    scripts = sorted(
+        {
+            (m.group(1) or "").strip()
+            for m in SCRIPT_SRC_RE.finditer(html or "")
+            if (m.group(1) or "").strip() and "/cdn-cgi/" not in (m.group(1) or "")
+        }
+    )
+    if scripts:
+        payload = json.dumps({"scripts": scripts}, separators=(",", ":"))
+    else:
+        shell = INLINE_SCRIPT_RE.sub("<script/>", html or "")
+        shell = re.sub(r"(?is)<!--.*?-->", "", shell)
+        shell = re.sub(r"\s+", " ", shell).strip()
+        payload = json.dumps(
+            {"shell": hashlib.sha256(shell.encode("utf-8", errors="ignore")).hexdigest()},
+            separators=(",", ":"),
+        )
+    return hashlib.sha256(payload.encode()).hexdigest()[:32]
+
+
+def _parse_validators(header_text: str) -> tuple[str | None, str | None]:
+    etag = None
+    last_mod = None
+    for line in (header_text or "").splitlines():
+        low = line.lower()
+        if low.startswith("etag:"):
+            raw = line.split(":", 1)[1].strip()
+            # Normalize weak etags: W/"abc" -> abc ; "abc" -> abc
+            if raw.upper().startswith("W/"):
+                raw = raw[2:].strip()
+            etag = raw.strip('"').strip("'") or None
+        elif low.startswith("last-modified:"):
+            last_mod = line.split(":", 1)[1].strip() or None
+    return etag, last_mod
+
+
+class HostGate:
+    """Per-host politeness: at most one request per HOST_MIN_GAP seconds per host,
+    plus automatic backoff on 429/503 (honours Retry-After)."""
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._next: dict[str, float] = {}
+        self._level: dict[str, int] = {}
+        self._until: dict[str, float] = {}
+        self._events: list[dict] = []
+
+    def wait_turn(self, host: str) -> bool:
+        while RUNNING:
+            with self._lock:
+                now = time.time()
+                due = max(self._next.get(host, 0.0), self._until.get(host, 0.0))
+                if now >= due:
+                    self._next[host] = now + HOST_MIN_GAP
+                    return True
+                wait = due - now
+            time.sleep(min(0.25, wait))
+        return False
+
+    def rate_limited(self, host: str, code: int, retry_after: str | None) -> float:
+        with self._lock:
+            lvl = self._level.get(host, 0) + 1
+            self._level[host] = lvl
+            delay = min(BACKOFF_MAX, BACKOFF_BASE * (2 ** (lvl - 1)))
+            try:
+                if retry_after and retry_after.strip().isdigit():
+                    delay = max(delay, min(BACKOFF_MAX * 2, float(retry_after.strip())))
+            except Exception:
+                pass
+            self._until[host] = time.time() + delay
+            ev = {"host": host, "http_code": code, "level": lvl, "backoff_s": delay,
+                  "at": now_iso(), "at_label": now_label(), "kind": "BACKOFF"}
+            self._events.append(ev)
+            self._events = self._events[-50:]
+        print(f"  [backoff] {host} http {code} -> pause {delay:.0f}s (level {lvl})", flush=True)
+        return delay
+
+    def ok(self, host: str) -> None:
+        if self._level.get(host):
+            with self._lock:
+                lvl = self._level.get(host, 0)
+                if lvl:
+                    self._level[host] = lvl - 1
+                    if lvl - 1 == 0:
+                        self._events.append({"host": host, "kind": "RECOVER", "at": now_iso(), "at_label": now_label()})
+                        print(f"  [backoff] {host} recovered", flush=True)
+
+    def snapshot(self) -> dict:
+        with self._lock:
+            now = time.time()
+            return {
+                "active": {h: round(u - now, 1) for h, u in self._until.items() if u > now},
+                "levels": {h: l for h, l in self._level.items() if l},
+                "events": list(self._events[-20:]),
+            }
+
+
+GATE = HostGate()
+
+
+def light_probe(session, url: str, prev: dict | None) -> dict:
+    """Conditional GET (If-None-Match / If-Modified-Since). 304 => unchanged.
+    On 200, fingerprint HTML via stable_html_fp (script list / stripped shell)."""
+    t0 = time.time()
+    prev = prev or {}
+    res = {"url": url, "ok": False, "http_code": "000", "etag": None, "etag_raw": None,
+           "last_modified": None, "body_hash": None, "bytes": 0, "not_modified": False,
+           "method": "GET", "error": "", "time_s": 0.0, "retry_after": None}
+    headers = {"User-Agent": UA, "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+               "Accept-Encoding": "gzip, deflate"}
+    if prev.get("etag_raw"):
+        headers["If-None-Match"] = prev["etag_raw"]
+    if prev.get("last_modified"):
+        headers["If-Modified-Since"] = prev["last_modified"]
+    try:
+        r = session.get(url, headers=headers, timeout=LIGHT_TIMEOUT, stream=True, allow_redirects=True)
+        code = r.status_code
+        res["http_code"] = str(code)
+        res["retry_after"] = r.headers.get("Retry-After")
+        raw_etag = r.headers.get("ETag")
+        res["etag_raw"] = raw_etag
+        res["etag"], res["last_modified"] = _parse_validators(
+            (f"ETag: {raw_etag}\n" if raw_etag else "") +
+            (f"Last-Modified: {r.headers.get('Last-Modified')}\n" if r.headers.get("Last-Modified") else ""))
+        if code == 304:
+            res["ok"] = True
+            res["not_modified"] = True
+            r.close()
+        elif 200 <= code < 400:
+            buf = bytearray()
+            for chunk in r.iter_content(65536):
+                buf.extend(chunk)
+                if len(buf) >= HTML_MAX_BYTES:
+                    break
+            r.close()
+            html = buf.decode(r.encoding or "utf-8", errors="ignore")
+            res["ok"] = True
+            res["bytes"] = len(buf)
+            res["body_hash"] = stable_html_fp(html)
+        else:
+            r.close()
+            res["error"] = f"http {code}"
+    except Exception as e:
+        res["error"] = (type(e).__name__ + ": " + str(e))[:200]
+    res["time_s"] = round(time.time() - t0, 3)
+    return res
+
+
+def changed(prev: dict | None, probe: dict) -> bool:
+    """True when the stable HTML fingerprint moved to a value not seen recently.
+    304 => never changed. ETag/Last-Modified are used only to get cheap 304s,
+    because many hosts rotate ETags per request."""
+    if not probe.get("ok") or not prev or probe.get("not_modified"):
+        return False
+    ph, nh = prev.get("body_hash") or "", probe.get("body_hash") or ""
+    if not (ph and nh) or ph == nh:
+        return False
+    if nh in (prev.get("recent_hashes") or []):
+        return False  # A/B or rotating variant we already extracted
+    return True
+
+
+def append_alert(ev: dict) -> None:
+    with ALERT_LOCK:
+        _append_alert(ev)
+
+
+def refresh_ca_finds() -> None:
+    try:
+        import build_ca_finds
+        d = build_ca_finds.write()
+        print(f"  ca_finds.json refreshed: {d.get('count')} finds", flush=True)
+        try:
+            subprocess.run(
+                [sys.executable, str(BASE / "mark_launched_from_ca.py"), "--publish"],
+                cwd=str(BASE),
+                timeout=90,
+                check=False,
+            )
+            subprocess.run(
+                [sys.executable, str(BASE / "publish_ca_finds_pages.py")],
+                cwd=str(BASE),
+                timeout=90,
+                check=False,
+            )
+        except Exception as e:
+            print(f"  ca_finds publish soft-fail: {e}", flush=True)
+    except Exception as e:
+        print(f"  ca_finds refresh failed: {e}", flush=True)
+
+
+def classify_scraped_evm(address: str, *, chain=None, snippet=None, source=None) -> dict:
+    """Sync eth_getCode classify before alerting. Soft-fails to unknown."""
+    try:
+        from addr_kind import classify_evm
+        return classify_evm(
+            address, chain_hint=chain, snippet=snippet, source=source, stop_on_contract=True,
+        )
+    except Exception as e:
+        return {"kind": "unknown", "addr_kind": "unknown", "error": str(e)[:120], "label_zh": None}
+
+
+def queue_wallet_trace(ev: dict) -> None:
+    """Non-blocking: for wallets deep-trace deploys; for contracts just rebuild ca_finds."""
+    if ev.get("type") not in ("NEW_JS_CA", "SCANNED_WALLET"):
+        return
+    addr = (ev.get("address") or "").strip()
+    if not (addr.lower().startswith("0x") and len(addr) == 42):
+        return
+    import subprocess as _sp
+    script = BASE / "trace_wallet_ca.py"
+    build = BASE / "build_ca_finds.py"
+    ww = BASE / "build_wallet_watchlist.py"
+    handle = (ev.get("handle") or "").strip()
+    log = BASE / "wallet_trace_live.log"
+    parts = [f"python3 {script} --address {addr} --recent-window 0"]
+    if handle:
+        import shlex
+        parts[0] += f" --handle {shlex.quote(handle)}"
+    # wallets: rebuild watchlist after classify/trace so onchain_lock picks them up
+    if ev.get("type") == "SCANNED_WALLET" or ev.get("kind") == "wallet":
+        parts.append(f"python3 {ww} --mirror")
+    parts.append(f"python3 {build}")
+    cmdline = " && ".join(parts)
+    try:
+        with log.open("a", encoding="utf-8") as lf:
+            lf.write(f"\n# queue {now_iso()} {addr} {handle} type={ev.get('type')}\n")
+            lf.flush()
+            _sp.Popen(
+                ["bash", "-c", cmdline],
+                stdout=lf, stderr=_sp.STDOUT, start_new_session=True,
+            )
+        print(f"  queued wallet_trace for {addr} ({ev.get('type')})", flush=True)
+    except Exception as e:
+        print(f"  wallet_trace queue failed: {e}", flush=True)
+
+
+def _append_alert(ev: dict) -> None:
+    ev = dict(ev)
+    ev.setdefault("at", now_iso())
+    ev.setdefault("at_label", now_label())
+    with ALERTS_PATH.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+    # Tiny wake file for parent routine
+    wake = {
+        "updated_at": now_iso(),
+        "updated_at_label": now_label(),
+        "last_alert_type": ev.get("type"),
+        "last_alert_name": ev.get("name"),
+        "alerts_path": str(ALERTS_PATH),
+    }
+    WAKE_PATH.write_text(json.dumps(wake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def save_state(state: dict) -> None:
+    with STATE_LOCK:
+        state["updated_at"] = now_iso()
+        state["updated_at_label"] = now_label()
+        text = json.dumps(state, ensure_ascii=False, indent=2) + "\n"
+    tmp = STATE_PATH.with_suffix(".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    tmp.replace(STATE_PATH)
+
+
+def load_all_watch_targets() -> list[dict]:
+    """Full watchlist targets (the 30-min listing/onchain/js pipeline always uses this list)."""
+    wl = load_json(WATCHLIST, {})
+    out = []
+    for p in wl.get("projects") or []:
+        site = pick_site(p)
+        if not site:
+            continue
+        out.append({
+            "name": p.get("name"),
+            "handle": p.get("handle"),
+            "chain": p.get("chain"),
+            "site": site,
+            "project": p,
+            "low_confidence": is_low_confidence(p),
+            "workbench": False,
+        })
+    return out
+
+
+def load_workbench_targets() -> list[dict]:
+    """Workbench items (workbench_active.json) resolved to a usable site.
+    Item sites win; otherwise fall back to the watchlist entry with the same handle."""
+    wb = load_json(WORKBENCH_PATH, {})
+    items = (wb or {}).get("items") or []
+    if not items:
+        return []
+    wl = load_json(WATCHLIST, {})
+    by_handle = {norm_handle(p.get("handle")): p for p in (wl.get("projects") or []) if p.get("handle")}
+    out = []
+    seen = set()
+    for it in items:
+        h = norm_handle(it.get("handle"))
+        if not h or h in seen:
+            continue
+        seen.add(h)
+        base = dict(by_handle.get(h) or {})
+        proj = dict(base)
+        proj["handle"] = (it.get("handle") or "").strip().lstrip("@") or base.get("handle")
+        proj["name"] = it.get("name") or base.get("name") or proj["handle"]
+        sites = [u for u in (it.get("sites") or []) if isinstance(u, str)]
+        if not any(is_usable_site(u) for u in sites):
+            sites = list(base.get("sites") or [])
+        proj["sites"] = sites
+        if it.get("chain"):
+            proj["chain"] = it.get("chain")
+        site = pick_site(proj)
+        if not site:
+            continue
+        out.append({
+            "name": proj.get("name"),
+            "handle": proj.get("handle"),
+            "chain": proj.get("chain"),
+            "site": site,
+            "project": proj,
+            "low_confidence": is_low_confidence(proj),
+            "workbench": True,
+        })
+    return out
+
+
+def load_watch_targets() -> list[dict]:
+    """Realtime targets.
+
+    WORKBENCH_ONLY modes:
+      auto (default): workbench sites when non-empty; fall back to full watchlist
+                      (projects with official sites) when workbench is empty.
+      1/true/on:      workbench only (idle when empty).
+      0/false/off:    always full watchlist.
+    """
+    if WORKBENCH_MODE in ("0", "false", "off", "no"):
+        tg, mode = load_all_watch_targets(), "full"
+    elif WORKBENCH_MODE in ("1", "true", "on", "yes"):
+        tg, mode = load_workbench_targets(), "workbench"
+    else:
+        # auto: prefer workbench when it has usable sites; else full watchlist
+        wb = load_workbench_targets()
+        if wb:
+            tg, mode = wb, "workbench"
+        else:
+            tg, mode = load_all_watch_targets(), "full"
+    CURRENT_TARGET_MODE["mode"] = mode
+    CURRENT_TARGET_MODE["workbench_handles"] = [project_key(t["project"]) for t in tg] if mode == "workbench" else []
+    return tg
+
+
+def _record(site_state: dict, entry: dict, workbench: bool) -> None:
+    hist = site_state.get("history") or []
+    hist.append(entry)
+    site_state["history"] = hist[-(HISTORY_MAX_WB if workbench else HISTORY_MAX_OTHER):]
+
+
+def _record_change(site_state: dict, entry: dict) -> None:
+    ch = site_state.get("recent_changes") or []
+    ch.append(entry)
+    site_state["recent_changes"] = ch[-CHANGES_MAX:]
+
+
+
+def seed_addrs_from_batch(name: str) -> list[dict]:
+    """Reuse last batch JS scan addresses so baseline does not re-alert known CAs."""
+    doc = load_json(JS_BATCH_LATEST, {})
+    for r in doc.get("results") or []:
+        if r.get("name") == name:
+            out = []
+            for c in r.get("addresses") or []:
+                out.append({
+                    "type": c.get("type"),
+                    "address": c.get("address"),
+                    "source": c.get("source"),
+                    "snippet": c.get("snippet"),
+                })
+            return out
+    return []
+
+
+def full_extract_and_alert(
+    target: dict,
+    probe: dict,
+    site_state: dict,
+    *,
+    reason: str,
+) -> list[dict]:
+    """Run full JS extract; emit SITE_CHANGE / NEW_JS_CA. Returns new alerts."""
+    alerts: list[dict] = []
+    proj = target["project"]
+    name = target["name"]
+    handle = target["handle"]
+    low = target["low_confidence"]
+
+    scan = scan_one_project(proj)
+    addrs = scan.get("addresses") or []
+    addr_list = [
+        {"type": c.get("type"), "address": c.get("address"), "source": c.get("source"), "snippet": c.get("snippet")}
+        for c in addrs
+    ]
+    prev_addrs = {
+        (a.get("type"), (a.get("address") or "").lower())
+        for a in (site_state.get("last_addrs") or [])
+    }
+    alerted = set(site_state.get("alerted_addrs") or [])
+
+    prev_fp = site_state.get("fingerprint")
+    prev_afp = site_state.get("address_fingerprint")
+    new_fp = scan.get("fingerprint")
+    new_afp = scan.get("address_fingerprint")
+    # First full extract after light baseline only seeds fingerprints — do not
+    # SITE_CHANGE yet (avoids one-shot noise). Later fp/addr moves do alert.
+    had_fp = bool(prev_fp or prev_afp)
+    content_changed = had_fp and (
+        (prev_fp and new_fp and prev_fp != new_fp)
+        or (prev_afp and new_afp and prev_afp != new_afp)
+    )
+    if content_changed:
+        ev = {
+            "type": "SITE_CHANGE",
+            "name": name,
+            "handle": handle,
+            "site": target["site"],
+            "reason": reason,
+            "etag": probe.get("etag"),
+            "last_modified": probe.get("last_modified"),
+            "body_hash": probe.get("body_hash"),
+            "prev_body_hash": site_state.get("body_hash"),
+            "address_count": len(addr_list),
+            "confidence": "low" if low else "normal",
+            "note": "feed-style site; third-party token icons common" if low else None,
+        }
+        append_alert(ev)
+        alerts.append(ev)
+        print(f"  ALERT SITE_CHANGE {name} ({target['site']})", flush=True)
+    else:
+        print(
+            f"  light-change only {name} (JS fingerprint unchanged) — no SITE_CHANGE",
+            flush=True,
+        )
+
+    for c in addr_list:
+        key = f"{c.get('type')}:{(c.get('address') or '').lower()}"
+        tkey = (c.get("type"), (c.get("address") or "").lower())
+        if tkey in prev_addrs:
+            continue
+        if key in alerted:
+            continue
+        addr = c.get("address")
+        addr_type = c.get("type") or ""
+        base_note = (
+            "low confidence: site often embeds third-party token icons / feed noise"
+            if low
+            else None
+        )
+        clf = {}
+        kind = None
+        label_zh = None
+        chain_out = target.get("chain")
+        # EVM: classify BEFORE alert — wallet → 扫出钱包, contract → NEW_JS_CA
+        if addr_type == "evm" or (
+            isinstance(addr, str) and addr.lower().startswith("0x") and len(addr) == 42
+        ):
+            clf = classify_scraped_evm(
+                addr,
+                chain=target.get("chain"),
+                snippet=c.get("snippet"),
+                source=c.get("source"),
+            )
+            kind = clf.get("kind")
+            label_zh = clf.get("label_zh")
+            if clf.get("chain") and clf["chain"] not in ("evm", "unknown"):
+                chain_out = clf["chain"]
+            if kind == "wallet":
+                alert_type = "SCANNED_WALLET"
+                conf = "low" if low else "high"
+                note_bits = ["扫出钱包", clf.get("note") or "eth_getCode empty (EOA)"]
+                if base_note:
+                    note_bits.append(base_note)
+                note = "; ".join(note_bits)
+            elif kind == "contract":
+                alert_type = "NEW_JS_CA"
+                conf = "low" if low else "high"
+                note_bits = []
+                if clf.get("note"):
+                    note_bits.append(clf["note"])
+                try:
+                    from trading_check import check_trading
+                    tr = check_trading(addr, chain_out)
+                    if tr.get("launched_old"):
+                        alert_type = "CA_ALREADY_TRADING"
+                        gate = (f"already trading since {tr.get('first_pair_at')} "
+                                f"({tr.get('age_hours')}h, vol24 ${tr.get('volume_h24')}) → 已开盘")
+                        note_bits.append(gate)
+                        from mark_launched_from_ca import force_launch
+                        force_launch(handle=handle or name, project=name, ca=addr,
+                                     ca_chain=tr.get("chain"), reason="already_trading",
+                                     evidence=gate, evidence_url=tr.get("dex_url"))
+                except Exception as _e:
+                    note_bits.append(f"trading gate error: {_e}"[:120])
+                if base_note:
+                    note_bits.append(base_note)
+                note = "; ".join(note_bits) if note_bits else base_note
+            else:
+                alert_type = "NEW_JS_CA"
+                conf = "low" if low else "medium"
+                note_bits = [clf.get("note") or "addr kind unknown on probed chains"]
+                if base_note:
+                    note_bits.append(base_note)
+                note = "; ".join(note_bits)
+        else:
+            alert_type = "NEW_JS_CA"
+            conf = "low" if low else "normal"
+            note = base_note
+        ev = {
+            "type": alert_type,
+            "name": name,
+            "handle": handle,
+            "site": target["site"],
+            "address": addr,
+            "addr_type": addr_type,
+            "source": c.get("source"),
+            "snippet": c.get("snippet"),
+            "confidence": conf,
+            "note": note,
+            "kind": kind,
+            "addr_kind": kind or addr_type,
+            "label_zh": label_zh or ("扫出钱包" if alert_type == "SCANNED_WALLET" else None),
+            "chain": chain_out,
+        }
+        if clf.get("code_bytes") is not None:
+            ev["code_bytes"] = clf.get("code_bytes")
+        append_alert(ev)
+        alerts.append(ev)
+        alerted.add(key)
+        tag = "扫出钱包" if alert_type == "SCANNED_WALLET" else alert_type
+        print(
+            f"  ALERT {tag} {name} {addr} conf={ev['confidence']} chain={chain_out}",
+            flush=True,
+        )
+        if alert_type in ("NEW_JS_CA", "SCANNED_WALLET") and (
+            isinstance(addr, str) and addr.lower().startswith("0x") and len(addr) == 42
+        ):
+            queue_wallet_trace(ev)
+
+    # Update site state
+    site_state.update({
+        "name": name,
+        "handle": handle,
+        "site": target["site"],
+        "etag": probe.get("etag"),
+        "last_modified": probe.get("last_modified"),
+        "body_hash": probe.get("body_hash"),
+        "http_code": probe.get("http_code"),
+        "last_probe_at": now_iso(),
+        "last_full_at": now_iso(),
+        "last_addrs": addr_list,
+        "alerted_addrs": sorted(alerted),
+        "fingerprint": scan.get("fingerprint"),
+        "address_fingerprint": scan.get("address_fingerprint"),
+        "low_confidence": low,
+        "last_errors": (scan.get("errors") or [])[:5],
+        "baseline": False,
+    })
+    return alerts
+
+
+def handle_signal(signum, _frame):
+    global RUNNING
+    print(f"\n[{now_label()}] signal {signum}, shutting down…", flush=True)
+    RUNNING = False
+
+
+class SiteWorker(threading.Thread):
+    def __init__(self, target: dict, key: str, interval: float, state: dict, stats: dict):
+        super().__init__(daemon=True, name=f"site:{key}")
+        self.target = target
+        self.key = key
+        self.interval = interval
+        self.state = state
+        self.stats = stats
+        self.stop_ev = threading.Event()
+        self.host = (urlparse(target["site"]).hostname or "").lower()
+        self.session = requests.Session()
+        self.err_streak = 0
+        self.last_err_log = 0.0
+        self.last_full = 0.0
+        self.cooldown = FULL_EXTRACT_COOLDOWN
+
+    def stop(self) -> None:
+        self.stop_ev.set()
+
+    def _sleep(self, sec: float) -> None:
+        end = time.time() + sec
+        while RUNNING and not self.stop_ev.is_set() and time.time() < end:
+            time.sleep(min(0.2, max(0.0, end - time.time())))
+
+    def run(self) -> None:
+        next_due = time.time()
+        while RUNNING and not self.stop_ev.is_set():
+            now = time.time()
+            if now < next_due:
+                self._sleep(next_due - now)
+                continue
+            if not GATE.wait_turn(self.host):
+                break
+            start = time.time()
+            next_due = start + self.interval
+            try:
+                self.tick()
+            except Exception as e:
+                print(f"  ERROR worker {self.target['name']}: {e}", flush=True)
+            if self.err_streak:
+                next_due = max(next_due, start + min(ERROR_BACKOFF_MAX, 2 ** min(self.err_streak, 6)))
+
+    def tick(self) -> None:
+        self.last_probe = None
+        result = self._tick() or "unknown"
+        probe = self.last_probe or {}
+        with STATE_LOCK:
+            s0 = self.state["sites"].get(self.key)
+            if s0 is None:
+                return
+            s0["last_latency_ms"] = int(round((probe.get("time_s") or 0.0) * 1000))
+            s0["last_result"] = result
+            s0["interval_s"] = self.interval
+            s0["workbench"] = bool(self.target.get("workbench"))
+            _record(s0, {
+                "at": now_iso(), "http_code": probe.get("http_code"),
+                "latency_ms": s0["last_latency_ms"], "result": result,
+                "bytes": probe.get("bytes"), "error": (probe.get("error") or None),
+            }, bool(self.target.get("workbench")))
+
+    def _tick(self) -> str:
+        t = self.target
+        key = self.key
+        sites_state = self.state["sites"]
+        with STATE_LOCK:
+            prev = dict(sites_state.get(key) or {})
+        probe = light_probe(self.session, t["site"], prev)
+        self.last_probe = probe
+        now = time.time()
+        st = self.stats
+        with STATE_LOCK:
+            st["checks"] += 1
+            st["last_check"].setdefault(key, deque(maxlen=64)).append(now)
+            st["probe_times"].append(probe.get("time_s") or 0.0)
+        code = int(probe["http_code"]) if str(probe.get("http_code", "")).isdigit() else 0
+        if code in (429, 503):
+            with STATE_LOCK:
+                st["rate_limited"] += 1
+            GATE.rate_limited(self.host, code, probe.get("retry_after"))
+            with STATE_LOCK:
+                s0 = sites_state.setdefault(key, {"name": t["name"], "handle": t["handle"], "site": t["site"]})
+                s0["last_probe_at"] = now_iso()
+                s0["last_error"] = f"http {code} (backed off)"
+            return "rate_limited"
+        if not probe.get("ok"):
+            self.err_streak += 1
+            with STATE_LOCK:
+                st["errors"] += 1
+                s0 = sites_state.setdefault(key, {"name": t["name"], "handle": t["handle"], "site": t["site"]})
+                s0["last_probe_at"] = now_iso()
+                err = probe.get("error") or probe.get("http_code")
+                if self.err_streak in (3, 10) and now - self.last_err_log > 300:
+                    self.last_err_log = now
+                    print(f"  [error] {t['name']} {t['site']}: {str(err)[:140]} (streak {self.err_streak}, backing off)", flush=True)
+                s0["last_error"] = err
+                s0["error_streak"] = self.err_streak
+            return "error"
+        if self.err_streak:
+            if self.err_streak >= 10:
+                print(f"  [ok] {t['name']} reachable again", flush=True)
+            self.err_streak = 0
+        GATE.ok(self.host)
+        with STATE_LOCK:
+            st["not_modified" if probe.get("not_modified") else "full_200"] += 1
+            cur = sites_state.get(key)
+            if not cur or not (cur.get("etag") or cur.get("last_modified") or cur.get("body_hash")):
+                seeded = seed_addrs_from_batch(t["name"])
+                alerted = {f"{a.get('type')}:{(a.get('address') or '').lower()}" for a in seeded}
+                sites_state[key] = {
+                    "name": t["name"], "handle": t["handle"], "site": t["site"],
+                    "etag": probe.get("etag"), "etag_raw": probe.get("etag_raw"),
+                    "last_modified": probe.get("last_modified"),
+                    "body_hash": probe.get("body_hash"),
+                    "recent_hashes": [probe["body_hash"]] if probe.get("body_hash") else [],
+                    "http_code": probe.get("http_code"), "last_probe_at": now_iso(),
+                    "last_full_at": None, "last_addrs": seeded,
+                    "alerted_addrs": sorted(alerted),
+                    "low_confidence": t["low_confidence"], "baseline": True,
+                }
+                print(f"  [baseline] {t['name']} seeded_addrs={len(seeded)} hash={probe.get('body_hash')}", flush=True)
+                return "baseline"
+            is_change = changed(cur, probe)
+            if not is_change:
+                cur["last_probe_at"] = now_iso()
+                cur["http_code"] = probe.get("http_code")
+                cur.pop("last_error", None)
+                cur.pop("error_streak", None)
+                if probe.get("etag_raw"):
+                    cur["etag_raw"] = probe["etag_raw"]
+                    cur["etag"] = probe.get("etag")
+                if probe.get("last_modified"):
+                    cur["last_modified"] = probe["last_modified"]
+                if probe.get("body_hash"):
+                    if not cur.get("body_hash") or probe["body_hash"] != cur.get("body_hash"):
+                        cur["body_hash"] = probe["body_hash"]  # seed / known variant
+                    rh = [h for h in (cur.get("recent_hashes") or []) if h != probe["body_hash"]]
+                    cur["recent_hashes"] = (rh + [probe["body_hash"]])[-RECENT_HASHES:]
+                return "not_modified" if probe.get("not_modified") else "unchanged"
+        # changed
+        if now - self.last_full < self.cooldown:
+            return "change_cooldown"  # re-detected after cooldown (body_hash not advanced)
+        self.last_full = now
+        with STATE_LOCK:
+            st["changed"] += 1
+        print(f"  [change] {t['name']} {t['site']} hash={probe.get('body_hash')}", flush=True)
+        with FULL_EXTRACT_SLOTS:
+            with STATE_LOCK:
+                work = dict(sites_state.get(key) or {})
+            fp_before = (work.get("fingerprint"), work.get("address_fingerprint"))
+            try:
+                alerts = full_extract_and_alert(t, probe, work, reason="change")
+            except Exception as e:
+                alerts = []
+                work["last_error"] = f"full_extract: {e}"[:200]
+                print(f"  ERROR full extract {t['name']}: {e}", flush=True)
+        fp_after = (work.get("fingerprint"), work.get("address_fingerprint"))
+        if not alerts and fp_before == fp_after:
+            # light fingerprint moved but full JS fingerprint did not: noisy page,
+            # back off full extracts for this site (15s -> 30 -> ... -> 600s)
+            self.cooldown = min(600.0, self.cooldown * 2)
+            work["light_fp_noisy"] = True
+            work["full_extract_cooldown_s"] = self.cooldown
+        else:
+            self.cooldown = FULL_EXTRACT_COOLDOWN
+            work["full_extract_cooldown_s"] = self.cooldown
+        rh = [h for h in (work.get("recent_hashes") or []) if h != probe.get("body_hash")]
+        if probe.get("body_hash"):
+            work["recent_hashes"] = (rh + [probe["body_hash"]])[-RECENT_HASHES:]
+        if probe.get("etag_raw"):
+            work["etag_raw"] = probe["etag_raw"]
+        work["change_count"] = int(work.get("change_count") or 0) + 1
+        work["last_change_at"] = now_iso()
+        _record_change(work, {
+            "at": now_iso(), "kind": "SITE_CHANGE" if any(a.get("type") == "SITE_CHANGE" for a in alerts) else "light_change",
+            "reason": "change", "body_hash": probe.get("body_hash"),
+            "new_addresses": [a.get("address") for a in alerts if a.get("type") in ("NEW_JS_CA", "SCANNED_WALLET")],
+            "address_count": len(work.get("last_addrs") or []),
+        })
+        with STATE_LOCK:
+            prev_live = sites_state.get(key) or {}
+            for k in ("history", "last_latency_ms", "checking", "check_requested_at"):
+                if k in prev_live:
+                    work[k] = prev_live[k]
+            sites_state[key] = work
+            st["alerts"] += len(alerts)
+        if any(a.get("type") in ("NEW_JS_CA", "SCANNED_WALLET") for a in alerts):
+            refresh_ca_finds()
+        return "changed"
+
+
+def manual_check(target: dict, key: str, state: dict, req: dict) -> None:
+    """Immediate full HTML+JS extract requested from the workbench API."""
+    sites_state = state["sites"]
+    t0 = time.time()
+    result = "manual_error"
+    alerts: list[dict] = []
+    probe: dict = {}
+    try:
+        with STATE_LOCK:
+            cur = sites_state.setdefault(key, {"name": target["name"], "handle": target["handle"], "site": target["site"]})
+            cur["checking"] = True
+            cur["check_started_at"] = now_iso()
+        host = (urlparse(target["site"]).hostname or "").lower()
+        GATE.wait_turn(host)
+        sess = requests.Session()
+        probe = light_probe(sess, target["site"], {})
+        if not probe.get("ok"):
+            with STATE_LOCK:
+                cur = sites_state[key]
+                cur["last_error"] = probe.get("error") or probe.get("http_code")
+                cur["last_probe_at"] = now_iso()
+                cur["http_code"] = probe.get("http_code")
+        else:
+            with FULL_EXTRACT_SLOTS:
+                with STATE_LOCK:
+                    work = dict(sites_state.get(key) or {})
+                if not work.get("alerted_addrs") and not work.get("last_addrs"):
+                    seeded = seed_addrs_from_batch(target["name"])
+                    work["last_addrs"] = seeded
+                    work["alerted_addrs"] = sorted({f"{a.get('type')}:{(a.get('address') or '').lower()}" for a in seeded})
+                alerts = full_extract_and_alert(target, probe, work, reason="manual")
+            result = "manual_full"
+            rh = [h for h in (work.get("recent_hashes") or []) if h != probe.get("body_hash")]
+            if probe.get("body_hash"):
+                work["recent_hashes"] = (rh + [probe["body_hash"]])[-RECENT_HASHES:]
+            if probe.get("etag_raw"):
+                work["etag_raw"] = probe["etag_raw"]
+            new_addrs = [a.get("address") for a in alerts if a.get("type") in ("NEW_JS_CA", "SCANNED_WALLET")]
+            if alerts:
+                work["change_count"] = int(work.get("change_count") or 0) + 1
+                work["last_change_at"] = now_iso()
+            _record_change(work, {
+                "at": now_iso(), "kind": "manual_check", "reason": "manual",
+                "body_hash": probe.get("body_hash"), "new_addresses": new_addrs,
+                "site_change": any(a.get("type") == "SITE_CHANGE" for a in alerts),
+                "address_count": len(work.get("last_addrs") or []),
+            })
+            with STATE_LOCK:
+                prev_live = sites_state.get(key) or {}
+                for k in ("history", "last_latency_ms", "interval_s", "workbench"):
+                    if k in prev_live:
+                        work[k] = prev_live[k]
+                sites_state[key] = work
+            if new_addrs:
+                refresh_ca_finds()
+    except Exception as e:
+        print(f"  ERROR manual check {target.get('name')}: {e}", flush=True)
+        with STATE_LOCK:
+            sites_state.setdefault(key, {})["last_error"] = f"manual: {e}"[:200]
+    finally:
+        with STATE_LOCK:
+            cur = sites_state.setdefault(key, {})
+            cur["checking"] = False
+            cur["last_manual_check_at"] = now_iso()
+            cur["last_manual_result"] = {
+                "result": result, "alerts": len(alerts), "requested_at": req.get("requested_at"),
+                "duration_ms": int((time.time() - t0) * 1000),
+            }
+            _record(cur, {"at": now_iso(), "http_code": probe.get("http_code"),
+                          "latency_ms": int(round((probe.get("time_s") or 0.0) * 1000)),
+                          "result": result, "bytes": probe.get("bytes"),
+                          "error": probe.get("error") or None}, True)
+        MANUAL_CHECKING.discard(key)
+        print(f"  [manual] {target.get('name')} result={result} alerts={len(alerts)} "
+              f"in {int((time.time()-t0)*1000)}ms", flush=True)
+
+
+def drain_check_queue(workers: dict, state: dict) -> None:
+    if not CHECK_QUEUE_PATH.exists() or CHECK_QUEUE_PATH.stat().st_size == 0:
+        return
+    proc = CHECK_QUEUE_PATH.with_suffix(".processing")
+    try:
+        CHECK_QUEUE_PATH.replace(proc)
+    except FileNotFoundError:
+        return
+    lines = proc.read_text(encoding="utf-8", errors="ignore").splitlines()
+    proc.unlink(missing_ok=True)
+    pool = None
+    for ln in lines:
+        try:
+            req = json.loads(ln)
+        except Exception:
+            continue
+        key = norm_handle(req.get("handle"))
+        if not key or key in MANUAL_CHECKING:
+            continue
+        target = workers[key].target if key in workers else None
+        if target is None:
+            if pool is None:
+                pool = {project_key(t["project"]): t for t in load_all_watch_targets()}
+                pool.update({project_key(t["project"]): t for t in load_workbench_targets()})
+            target = pool.get(key)
+        if target is None:
+            with STATE_LOCK:
+                s0 = state["sites"].setdefault(key, {"handle": req.get("handle"), "name": req.get("handle")})
+                s0["checking"] = False
+                s0["last_manual_check_at"] = now_iso()
+                s0["last_manual_result"] = {"result": "no_usable_site", "requested_at": req.get("requested_at")}
+            print(f"  [manual] {key}: no usable site", flush=True)
+            continue
+        MANUAL_CHECKING.add(key)
+        threading.Thread(target=manual_check, args=(target, key, state, req), daemon=True,
+                         name=f"manual:{key}").start()
+
+
+def _pct(vals: list[float], q: float) -> float:
+    if not vals:
+        return 0.0
+    vals = sorted(vals)
+    i = min(len(vals) - 1, max(0, int(round(q * (len(vals) - 1)))))
+    return vals[i]
+
+
+def run_loop(interval: float, once: bool = False) -> int:
+    global RUNNING
+    interval = clamp_interval(interval)
+    signal.signal(signal.SIGTERM, handle_signal)
+    signal.signal(signal.SIGINT, handle_signal)
+
+    state = load_json(STATE_PATH, {})
+    if not isinstance(state, dict):
+        state = {}
+    state.setdefault("sites", {})
+    targets = load_watch_targets()
+    print(f"[{now_label()}] fast_site_poll v2 start interval={interval}s sites={len(targets)} "
+          f"targets={CURRENT_TARGET_MODE['mode']} (WORKBENCH_ONLY={WORKBENCH_MODE}) "
+          f"mode=concurrent-per-site host_gap={HOST_MIN_GAP}s state={STATE_PATH}", flush=True)
+    state["poll_interval_s"] = interval
+    state["mode"] = "concurrent-per-site-v2"
+    state["watched_count"] = len(targets)
+    state["started_at"] = now_iso()
+    save_state(state)
+
+    stats = {"checks": 0, "not_modified": 0, "full_200": 0, "errors": 0, "rate_limited": 0,
+             "changed": 0, "alerts": 0, "last_check": {}, "probe_times": deque(maxlen=500)}
+
+    if once:
+        ws = [SiteWorker(t, project_key(t["project"]), interval, state, stats) for t in targets]
+        for w in ws:
+            w.tick()
+        save_state(state)
+        print(f"[{now_label()}] once: checks={stats['checks']} errors={stats['errors']}", flush=True)
+        return 0
+
+    workers: dict[str, SiteWorker] = {}
+
+    def reconcile(tgts: list[dict]) -> None:
+        want = {project_key(t["project"]): t for t in tgts}
+        for k, w in list(workers.items()):
+            if k not in want or want[k]["site"] != w.target["site"]:
+                w.stop()
+                workers.pop(k, None)
+        for k, t in want.items():
+            if k not in workers:
+                w = SiteWorker(t, k, interval, state, stats)
+                workers[k] = w
+                w.start()
+        with STATE_LOCK:
+            state["watched_count"] = len(want)
+            state["target_mode"] = CURRENT_TARGET_MODE["mode"]
+            state["workbench_only_env"] = WORKBENCH_MODE
+            state["workbench_handles"] = list(CURRENT_TARGET_MODE["workbench_handles"])
+            state["targets_reloaded_at"] = now_iso()
+
+    reconcile(targets)
+
+    def wb_mtime() -> float:
+        try:
+            return WORKBENCH_PATH.stat().st_mtime
+        except FileNotFoundError:
+            return 0.0
+
+    last_wb_mtime = wb_mtime()
+    last_save = last_summary = last_reload = time.time()
+    summary_n = 0
+    prev_counts = {k: 0 for k in ("checks", "not_modified", "full_200", "errors", "rate_limited", "changed", "alerts")}
+    while RUNNING:
+        time.sleep(0.5)
+        now = time.time()
+        m = wb_mtime()
+        if now - last_reload >= RELOAD_EVERY or m != last_wb_mtime:
+            wb_changed = m != last_wb_mtime
+            last_wb_mtime = m
+            last_reload = now
+            try:
+                before = CURRENT_TARGET_MODE["mode"], len(workers)
+                reconcile(load_watch_targets())
+                if wb_changed or before != (CURRENT_TARGET_MODE["mode"], len(workers)):
+                    print(f"[{now_label()}] targets reloaded mode={CURRENT_TARGET_MODE['mode']} "
+                          f"sites={len(workers)} wb={CURRENT_TARGET_MODE['workbench_handles']}", flush=True)
+            except Exception as e:
+                print(f"  reload failed: {e}", flush=True)
+        try:
+            drain_check_queue(workers, state)
+        except Exception as e:
+            print(f"  check queue failed: {e}", flush=True)
+        if now - last_summary >= SUMMARY_EVERY:
+            win = now - last_summary
+            last_summary = now
+            summary_n += 1
+            with STATE_LOCK:
+                gaps = []
+                for k, dq in stats["last_check"].items():
+                    recent = [x for x in dq if x >= now - 30]
+                    if len(recent) >= 2:
+                        gaps.append((recent[-1] - recent[0]) / (len(recent) - 1))
+                delta = {k: stats[k] - prev_counts[k] for k in prev_counts}
+                prev_counts = {k: stats[k] for k in prev_counts}
+                pt = list(stats["probe_times"])
+                gate = GATE.snapshot()
+                cyc = {
+                    "n": summary_n, "at": now_iso(), "at_label": now_label(),
+                    "window_s": round(win, 1),
+                    "elapsed_s": round(statistics.median(gaps), 2) if gaps else None,
+                    "per_site_interval_p50_s": round(statistics.median(gaps), 2) if gaps else None,
+                    "per_site_interval_p90_s": round(_pct(gaps, 0.9), 2) if gaps else None,
+                    "per_site_interval_max_s": round(max(gaps), 2) if gaps else None,
+                    "probe_time_p50_s": round(statistics.median(pt), 3) if pt else None,
+                    "probed": len(workers), "sites_measured": len(gaps),
+                    **{k: delta[k] for k in delta},
+                    "backoff_hosts": gate["active"],
+                }
+                state["last_cycle"] = cyc
+                state["backoff"] = gate
+            print(f"[{now_label()}] summary#{summary_n} [{CURRENT_TARGET_MODE['mode']}] sites={len(workers)} checks={delta['checks']}/{win:.0f}s "
+                  f"per-site p50={cyc['per_site_interval_p50_s']}s p90={cyc['per_site_interval_p90_s']}s "
+                  f"max={cyc['per_site_interval_max_s']}s 304={delta['not_modified']} 200={delta['full_200']} "
+                  f"err={delta['errors']} 429/503={delta['rate_limited']} changed={delta['changed']} "
+                  f"alerts={delta['alerts']} backoff={gate['active'] or '-'}", flush=True)
+        if now - last_save >= SAVE_EVERY:
+            last_save = now
+            try:
+                save_state(state)
+            except Exception as e:
+                print(f"  save_state failed: {e}", flush=True)
+
+    for w in workers.values():
+        w.stop()
+    save_state(state)
+    print(f"[{now_label()}] stopped after {summary_n} summaries", flush=True)
+    return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Pad Hunter fast official-site poller")
+    ap.add_argument(
+        "--interval", type=float, default=1.0,
+        help="Per-site light poll interval seconds (default 1, clamp 1–60)",
+    )
+    ap.add_argument("--once", action="store_true", help="One cycle then exit")
+    ap.add_argument("--status", action="store_true", help="Print state summary and exit")
+    args = ap.parse_args()
+
+    if args.status:
+        st = load_json(STATE_PATH, {})
+        print(json.dumps({
+            "state": str(STATE_PATH),
+            "alerts": str(ALERTS_PATH),
+            "wake": str(WAKE_PATH),
+            "watched_count": st.get("watched_count"),
+            "poll_interval_s": st.get("poll_interval_s"),
+            "mode": st.get("mode"),
+            "target_mode": st.get("target_mode"),
+            "workbench_handles": st.get("workbench_handles"),
+            "backoff": st.get("backoff"),
+            "updated_at": st.get("updated_at"),
+            "last_cycle": st.get("last_cycle"),
+            "pid_file": str(PID_PATH),
+            "pid_alive": (
+                PID_PATH.exists()
+                and Path(f"/proc/{PID_PATH.read_text().strip()}/cmdline").exists()
+            ) if PID_PATH.exists() else False,
+        }, ensure_ascii=False, indent=2))
+        return 0
+
+    os.chdir(BASE)
+    return run_loop(args.interval, once=args.once)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

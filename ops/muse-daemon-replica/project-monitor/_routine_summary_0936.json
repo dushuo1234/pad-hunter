@@ -1,0 +1,94 @@
+{
+  "routine": "开盘与CA预警",
+  "at": "2026-10-25T09:43:36+08:00",
+  "pipeline": {
+    "script": "run_listing_onchain_js.sh",
+    "EXIT": 0,
+    "start": "2026-10-25T09:06:22+08:00",
+    "end": "2026-10-25T09:36:41+08:00",
+    "duration_s": 1819,
+    "log": "/workspace/project-monitor/logs/run_listing_onchain_js_20261025_0906.log"
+  },
+  "watchlist_sync": {
+    "before": 245,
+    "after": 247,
+    "newly_locked": [
+      {
+        "name": "Gonggu",
+        "handle": "gongguone",
+        "status": "开发中"
+      },
+      {
+        "name": "SwarmPad",
+        "handle": "swarmpad_",
+        "status": "开发中"
+      }
+    ]
+  },
+  "x_refresh": {
+    "bios_approx": 50,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "CaravanRH",
+      "hashgentic",
+      "thetimecard"
+    ],
+    "user_count": 391,
+    "pkc_bio": "(empty)",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "daily_reads_left_approx": 955
+  },
+  "counts": {
+    "new_ca": 0,
+    "new_js_ca": 0,
+    "matches": 0,
+    "new_listing_signals": 1,
+    "site_js_change": 6,
+    "TRACE_CA": 4,
+    "ONCHAIN_LOCK_new": 0
+  },
+  "highlights": {
+    "LISTING_SIGNAL": [
+      {
+        "name": "Qern App",
+        "handle": "QernApp",
+        "detail": "PRE-TGE airdrop campaign metric tick 835→832; repeat, not strong change"
+      }
+    ],
+    "NEW_DEPLOY": "none watchlist-relevant; ambient UniV2 only",
+    "SITE_JS_CHANGE": [
+      "E.T.A",
+      "Index Network",
+      "Listen",
+      "TapeFoundry x2",
+      "♱ 17-26 — fingerprint only, addrs unchanged, near ambient univ2_base"
+    ],
+    "TRACE_CA": "Hashgentic x4 from wallet 0xe0e63f… on BSC — see details; project tagged 扫出钱包·非CA",
+    "ONCHAIN_LOCK": "eof offset 106495; new=0"
+  },
+  "listing_at": {
+    "changes_published": 0,
+    "within_3d": [
+      {
+        "name": "Timecard",
+        "handle": "thetimecard",
+        "listing_at": "2026-10-27T21:00:00+08:00"
+      },
+      {
+        "name": "Blastoff",
+        "handle": "play_blastoff",
+        "listing_at": "2026-10-28T07:59:00+08:00"
+      }
+    ]
+  },
+  "prune_mark": {
+    "newly_launched": 0,
+    "blocklist": 68,
+    "launched": 68,
+    "workbench": 53,
+    "watchlist": 247
+  },
+  "daemon_onchain_lock": "ok pid=889131",
+  "actionable": false,
+  "quiet_summary": "pipeline EXIT=0 ~30.3min; watchlist 245→247 (+Gonggu/+SwarmPad); new_ca=0 new_js_ca=0 matches=0; Qern LISTING_SIGNAL repeat; Timecard within_3d 10-27 21:00 unchanged; onchain_lock +0; TRACE_CA Hashgentic x4 non-actionable wallet-trace; prune newly=0 (launched 68, workbench 53)"
+}

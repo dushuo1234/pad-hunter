@@ -1,0 +1,1062 @@
+#!/usr/bin/env python3
+"""工作台高频提醒 daemon (Pad Hunter)：即将开始 + CA + 官网/JS 变动，按项目实时推到工作台。
+
+  * CA：每 5s 看 ca_finds.json（mtime 变就重算）→ 工作台项目的 CA 状态（已确认CA 只认 confirmed+alert_ok+is_token，NFT/混合/山寨永不算）。
+  * 官网/JS 变动 & 新地址：增量 tail fast_site_alerts.jsonl / js_factory_events.jsonl / onchain_lock_alerts.jsonl /
+          solana_lock_alerts.jsonl / wallet_trace_events.jsonl(TRACE_CA)，按工作台项目过滤（不重复抓站）。
+
+只盯工作台（Cloudflare Worker /v1/workbench/pins）里的项目，排除已开盘：
+  * 官网：每 ~45s 抓一次 HTML（+ 脚本列表变化时抓同源 JS bundle），解析开始/开铸/TGE/开盘时间与倒计时；
+          时间新出现或变化即提醒，新时间晚于旧时间 → 标「延期」。
+  * 官推：每 ~60s 扫 x_posts_cache.json / x_listing_posts_cache.json / alerts/x_inbox/*.json
+          （x_inbox 由带 X 权限的 routine 投递 get_users_posts / search_posts_all 原始 JSON），
+          复用 scan_x_progress.classify_text（「即将开盘」官推进度分类）判断近期是否说即将开始，并解析具体时间。
+输出：alerts/workbench_soon.jsonl（去重：项目+证据），并 POST 到 Worker /v1/workbench/alert → WS 广播 workbench_alert。
+绝不写 listing_at、绝不编造时间；解析出的时间只作为提醒，附原文与来源。
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import signal
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urljoin, urlparse
+from zoneinfo import ZoneInfo
+
+import requests
+
+BASE = Path("/workspace/project-monitor")
+sys.path.insert(0, str(BASE))
+from scan_x_progress import classify_text  # noqa: E402  (官推进度分类，与「即将开盘」同源)
+from scan_js_factory_match import is_usable_site  # noqa: E402
+from extract_listing_times import apply_tz_label, strip_html  # noqa: E402
+import ingest_x_posts  # noqa: E402
+
+SH = ZoneInfo("Asia/Shanghai")
+ALERT_DIR = BASE / "alerts"
+ALERTS = ALERT_DIR / "workbench_soon.jsonl"
+STATE = ALERT_DIR / "workbench_soon_state.json"
+X_PLAN = ALERT_DIR / "workbench_soon_x_plan.json"
+X_INBOX = ALERT_DIR / "x_inbox"
+TOKEN_FILE = BASE / "workbench_api_token.txt"
+API = os.environ.get("PAD_HUNTER_CF_API", "https://api.adualpha.win").rstrip("/")
+WATCHLIST = BASE / "watchlist.json"
+CANDIDATES = Path("/workspace/push-radar/data/candidates.json")
+LISTING_TIMES = BASE / "listing_times.json"
+REMOVED = BASE / "removed_launched.json"
+LAUNCHED = Path("/workspace/push-radar/data/launched.json")
+X_CACHE = BASE / "x_posts_cache.json"
+X_LISTING = BASE / "x_listing_posts_cache.json"
+WB_LOCAL = BASE / "workbench_active.json"
+# TODAY_PROJECTS_BOOST: 今日项目清单提频（每 cycle 重读，无需改环境变量）
+TODAY_PROJECTS = BASE / "today_projects.json"
+TODAY_BOOST = BASE / "today_projects_boost.json"
+BOOST_SITE_EVERY = float(os.environ.get("WB_SOON_BOOST_SITE_EVERY", "10"))
+
+SITE_EVERY = float(os.environ.get("WB_SOON_SITE_EVERY", "45"))
+X_EVERY = float(os.environ.get("WB_SOON_X_EVERY", "60"))
+PINS_EVERY = 60.0
+X_WINDOW_H = 72
+UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36 PadHunterSoon/1.0"
+HTML_MAX = 700_000
+JS_MAX = 3_000_000
+JS_PER_SITE = 4
+RUNNING = True
+# 公共平台/聚合站不是项目官网，不当作官网时间来源
+GENERIC_HOSTS = ("pump.fun", "opensea.io", "magiceden", "linktr.ee", "t.me", "discord", "github.com", "medium.com",
+                 "x.com", "twitter.com", "youtube.com", "dexscreener", "four.meme", "blast.fun", "letsbonk", "zora.co")
+
+# ---------- 时间解析 ----------
+MON = {"jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8,
+       "sep": 9, "sept": 9, "oct": 10, "nov": 11, "dec": 12}
+TZ_RE = r"(?:\(?\s*(UTC|GMT|Z|EST|EDT|ET|PST|PDT|PT|CET|CEST|CST|SGT|HKT|KST|JST|北京时间|UTC\s*[+-]\s*\d{1,2}(?::?\d{2})?|GMT\s*[+-]\s*\d{1,2}(?::?\d{2})?)\s*\)?)?"
+CLOCK_RE = r"(\d{1,2})(?:[:：.](\d{2}))?\s*(am|pm|a\.m\.|p\.m\.)?"
+KW = re.compile(
+    r"(launch|launching|mint|minting|tge|token\s+generation|go(?:es)?\s+live|live\s+(?:on|at|in)|start|starts|opens?|opening|"
+    r"countdown|presale|pre-sale|public\s+sale|whitelist|\bwl\b|allowlist|sale|listing|trading|deploy|fair\s*launch|"
+    r"开盘|开始|上线|开铸|铸造|发射|倒计时|公售|预售|白名单|开放|发售|上市|开启|启动)",
+    re.I,
+)
+NON_LAUNCH = re.compile(r"(\bAMA\b|Twitter\s+Space|X\s+Space|\bSpaces?\b|直播|播客|giveaway\s+ends|contest\s+ends)", re.I)
+DELAY_WORDS = re.compile(r"(postpone|delay|delayed|reschedul|pushed\s+back|moved\s+to|new\s+date|延期|推迟|改期|顺延)", re.I)
+COUNTDOWN_RE = re.compile(
+    r"(countdown|倒计时|\b\d{1,3}\s*(?:d|days?)\s*[: ]\s*\d{1,2}\s*(?:h|hrs?|hours?)\b|"
+    r"days\s+hours\s+minutes|天\s*\d{1,2}\s*时|DAYS\s*HOURS\s*MIN)",
+    re.I,
+)
+
+
+def now() -> datetime:
+    return datetime.now(SH)
+
+
+def iso(dt: datetime | None) -> str | None:
+    return dt.astimezone(SH).isoformat(timespec="seconds") if dt else None
+
+
+def disp(dt: datetime | None, has_clock: bool = True) -> str:
+    if not dt:
+        return "未给具体时间"
+    if not has_clock:
+        return dt.astimezone(SH).strftime("%m/%d") + "（只给了日期）"
+    return dt.astimezone(SH).strftime("%m/%d %H:%M") + "（北京时间）"
+
+
+def norm(h: str | None) -> str:
+    return (h or "").strip().lstrip("@").lower()
+
+
+def _clock(h: str | None, m: str | None, ap: str | None) -> tuple[int, int] | None:
+    if h is None:
+        return None
+    hh, mm = int(h), int(m or 0)
+    if ap:
+        a = ap.lower().replace(".", "")
+        if a.startswith("p") and hh < 12:
+            hh += 12
+        elif a.startswith("a") and hh == 12:
+            hh = 0
+    return (hh, mm) if 0 <= hh <= 23 and 0 <= mm <= 59 else None
+
+
+def _tz(label: str | None, zh: bool) -> tuple[str, str]:
+    """→ (label used by apply_tz_label, 中文时区说明)."""
+    if label:
+        lab = re.sub(r"\s+", "", label).upper()
+        if lab == "北京时间":
+            return "CST", "北京时间"
+        if lab in ("ET",):
+            return "EDT", "美东时间"
+        if lab in ("PT",):
+            return "PDT", "美西时间"
+        if lab in ("SGT", "HKT"):
+            return "UTC+8", lab
+        if lab in ("KST", "JST"):
+            return "UTC+9", lab
+        return lab, lab
+    return ("CST", "未注明时区，按北京时间") if zh else ("UTC", "未注明时区，按UTC")
+
+
+def _mk(y: int, mo: int, d: int, clk, tzlab: str | None, zh: bool) -> tuple[datetime, str] | None:
+    lab, note = _tz(tzlab, zh)
+    try:
+        dt = datetime(y, mo, d, clk[0] if clk else 0, clk[1] if clk else 0)
+    except ValueError:
+        return None
+    return apply_tz_label(dt, lab), note
+
+
+def _year(mo: int, d: int, ref: datetime) -> int:
+    y = ref.year
+    try:
+        c = datetime(y, mo, d, tzinfo=SH)
+    except ValueError:
+        return y
+    return y + 1 if c < ref - timedelta(days=60) else y
+
+
+def parse_times(text: str, ref: datetime, *, need_kw: bool = True) -> list[dict]:
+    """返回 [{at: datetime, has_clock, raw, tz_note}]；只取有开始/开铸/TGE 等上下文的时间。"""
+    out: list[dict] = []
+    if not text:
+        return out
+    zh = bool(re.search(r"[\u4e00-\u9fff]", text))
+
+    def add(m, dt_note, has_clock):
+        if not dt_note:
+            return
+        dt, note = dt_note
+        a, b = max(0, m.start() - 140), min(len(text), m.end() + 140)
+        ctx = text[a:b]
+        if need_kw and not KW.search(ctx):
+            return
+        if NON_LAUNCH.search(ctx) and not re.search(r"(mint|tge|launch|开盘|开铸)", ctx, re.I):
+            return
+        out.append({"at": dt, "has_clock": has_clock, "raw": re.sub(r"\s+", " ", ctx).strip()[:240], "tz_note": note})
+
+    # 1) ISO 2026-10-25T14:00(:00)(Z|+08:00) / 2026-10-25 14:00 UTC
+    for m in re.finditer(r"\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})(?:[T\s]+(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?\s*(Z|[+-]\d{2}:?\d{2})?)?\s*" + TZ_RE, text):
+        y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        clk = _clock(m.group(4), m.group(5), None) if m.group(4) else None
+        off = m.group(6)
+        if off and off != "Z":
+            off = "UTC" + off[:3] + ":" + off[-2:]
+        add(m, _mk(y, mo, d, clk, off or m.group(7), zh), bool(clk))
+    # 2) Month-name: Oct 25(th)(, 2026) (at|@|-) 2pm UTC  |  25 Oct
+    mon = r"(jan|feb|mar|apr|may|jun|jul|aug|sept?|oct|nov|dec)[a-z]*\.?"
+    for m in re.finditer(r"\b" + mon + r"\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(20\d{2}))?(?:\s*(?:at|@|,|-|–|·|•|\||/)?\s*(?:at\s*)?" + CLOCK_RE + r")?\s*" + TZ_RE, text, re.I):
+        mo, d = MON[m.group(1).lower()[:4] if m.group(1).lower().startswith("sept") else m.group(1).lower()[:3]], int(m.group(2))
+        y = int(m.group(3)) if m.group(3) else _year(mo, d, ref)
+        clk = _clock(m.group(4), m.group(5), m.group(6)) if m.group(4) and (m.group(5) or m.group(6)) else None
+        add(m, _mk(y, mo, d, clk, m.group(7), zh), bool(clk))
+    for m in re.finditer(r"\b(\d{1,2})(?:st|nd|rd|th)?\s+" + mon + r"(?:,?\s*(20\d{2}))?(?:\s*(?:at|@|,|-|–|·|•|\||/)?\s*(?:at\s*)?" + CLOCK_RE + r")?\s*" + TZ_RE, text, re.I):
+        d, mo = int(m.group(1)), MON[m.group(2).lower()[:3]]
+        y = int(m.group(3)) if m.group(3) else _year(mo, d, ref)
+        clk = _clock(m.group(4), m.group(5), m.group(6)) if m.group(4) and (m.group(5) or m.group(6)) else None
+        add(m, _mk(y, mo, d, clk, m.group(7), zh), bool(clk))
+    # 3) 中文：10月25日(晚上)20:00 / 10月25号晚8点
+    for m in re.finditer(r"(\d{1,2})月(\d{1,2})[日号]\s*(凌晨|早上|上午|中午|下午|晚上|晚)?\s*(\d{1,2})?(?:[:：点时](\d{2})?)?\s*(?:分)?\s*" + TZ_RE, text):
+        mo, d = int(m.group(1)), int(m.group(2))
+        h = m.group(4)
+        clk = None
+        if h is not None:
+            hh = int(h)
+            if m.group(3) in ("下午", "晚上", "晚") and hh < 12:
+                hh += 12
+            clk = (hh, int(m.group(5) or 0)) if 0 <= hh <= 23 else None
+        add(m, _mk(_year(mo, d, ref), mo, d, clk, m.group(6) or "北京时间", True), bool(clk))
+    # 4) 数字 m/d HH:MM (只在带钟点时取，避免 10/28 被误读)
+    for m in re.finditer(r"(?<![\d/])(\d{1,2})/(\d{1,2})(?![\d/])\s*(?:at|@|,|-)?\s*(\d{1,2}):(\d{2})\s*(am|pm)?\s*" + TZ_RE, text, re.I):
+        mo, d = int(m.group(1)), int(m.group(2))
+        if mo > 12:
+            continue
+        add(m, _mk(_year(mo, d, ref), mo, d, _clock(m.group(3), m.group(4), m.group(5)), m.group(6), zh), True)
+    # 5) 相对：tomorrow/tonight/today/明天/今晚 + 钟点
+    for m in re.finditer(r"\b(tomorrow|tonight|today)\b\s*(?:at|@|,)?\s*" + CLOCK_RE + r"\s*" + TZ_RE, text, re.I):
+        if not (m.group(3) or m.group(4)):
+            continue
+        clk = _clock(m.group(2), m.group(3), m.group(4))
+        lab, note = _tz(m.group(5), zh)
+        base = apply_tz_label(datetime(ref.year, ref.month, ref.day), lab)  # 当地日期近似：以参考时间所在日
+        local_ref = ref.astimezone(base.tzinfo)
+        dd = local_ref.date() + timedelta(days=1 if m.group(1).lower() == "tomorrow" else 0)
+        if clk:
+            add(m, (apply_tz_label(datetime(dd.year, dd.month, dd.day, *clk), lab), note + "；相对发帖时间"), True)
+    for m in re.finditer(r"(明天|明晚|今晚|今天|今日)\s*(凌晨|早上|上午|中午|下午|晚上|晚)?\s*(\d{1,2})(?:[:：点时](\d{2})?)", text):
+        hh = int(m.group(3))
+        if (m.group(1) in ("明晚", "今晚") or m.group(2) in ("下午", "晚上", "晚")) and hh < 12:
+            hh += 12
+        if not 0 <= hh <= 23:
+            continue
+        lr = ref.astimezone(SH)
+        dd = lr.date() + timedelta(days=1 if m.group(1).startswith("明") else 0)
+        add(m, (datetime(dd.year, dd.month, dd.day, hh, int(m.group(4) or 0), tzinfo=SH), "北京时间；相对发帖时间"), True)
+    # 6) in N hours/minutes/days, N小时后
+    for m in re.finditer(r"\bin\s+(\d{1,3})\s*(minutes?|mins?|hours?|hrs?|h|days?)\b", text, re.I):
+        n, u = int(m.group(1)), m.group(2).lower()
+        delta = timedelta(minutes=n) if u.startswith("m") else timedelta(days=n) if u.startswith("d") else timedelta(hours=n)
+        add(m, (ref + delta, "相对发帖时间（约）"), not u.startswith("d"))
+    for m in re.finditer(r"(\d{1,3})\s*(分钟|小时|天)后", text):
+        n, u = int(m.group(1)), m.group(2)
+        delta = timedelta(minutes=n) if u == "分钟" else timedelta(days=n) if u == "天" else timedelta(hours=n)
+        add(m, (ref + delta, "相对发帖时间（约）"), u != "天")
+    # dedupe
+    seen, uniq = set(), []
+    for c in out:
+        k = (iso(c["at"]), c["has_clock"])
+        if k in seen:
+            continue
+        seen.add(k)
+        uniq.append(c)
+    return uniq
+
+
+EPOCH_KW = re.compile(
+    r"(launch|mint|tge|start|countdown|open|sale|presale|deadline|target|end|live)\w*[\"'`]?\s*[:=]\s*[\"'`]?(1[6-9]\d{8}(?:\d{3})?)\b",
+    re.I,
+)
+
+
+def parse_code_times(code: str, ref: datetime) -> list[dict]:
+    """JS/内联 JSON 里的倒计时目标：ISO 串或 epoch（必须紧邻 launch/mint/tge/countdown 等变量名）。"""
+    out = []
+    for m in EPOCH_KW.finditer(code or ""):
+        v = int(m.group(2))
+        ts = v / 1000 if v > 10**11 else v
+        dt = datetime.fromtimestamp(ts, tz=timezone.utc).astimezone(SH)
+        if ref - timedelta(hours=2) <= dt <= ref + timedelta(days=120):
+            out.append({"at": dt, "has_clock": True, "raw": code[max(0, m.start() - 60): m.end() + 40].replace("\n", " ")[:200], "tz_note": "epoch"})
+    for m in re.finditer(r"(launch|mint|tge|start|countdown|open|sale|presale|target|live)\w*[\"'`]?\s*[:=]\s*(?:new\s+Date\()?[\"'`](20\d{2}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)[\"'`]", code or "", re.I):
+        s = m.group(2)
+        try:
+            dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.astimezone(SH)
+        except Exception:
+            continue
+        if ref - timedelta(hours=2) <= dt <= ref + timedelta(days=120):
+            out.append({"at": dt, "has_clock": True, "raw": code[max(0, m.start() - 60): m.end() + 20].replace("\n", " ")[:200], "tz_note": "ISO"})
+    return out
+
+
+# ---------- IO ----------
+def load(p: Path, d):
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return d
+
+
+def save_state(st: dict) -> None:
+    tmp = STATE.with_suffix(".tmp")
+    tmp.write_text(json.dumps(st, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    tmp.replace(STATE)
+
+
+def token() -> str:
+    t = os.environ.get("PAD_HUNTER_WORKBENCH_TOKEN_NEW", "").strip()
+    if not t and TOKEN_FILE.exists():
+        t = TOKEN_FILE.read_text().strip()
+    return t
+
+
+def api_get(path: str):
+    r = requests.get(API + path, headers={"X-Pad-Hunter-Token": token(), "User-Agent": UA}, timeout=15)
+    r.raise_for_status()
+    return r.json()
+
+
+def api_post(path: str, body: dict):
+    r = requests.post(API + path, json=body, headers={"X-Pad-Hunter-Token": token(), "User-Agent": UA}, timeout=15)
+    return r.status_code, (r.json() if r.headers.get("content-type", "").startswith("application/json") else r.text[:200])
+
+
+def launched_set(blocklist: list[str]) -> set[str]:
+    out = {norm(h) for h in blocklist}
+    rem = load(REMOVED, {})
+    ents = rem if isinstance(rem, list) else (rem.get("removed") or rem.get("entries") or [])
+    if isinstance(rem, dict) and not ents:
+        for k, v in rem.items():
+            if isinstance(v, dict) and not v.get("restored"):
+                out.add(norm(v.get("handle") or k))
+    for e in ents if isinstance(ents, list) else []:
+        if isinstance(e, dict) and not e.get("restored"):
+            out.add(norm(e.get("handle")))
+    la = load(LAUNCHED, {})
+    items = la if isinstance(la, list) else (la.get("projects") or la.get("items") or la.get("launched") or [])
+    for i in items if isinstance(items, list) else []:
+        if isinstance(i, dict):
+            out.add(norm(i.get("handle")))
+    out.discard("")
+    return out
+
+
+def load_pins(st: dict) -> list[dict]:
+    src = "worker"
+    try:
+        doc = api_get("/v1/workbench/pins")
+        items = doc.get("items") or []
+        try:
+            bl = api_get("/v1/workbench/blocklist").get("handles") or []
+        except Exception:
+            bl = []
+    except Exception as e:
+        print(f"[{iso(now())}] WARN 读取 Worker 工作台失败，退回本地镜像: {str(e)[:120]}", flush=True)
+        src = "local"
+        items = (load(WB_LOCAL, {}) or {}).get("items") or []
+        bl = []
+    launched = launched_set(bl)
+    wl = {norm(p.get("handle")): p for p in (load(WATCHLIST, {}).get("projects") or []) if p.get("handle")}
+    cands = {norm(c.get("handle")): c for c in ((load(CANDIDATES, {}) or {}).get("candidates") or []) if c.get("handle")}
+    out, excluded = [], []
+    for it in items:
+        h = norm(it.get("handle"))
+        if not h:
+            continue
+        w, c = wl.get(h) or {}, cands.get(h) or {}
+        if h in launched or w.get("listing") in ("已开盘", "已上线") or c.get("listing") in ("已开盘", "已上线") or c.get("already_listed"):
+            excluded.append(h)
+            continue
+        sites = [u for u in (it.get("sites") or []) if isinstance(u, str)]
+        sites += [u for u in (w.get("sites") or []) if isinstance(u, str)]
+        if isinstance(c.get("site"), str):
+            sites.append(c["site"])
+        usable, seenhost = [], set()
+        for u in sorted({s.strip() for s in sites if is_usable_site(s.strip())
+                         and not any(g in (urlparse(s.strip()).hostname or "").lower() for g in GENERIC_HOSTS)}, key=lambda x: (0 if x.startswith("https") else 1, len(x))):
+            k = (urlparse(u).hostname or "").lower() + (urlparse(u).path or "/").rstrip("/")
+            if k in seenhost:
+                continue
+            seenhost.add(k)
+            usable.append(u)
+        out.append({"handle": it.get("handle").lstrip("@"), "key": h, "name": it.get("name") or w.get("name") or it.get("handle"),
+                    "sites": usable[:2]})
+    st["pins"] = {"at": iso(now()), "source": src, "raw_count": len(items), "watched": len(out),
+                  "excluded_launched": excluded, "with_site": sum(1 for p in out if p["sites"])}
+    return out
+
+
+def known_time(key: str) -> str | None:
+    for it in (load(LISTING_TIMES, {}).get("items") or []):
+        if norm(it.get("handle")) == key and it.get("listing_at"):
+            return it["listing_at"]
+    return None
+
+
+def emit(st: dict, rec: dict, *, push: bool, dry: bool) -> bool:
+    dk = rec.pop("_dedupe")
+    if dk in st.setdefault("dedupe", {}):
+        return False
+    rec["id"] = hashlib.sha1(dk.encode()).hexdigest()[:16]
+    st["dedupe"][dk] = rec["ts"]
+    if len(st["dedupe"]) > 5000:
+        for k in sorted(st["dedupe"], key=st["dedupe"].get)[:1000]:
+            st["dedupe"].pop(k, None)
+    if dry:
+        print("DRY " + json.dumps(rec, ensure_ascii=False), flush=True)
+        return True
+    ALERTS.parent.mkdir(parents=True, exist_ok=True)
+    with ALERTS.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    print(f"[{rec['ts']}] ALERT {rec['kind']} @{rec['handle']} {rec['summary']}", flush=True)
+    if push:
+        st.setdefault("push_queue", []).append(rec)
+    return True
+
+
+def flush_push(st: dict) -> None:
+    q = st.get("push_queue") or []
+    if not q:
+        return
+    try:
+        code, body = api_post("/v1/workbench/alert", {"alerts": q[:50], "client_id": "box-workbench-soon"})
+        if code == 200:
+            st["push_queue"] = q[50:]
+            st["last_push"] = {"at": iso(now()), "accepted": (body or {}).get("accepted"), "ws_clients": (body or {}).get("ws_clients")}
+        else:
+            st["last_push_error"] = {"at": iso(now()), "code": code}
+    except Exception as e:
+        st["last_push_error"] = {"at": iso(now()), "error": str(e)[:160]}
+
+
+# ---------- 官网 ----------
+SCRIPT_SRC = re.compile(r"<script[^>]+src=[\"']([^\"']+)[\"']", re.I)
+
+
+def fetch(url: str, cap: int) -> tuple[int, str]:
+    with requests.get(url, headers={"User-Agent": UA}, timeout=(5, 12), stream=True, allow_redirects=True) as r:
+        buf = b""
+        for chunk in r.iter_content(65536):
+            buf += chunk
+            if len(buf) > cap:
+                break
+        return r.status_code, buf.decode(r.encoding or "utf-8", errors="replace")
+
+
+def scan_site(p: dict, url: str, prev: dict) -> dict:
+    ref = now()
+    res = {"url": url, "at": iso(ref), "ok": False}
+    try:
+        code, html = fetch(url, HTML_MAX)
+    except Exception as e:
+        res["error"] = str(e)[:120]
+        return res
+    res["http"] = code
+    if code >= 400:
+        return res
+    res["ok"] = True
+    text = strip_html(html)
+    meta = " ".join(re.findall(r"<meta[^>]+content=[\"']([^\"']{8,300})[\"']", html, re.I))
+    cands = parse_times(text + " \n " + meta, ref)
+    cands += parse_code_times(html, ref)
+    host = (urlparse(url).hostname or "").lower()
+    scripts = sorted({urljoin(url, s) for s in SCRIPT_SRC.findall(html)
+                      if (urlparse(urljoin(url, s)).hostname or "").lower().endswith(host.split(".", 1)[-1]) and "/cdn-cgi/" not in s})
+    sig = hashlib.sha1("|".join(scripts).encode()).hexdigest()[:16]
+    res["script_sig"] = sig
+    js_c = prev.get("js_cands") if prev.get("script_sig") == sig else None
+    if js_c is None:
+        js_c = []
+        for s in scripts[:JS_PER_SITE]:
+            try:
+                c2, code_txt = fetch(s, JS_MAX)
+                if c2 < 400:
+                    for c in parse_code_times(code_txt, ref):
+                        c["src"] = s
+                        js_c.append({**c, "at": iso(c["at"])})
+            except Exception:
+                pass
+    res["js_cands"] = js_c
+    for c in js_c:
+        cands.append({**c, "at": datetime.fromisoformat(c["at"])})
+    fut = [c for c in cands if ref - timedelta(hours=1) <= c["at"] <= ref + timedelta(days=120)]
+    fut.sort(key=lambda c: (not c["has_clock"], c["at"]))
+    res["times"] = [{"at": iso(c["at"]), "has_clock": c["has_clock"], "raw": c["raw"], "tz_note": c.get("tz_note"), "src": c.get("src") or url}
+                    for c in fut[:6]]
+    cd = COUNTDOWN_RE.search(text)
+    res["countdown"] = bool(cd)
+    res["countdown_raw"] = re.sub(r"\s+", " ", text[max(0, cd.start() - 80): cd.end() + 80]) if cd else ""
+    res["text_hash"] = hashlib.sha1(text.encode("utf-8", "ignore")).hexdigest()[:16]
+    return res
+
+
+
+def today_boost_doc() -> dict:
+    """今日清单提频配置（每 cycle 重读）。支持 T-20 单 handle 秒级覆盖。"""
+    for path in (TODAY_BOOST, TODAY_PROJECTS):
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(doc, dict):
+            continue
+        if isinstance(doc.get("handles"), list) or isinstance(doc.get("items"), list):
+            return doc
+    return {}
+
+
+def today_boost_handles() -> set[str]:
+    """今日清单 handle（norm），每 cycle 读文件；失败则空集。"""
+    doc = today_boost_doc()
+    if isinstance(doc.get("handles"), list):
+        return {norm(h) for h in doc["handles"] if h}
+    items = doc.get("items")
+    if isinstance(items, list):
+        return {norm(it.get("handle")) for it in items if isinstance(it, dict) and it.get("handle")}
+    return set()
+
+
+def site_interval_for(key: str, boost: set[str], doc: dict | None = None) -> float:
+    """今日清单默认 BOOST_SITE_EVERY；T-20 handle 可读 handle_site_every / t20_*（约 5s）。"""
+    doc = doc if doc is not None else today_boost_doc()
+    hse = doc.get("handle_site_every") if isinstance(doc.get("handle_site_every"), dict) else {}
+    if key in hse:
+        try:
+            return float(hse[key])
+        except (TypeError, ValueError):
+            pass
+    t20 = {norm(h) for h in (doc.get("t20_handles") or []) if h}
+    if key in t20:
+        try:
+            return float(doc.get("t20_site_every_seconds") or 5)
+        except (TypeError, ValueError):
+            return 5.0
+    if key in boost:
+        try:
+            return float(doc.get("site_every_seconds") or BOOST_SITE_EVERY)
+        except (TypeError, ValueError):
+            return BOOST_SITE_EVERY
+    return SITE_EVERY
+
+def site_cycle(st: dict, pins: list[dict], *, push: bool, dry: bool, force: bool = False) -> int:
+    sites = st.setdefault("sites", {})
+    due = []
+    t = time.time()
+    bdoc = today_boost_doc()
+    boost = today_boost_handles()
+    for p in pins:
+        interval = site_interval_for(p.get("key") or "", boost, bdoc)
+        for u in p["sites"]:
+            k = f"{p['key']}|{u}"
+            if force or t - (sites.get(k) or {}).get("_t", 0) >= interval:
+                due.append((p, u, k))
+    if not due:
+        return 0
+    n = 0
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        results = list(ex.map(lambda a: (a, scan_site(a[0], a[1], sites.get(a[2]) or {})), due))
+    for (p, u, k), res in results:
+        prev = sites.get(k) or {}
+        res["_t"] = t
+        if not res.get("ok"):
+            prev.update({"_t": t, "last_error": res.get("error") or res.get("http"), "at": res["at"]})
+            sites[k] = prev
+            continue
+        prev_times = {x["at"] for x in (prev.get("times") or [])}
+        first = "times" not in prev
+        best = (res["times"] or [None])[0]
+        prev_best = (prev.get("times") or [None])[0]
+        if best and best["at"] not in prev_times:
+            newdt = datetime.fromisoformat(best["at"])
+            base = prev_best["at"] if prev_best else known_time(p["key"])
+            is_delay = bool(base and newdt > datetime.fromisoformat(base) + timedelta(minutes=1)) or bool(DELAY_WORDS.search(best["raw"]))
+            if first:
+                summ = f"官网显示开始时间 {disp(newdt, best['has_clock'])}"
+            elif prev_best:
+                summ = f"官网开始时间更新：{disp(datetime.fromisoformat(prev_best['at']), prev_best.get('has_clock', True))} → {disp(newdt, best['has_clock'])}"
+            else:
+                summ = f"官网新出现开始时间 {disp(newdt, best['has_clock'])}"
+            if is_delay:
+                summ += "（延期）"
+            n += emit(st, {
+                "_dedupe": f"site|{p['key']}|{best['at']}",
+                "ts": iso(now()), "handle": p["handle"], "name": p["name"], "kind": "site_time",
+                "summary": f"【{p['name']}】{summ}", "start_at": best["at"], "start_at_display": disp(newdt, best["has_clock"]),
+                "has_clock": best["has_clock"], "tz_note": best.get("tz_note"), "prev_start_at": base,
+                "is_delay": is_delay, "evidence_url": best.get("src") or u, "quote": best["raw"][:240],
+                "source": "site_js" if (best.get("src") or u) != u else "site_html", "baseline": first,
+            }, push=push, dry=dry)
+        elif res.get("countdown") and not prev.get("countdown") and not first:
+            n += emit(st, {
+                "_dedupe": f"site_cd|{p['key']}|{res['text_hash']}",
+                "ts": iso(now()), "handle": p["handle"], "name": p["name"], "kind": "site_time",
+                "summary": f"【{p['name']}】官网新出现倒计时（暂未解析出具体时间，请打开官网看）", "start_at": None,
+                "start_at_display": "未给具体时间", "has_clock": False, "tz_note": None, "prev_start_at": None,
+                "is_delay": False, "evidence_url": u, "quote": res.get("countdown_raw", "")[:240], "source": "site_html", "baseline": False,
+            }, push=push, dry=dry)
+        res["first_seen_at"] = prev.get("first_seen_at") or res["at"]
+        sites[k] = res
+    return n
+
+
+# ---------- 官推 ----------
+def ingest_inbox() -> int:
+    files = sorted(X_INBOX.glob("*.json"))
+    if not files:
+        return 0
+    added = 0
+    try:
+        added = ingest_x_posts.merge_posts_cache(files, listing=False)
+    except Exception as e:
+        print(f"[{iso(now())}] WARN x_inbox 导入失败: {e}", flush=True)
+        return 0
+    for f in files:
+        try:
+            f.rename(X_INBOX / "done" / f.name)
+        except Exception:
+            pass
+    return added
+
+
+def x_posts_for(key: str, xu: dict, xl: dict) -> list[dict]:
+    posts = []
+    for k, v in xu.items():
+        if norm(k) == key and isinstance(v, dict):
+            posts += [p for p in v.get("posts") or [] if isinstance(p, dict)]
+    posts += [p for p in (xl.get(key) or []) if isinstance(p, dict)]
+    return posts
+
+
+def x_cycle(st: dict, pins: list[dict], *, push: bool, dry: bool) -> int:
+    # X 日额度用完时：磁盘脚本拉 6551 → 同 x_inbox（不依赖 routine 提示词）
+    try:
+        import workbench_soon_x_fetch as _xfb
+        _fb = _xfb.daemon_tick()
+        if _fb and not _fb.get("skipped"):
+            st["x_fallback"] = {
+                "at": iso(now()),
+                "mode": _fb.get("mode") or (_fb.get("state") or {}).get("mode"),
+                "posts": _fb.get("posts"),
+                "inbox": _fb.get("inbox"),
+                "handles_ok": _fb.get("handles_ok"),
+                "errors": (_fb.get("errors") or [])[:2],
+            }
+            if _fb.get("inbox"):
+                print(f"[{iso(now())}] x_fallback 6551 → {_fb.get('inbox')} posts={_fb.get('posts')}", flush=True)
+    except Exception as e:
+        print(f"[{iso(now())}] WARN x_fallback tick: {e}", flush=True)
+    ingested = ingest_inbox()
+    xu = (load(X_CACHE, {}) or {}).get("users") or {}
+    xl = (load(X_LISTING, {}) or {}).get("users") or {}
+    ref = now()
+    cutoff = ref - timedelta(hours=X_WINDOW_H)
+    n, scanned, recent = 0, 0, 0
+    best_t = st.setdefault("x_best_time", {})
+    for p in pins:
+        seen = set()
+        for post in sorted(x_posts_for(p["key"], xu, xl), key=lambda q: q.get("created_at") or ""):
+            pid = str(post.get("id") or "")
+            text = (post.get("text") or "").strip()
+            if not pid or pid in seen or not text or text.startswith("RT @"):
+                continue
+            seen.add(pid)
+            scanned += 1
+            try:
+                cat = datetime.fromisoformat(str(post.get("created_at")).replace("Z", "+00:00")).astimezone(SH)
+            except Exception:
+                continue
+            if cat < cutoff:
+                continue
+            recent += 1
+            bucket, hits = classify_text(text)
+            times = [c for c in parse_times(text, cat) if cat - timedelta(hours=1) <= c["at"] <= cat + timedelta(days=120)]
+            times.sort(key=lambda c: (not c["has_clock"], c["at"]))
+            delay_kw = bool(DELAY_WORDS.search(text))
+            if bucket not in ("near_launch", "already_live") and not (times and KW.search(text)) and not delay_kw:
+                continue
+            if bucket == "none" and not times and delay_kw and not KW.search(text):
+                continue
+            best = times[0] if times else None
+            prev = best_t.get(p["key"]) or known_time(p["key"])
+            is_delay = delay_kw and bool(KW.search(text))
+            if best and prev and best["at"] > datetime.fromisoformat(prev) + timedelta(minutes=1):
+                is_delay = True
+            url = post.get("url") or f"https://x.com/{p['handle']}/status/{pid}"
+            if bucket == "already_live":
+                summ = f"【{p['name']}】官推疑似已经开始/已开盘（{', '.join(hits[:2])}），请核实；不会自动标记已开盘"
+            elif best:
+                summ = f"【{p['name']}】官推说即将开始：{disp(best['at'], best['has_clock'])}" + ("（延期）" if is_delay else "")
+            elif is_delay:
+                summ = f"【{p['name']}】官推提到延期/改期"
+            else:
+                summ = f"【{p['name']}】官推说即将开始（{', '.join(hits[:3])}），未给具体时间"
+            if best:
+                best_t[p["key"]] = iso(best["at"])
+            n += emit(st, {
+                "_dedupe": f"x|{p['key']}|{pid}",
+                "ts": iso(now()), "handle": p["handle"], "name": p["name"], "kind": "x_post",
+                "summary": summ, "start_at": iso(best["at"]) if best else None,
+                "start_at_display": disp(best["at"], best["has_clock"]) if best else "未给具体时间",
+                "has_clock": bool(best and best["has_clock"]), "tz_note": best.get("tz_note") if best else None,
+                "prev_start_at": prev, "is_delay": is_delay, "evidence_url": url,
+                "quote": re.sub(r"\s+", " ", text)[:240], "post_created_at": iso(cat),
+                "x_bucket": bucket, "x_hits": hits[:3], "source": "x", "baseline": not st.get("x_baseline_done"),
+            }, push=push, dry=dry)
+    st["x_baseline_done"] = True
+    st["x_last"] = {"at": iso(ref), "posts_scanned": scanned, "recent_posts": recent, "inbox_ingested": ingested,
+                    "x_cache_fetched_at": (load(X_CACHE, {}) or {}).get("fetched_at")}
+    write_x_plan(pins, xu)
+    return n
+
+
+def write_x_plan(pins: list[dict], xu: dict) -> None:
+    """给有 X 权限的 routine 用：分组 from: 查询 + since_id，结果原样投递到 alerts/x_inbox/*.json。"""
+    ids = {}
+    max_id = 0
+    for k, v in xu.items():
+        if isinstance(v, dict):
+            ids[norm(k)] = v.get("id")
+            for p in v.get("posts") or []:
+                try:
+                    if norm(k) in {q["key"] for q in pins}:
+                        max_id = max(max_id, int(p.get("id") or 0))
+                except Exception:
+                    pass
+    def _clean_x(h):
+        h = str(h or "").strip()
+        m = re.search(r"(?:x|twitter)\.com/(?:#!/)?@?([A-Za-z0-9_]{1,15})", h, re.I)
+        if m:
+            h = m.group(1)
+        h = h.lstrip("@").split("/")[0].split("?")[0]
+        return h if re.fullmatch(r"[A-Za-z0-9_]{1,15}", h) else None
+    handles = []
+    # 今日清单优先扫 X
+    for h in sorted(today_boost_handles()):
+        c = _clean_x(h)
+        if c and c.lower() not in {x.lower() for x in handles}:
+            handles.append(c)
+    for p in pins:
+        c = _clean_x(p.get("handle"))
+        if c and c.lower() not in {x.lower() for x in handles}:
+            handles.append(c)
+    queries, cur = [], []
+    for h in handles:
+        cand = cur + [h]
+        q = "(" + " OR ".join(f"from:{x}" for x in cand) + ") -is:retweet"
+        if len(q) > 480 and cur:
+            queries.append("(" + " OR ".join(f"from:{x}" for x in cur) + ") -is:retweet")
+            cur = [h]
+        else:
+            cur = cand
+    if cur:
+        queries.append("(" + " OR ".join(f"from:{x}" for x in cur) + ") -is:retweet")
+    X_PLAN.write_text(json.dumps({
+        "generated_at": iso(now()), "handles": handles,
+        "user_ids": {h: ids.get(norm(h)) for h in handles},
+        "search_queries": queries,
+        "suggested": "x search_posts_all(query=<q>, start_time=<now-2h UTC>, sort_order=recency, max_results=50, "
+                     "post.fields=created_at,author_id,note_tweet, expansions=author_id, user.fields=username) "
+                     "→ 原始 JSON 写入 alerts/x_inbox/<ts>_<i>.json；daemon 每 60s 自动导入",
+        "inbox": str(X_INBOX),
+    }, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+
+# ---------- CA / 官网 / JS 变动（复用现有管线输出，不重复抓取） ----------
+CA_FINDS = BASE / "ca_finds.json"
+EVENT_STREAMS = {
+    "fast_site": BASE / "fast_site_alerts.jsonl",          # SITE_CHANGE / NEW_JS_CA / NFT_CONTRACT / X_CA …（1s 级）
+    "js_batch": BASE / "js_factory_events.jsonl",          # SITE_JS_CHANGE / NEW_JS_CA …（30 分钟批）
+    "onchain": BASE / "onchain_lock_alerts.jsonl",         # ONCHAIN_LOCK / TAPEOUT_*
+    "solana": BASE / "solana_lock_alerts.jsonl",
+    "trace": BASE / "wallet_trace_events.jsonl",           # 只取 TRACE_CA
+}
+SITE_CHANGE_THROTTLE_S = 600  # 同一项目官网指纹变动最多 10 分钟提醒一次（中间次数累加）
+BASELINE_EVENTS_H = 6
+
+
+def short(a: str | None) -> str:
+    a = a or ""
+    return a if len(a) <= 14 else f"{a[:6]}…{a[-4:]}"
+
+
+def pin_index(pins: list[dict]) -> dict:
+    idx = {}
+    for p in pins:
+        idx[p["key"]] = p
+        nm = re.sub(r"[^a-z0-9]", "", (p.get("name") or "").lower())
+        if len(nm) >= 4:
+            idx.setdefault("name:" + nm, p)
+    return idx
+
+
+def match_pin(idx: dict, handle: str | None, name: str | None) -> dict | None:
+    p = idx.get(norm(handle))
+    if p:
+        return p
+    nm = re.sub(r"[^a-z0-9]", "", (name or "").lower())
+    return idx.get("name:" + nm) if len(nm) >= 4 else None
+
+
+def base_rec(p: dict, kind: str, summary: str, dk: str, **kw) -> dict:
+    r = {"_dedupe": dk, "ts": iso(now()), "handle": p["handle"], "name": p["name"], "kind": kind,
+         "summary": f"【{p['name']}】{summary}", "start_at": None, "start_at_display": None, "is_delay": False}
+    r.update(kw)
+    return r
+
+
+def ca_cycle(st: dict, pins: list[dict], *, push: bool, dry: bool) -> int:
+    """ca_finds.json（build_ca_finds + ca_gate + ca_confidence 的最终结果）→ 每个工作台项目的 CA 状态。
+    只有 ca_status=confirmed 且 alert_ok 且 is_token 的才叫「已确认CA」；NFT/混合/非CA/疑似山寨一律不算。"""
+    try:
+        mt = CA_FINDS.stat().st_mtime
+    except Exception:
+        return 0
+    if st.get("ca_finds_mtime") == mt:
+        return 0
+    st["ca_finds_mtime"] = mt
+    d = load(CA_FINDS, {})
+    idx = pin_index(pins)
+    first = "ca_seen" not in st
+    seen = st.setdefault("ca_seen", {})
+    n = 0
+    rows = [(r, False) for r in (d.get("finds") or [])] + [(r, True) for r in (d.get("suspected_copycats") or [])]
+    for r, copycat in rows:
+        p = match_pin(idx, r.get("handle"), r.get("project"))
+        if not p or not r.get("address"):
+            continue
+        status = r.get("ca_status") or ""
+        kind_addr = (r.get("addr_kind") or r.get("kind") or "").lower()
+        is_nft = "nft" in kind_addr or "1155" in kind_addr or "721" in kind_addr or "404" in kind_addr or r.get("token_kind") in ("nft", "hybrid_404")
+        confirmed = status == "confirmed" and bool(r.get("alert_ok")) and r.get("is_token") is True and not is_nft and not copycat
+        if copycat or status == "suspected_copycat":
+            label, status_key = "疑似山寨（同名非官方），不算CA", "suspected_copycat"
+        elif confirmed:
+            label, status_key = f"已确认CA（{r.get('confirm_basis_zh') or r.get('provenance_zh') or '已核验'}）", "confirmed"
+        elif is_nft:
+            label, status_key = "NFT/混合合约，不算CA", "nft"
+        elif status == "candidate":
+            label, status_key = "候选CA（待核验，未确认）", "candidate"
+        elif status == "superseded":
+            label, status_key = "旧CA（已被新地址取代）", "superseded"
+        else:
+            continue  # not_ca / 钱包：不往工作台推
+        k = f"{p['key']}|{r['address'].lower()}"
+        if seen.get(k) == status_key:
+            continue
+        prev = seen.get(k)
+        seen[k] = status_key
+        summ = f"{label}：{short(r['address'])}" + (f"（{r.get('chain')}）" if r.get("chain") else "")
+        if prev and prev != status_key:
+            summ += f"（状态变化：{prev}→{status_key}）"
+        n += emit(st, base_rec(p, "ca", summ, f"ca|{k}|{status_key}", address=r["address"], chain=r.get("chain"),
+                               ca_status=status_key, ca_status_zh=label, alert_ok=bool(confirmed),
+                               evidence_url=r.get("evidence_url") or r.get("source") or "",
+                               quote=(r.get("note_zh") or r.get("note") or "")[:240], source="ca_finds", baseline=first),
+                  push=push, dry=dry)
+    return n
+
+
+EV_LABEL = {
+    "NEW_JS_CA": "官网/JS 新出现合约地址（待CA核验，未确认）",
+    "NFT_CONTRACT": "官网/JS 出现 NFT 合约（不算CA）",
+    "UNVERIFIED_ADDR": "官网/JS 出现未核验地址",
+    "SCANNED_WALLET": "官网/JS 扫出钱包地址（可能是部署钱包，已排队追踪）",
+    "X_CA": "官推出现合约地址（等CA门槛确认）",
+    "TAPEOUT_CA": "TapeOut 出现合约地址（等CA门槛确认）",
+    "ONCHAIN_LOCK": "链上锁定到新部署合约（等CA门槛确认）",
+    "TRACE_CA": "部署钱包追踪到新合约（等CA门槛确认）",
+    "SOLANA_LOCK_UNMATCHED": "Solana 链上出现疑似新币（未匹配，待核验）",
+    "TAPEOUT_NAME_MATCH_UNCONFIRMED": "链上出现同名币（疑似山寨，不算CA）",
+}
+
+
+def tail_stream(st: dict, name: str, path: Path) -> list[dict]:
+    offs = st.setdefault("offsets", {})
+    try:
+        size = path.stat().st_size
+    except Exception:
+        return []
+    if name not in offs:
+        # 首次：只回看最近 BASELINE_EVENTS_H 小时的（标 baseline），之后从文件尾增量读
+        cutoff = iso(now() - timedelta(hours=BASELINE_EVENTS_H))
+        out = []
+        with path.open("rb") as f:
+            f.seek(max(0, size - 3_000_000))
+            for line in f.read().decode("utf-8", "replace").splitlines():
+                try:
+                    ev = json.loads(line)
+                except Exception:
+                    continue
+                if str(ev.get("at") or ev.get("ts") or "") >= cutoff:
+                    ev["_baseline"] = True
+                    out.append(ev)
+        offs[name] = size
+        return out
+    off = offs[name]
+    if size < off:
+        off = 0
+    if size == off:
+        return []
+    with path.open("rb") as f:
+        f.seek(off)
+        data = f.read(size - off)
+    last_nl = data.rfind(b"\n")
+    if last_nl < 0:
+        return []
+    offs[name] = off + last_nl + 1
+    out = []
+    for line in data[: last_nl + 1].decode("utf-8", "replace").splitlines():
+        try:
+            out.append(json.loads(line))
+        except Exception:
+            pass
+    return out
+
+
+_CA_MAP: dict = {"mtime": None, "map": {}}
+
+
+def ca_status_map() -> dict:
+    try:
+        mt = CA_FINDS.stat().st_mtime
+    except Exception:
+        return {}
+    if _CA_MAP["mtime"] != mt:
+        d = load(CA_FINDS, {})
+        m = {}
+        for r in d.get("finds") or []:
+            if r.get("address"):
+                m[r["address"].lower()] = r.get("ca_status") or ""
+        for r in d.get("suspected_copycats") or []:
+            if r.get("address"):
+                m[r["address"].lower()] = "suspected_copycat"
+        _CA_MAP.update(mtime=mt, map=m)
+    return _CA_MAP["map"]
+
+
+def events_cycle(st: dict, pins: list[dict], *, push: bool, dry: bool) -> int:
+    idx = pin_index(pins)
+    camap = ca_status_map()
+    thr = st.setdefault("site_change_throttle", {})
+    n = 0
+    for sname, path in EVENT_STREAMS.items():
+        evs = tail_stream(st, sname, path)
+        if any(e.get("_baseline") for e in evs):
+            # baseline：每个项目每种类型只留最新一条
+            last = {}
+            for e in evs:
+                last[(norm(e.get("handle")), e.get("type"), (e.get("address") or "").lower())] = e
+            evs = list(last.values())
+        for ev in evs:
+            typ = ev.get("type") or ""
+            if sname == "trace" and typ != "TRACE_CA":
+                continue
+            p = match_pin(idx, ev.get("handle"), ev.get("name") or ev.get("project"))
+            if not p:
+                continue
+            bl = bool(ev.get("_baseline"))
+            at = ev.get("at") or ev.get("ts") or iso(now())
+            site_host = (urlparse(ev.get("site") or "").hostname or "").lower()
+            if site_host and any(g in site_host for g in GENERIC_HOSTS):
+                continue  # 公共平台页（pump.fun 等）变动不算项目官网变动
+            if typ in ("SITE_CHANGE", "SITE_JS_CHANGE") and not p["sites"]:
+                continue  # 该项目没有自己的官网（只有公共平台链接）
+            if typ == "SITE_CHANGE":
+                key = p["key"]
+                t = thr.get(key) or {}
+                tnow = time.time()
+                if not bl and tnow - t.get("last", 0) < SITE_CHANGE_THROTTLE_S:
+                    t["suppressed"] = t.get("suppressed", 0) + 1
+                    thr[key] = t
+                    continue
+                extra = f"（此前 10 分钟内另有 {t.get('suppressed')} 次变动）" if t.get("suppressed") else ""
+                thr[key] = {"last": tnow, "suppressed": 0}
+                ac = ev.get("address_count")
+                summ = "官网有更新（页面/脚本指纹变化）" + (f"，页面+JS 共扫到 {ac} 个地址" if ac else "") + extra
+                n += emit(st, base_rec(p, "site_change", summ, f"site_change|{p['key']}|{ev.get('body_hash')}",
+                                       evidence_url=ev.get("site") or "", quote=f"指纹 {str(ev.get('prev_body_hash'))[:8]}→{str(ev.get('body_hash'))[:8]}",
+                                       event_at=at, source=f"{sname}:{typ}", baseline=bl), push=push, dry=dry)
+            elif typ == "SITE_JS_CHANGE":
+                ch = ev.get("address_set_changed")
+                summ = "官网 JS 有变动" + (f"，合约地址集合变化（{ev.get('prev_address_count')}→{ev.get('address_count')} 个）" if ch else "（地址没变）")
+                n += emit(st, base_rec(p, "js_change", summ, f"js_change|{p['key']}|{ev.get('fingerprint')}",
+                                       evidence_url="", quote=f"JS 指纹 {str(ev.get('prev_fingerprint'))[:8]}→{str(ev.get('fingerprint'))[:8]}",
+                                       event_at=at, source=f"{sname}:{typ}", baseline=bl), push=push, dry=dry)
+            elif typ in EV_LABEL and ev.get("address"):
+                a = ev["address"]
+                src = ev.get("source") or ev.get("evidence_url") or ev.get("post_url") or ev.get("site") or ""
+                kind = "js_address" if typ in ("NEW_JS_CA", "NFT_CONTRACT", "UNVERIFIED_ADDR", "SCANNED_WALLET") else "ca_signal"
+                known = camap.get(a.lower())
+                if known and (kind == "ca_signal" or known != "not_ca"):
+                    continue  # ca_finds 已给出最终结论（已确认/候选/山寨/NFT），由 kind=ca 那条负责
+                label = EV_LABEL[typ] + ("（已核验：非CA）" if known == "not_ca" else "")
+                summ = f"{label}：{short(a)}" + (f"（{ev.get('chain')}）" if ev.get("chain") else "")
+                if ev.get("token_symbol"):
+                    summ += f" ${ev.get('token_symbol')}"
+                n += emit(st, base_rec(p, kind, summ, f"{kind}|{p['key']}|{a.lower()}|{typ}",
+                                       address=a, chain=ev.get("chain"), addr_type=ev.get("addr_type") or ev.get("addr_kind"),
+                                       ca_status="unconfirmed" if typ not in ("NFT_CONTRACT", "TAPEOUT_NAME_MATCH_UNCONFIRMED") else ("nft" if typ == "NFT_CONTRACT" else "suspected_copycat"),
+                                       alert_ok=False, evidence_url=src if src.startswith("http") else (ev.get("site") or ""),
+                                       quote=(ev.get("snippet") or ev.get("post_text") or ev.get("reason") or src)[:240],
+                                       event_at=at, source=f"{sname}:{typ}", baseline=bl), push=push, dry=dry)
+    return n
+
+
+# ---------- main ----------
+def _stop(*_):
+    global RUNNING
+    RUNNING = False
+
+
+def cycle(st, pins, *, push, dry, force=False):
+    a = site_cycle(st, pins, push=push, dry=dry, force=force)
+    b = x_cycle(st, pins, push=push, dry=dry)
+    if push and not dry:
+        flush_push(st)
+    return a, b
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--daemon", action="store_true")
+    ap.add_argument("--tick", type=float, default=5.0)
+    ap.add_argument("--once", action="store_true")
+    ap.add_argument("--dry-run", action="store_true", help="不写正式提醒流、不推 Worker，只打印")
+    ap.add_argument("--no-push", action="store_true")
+    ap.add_argument("--status", action="store_true")
+    args = ap.parse_args()
+    st = load(STATE, {})
+    if args.status:
+        print(json.dumps({k: st.get(k) for k in ("pins", "last_cycle", "x_last", "last_push", "last_push_error")}, ensure_ascii=False, indent=1))
+        return 0
+    if args.dry_run:
+        st = json.loads(json.dumps(st))  # 不保存
+    push = not args.no_push
+    signal.signal(signal.SIGTERM, _stop)
+    signal.signal(signal.SIGINT, _stop)
+    pins, pins_t, x_t = [], 0.0, 0.0
+    print(f"[{iso(now())}] workbench_soon_watch 启动 site_every={SITE_EVERY}s boost_site_every={BOOST_SITE_EVERY}s x_every={X_EVERY}s dry={args.dry_run}", flush=True)
+    while RUNNING:
+        t0 = time.time()
+        if t0 - pins_t >= PINS_EVERY or not pins:
+            pins = load_pins(st)
+            pins_t = t0
+        a = site_cycle(st, pins, push=push, dry=args.dry_run, force=args.once)
+        b = 0
+        c = ca_cycle(st, pins, push=push, dry=args.dry_run) + events_cycle(st, pins, push=push, dry=args.dry_run)
+        if args.once or t0 - x_t >= X_EVERY:
+            b = x_cycle(st, pins, push=push, dry=args.dry_run)
+            x_t = t0
+        if push and not args.dry_run:
+            flush_push(st)
+        st["last_cycle"] = {"at": iso(now()), "elapsed_s": round(time.time() - t0, 2), "site_alerts": a, "x_alerts": b, "ca_js_alerts": c,
+                            "sites_tracked": len(st.get("sites") or {}), "pid": os.getpid()}
+        if not args.dry_run:
+            save_state(st)
+        if args.once or not args.daemon:
+            print(json.dumps(st["last_cycle"], ensure_ascii=False), flush=True)
+            return 0
+        time.sleep(max(0.5, args.tick - (time.time() - t0)))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

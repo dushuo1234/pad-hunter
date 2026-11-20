@@ -1,0 +1,1444 @@
+#!/usr/bin/env python3
+"""Trace scraped addresses: classify EOA vs contract, then find CAs a wallet deployed.
+
+Reads ca_finds.json (and optionally watchlist locked CAs). For each EVM address:
+  1) eth_getCode on hinted chain(s) — bytes>0 → contract; bytes==0 → wallet/EOA
+  2) For wallets: discover deployed contracts via
+     - public Blockscout (eth.blockscout.com) txlist / v2 txs with created_contract
+     - eth_getTransactionReceipt.contractAddress for from-txs with to=null
+     - short recent-block receipt scan (configurable, default 800) for medium+/wallet-noted
+  3) Append TRACE_CA / classification events; write wallet_trace_latest.json
+
+No API keys. Solana skipped in v1 (documented). Failure is non-fatal for the pipeline.
+Also matches watched wallets as tx.from against recent launchpad factory TokenCreated logs
+(CREATE2/factory path) — UniV2/V3 ambient PairCreated skipped.
+CREATE2 salt+initcode derivation: OZ cloneDeterministic / EIP-1167 minimal proxy, plus
+ABI-aware token extraction from known launchpad events (via=create2_derive).
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import time
+import urllib.parse
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+# Prefer local venv for keccak (pycryptodome); fall back silently
+_VENV_SP = Path("/workspace/project-monitor/.venv/lib")
+if _VENV_SP.exists():
+    import sys
+    for _p in sorted(_VENV_SP.glob("python*/site-packages")):
+        sp = str(_p)
+        if sp not in sys.path:
+            sys.path.insert(0, sp)
+
+BASE = Path("/workspace/project-monitor")
+FACTORIES = BASE / "factories.json"
+CA_FINDS = BASE / "ca_finds.json"
+WATCHLIST = BASE / "watchlist.json"
+LATEST = BASE / "wallet_trace_latest.json"
+EVENTS = BASE / "wallet_trace_events.jsonl"
+SH = ZoneInfo("Asia/Shanghai")
+
+UA = "PadHunterWalletTrace/1.0"
+CHAIN_ORDER_DEFAULT = ("ethereum", "bsc", "base", "robinhood", "hyperevm", "ink")
+# eth.blockscout.com works without keys from this host; RH Blockscout is CF-blocked.
+EXPLORERS = {
+    "ethereum": {
+        "api_v2": "https://eth.blockscout.com/api/v2",
+        "api_legacy": "https://eth.blockscout.com/api",
+        "tx_url": "https://etherscan.io/tx/{hash}",
+        "addr_url": "https://etherscan.io/address/{addr}",
+    },
+    # RH explorer API is Cloudflare-blocked; keep URL for evidence links only.
+    "robinhood": {
+        "api_v2": None,
+        "api_legacy": None,
+        "tx_url": "https://robinhoodchain.blockscout.com/tx/{hash}",
+        "addr_url": "https://robinhoodchain.blockscout.com/address/{addr}",
+    },
+    "hyperevm": {
+        "api_v2": None,
+        "api_legacy": None,
+        "tx_url": "https://hyperevmscan.io/tx/{hash}",
+        "addr_url": "https://hyperevmscan.io/address/{addr}",
+    },
+    "bsc": {
+        "api_v2": None,
+        "api_legacy": None,
+        "tx_url": "https://bscscan.com/tx/{hash}",
+        "addr_url": "https://bscscan.com/address/{addr}",
+    },
+    "base": {
+        "api_v2": None,
+        "api_legacy": None,
+        "tx_url": "https://basescan.org/tx/{hash}",
+        "addr_url": "https://basescan.org/address/{addr}",
+    },
+    "ink": {
+        "api_v2": None,
+        "api_legacy": None,
+        "tx_url": "https://explorer.inkonchain.com/tx/{hash}",
+        "addr_url": "https://explorer.inkonchain.com/address/{addr}",
+    },
+}
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def load_json(path: Path, default):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def append_event(ev: dict) -> None:
+    ev = dict(ev)
+    ev.setdefault("at", now_iso())
+    with EVENTS.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(ev, ensure_ascii=False) + "\n")
+
+
+def rpc_call(rpc_url: str, method: str, params: list, timeout: int = 20) -> dict:
+    payload = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+    cmd = [
+        "curl", "-sS", "--max-time", str(timeout),
+        "-X", "POST", rpc_url,
+        "-H", "content-type: application/json",
+        "-H", f"user-agent: {UA}",
+        "-d", payload,
+    ]
+    try:
+        out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
+        return json.loads(out)
+    except Exception as e:
+        return {"error": {"message": str(e)[:200]}}
+
+
+def http_json(url: str, timeout: int = 18) -> dict | list | None:
+    cmd = [
+        "curl", "-sS", "--max-time", str(timeout),
+        "-A", UA, "-H", "accept: application/json", url,
+    ]
+    try:
+        out = subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL)
+        if not out or out.lstrip().startswith("<!"):
+            return None
+        return json.loads(out)
+    except Exception:
+        return None
+
+
+def is_evm(addr: str) -> bool:
+    return isinstance(addr, str) and addr.lower().startswith("0x") and len(addr) == 42
+
+
+def norm(addr: str) -> str:
+    return addr.lower() if is_evm(addr) else addr
+
+
+def pick_rpcs(factories: dict) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for cid, cfg in (factories.get("chains") or {}).items():
+        for u in cfg.get("rpc") or []:
+            r = rpc_call(u, "eth_blockNumber", [], timeout=12)
+            if r.get("result"):
+                out[cid] = u
+                break
+    return out
+
+
+def code_and_nonce(rpc: str, address: str) -> dict:
+    code_r = rpc_call(rpc, "eth_getCode", [address, "latest"])
+    code = code_r.get("result") or ""
+    err = None
+    prefix = ""
+    if code_r.get("error"):
+        err = str(code_r["error"])[:160]
+        nbytes = -1
+    elif isinstance(code, str) and code.startswith("0x"):
+        nbytes = max(0, (len(code) - 2) // 2)
+        prefix = code[:10].lower()  # 0x + 4 bytes
+    else:
+        nbytes = -1
+        err = "bad code result"
+    nonce_r = rpc_call(rpc, "eth_getTransactionCount", [address, "latest"])
+    nonce = None
+    if nonce_r.get("result"):
+        try:
+            nonce = int(nonce_r["result"], 16)
+        except Exception:
+            nonce = None
+    elif nonce_r.get("error") and not err:
+        err = str(nonce_r["error"])[:160]
+    # EIP-7702 delegation designator is 23 bytes starting 0xef0100.
+    # Do NOT treat EIP-1167 (45B minimal proxy) or other short bytecode as EOA.
+    eip7702 = nbytes == 23 and prefix.startswith("0xef0100")
+    min_proxy = (
+        nbytes == 45
+        and (code or "").lower().startswith("0x363d3d373d3d3d363d73")
+        and (code or "").lower().endswith("5af43d82803e903d91602b57fd5bf3")
+    )
+    eoa_like = bool(eip7702)
+    return {
+        "bytes": nbytes, "nonce": nonce, "error": err, "ok": nbytes >= 0,
+        "eip7702": eip7702, "minimal_proxy": min_proxy,
+        "eoa_like_code": eoa_like, "code_prefix": prefix,
+    }
+
+
+def chains_to_try(find: dict, factories: dict) -> list[str]:
+    """Prefer bio/snippet chain hint (BSC/Base/…) then default EVM order."""
+    try:
+        from addr_kind import chains_to_try as _ct, chain_hint_from_text, normalize_chain
+        hint = normalize_chain(find.get("chain")) or chain_hint_from_text(
+            find.get("snippet"), find.get("source"), find.get("note"), find.get("chain"),
+        )
+        return _ct(hint, factories)
+    except Exception:
+        hint = (find.get("chain") or "").lower().strip()
+        known = set(CHAIN_ORDER_DEFAULT)
+        if hint in known:
+            ordered = [hint] + [c for c in CHAIN_ORDER_DEFAULT if c != hint]
+        elif hint in ("evm", "", "unknown", "未知"):
+            ordered = list(CHAIN_ORDER_DEFAULT)
+        else:
+            ordered = list(CHAIN_ORDER_DEFAULT)
+        have = {cid for cid, cfg in (factories.get("chains") or {}).items() if cfg.get("rpc")}
+        return [c for c in ordered if c in have]
+
+
+def classify_address(addr: str, find: dict, rpcs: dict, factories: dict) -> dict:
+    """Return classification across tried chains; pick best (prefer any contract hit)."""
+    tried = []
+    best_contract = None
+    best_wallet = None
+    for chain in chains_to_try(find, factories):
+        rpc = rpcs.get(chain)
+        if not rpc:
+            tried.append({"chain": chain, "error": "no rpc"})
+            continue
+        info = code_and_nonce(rpc, addr)
+        row = {"chain": chain, **info, "rpc": rpc}
+        tried.append(row)
+        if info["bytes"] and info["bytes"] > 0 and not info.get("eoa_like_code"):
+            best_contract = row
+            break  # real contract bytecode — done
+        if info["bytes"] == 0 or info.get("eoa_like_code"):
+            # Prefer a chain where nonce>0 for tracing; keep first otherwise
+            if best_wallet is None:
+                best_wallet = row
+            elif (info.get("nonce") or 0) > (best_wallet.get("nonce") or 0):
+                best_wallet = row
+        time.sleep(0.05)  # polite
+    if best_contract:
+        return {
+            "kind": "contract",
+            "chain": best_contract["chain"],
+            "code_bytes": best_contract["bytes"],
+            "nonce": best_contract["nonce"],
+            "tried": tried,
+        }
+    if best_wallet:
+        return {
+            "kind": "wallet",
+            "chain": best_wallet["chain"],
+            "code_bytes": best_wallet.get("bytes") or 0,
+            "nonce": best_wallet["nonce"],
+            "eip7702": bool(best_wallet.get("eip7702")),
+            "tried": tried,
+        }
+    return {
+        "kind": "unknown",
+        "chain": (find.get("chain") or "evm"),
+        "code_bytes": None,
+        "nonce": None,
+        "tried": tried,
+        "error": "all rpc probes failed",
+    }
+
+
+
+def _keccak256(data: bytes) -> bytes:
+    from Crypto.Hash import keccak
+    h = keccak.new(digest_bits=256)
+    h.update(data)
+    return h.digest()
+
+
+def _rlp_int(n: int) -> bytes:
+    if n == 0:
+        return b"\x80"
+    if n < 0x80:
+        return bytes([n])
+    b = n.to_bytes((n.bit_length() + 7) // 8, "big")
+    return bytes([0x80 + len(b)]) + b
+
+
+def _rlp_list_addr_nonce(addr20: bytes, nonce: int) -> bytes:
+    """Minimal RLP([address, nonce]) for CREATE address derivation."""
+    addr_enc = bytes([0x94]) + addr20  # 0x80+20
+    nonce_enc = _rlp_int(nonce)
+    payload = addr_enc + nonce_enc
+    if len(payload) <= 55:
+        return bytes([0xc0 + len(payload)]) + payload
+    len_b = len(payload).to_bytes((len(payload).bit_length() + 7) // 8, "big")
+    return bytes([0xf7 + len(len_b)]) + len_b + payload
+
+
+def create_address(sender: str, nonce: int) -> str:
+    raw = bytes.fromhex(sender.lower().removeprefix("0x"))
+    if len(raw) != 20:
+        raise ValueError("bad sender")
+    digest = _keccak256(_rlp_list_addr_nonce(raw, nonce))
+    return "0x" + digest[-20:].hex()
+
+
+
+def create2_address(factory: str, salt: bytes | str, init_code_hash: bytes | str) -> str:
+    """EIP-1014 CREATE2: keccak256(0xff ++ factory ++ salt ++ initCodeHash)[12:]."""
+    fac = bytes.fromhex(factory.lower().removeprefix("0x"))
+    if len(fac) != 20:
+        raise ValueError("bad factory")
+    if isinstance(salt, str):
+        salt_b = bytes.fromhex(salt.lower().removeprefix("0x"))
+    else:
+        salt_b = salt
+    if len(salt_b) != 32:
+        raise ValueError("bad salt")
+    if isinstance(init_code_hash, str):
+        ih = bytes.fromhex(init_code_hash.lower().removeprefix("0x"))
+    else:
+        ih = init_code_hash
+    if len(ih) != 32:
+        raise ValueError("bad init_code_hash")
+    return "0x" + _keccak256(b"\xff" + fac + salt_b + ih)[-20:].hex()
+
+
+def eip1167_init_code(implementation: str) -> bytes:
+    """OpenZeppelin Clones / EIP-1167 minimal-proxy creation bytecode for `implementation`."""
+    impl = bytes.fromhex(implementation.lower().removeprefix("0x"))
+    if len(impl) != 20:
+        raise ValueError("bad implementation")
+    # creation code used by Clones.cloneDeterministic
+    return (
+        bytes.fromhex("3d602d80600a3d3981f3363d3d373d3d3d363d73")
+        + impl
+        + bytes.fromhex("5af43d82803e903d91602b57fd5bf3")
+    )
+
+
+def eip1167_init_code_hash(implementation: str) -> bytes:
+    return _keccak256(eip1167_init_code(implementation))
+
+
+# OZ Clones.cloneDeterministic(address,bytes32) and 3-arg variant
+CLONE_DET_SELECTORS = {
+    "0xb86b2ceb": "cloneDeterministic(address,bytes32)",
+    "0xf14188e0": "cloneDeterministic(address,bytes32,address)",
+}
+
+
+def parse_clone_deterministic_input(data: str) -> dict | None:
+    """Decode cloneDeterministic calldata → {implementation, salt, selector}."""
+    if not isinstance(data, str) or not data.startswith("0x") or len(data) < 10 + 64 + 64:
+        return None
+    sel = data[:10].lower()
+    if sel not in CLONE_DET_SELECTORS:
+        return None
+    hexdata = data[10:]
+    # arg0 address (left-padded 32 bytes), arg1 bytes32 salt
+    word0, word1 = hexdata[0:64], hexdata[64:128]
+    if word0[:24] != "0" * 24:
+        return None
+    impl = "0x" + word0[24:].lower()
+    salt = "0x" + word1.lower()
+    if int(impl, 16) == 0:
+        return None
+    return {"implementation": impl, "salt": salt, "selector": sel,
+            "sig": CLONE_DET_SELECTORS[sel]}
+
+
+def create2_from_clone_call(factory: str, data: str) -> str | None:
+    """Predicted CREATE2 address for OZ cloneDeterministic call to `factory`."""
+    parsed = parse_clone_deterministic_input(data)
+    if not parsed:
+        return None
+    try:
+        ih = eip1167_init_code_hash(parsed["implementation"])
+        return create2_address(factory, parsed["salt"], ih)
+    except Exception:
+        return None
+
+
+# Prefer the real token field from known launchpad event layouts (stronger than salt derive).
+# topic1 indexed token for most; four.meme / Virtuals put token in data words.
+FACTORY_TOKEN_TOPIC1 = {
+    "clanker_v4_eth", "clanker_v4_base", "clanker_v3_1_base",
+    "spinup_memelaunchpad", "liquidlaunch_hyperevm",
+    "launchpad_meme_hyperevm", "launchpad_meme_bonding_hyperevm",
+}
+
+
+def token_from_factory_log(fac_id: str, log: dict) -> str | None:
+    """ABI-aware token address from a launchpad create log; None → fall back to scan."""
+    topics = log.get("topics") or []
+    data = (log.get("data") or "0x")
+    if not isinstance(data, str):
+        data = "0x"
+    hexdata = data[2:] if data.startswith("0x") else data
+    fid = fac_id or ""
+    if fid in FACTORY_TOKEN_TOPIC1 or fid.startswith("clanker"):
+        if len(topics) >= 2 and isinstance(topics[1], str) and len(topics[1]) == 66:
+            addr = "0x" + topics[1][-40:].lower()
+            if int(addr, 16) != 0:
+                return addr
+    if fid == "fourmeme_tm2_bsc" and len(hexdata) >= 128:
+        # TokenCreate: creator (word0), token (word1) — both non-indexed
+        w1 = hexdata[64:128]
+        if w1[:24] == "0" * 24:
+            addr = "0x" + w1[24:].lower()
+            if int(addr, 16) != 0:
+                return addr
+    if "virtuals" in fid and len(hexdata) >= 128:
+        # NewPersona: virtualId (word0 uint), token (word1)
+        w1 = hexdata[64:128]
+        if w1[:24] == "0" * 24:
+            addr = "0x" + w1[24:].lower()
+            if int(addr, 16) != 0:
+                return addr
+    return None
+
+
+def create2_hits_from_tx_input(
+    rpc: str,
+    chain: str,
+    wallet: str,
+    tx_hash: str,
+    factory_addr: str | None,
+    factories_doc: dict,
+) -> list[dict]:
+    """From a known factory-create tx: derive CREATE2 address from cloneDeterministic input.
+
+    Event-extracted token (caller) is preferred; this path labels via=create2_derive when
+    salt+impl are recoverable. Verifies eth_getCode > 0 before returning.
+    """
+    if not rpc or not tx_hash:
+        return []
+    tr = rpc_call(rpc, "eth_getTransactionByHash", [tx_hash], timeout=12)
+    tx = tr.get("result") or {}
+    if not tx:
+        return []
+    data = tx.get("input") or tx.get("data") or "0x"
+    to = (tx.get("to") or factory_addr or "").lower()
+    if not to or not is_evm(to):
+        return []
+    cfg = EXPLORERS.get(chain) or {}
+    out: list[dict] = []
+    # OZ Clones.cloneDeterministic → EIP-1167 CREATE2
+    predicted = create2_from_clone_call(to, data)
+    if predicted:
+        info = code_and_nonce(rpc, predicted)
+        if info.get("bytes") and info["bytes"] > 0:
+            out.append({
+                "contract": predicted,
+                "tx_hash": tx_hash,
+                "evidence_url": (cfg.get("tx_url") or "").format(hash=tx_hash) if cfg.get("tx_url") else None,
+                "via": "create2_derive",
+                "chain": chain,
+                "factory": to,
+                "factory_id": None,
+                "note": f"CREATE2 derive via cloneDeterministic on {to}",
+                "note_zh": f"CREATE2 推导（cloneDeterministic / EIP-1167）工厂 {to[:10]}…",
+                "salt_derived": True,
+            })
+    return out
+
+
+def create2_from_wallet_recent_txs(
+    rpc: str,
+    chain: str,
+    wallet: str,
+    factories_doc: dict,
+    *,
+    max_txs: int = 40,
+    max_lookups: int = 25,
+) -> list[dict]:
+    """Scan recent outbound txs (Blockscout when available) for cloneDeterministic / factory calls.
+
+    Bounded: ethereum/base explorers only for listing; other chains skip listing and rely on
+    factory_creates_for_wallet event path + optional create2_hits_from_tx_input there.
+    """
+    if not rpc or not is_evm(wallet):
+        return []
+    cfg = EXPLORERS.get(chain) or {}
+    api_v2 = cfg.get("api_v2")
+    if not api_v2:
+        return []  # no free tx list without explorer
+    launchpad_addrs = set()
+    for fac in factories_doc.get("factories") or []:
+        if (fac.get("chain") or "").lower() != chain.lower():
+            continue
+        if not _is_launchpad_factory(fac):
+            continue
+        a = fac.get("address")
+        if a and is_evm(a):
+            launchpad_addrs.add(norm(a))
+    url = f"{api_v2}/addresses/{wallet}/transactions?filter=from"
+    data = http_json(url, timeout=18)
+    if not isinstance(data, dict):
+        return []
+    out: list[dict] = []
+    seen: set[str] = set()
+    lookups = 0
+    for it in (data.get("items") or [])[:max_txs]:
+        if lookups >= max_lookups:
+            break
+        to_obj = it.get("to")
+        to = None
+        if isinstance(to_obj, dict):
+            to = to_obj.get("hash") or to_obj.get("address")
+        elif isinstance(to_obj, str):
+            to = to_obj
+        raw = (it.get("raw_input") or it.get("rawInput") or it.get("input") or "0x")
+        th = it.get("hash")
+        if not th:
+            continue
+        sel = (raw[:10].lower() if isinstance(raw, str) and len(raw) >= 10 else "")
+        interesting = (to and norm(to) in launchpad_addrs) or sel in CLONE_DET_SELECTORS
+        if not interesting:
+            continue
+        lookups += 1
+        # Prefer raw_input from explorer; fall back to RPC
+        input_data = raw if isinstance(raw, str) and len(raw) > 10 else None
+        if not input_data or input_data == "0x":
+            tr = rpc_call(rpc, "eth_getTransactionByHash", [th], timeout=12)
+            input_data = (tr.get("result") or {}).get("input") or "0x"
+            time.sleep(0.04)
+        if to and sel in CLONE_DET_SELECTORS:
+            predicted = create2_from_clone_call(to, input_data)
+            if predicted and predicted not in seen:
+                info = code_and_nonce(rpc, predicted)
+                time.sleep(0.03)
+                if info.get("bytes") and info["bytes"] > 0:
+                    seen.add(predicted)
+                    out.append({
+                        "contract": predicted,
+                        "tx_hash": th,
+                        "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                        "via": "create2_derive",
+                        "chain": chain,
+                        "factory": norm(to),
+                        "note": f"CREATE2 cloneDeterministic tx from wallet → {to}",
+                        "note_zh": f"钱包近期 cloneDeterministic 交易，CREATE2 推导出合约",
+                        "salt_derived": True,
+                    })
+        time.sleep(0.05)
+    return out
+
+
+# Launchpad / meme factories worth matching for CREATE2 / factory creates (not ambient DEX).
+LAUNCHPAD_FACTORY_PREFIXES = (
+    "clanker", "fourmeme", "virtuals", "tapeout", "launchpad", "spinup",
+    "liquidlaunch", "nftx_",
+)
+# topic0 name → event_topics key in factories.json
+TOPIC_KEY_BY_EVENT = {
+    "PairCreated": "PairCreated_univ2",
+    "PoolCreated": "PoolCreated_univ3",
+    "Initialize": "Initialize_univ4",
+    "TokenCreated": "TokenCreated_clanker_v4",  # fallback; per-factory override below
+    "TokenCreate": "TokenCreate_fourmeme",
+    "NewPersona": "NewPersona_virtuals",
+    "LaunchCreated": "LaunchCreated_spinup",
+    "TokenCreatedWithCurve": "TokenCreatedWithCurve_launchpad_meme",
+}
+FACTORY_TOPIC_OVERRIDE = {
+    "clanker_v4_eth": "TokenCreated_clanker_v4",
+    "clanker_v4_base": "TokenCreated_clanker_v4",
+    "fourmeme_tm2_bsc": "TokenCreate_fourmeme",
+    "virtuals_agent_factory_base": "NewPersona_virtuals",
+    "virtuals_bonding_base": "NewPersona_virtuals",
+    "tapeout_factory_bsc": "TapeOut_ProcessorCreated",
+    "launchpad_meme_hyperevm": "TokenCreated_launchpad_meme",
+    "launchpad_meme_bonding_hyperevm": "TokenCreatedWithCurve_launchpad_meme",
+    "spinup_memelaunchpad": "LaunchCreated_spinup",
+    "liquidlaunch_hyperevm": "TokenCreated_liquidlaunch",
+}
+
+
+def _is_launchpad_factory(fac: dict) -> bool:
+    fid = (fac.get("id") or "").lower()
+    return any(fid.startswith(p) or p.rstrip("_") in fid for p in LAUNCHPAD_FACTORY_PREFIXES)
+
+
+def _topic0_for_factory(fac: dict, topics: dict) -> str | None:
+    fid = fac.get("id") or ""
+    key = FACTORY_TOPIC_OVERRIDE.get(fid)
+    if key and topics.get(key):
+        return topics[key]
+    # try event names listed on factory
+    for ev in fac.get("events") or []:
+        # events may be free text; skip
+        if not isinstance(ev, str) or " " in ev:
+            continue
+        k = TOPIC_KEY_BY_EVENT.get(ev)
+        if k and topics.get(k):
+            return topics[k]
+    return None
+
+
+def _addrs_from_log(log: dict) -> list[str]:
+    """Pull 0x addresses from topics[1:] and data words (same idea as onchain scanners)."""
+    out = []
+    for t in (log.get("topics") or [])[1:]:
+        if isinstance(t, str) and t.startswith("0x") and len(t) == 66:
+            addr = "0x" + t[-40:].lower()
+            if int(addr, 16) != 0:
+                out.append(addr)
+    data = log.get("data") or ""
+    if isinstance(data, str) and data.startswith("0x") and len(data) >= 66:
+        hexdata = data[2:]
+        for i in range(0, len(hexdata) - 63, 64):
+            word = hexdata[i:i + 64]
+            # address-shaped word (12 bytes zero + 20 bytes)
+            if word[:24] == "0" * 24:
+                addr = "0x" + word[24:].lower()
+                if int(addr, 16) != 0:
+                    out.append(addr)
+    # dedupe preserve order
+    seen = set()
+    uniq = []
+    for a in out:
+        if a not in seen:
+            seen.add(a)
+            uniq.append(a)
+    return uniq
+
+
+def factory_creates_for_wallet(
+    rpc: str,
+    chain: str,
+    wallet: str,
+    factories_doc: dict,
+    *,
+    lookback_blocks: int = 1200,
+    max_logs_per_factory: int = 40,
+    max_tx_lookups: int = 60,
+) -> list[dict]:
+    """Find recent launchpad factory creates where tx.from == wallet (CREATE2/factory path).
+
+    Uses factory event logs + receipt/tx.from; also tries CREATE2 salt derive from
+    cloneDeterministic calldata on the same tx (via=create2_derive).
+    Skips ambient UniV2/V3 PairCreated factories.
+    """
+    if not rpc or not is_evm(wallet):
+        return []
+    topics = factories_doc.get("event_topics") or {}
+    bn_hex = (rpc_call(rpc, "eth_blockNumber", [], timeout=12).get("result") or "0x0")
+    try:
+        bn = int(bn_hex, 16)
+    except Exception:
+        return []
+    from_block = max(0, bn - max(100, int(lookback_blocks)))
+    wallet_l = norm(wallet)
+    cfg = EXPLORERS.get(chain) or {}
+    out: list[dict] = []
+    seen_ca: set[str] = set()
+    tx_lookups = 0
+    tx_cache: dict[str, str | None] = {}
+
+    for fac in factories_doc.get("factories") or []:
+        if (fac.get("chain") or "").lower() != chain.lower():
+            continue
+        if not _is_launchpad_factory(fac):
+            continue
+        faddr = fac.get("address")
+        if not faddr or not is_evm(faddr):
+            continue
+        t0 = _topic0_for_factory(fac, topics)
+        filt = {
+            "address": faddr,
+            "fromBlock": hex(from_block),
+            "toBlock": "latest",
+        }
+        if t0:
+            filt["topics"] = [t0]
+        lr = rpc_call(rpc, "eth_getLogs", [filt], timeout=20)
+        logs = lr.get("result")
+        if not isinstance(logs, list):
+            # try without topic filter if topic unknown / bad
+            if t0:
+                filt.pop("topics", None)
+                lr = rpc_call(rpc, "eth_getLogs", [filt], timeout=20)
+                logs = lr.get("result") if isinstance(lr.get("result"), list) else []
+            else:
+                logs = []
+        if not logs:
+            continue
+        # newest first
+        logs = list(reversed(logs))[:max_logs_per_factory]
+        for log in logs:
+            if tx_lookups >= max_tx_lookups:
+                break
+            th = log.get("transactionHash")
+            if not th:
+                continue
+            if th not in tx_cache:
+                tx_lookups += 1
+                tr = rpc_call(rpc, "eth_getTransactionByHash", [th], timeout=12)
+                tx = tr.get("result") or {}
+                tx_cache[th] = norm(tx.get("from") or "") if tx.get("from") else None
+                time.sleep(0.04)
+            if tx_cache.get(th) != wallet_l:
+                continue
+            # Prefer ABI-known token field (stronger). Only fall back to generic
+            # log-word scan when ABI layout unknown — avoids uint256/requestId noise.
+            preferred = token_from_factory_log(fac.get("id") or "", log)
+            cands: list[str] = []
+            if preferred and preferred != norm(faddr) and preferred != wallet_l:
+                cands = [preferred]
+            else:
+                for a in _addrs_from_log(log):
+                    if a != norm(faddr) and a != wallet_l and a not in cands:
+                        # drop address-shaped uints (lots of leading zero nibbles in addr)
+                        if a.startswith("0x000000000000000000000000"):
+                            continue
+                        cands.append(a)
+            if not cands:
+                rr = rpc_call(rpc, "eth_getTransactionReceipt", [th], timeout=12)
+                ca = (rr.get("result") or {}).get("contractAddress")
+                if ca and is_evm(ca) and int(ca, 16) != 0:
+                    cands = [norm(ca)]
+            for ca in cands[:3]:
+                if ca in seen_ca:
+                    continue
+                seen_ca.add(ca)
+                via = "factory_tx_from"
+                note = f"factory create on {fac.get('id')} with tx.from=wallet"
+                note_zh = f"监控钱包经工厂 {fac.get('id')} 创建（tx.from 匹配）"
+                if preferred and ca == preferred:
+                    note += "; token field from event ABI"
+                    note_zh += "；事件 ABI 代币字段"
+                out.append({
+                    "contract": ca,
+                    "tx_hash": th,
+                    "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                    "via": via,
+                    "chain": chain,
+                    "factory_id": fac.get("id"),
+                    "factory": faddr,
+                    "note": note,
+                    "note_zh": note_zh,
+                })
+            # Secondary: CREATE2 salt derive from same tx input (cloneDeterministic)
+            try:
+                for h in create2_hits_from_tx_input(
+                    rpc, chain, wallet_l, th, faddr, factories_doc
+                ):
+                    ca = h.get("contract")
+                    if not ca or ca in seen_ca:
+                        continue
+                    seen_ca.add(ca)
+                    h["factory_id"] = fac.get("id")
+                    out.append(h)
+            except Exception:
+                pass
+        if tx_lookups >= max_tx_lookups:
+            break
+        time.sleep(0.05)
+    return out
+
+
+def match_onchain_deploys_for_wallet(wallet: str, chain: str, rpc: str | None = None) -> list[dict]:
+    """Cheap path: reuse onchain_scan_* deploy hints; confirm tx.from == wallet when rpc given."""
+    wallet_l = norm(wallet)
+    out = []
+    seen = set()
+    cfg = EXPLORERS.get(chain) or {}
+    for path in (BASE / "onchain_scan_latest.json", BASE / "onchain_scan_previous.json"):
+        doc = load_json(path, {})
+        for h in doc.get("new_deploy_hints") or []:
+            if (h.get("chain") or "").lower() != chain.lower():
+                continue
+            if h.get("ambient"):
+                continue
+            th = h.get("tx")
+            addrs = h.get("addresses") or []
+            if not th or not addrs:
+                continue
+            # If hint already carries deployer, use it; else optional RPC confirm
+            deployer = (h.get("deployer") or h.get("from") or "").lower()
+            if deployer and deployer == wallet_l:
+                ok = True
+            elif rpc and th:
+                tr = rpc_call(rpc, "eth_getTransactionByHash", [th], timeout=12)
+                ok = norm((tr.get("result") or {}).get("from") or "") == wallet_l
+                time.sleep(0.03)
+            else:
+                continue
+            if not ok:
+                continue
+            for a in addrs:
+                if not is_evm(a):
+                    continue
+                k = norm(a)
+                if k in seen or k == wallet_l:
+                    continue
+                seen.add(k)
+                out.append({
+                    "contract": k,
+                    "tx_hash": th,
+                    "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                    "via": "onchain_hint_tx_from",
+                    "chain": chain,
+                    "factory_id": h.get("factory_id"),
+                    "factory": h.get("factory"),
+                    "note": f"onchain_scan deploy hint tx.from=wallet factory={h.get('factory_id')}",
+                    "note_zh": f"链上工厂扫描命中，创建交易来自该钱包（{h.get('factory_id')}）",
+                })
+    return out
+
+
+
+def derive_create_deploys(rpc: str, chain: str, wallet: str, nonce: int, max_nonce: int = 64) -> list[dict]:
+    """For nonce N, check CREATE addresses for n=0..N-1 via eth_getCode (fast, no explorer).
+
+    Misses CREATE2 / factory-created tokens. Caps at max_nonce for safety.
+    """
+    if not nonce or nonce <= 0:
+        return []
+    cfg = EXPLORERS.get(chain) or {}
+    out = []
+    limit = min(int(nonce), max_nonce)
+    for n in range(limit):
+        try:
+            ca = create_address(wallet, n)
+        except Exception:
+            continue
+        info = code_and_nonce(rpc, ca)
+        if info.get("bytes") and info["bytes"] > 0:
+            out.append({
+                "contract": ca,
+                "tx_hash": None,
+                "deploy_nonce": n,
+                "code_bytes": info["bytes"],
+                "evidence_url": (cfg.get("addr_url") or "").format(addr=ca) if cfg.get("addr_url") else None,
+                "via": "create_derive",
+                "chain": chain,
+                "note": f"CREATE address for wallet nonce={n} has code on {chain}",
+            })
+        time.sleep(0.03)
+    return out
+
+
+def explorer_created_contracts(chain: str, address: str) -> list[dict]:
+    """Pull contract creations attributed to this wallet from public explorers."""
+    cfg = EXPLORERS.get(chain) or {}
+    found: list[dict] = []
+    seen: set[str] = set()
+
+    def add(ca: str, tx: str | None, extra: dict | None = None):
+        if not ca or not is_evm(ca):
+            return
+        key = norm(ca)
+        if key in seen:
+            return
+        seen.add(key)
+        ev_url = None
+        if tx and cfg.get("tx_url"):
+            ev_url = cfg["tx_url"].format(hash=tx)
+        elif cfg.get("addr_url"):
+            ev_url = cfg["addr_url"].format(addr=ca)
+        row = {"contract": ca, "tx_hash": tx, "evidence_url": ev_url, "via": "explorer"}
+        if extra:
+            row.update(extra)
+        found.append(row)
+
+    api_v2 = cfg.get("api_v2")
+    api_leg = cfg.get("api_legacy")
+    if not api_v2 and not api_leg:
+        return found
+
+    # Blockscout v2: transactions from address; created_contract field
+    if api_v2:
+        next_params = None
+        pages = 0
+        while pages < 5:
+            pages += 1
+            if next_params:
+                q = urllib.parse.urlencode(next_params)
+                url = f"{api_v2}/addresses/{address}/transactions?filter=from&{q}"
+            else:
+                url = f"{api_v2}/addresses/{address}/transactions?filter=from"
+            data = http_json(url)
+            if not isinstance(data, dict):
+                break
+            for it in data.get("items") or []:
+                created = it.get("created_contract")
+                ca = None
+                if isinstance(created, dict):
+                    ca = created.get("hash") or created.get("address")
+                elif isinstance(created, str):
+                    ca = created
+                to = it.get("to")
+                # creation txs often have to=null
+                if not ca and to is None and (it.get("raw_input") or "").startswith("0x"):
+                    # resolve via receipt later; stash hash
+                    th = it.get("hash")
+                    if th:
+                        found.append({
+                            "contract": None,
+                            "tx_hash": th,
+                            "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                            "via": "explorer_v2_to_null",
+                            "needs_receipt": True,
+                        })
+                if ca:
+                    add(ca, it.get("hash"), {"timestamp": it.get("timestamp")})
+            next_params = data.get("next_page_params")
+            if not next_params:
+                break
+            time.sleep(0.15)
+
+        # internal txs may carry create
+        data = http_json(f"{api_v2}/addresses/{address}/internal-transactions")
+        if isinstance(data, dict):
+            for it in data.get("items") or []:
+                if (it.get("type") or "").lower() not in ("create", "create2", "suicide", "reward", "call"):
+                    pass
+                created = it.get("created_contract")
+                ca = created.get("hash") if isinstance(created, dict) else created
+                if ca and (it.get("type") or "").lower() in ("create", "create2"):
+                    add(ca, it.get("transaction_hash") or it.get("hash"), {"via": "explorer_internal"})
+
+    if api_leg:
+        data = http_json(
+            f"{api_leg}?module=account&action=txlist&address={address}&page=1&offset=100&sort=desc"
+        )
+        if isinstance(data, dict) and isinstance(data.get("result"), list):
+            for t in data["result"]:
+                ca = t.get("contractAddress") or ""
+                if ca and ca.startswith("0x") and int(ca, 16) != 0:
+                    add(ca, t.get("hash"), {"via": "explorer_legacy_txlist", "timestamp": t.get("timeStamp")})
+                # to empty + input bytecode → needs receipt
+                if (not t.get("to")) and (t.get("input") or "").startswith("0x60"):
+                    th = t.get("hash")
+                    if th:
+                        found.append({
+                            "contract": None,
+                            "tx_hash": th,
+                            "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                            "via": "explorer_legacy_to_null",
+                            "needs_receipt": True,
+                        })
+        time.sleep(0.1)
+    return found
+
+
+def resolve_receipts(rpc: str, chain: str, pending: list[dict]) -> list[dict]:
+    """Fill contractAddress from eth_getTransactionReceipt for to=null txs."""
+    out = []
+    cfg = EXPLORERS.get(chain) or {}
+    seen = set()
+    for p in pending:
+        th = p.get("tx_hash")
+        if not th:
+            continue
+        r = rpc_call(rpc, "eth_getTransactionReceipt", [th], timeout=20)
+        receipt = r.get("result") or {}
+        ca = receipt.get("contractAddress")
+        if ca and is_evm(ca) and int(ca, 16) != 0:
+            key = norm(ca)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({
+                "contract": ca,
+                "tx_hash": th,
+                "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                "via": "rpc_receipt",
+                "status": receipt.get("status"),
+            })
+        time.sleep(0.05)
+    return out
+
+
+def recent_block_deploys(
+    rpc: str, chain: str, wallet: str, window: int, max_blocks: int = 2000
+) -> list[dict]:
+    """Scan last `window` blocks for txs from wallet with contract creation.
+
+    Expensive — only call for flagged wallets. Caps at max_blocks.
+    """
+    window = max(0, min(int(window), max_blocks))
+    if window <= 0:
+        return []
+    bn_r = rpc_call(rpc, "eth_blockNumber", [])
+    if not bn_r.get("result"):
+        return []
+    tip = int(bn_r["result"], 16)
+    start = max(0, tip - window + 1)
+    wallet_l = wallet.lower()
+    cfg = EXPLORERS.get(chain) or {}
+    found = []
+    # Walk newest → older; use full tx objects
+    for b in range(tip, start - 1, -1):
+        r = rpc_call(rpc, "eth_getBlockByNumber", [hex(b), True], timeout=25)
+        block = r.get("result") or {}
+        txs = block.get("transactions") or []
+        for tx in txs:
+            if not isinstance(tx, dict):
+                continue
+            if (tx.get("from") or "").lower() != wallet_l:
+                continue
+            if tx.get("to") not in (None, "", "0x"):
+                continue
+            th = tx.get("hash")
+            if not th:
+                continue
+            rr = rpc_call(rpc, "eth_getTransactionReceipt", [th], timeout=20)
+            receipt = rr.get("result") or {}
+            ca = receipt.get("contractAddress")
+            if ca and is_evm(ca) and int(ca, 16) != 0:
+                found.append({
+                    "contract": ca,
+                    "tx_hash": th,
+                    "block": b,
+                    "evidence_url": (cfg.get("tx_url") or "").format(hash=th) if cfg.get("tx_url") else None,
+                    "via": "recent_block_scan",
+                })
+            time.sleep(0.02)
+        if (tip - b) % 50 == 0:
+            time.sleep(0.05)
+    return found
+
+
+def should_deep_trace(find: dict, classification: dict) -> bool:
+    if classification.get("kind") != "wallet":
+        return False
+    note = (find.get("note") or "").lower()
+    conf = (find.get("confidence") or "low").lower()
+    if "wallet" in note or "ref=" in note or "referral" in note:
+        return True
+    if conf in ("medium", "high"):
+        return True
+    nonce = classification.get("nonce") or 0
+    if nonce > 0 and conf != "low":
+        return True
+    # low-confidence Baola icons etc. — classify only, no expensive scan
+    return False
+
+
+def collect_inputs(also_watchlist: bool) -> list[dict]:
+    finds = load_json(CA_FINDS, {}).get("finds") or []
+    out = []
+    seen = set()
+    for f in finds:
+        addr = f.get("address")
+        if not addr or not is_evm(addr):
+            continue
+        key = (norm(addr), (f.get("handle") or f.get("project") or "").lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(dict(f))
+    if also_watchlist:
+        wl = load_json(WATCHLIST, {})
+        for p in wl.get("projects") or []:
+            for fld in ("ca", "ca_alt", "mint"):
+                v = p.get(fld)
+                vals = v if isinstance(v, list) else [v]
+                for x in vals:
+                    if not isinstance(x, str) or not is_evm(x):
+                        continue
+                    key = (norm(x), (p.get("handle") or "").lower())
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    out.append({
+                        "project": p.get("name"),
+                        "handle": p.get("handle"),
+                        "chain": p.get("ca_chain") or "evm",
+                        "address": x,
+                        "confidence": "high" if fld == "ca" else "medium",
+                        "source": f"watchlist.{fld}",
+                        "note": None,
+                    })
+    return out
+
+
+def trace_one(
+    find: dict,
+    rpcs: dict,
+    factories: dict,
+    recent_window: int,
+    force_recent: bool,
+) -> dict:
+    addr = find["address"]
+    clf = classify_address(addr, find, rpcs, factories)
+    result = {
+        "project": find.get("project"),
+        "handle": find.get("handle"),
+        "address": addr,
+        "confidence": find.get("confidence"),
+        "note": find.get("note"),
+        "source": find.get("source"),
+        "classification": clf,
+        "deployed": [],
+        "errors": [],
+    }
+    kind = clf.get("kind")
+    chain = clf.get("chain")
+    if kind == "contract":
+        append_event({
+            "type": "CONTRACT_CLASSIFIED",
+            "project": find.get("project"),
+            "handle": find.get("handle"),
+            "address": addr,
+            "chain": chain,
+            "code_bytes": clf.get("code_bytes"),
+            "nonce": clf.get("nonce"),
+        })
+        return result
+    if kind == "wallet":
+        append_event({
+            "type": "WALLET_CLASSIFIED",
+            "project": find.get("project"),
+            "handle": find.get("handle"),
+            "address": addr,
+            "chain": chain,
+            "nonce": clf.get("nonce"),
+            "note": find.get("note"),
+        })
+    else:
+        result["errors"].append(clf.get("error") or "unclassified")
+        return result
+
+    deployed: list[dict] = []
+    deep = should_deep_trace(find, clf) or force_recent
+    # Trace on every chain where this address is an EOA with activity (nonce>0),
+    # not only the first chain we classified on.
+    wallet_chains = []
+    for row in clf.get("tried") or []:
+        eoa = (row.get("bytes") == 0) or row.get("eoa_like_code")
+        if eoa and (row.get("nonce") or 0) > 0 and row.get("chain") in rpcs:
+            wallet_chains.append(row["chain"])
+    if not wallet_chains and chain in rpcs:
+        wallet_chains = [chain]
+
+    for ch in wallet_chains:
+        rpc = rpcs.get(ch)
+        if not rpc:
+            continue
+        before = len(deployed)
+        try:
+            raw = explorer_created_contracts(ch, addr)
+            need_receipt = [x for x in raw if x.get("needs_receipt") or not x.get("contract")]
+            have = [x for x in raw if x.get("contract") and not x.get("needs_receipt")]
+            if need_receipt:
+                have.extend(resolve_receipts(rpc, ch, need_receipt))
+            for h in have:
+                h.setdefault("chain", ch)
+            deployed.extend(have)
+        except Exception as e:
+            result["errors"].append(f"explorer:{ch}: {e}"[:200])
+
+        # CREATE-address derivation (nonce 0..N-1) — fast, covers classic CREATE deploys
+        got_here = len(deployed) > before
+        if deep and not got_here:
+            # nonce on this chain from classification tried[]
+            ch_nonce = 0
+            for row in clf.get("tried") or []:
+                if row.get("chain") == ch:
+                    ch_nonce = row.get("nonce") or 0
+                    break
+            if ch_nonce > 0:
+                try:
+                    derived = derive_create_deploys(rpc, ch, addr, ch_nonce)
+                    deployed.extend(derived)
+                    if derived:
+                        got_here = True
+                except Exception as e:
+                    result["errors"].append(f"create_derive:{ch}: {e}"[:200])
+        # Factory / CREATE2 path: launchpad TokenCreated logs where tx.from == wallet
+        # + reuse onchain_scan deploy hints. Runs for deep traces even if CREATE found some.
+        if deep:
+            try:
+                hinted = match_onchain_deploys_for_wallet(addr, ch, rpc)
+                deployed.extend(hinted)
+            except Exception as e:
+                result["errors"].append(f"onchain_hint:{ch}: {e}"[:200])
+            try:
+                # Shorter lookback when CREATE already found something
+                lb = 800 if got_here else 1500
+                fac_hits = factory_creates_for_wallet(
+                    rpc, ch, addr, factories, lookback_blocks=lb,
+                    max_logs_per_factory=30, max_tx_lookups=40,
+                )
+                deployed.extend(fac_hits)
+                if fac_hits:
+                    got_here = True
+            except Exception as e:
+                result["errors"].append(f"factory_tx:{ch}: {e}"[:200])
+            try:
+                c2 = create2_from_wallet_recent_txs(
+                    rpc, ch, addr, factories, max_txs=40, max_lookups=20,
+                )
+                deployed.extend(c2)
+                if c2:
+                    got_here = True
+            except Exception as e:
+                result["errors"].append(f"create2_derive:{ch}: {e}"[:200])
+        # Expensive recent-block receipt scan only when --force-recent
+        if force_recent and recent_window > 0 and not got_here:
+            win = recent_window if ch == "ethereum" else min(recent_window, 200)
+            try:
+                extra = recent_block_deploys(rpc, ch, addr, win)
+                for h in extra:
+                    h.setdefault("chain", ch)
+                deployed.extend(extra)
+            except Exception as e:
+                result["errors"].append(f"recent_scan:{ch}: {e}"[:200])
+
+    # Dedup deployed
+    seen = set()
+    uniq = []
+    for d in deployed:
+        ca = d.get("contract")
+        if not ca or not is_evm(ca):
+            continue
+        k = norm(ca)
+        if k in seen or k == norm(addr):
+            continue
+        seen.add(k)
+        uniq.append(d)
+    result["deployed"] = uniq
+
+    for d in uniq:
+        # PROJECT CA LOCK: do not emit TRACE_CA for a project whose official X already locked a CA.
+        # Activity (WALLET_ACTIVITY) is not produced here — untouched.
+        try:
+            from ca_confidence import should_skip_ca, log_locked_skip
+            skip, why = should_skip_ca(handle=find.get("handle"), name=find.get("project"),
+                                       address=d["contract"], source=f"wallet_trace:{addr}",
+                                       from_official_x=False)
+            if skip:
+                log_locked_skip(handle=find.get("handle"), name=find.get("project"),
+                                address=d["contract"], source=f"wallet_trace:{addr}",
+                                reason=why, extra={"wallet": addr, "via": d.get("via")})
+                continue
+        except Exception:
+            pass
+        append_event({
+            "type": "TRACE_CA",
+            "project": find.get("project"),
+            "handle": find.get("handle"),
+            "wallet": addr,
+            "address": d["contract"],
+            "chain": d.get("chain") or chain,
+            "tx_hash": d.get("tx_hash"),
+            "evidence_url": d.get("evidence_url"),
+            "via": d.get("via"),
+            "note": d.get("note"),
+            "note_zh": d.get("note_zh"),
+            "factory_id": d.get("factory_id"),
+            "source_confidence": find.get("confidence"),
+        })
+    return result
+
+
+def build_trace_finds(results: list[dict]) -> list[dict]:
+    """Normalize TRACE_CA rows for build_ca_finds consumption (also embedded in latest)."""
+    rows = []
+    for r in results:
+        clf = r.get("classification") or {}
+        if clf.get("kind") != "wallet":
+            continue
+        for d in r.get("deployed") or []:
+            try:
+                from ca_confidence import should_skip_ca
+                skip, _ = should_skip_ca(handle=r.get("handle"), name=r.get("project"),
+                                         address=d["contract"], source=f"wallet_trace:{r.get('address')}",
+                                         from_official_x=False)
+                if skip:
+                    continue
+            except Exception:
+                pass
+            via = d.get("via") or "wallet_trace"
+            conf = "high" if d.get("tx_hash") and via in (
+                "factory_tx_from", "create2_derive", "onchain_hint_tx_from", "rpc_receipt", "explorer",
+            ) else ("medium" if via in ("create_derive", "create2_derive") else "medium")
+            if via == "create2_derive":
+                conf = "high" if d.get("tx_hash") else "medium"
+            rows.append({
+                "project": r.get("project"),
+                "handle": r.get("handle"),
+                "chain": d.get("chain") or clf.get("chain") or "evm",
+                "address": d["contract"],
+                "wallet": r.get("address"),
+                "source": f"wallet_trace:{r.get('address')}",
+                "evidence_url": d.get("evidence_url"),
+                "tx_hash": d.get("tx_hash"),
+                "detected_at": now_iso(),
+                "confidence": conf,
+                "note": d.get("note") or f"traced from wallet {r.get('address')} via {via}",
+                "note_zh": d.get("note_zh"),
+                "via": via,
+                "factory_id": d.get("factory_id"),
+                "origin": "wallet_trace",
+            })
+    return rows
+
+
+def run(
+    recent_window: int = 800,
+    also_watchlist: bool = False,
+    only_handle: str | None = None,
+    only_address: str | None = None,
+    force_recent: bool = False,
+    max_workers: int = 4,
+) -> dict:
+    t0 = time.time()
+    factories = load_json(FACTORIES, {})
+    print(f"[{now_iso()}] picking RPCs…", flush=True)
+    rpcs = pick_rpcs(factories)
+    print(f"  rpcs: { {k: v[:40]+'…' for k,v in rpcs.items()} }", flush=True)
+
+    inputs = collect_inputs(also_watchlist)
+    if only_handle:
+        hl = only_handle.lower().lstrip("@")
+        inputs = [f for f in inputs if (f.get("handle") or "").lower() == hl
+                  or (f.get("project") or "").lower() == hl]
+    if only_address:
+        al = only_address.lower()
+        inputs = [f for f in inputs if norm(f.get("address") or "") == al]
+        if not inputs:
+            # synthesize a minimal find so one-shot live hooks still classify
+            inputs = [{
+                "project": only_handle or "?",
+                "handle": only_handle,
+                "chain": "evm",
+                "address": only_address,
+                "confidence": "medium",
+                "source": "live_queue",
+                "note": "queued from NEW_JS_CA",
+            }]
+    print(f"  inputs: {len(inputs)} EVM addresses", flush=True)
+
+    results: list[dict] = []
+    # Sequential is safer for RPC politeness; small pool for classification-only batches
+    # Use sequential for deep-trace candidates, parallel classify for the rest.
+    deep_items = []
+    light_items = []
+    for f in inputs:
+        note = (f.get("note") or "").lower()
+        conf = (f.get("confidence") or "low").lower()
+        if conf in ("medium", "high") or "wallet" in note or "ref=" in note:
+            deep_items.append(f)
+        else:
+            light_items.append(f)
+
+    def _do(f):
+        return trace_one(f, rpcs, factories, recent_window=0 if f in light_items else recent_window,
+                         force_recent=force_recent)
+
+    # Light: parallel classify (no explorer/scan)
+    with ThreadPoolExecutor(max_workers=max(1, min(max_workers, 6))) as ex:
+        futs = {ex.submit(
+            trace_one, f, rpcs, factories, 0, False
+        ): f for f in light_items}
+        for fut in as_completed(futs):
+            try:
+                results.append(fut.result())
+            except Exception as e:
+                f = futs[fut]
+                results.append({
+                    "project": f.get("project"), "handle": f.get("handle"),
+                    "address": f.get("address"), "classification": {"kind": "unknown"},
+                    "deployed": [], "errors": [str(e)[:200]],
+                })
+
+    # Deep: sequential
+    for f in deep_items:
+        print(f"  deep-trace {f.get('project')} {f.get('address')[:12]}…", flush=True)
+        try:
+            results.append(trace_one(f, rpcs, factories, recent_window, force_recent))
+        except Exception as e:
+            results.append({
+                "project": f.get("project"), "handle": f.get("handle"),
+                "address": f.get("address"), "classification": {"kind": "unknown"},
+                "deployed": [], "errors": [str(e)[:200]],
+            })
+
+    trace_finds = build_trace_finds(results)
+    n_wallet = sum(1 for r in results if (r.get("classification") or {}).get("kind") == "wallet")
+    n_contract = sum(1 for r in results if (r.get("classification") or {}).get("kind") == "contract")
+    n_unknown = sum(1 for r in results if (r.get("classification") or {}).get("kind") == "unknown")
+    n_trace = sum(len(r.get("deployed") or []) for r in results)
+    elapsed = round(time.time() - t0, 2)
+
+    doc = {
+        "generated_at": now_iso(),
+        "elapsed_s": elapsed,
+        "rpcs": {k: v for k, v in rpcs.items()},
+        "limits": {
+            "recent_block_window": recent_window,
+            "create_derive": "enabled for wallet nonce>0 (classic CREATE)",
+            "factory_tx_from": "launchpad factory eth_getLogs + tx.from match (CREATE2/factory creates); ambient UniV2/V3 skipped",
+            "create2_salt": "derived for OZ cloneDeterministic/EIP-1167 (via=create2_derive); launchpad TokenCreated uses event token field (stronger); salt+initcode for unknown factory ABIs still limited",
+            "solana": "skipped in v1 — no free reliable mint-creation index without API keys",
+            "robinhood_explorer": "Blockscout Cloudflare-blocked; RPC-only",
+            "hyperevm_explorer": "no public API wired; RPC-only",
+        },
+        "counts": {
+            "inputs": len(inputs),
+            "wallet": n_wallet,
+            "contract": n_contract,
+            "unknown": n_unknown,
+            "trace_ca": n_trace,
+        },
+        "results": results,
+        "trace_finds": trace_finds,
+    }
+    tmp = LATEST.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(LATEST)
+    print(
+        f"[{now_iso()}] done in {elapsed}s — wallet={n_wallet} contract={n_contract} "
+        f"unknown={n_unknown} TRACE_CA={n_trace} -> {LATEST}",
+        flush=True,
+    )
+    return doc
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Classify CA finds as wallet/contract and trace deploys")
+    ap.add_argument("--recent-window", type=int, default=800,
+                    help="Recent blocks to scan for deploys when explorer empty (0=off)")
+    ap.add_argument("--watchlist", action="store_true", help="Also include watchlist locked CAs")
+    ap.add_argument("--handle", type=str, default=None, help="Only this project handle/name")
+    ap.add_argument("--address", type=str, default=None, help="Only this EVM address (one-shot)")
+    ap.add_argument("--force-recent", action="store_true", help="Force recent-block scan even if explorer ok")
+    ap.add_argument("--workers", type=int, default=4)
+    args = ap.parse_args()
+    run(
+        recent_window=args.recent_window,
+        also_watchlist=args.watchlist,
+        only_handle=args.handle,
+        only_address=args.address,
+        force_recent=args.force_recent,
+        max_workers=args.workers,
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

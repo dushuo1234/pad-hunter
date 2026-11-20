@@ -1,0 +1,207 @@
+{
+  "at": "2026-10-23T22:26:02+08:00",
+  "fired_at": "2026-10-23T21:57:00+08:00",
+  "exit": 0,
+  "duration_s": 1398,
+  "duration_note": "pipeline ~23.3min (21:58:52→22:22:10 Asia/Shanghai); full routine incl. sync+X+lock+publish ~28min",
+  "pipeline_ok": "yes",
+  "watchlist": "219→219",
+  "watchlist_note": "already in sync with projects.json; locked_new=[]; no prune this run",
+  "locked_new": [],
+  "candidates": "221→221",
+  "projects": "221→221",
+  "launched": 54,
+  "newly_launched": [],
+  "workbench": "47→47",
+  "workbench_note": "unchanged",
+  "x_refresh": {
+    "bios": 20,
+    "posts_merged": 21,
+    "handles_priority_posts": [
+      "play_blastoff",
+      "KaspaRocket",
+      "ETHERIISPROTOCO",
+      "RustLings_Nft",
+      "CaravanRH",
+      "RebateLaunch",
+      "TerraGenesis_RH",
+      "ZeromemeFun",
+      "WalletV_io",
+      "drakhenRH",
+      "PrivateKeyCoin_",
+      "QernApp",
+      "LebrelAI",
+      "hexxxx2_0"
+    ],
+    "user_count": 324,
+    "pkc_bio_snip": "https://t.co/uN3ndszw6d (t.me/privatekeycoin; still no CA)",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "drakhen_bio_has_ca": "0x07d1efd7c3ad2c69d6c59ddbd7343d6acf2fcfe7",
+    "GrokPotPaid": "X user not found"
+  },
+  "new_ca": [],
+  "new_js_ca": 0,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "SITE_JS": [
+    "Jitter",
+    "Pitch"
+  ],
+  "SITE_JS_note": "Jitter/Pitch fp-only addrs 0→0; near_deploys=8 ambient univ2/univ3/univ4 — skip",
+  "onchain_lock": {
+    "lines_before": 72,
+    "bytes_before": 61336,
+    "lines_after": 77,
+    "bytes_after": 65585,
+    "new": 5,
+    "effective_new_ca": 0,
+    "ca_finds_rebuilt": true,
+    "ca_finds_rebuild_note": "rebuild after pipeline; all 5 hits → suspected_copycats alert_ok=false",
+    "hits": [],
+    "non_qualifying": [
+      {
+        "project": "Grok Pot",
+        "handle": "GrokPotPaid",
+        "address": "0xc54d73cf99c36b51d0b632cfab1878373c15ffff",
+        "chain": "bsc",
+        "confidence": "medium",
+        "token": "Grok / grok",
+        "via": "factory:fourmeme_tm2_bsc:TokenCreate",
+        "at": "2026-10-23T21:54:36+08:00",
+        "reason": "symbol:GROK",
+        "note": "symbol:GROK; factory:fourmeme_tm2_bsc:TokenCreate; name/symbol-only no wallet_hit → suspected_copycat alert_ok=false",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      },
+      {
+        "project": "influence.fun",
+        "handle": "influencedotfun",
+        "address": "0x3d21fc59ea2b44b7143fa9375c7c16f72866ffff",
+        "chain": "bsc",
+        "confidence": "low",
+        "token": "IF / ID FUN",
+        "via": "factory:fourmeme_tm2_bsc:TokenCreate",
+        "at": "2026-10-23T22:02:53+08:00",
+        "reason": "symbol:IF",
+        "note": "symbol:IF; factory:fourmeme_tm2_bsc:TokenCreate; ambiguous; name/symbol-only no wallet_hit → suspected_copycat alert_ok=false",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      },
+      {
+        "project": "Jack Labs",
+        "handle": "JackLabsHQ",
+        "address": "0x6f523d3b6900f4651c0f2437cd293b5eaa0cffff",
+        "chain": "bsc",
+        "confidence": "medium",
+        "token": "JACK / jack",
+        "via": "factory:fourmeme_tm2_bsc:TokenCreate",
+        "at": "2026-10-23T22:03:16+08:00",
+        "reason": "symbol:JACK",
+        "note": "symbol:JACK; factory:fourmeme_tm2_bsc:TokenCreate; name/symbol-only no wallet_hit → suspected_copycat alert_ok=false",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      },
+      {
+        "project": "Jack Labs",
+        "handle": "JackLabsHQ",
+        "address": "0xbacf0bf8ba5c2ff353dc09a6d8e175311600ffff",
+        "chain": "bsc",
+        "confidence": "medium",
+        "token": "JACK / jack",
+        "via": "factory:fourmeme_tm2_bsc:TokenCreate",
+        "at": "2026-10-23T22:05:45+08:00",
+        "reason": "symbol:JACK",
+        "note": "symbol:JACK; factory:fourmeme_tm2_bsc:TokenCreate; name/symbol-only no wallet_hit → suspected_copycat alert_ok=false",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      },
+      {
+        "project": "Gazbi.fun",
+        "handle": "GazbiFun",
+        "address": "0xb20000000000000000000055120ba3f6dcecd6f2",
+        "chain": "base",
+        "confidence": "medium",
+        "token": "KAS / KaspaDollar",
+        "via": "factory:univ4_pm_base:Initialize",
+        "at": "2026-10-23T22:07:21+08:00",
+        "reason": "symbol:KAS",
+        "note": "symbol:KAS; factory:univ4_pm_base:Initialize; name/symbol-only no wallet_hit → suspected_copycat alert_ok=false; symbol KAS vs project Gazbi — likely false positive",
+        "source": "onchain_lock",
+        "qualifying": false,
+        "alert_ok": false
+      }
+    ]
+  },
+  "NEW_DEPLOY_watchlist": 0,
+  "NEW_DEPLOY_ambient": 3,
+  "borderline_kept": [
+    {
+      "name": "BunnyPad",
+      "handle": "Bunnypadfun",
+      "note": "token-live wording but no own CA confirmed"
+    },
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO",
+      "note": "high-confidence CA but no explicit trading/live signal; CA 0xa2399b22…"
+    },
+    {
+      "name": "Drakhen",
+      "handle": "drakhenRH",
+      "note": "high-confidence CA but no explicit trading/live signal; CA 0x07d1efd7…"
+    }
+  ],
+  "LISTING_SIGNAL_NEW": [],
+  "LISTING_SIGNAL_repeats": [
+    "Qern App @QernApp TGE / PRE-TGE campaign (repeat)",
+    "buidlr @thebuidlr almost live (repeat)"
+  ],
+  "within_3d": [
+    {
+      "project": "Wallet V: Trade with AI Agents",
+      "handle": "WalletV_io",
+      "listing_at": "2026-10-24T20:00:00+08:00",
+      "confidence": "medium/x"
+    }
+  ],
+  "listing_at_changes_published": [],
+  "listing_at_note": "no listing_at value changes vs prior Pages; listing_times republished (KickflipMotors already pruned from items); within_3d=WalletV only",
+  "pages_publish": {
+    "listing_times": {
+      "main": "3719641",
+      "gh-pages": "01b8c70"
+    },
+    "ca_finds": {
+      "main": "bc4ccf9",
+      "gh-pages": "77ce122"
+    },
+    "monitor_events": {
+      "main": "4d9761c",
+      "gh-pages": "f55601d"
+    },
+    "board": {
+      "launched": {
+        "main": "noop(hash-match)",
+        "gh-pages": "57faf04"
+      },
+      "candidates": {
+        "main": "noop(hash-match)",
+        "gh-pages": "noop(remote-match)"
+      },
+      "projects": "skip (hash-match both)"
+    }
+  },
+  "daemon_onchain_lock": {
+    "pid": 4515,
+    "ok": true,
+    "phase": "running"
+  },
+  "rpc_auth_failures": false,
+  "rpc_note": "public-node / robinhood rate-limit noise (base -32011, bsc/eth limits, robinhood 429); daemon still running; no credential auth failures",
+  "actionable": false,
+  "ACTIONABLE_ITEMS": []
+}

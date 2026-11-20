@@ -1,0 +1,97 @@
+{
+  "id": "kittenswap_pair_factory",
+  "address": "0xDa12F450580A4cc485C3b501BAB7b0B3cbc3B31B",
+  "chain": "hyperevm",
+  "name": "KittenSwap Pair Factory",
+  "abi": [
+    {
+      "type": "event",
+      "name": "PairCreated",
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "stable",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "name": "pair",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "",
+          "type": "uint256"
+        }
+      ]
+    }
+  ],
+  "events_of_interest": [
+    {
+      "name": "PairCreated",
+      "signature": "PairCreated(address,address,bool,address,uint256)",
+      "topic0": "0xc4805696c66d7cf352fc1d6bb633ad5ee82f6cb577c453024b6e0eb8306c6fc9",
+      "args": [
+        {
+          "name": "token0",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "token1",
+          "type": "address",
+          "indexed": true
+        },
+        {
+          "name": "stable",
+          "type": "bool",
+          "indexed": false
+        },
+        {
+          "name": "pair",
+          "type": "address",
+          "indexed": false
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "indexed": false
+        }
+      ]
+    }
+  ],
+  "source_verified": false,
+  "source_files": null,
+  "explorer_url": "https://hyperevmscan.io/address/0xDa12F450580A4cc485C3b501BAB7b0B3cbc3B31B",
+  "explorer_api_used": null,
+  "source_note": "Official KittenSwap PairFactory (ve3,3 / Solidly-style PairCreated). Docs: kittenswap.gitbook.io deployed-contracts. Source unverified this pass; topic0 from Solidly signature.",
+  "meta": {
+    "verified_how": [
+      "kittenswap.gitbook.io/kittenswap/deployed-contracts PairFactory",
+      "HyperEVMScan label Kittenswap: Pair Factory"
+    ]
+  },
+  "fetched_at": "2026-10-20T19:44:50+08:00",
+  "bytecode_sha256": null,
+  "bytecode_len": null,
+  "decompile_notes": null,
+  "observed_topic0": [
+    {
+      "topic0": "0xc4805696c66d7cf352fc1d6bb633ad5ee82f6cb577c453024b6e0eb8306c6fc9",
+      "count": null
+    }
+  ],
+  "canonical_abi": true,
+  "verification_method": "official_docs_solidly_abi"
+}

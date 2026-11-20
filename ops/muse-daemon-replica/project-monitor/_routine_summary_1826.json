@@ -1,0 +1,100 @@
+{
+  "routine": "开盘与CA预警",
+  "at": "2026-10-27T19:03:21+08:00",
+  "fired": "2026-10-27T10:26Z",
+  "pause_file": "absent",
+  "daemons": {
+    "listing": "running pid=3446519",
+    "onchain_lock": "running pid=889131"
+  },
+  "watchlist_sync": {
+    "before": 304,
+    "after": 306,
+    "newly_locked": [
+      {
+        "name": "Tollan Universe",
+        "handle": "TollanUniverse",
+        "status": "mint进行中"
+      },
+      {
+        "name": "TapeFractal",
+        "handle": "TapeFractal",
+        "status": "即将启动"
+      }
+    ],
+    "note": "locks dropped mid-pipeline (daemon/extract rewrite) and re-applied after"
+  },
+  "wallet_mirror": 68,
+  "token_symbols": 906,
+  "sol_wallets_after_harvest": 71,
+  "x_refresh": {
+    "at": "2026-10-27T18:29:53+08:00",
+    "bios_refreshed": 28,
+    "posts_handles": [
+      "PrivateKeyCoin_",
+      "TollanUniverse",
+      "TapeFractal",
+      "Agentai_ai",
+      "play_blastoff",
+      "thetimecard"
+    ],
+    "user_count": 487,
+    "pkc_bio": "",
+    "pkc_sticky": "Launching this week. Only CA will be posted in bio. Stand by.",
+    "pkc_bio_empty": true,
+    "x_reads_left_approx": 533,
+    "notes": "PKC bio empty no CA; TapeFractal freemint 2026-10-27 20:00 UTC+8; AgentAI AGI mint ends same; Timecard mint soon today; Tollan Loot Planets Space Stations mint soon"
+  },
+  "pipeline": {
+    "EXIT": 0,
+    "duration_s": 1768,
+    "duration_min": 29.5,
+    "log": "logs/run_listing_onchain_js_20261027_1829.log",
+    "new_js_ca": 0,
+    "matches": 0,
+    "NEW_DEPLOY": "none watchlist-relevant; ambient univ2 samples=30",
+    "SITE_JS_CHANGE": [
+      "EmberWorld",
+      "Shielded-NakaPunks",
+      "Sojo"
+    ],
+    "SITE_JS_CHANGE_note": "fingerprint only / near ambient univ2 — skip",
+    "TRACE_CA": 4,
+    "TRACE_CA_detail": "Hashgentic x4 CREATE on BSC — tagged 扫出钱包·非CA / 合约(非代币)·非CA; non-actionable",
+    "onchain_lock_new": 0,
+    "onchain_lock_offset": 163513,
+    "newly_launched": 0,
+    "launched_count": 83,
+    "workbench": 73,
+    "listing_at_published": [
+      {
+        "name": "TapeFractal",
+        "handle": "TapeFractal",
+        "listing_at": "2026-10-27T20:00:00+08:00",
+        "source": "x",
+        "note": "Freemint tonight UTC+8; corrected misparse 10-28 04:00"
+      }
+    ]
+  },
+  "actionable": [
+    {
+      "type": "LISTING_SIGNAL+listing_at",
+      "project": "TapeFractal",
+      "handle": "TapeFractal",
+      "chain": "Fractal Bitcoin",
+      "ca": null,
+      "evidence": "X: 公开铸造 Freemint 2026/10/27-20:00 (utc+8); site tapefractal.trade; newly locked 即将启动",
+      "source": "X / watchlist lock",
+      "listing_at": "2026-10-27T20:00:00+08:00"
+    }
+  ],
+  "user_ping": true,
+  "draft_message": "🔔 TapeFractal Freemint 今晚 20:00（UTC+8）\nChain: Fractal Bitcoin · CA: 未出\nX 官宣公开铸造 Freemint，官网 tapefractal.trade；刚锁进监控。\nSource: X @TapeFractal\n\nTapeFractal freemint tonight 20:00 Asia/Shanghai on Fractal Bitcoin — no CA yet. Just locked. Source: X.",
+  "non_actionable_notes": [
+    "Tollan Universe newly locked (mint进行中) — Space Stations Mint 'more details soon', not strong live-mint yet",
+    "Agent AI / Timecard / PlayBlastOff listing_at sticky unchanged",
+    "PKC bio still empty; sticky launching-this-week",
+    "ONCHAIN_LOCK new=0; NEW_JS_CA=0; matches=0; newly_launched=0",
+    "RPC rate-limits on publicnode/ink/robinhood noted in onchain daemon (ongoing, not new failure storm)"
+  ]
+}

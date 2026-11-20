@@ -1,0 +1,335 @@
+#!/usr/bin/env python3
+"""Put a local JSON file onto pad-hunter main via GitHub Contents API.
+
+Auth (first hit wins; never printed):
+  1. env GITHUB_TOKEN / GH_TOKEN
+  2. file PAD_HUNTER_GH_TOKEN_FILE (default: /workspace/project-monitor/.secrets/github_token)
+  3. `gh auth token` if gh is logged in
+
+Soft-fails (returns non-zero, prints one line) when auth is missing or GitHub errors.
+"""
+from __future__ import annotations
+
+import argparse
+import base64
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import urllib.error
+import urllib.request
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+DEFAULT_TOKEN_FILE = BASE / ".secrets" / "github_token"
+STATE_DIR = BASE / "state"
+OWNER = "dushuo1234"
+REPO = "pad-hunter"
+BRANCH = "main"
+API = f"https://api.github.com/repos/{OWNER}/{REPO}/contents"
+TZ = ZoneInfo("Asia/Shanghai")
+
+
+def now_iso() -> str:
+    return datetime.now(TZ).isoformat(timespec="seconds")
+
+
+def resolve_token() -> str | None:
+    for key in ("GITHUB_TOKEN", "GH_TOKEN", "PAD_HUNTER_GH_TOKEN"):
+        v = (os.environ.get(key) or "").strip()
+        if v:
+            return v
+    token_file = Path(os.environ.get("PAD_HUNTER_GH_TOKEN_FILE") or DEFAULT_TOKEN_FILE)
+    try:
+        if token_file.is_file():
+            v = token_file.read_text(encoding="utf-8").strip()
+            if v:
+                return v
+    except OSError:
+        pass
+    try:
+        proc = subprocess.run(
+            ["gh", "auth", "token"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        if proc.returncode == 0:
+            v = (proc.stdout or "").strip()
+            if v:
+                return v
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return None
+
+
+def content_hash(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def state_path(remote_path: str) -> Path:
+    safe = remote_path.replace("/", "__")
+    return STATE_DIR / f"publish_{safe}.json"
+
+
+def load_state(remote_path: str) -> dict:
+    p = state_path(remote_path)
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_state(remote_path: str, obj: dict) -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    p = state_path(remote_path)
+    tmp = p.with_suffix(".tmp")
+    tmp.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp.replace(p)
+
+
+def api_request(method: str, url: str, token: str, body: dict | None = None) -> tuple[int, dict | str]:
+    data = None
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "pad-hunter-pages-publisher",
+    }
+    if body is not None:
+        data = json.dumps(body).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=data, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            raw = resp.read()
+            if not raw:
+                return resp.status, {}
+            return resp.status, json.loads(raw.decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        err_body = e.read().decode("utf-8", errors="replace")
+        try:
+            parsed = json.loads(err_body)
+        except Exception:
+            parsed = err_body
+        return e.code, parsed
+
+
+def get_remote_sha(token: str, remote_path: str) -> str | None:
+    status, payload = api_request("GET", f"{API}/{remote_path}?ref={BRANCH}", token)
+    if status == 404:
+        return None
+    if status != 200 or not isinstance(payload, dict):
+        raise RuntimeError(f"GET {remote_path} -> {status} {payload}")
+    return payload.get("sha")
+
+
+def put_file(
+    local_path: Path,
+    remote_path: str,
+    *,
+    message: str | None = None,
+    force: bool = False,
+) -> int:
+    """Publish local_path to remote_path on main. Returns 0 ok/noop, 2 soft failure."""
+    if not local_path.is_file():
+        print(f"[publish_pages] missing local file: {local_path}", flush=True)
+        return 2
+    data = local_path.read_bytes()
+    digest = content_hash(data)
+    st = load_state(remote_path)
+    if not force and st.get("sha256") == digest:
+        print(f"[publish_pages] noop {remote_path} (hash unchanged)", flush=True)
+        return 0
+
+    token = resolve_token()
+    if not token:
+        print(
+            "[publish_pages] no GitHub token "
+            f"(set GITHUB_TOKEN/GH_TOKEN or write {DEFAULT_TOKEN_FILE})",
+            flush=True,
+        )
+        return 2
+
+    try:
+        remote_sha = get_remote_sha(token, remote_path)
+    except Exception as e:
+        print(f"[publish_pages] GET failed {remote_path}: {e}", flush=True)
+        return 2
+
+    # Also skip if remote blob bytes match (e.g. after PR merge before local state seeded)
+    if remote_sha and not force:
+        status, meta = api_request("GET", f"{API}/{remote_path}?ref={BRANCH}", token)
+        if status == 200 and isinstance(meta, dict) and meta.get("encoding") == "base64":
+            try:
+                remote_bytes = base64.b64decode("".join((meta.get("content") or "").split()))
+                if content_hash(remote_bytes) == digest:
+                    save_state(
+                        remote_path,
+                        {
+                            "sha256": digest,
+                            "github_sha": meta.get("sha"),
+                            "published_at": now_iso(),
+                            "bytes": len(data),
+                            "source": str(local_path),
+                            "note": "seeded from matching remote",
+                        },
+                    )
+                    print(f"[publish_pages] noop {remote_path} (remote already matches)", flush=True)
+                    return 0
+            except Exception:
+                pass
+
+    count_hint = ""
+    try:
+        doc = json.loads(data.decode("utf-8"))
+        if isinstance(doc, dict) and "count" in doc:
+            count_hint = f" ({doc['count']} finds)" if "finds" in doc else f" (count={doc['count']})"
+        elif isinstance(doc, dict) and isinstance(doc.get("candidates"), list):
+            count_hint = f" ({len(doc['candidates'])} candidates)"
+        elif isinstance(doc, list):
+            count_hint = f" ({len(doc)} items)"
+    except Exception:
+        pass
+
+    msg = message or f"data: {Path(remote_path).name} auto{count_hint}"
+    body = {
+        "message": msg,
+        "content": base64.b64encode(data).decode("ascii"),
+        "branch": BRANCH,
+    }
+    if remote_sha:
+        body["sha"] = remote_sha
+
+    status, payload = api_request("PUT", f"{API}/{remote_path}", token, body)
+    if status not in (200, 201) or not isinstance(payload, dict):
+        print(f"[publish_pages] PUT failed {remote_path}: {status} {payload}", flush=True)
+        return 2
+
+    commit_sha = ((payload.get("commit") or {}).get("sha")) or ""
+    new_sha = ((payload.get("content") or {}).get("sha")) or remote_sha
+    save_state(
+        remote_path,
+        {
+            "sha256": digest,
+            "github_sha": new_sha,
+            "commit_sha": commit_sha,
+            "published_at": now_iso(),
+            "bytes": len(data),
+            "source": str(local_path),
+        },
+    )
+    print(
+        f"[publish_pages] published {remote_path} bytes={len(data)} commit={commit_sha[:7] or '?'}",
+        flush=True,
+    )
+    return 0
+
+
+
+def put_file_to_branch(
+    local_path: Path,
+    remote_path: str,
+    branch: str,
+    *,
+    message: str | None = None,
+    force: bool = False,
+) -> int:
+    """Like put_file but targets an explicit branch (e.g. gh-pages data/)."""
+    if not local_path.is_file():
+        print(f"[publish_pages] missing local file: {local_path}", flush=True)
+        return 2
+    data = local_path.read_bytes()
+    digest = content_hash(data)
+    state_key = f"{branch}:{remote_path}"
+    st = load_state(state_key)
+    if not force and st.get("sha256") == digest:
+        print(f"[publish_pages] noop {branch}:{remote_path} (hash unchanged)", flush=True)
+        return 0
+    token = resolve_token()
+    if not token:
+        print("[publish_pages] no GitHub token", flush=True)
+        return 2
+    status, meta = api_request("GET", f"{API}/{remote_path}?ref={branch}", token)
+    remote_sha = None
+    if status == 200 and isinstance(meta, dict):
+        remote_sha = meta.get("sha")
+        if not force and meta.get("encoding") == "base64":
+            try:
+                remote_bytes = base64.b64decode("".join((meta.get("content") or "").split()))
+                if content_hash(remote_bytes) == digest:
+                    save_state(state_key, {"sha256": digest, "github_sha": remote_sha,
+                                           "published_at": now_iso(), "bytes": len(data),
+                                           "source": str(local_path), "branch": branch})
+                    print(f"[publish_pages] noop {branch}:{remote_path} (remote matches)", flush=True)
+                    return 0
+            except Exception:
+                pass
+    elif status not in (404, 200):
+        print(f"[publish_pages] GET {branch}:{remote_path} -> {status} {meta}", flush=True)
+        return 2
+    body = {
+        "message": message or f"data: {Path(remote_path).name} ({branch})",
+        "content": base64.b64encode(data).decode("ascii"),
+        "branch": branch,
+    }
+    if remote_sha:
+        body["sha"] = remote_sha
+    status, payload = api_request("PUT", f"{API}/{remote_path}", token, body)
+    if status not in (200, 201) or not isinstance(payload, dict):
+        print(f"[publish_pages] PUT failed {branch}:{remote_path}: {status} {payload}", flush=True)
+        return 2
+    commit_sha = ((payload.get("commit") or {}).get("sha")) or ""
+    new_sha = ((payload.get("content") or {}).get("sha")) or remote_sha
+    save_state(state_key, {"sha256": digest, "github_sha": new_sha, "commit_sha": commit_sha,
+                           "published_at": now_iso(), "bytes": len(data),
+                           "source": str(local_path), "branch": branch})
+    print(f"[publish_pages] published {branch}:{remote_path} bytes={len(data)} commit={commit_sha[:7] or '?'}", flush=True)
+    return 0
+
+
+def publish_radar_data(*, force: bool = False) -> int:
+    """Publish candidates/projects/launched/ca_finds to main public/data AND gh-pages data/."""
+    mapping = [
+        (Path("/workspace/push-radar/data/launched.json"), "launched.json", "data: launched"),
+        (Path("/workspace/push-radar/data/candidates.json"), "candidates.json", "data: candidates"),
+        (Path("/workspace/push-radar/data/projects.json"), "projects.json", "data: projects"),
+        (Path("/workspace/project-monitor/ca_finds.json"), "ca_finds.json", "data: ca_finds"),
+    ]
+    rc = 0
+    for local, name, msg in mapping:
+        if not local.is_file():
+            continue
+        # mirror into push-radar + publish-pages-data
+        for dest in (Path("/workspace/push-radar/data") / name,
+                     Path("/workspace/publish-pages-data") / name):
+            try:
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                dest.write_bytes(local.read_bytes())
+            except Exception:
+                pass
+        a = put_file(local, f"public/data/{name}", message=f"{msg} (main)", force=force)
+        b = put_file_to_branch(local, f"data/{name}", "gh-pages", message=f"{msg} (gh-pages live)", force=force)
+        if a or b:
+            rc = max(rc, a, b)
+    return rc
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Publish a local file to pad-hunter Pages data via Contents API")
+    ap.add_argument("local", type=Path, help="Local file path")
+    ap.add_argument("remote", help="Repo path e.g. public/data/ca_finds.json")
+    ap.add_argument("--message", default=None)
+    ap.add_argument("--force", action="store_true")
+    args = ap.parse_args()
+    try:
+        return put_file(args.local, args.remote, message=args.message, force=args.force)
+    except Exception as e:
+        print(f"[publish_pages] error: {e}", flush=True)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

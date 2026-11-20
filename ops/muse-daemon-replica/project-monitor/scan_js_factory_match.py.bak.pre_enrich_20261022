@@ -1,0 +1,850 @@
+#!/usr/bin/env python3
+"""Scrape Pad Hunter project site JS for contract addresses; match vs factory deploys.
+
+Pipeline position (routine):
+  1) scan_listing_ca.py
+  2) scan_onchain.py
+  3) scan_js_factory_match.py   ← this script (run after onchain for freshest deploys)
+
+For each watchlist project with a usable official site URL:
+  - fetch HTML (curl, timeouts, size cap)
+  - discover <script src=...> (same-origin + absolute CDN on project host / common asset hosts)
+  - download JS bundles (per-file and per-project size caps)
+  - extract EVM 0x40 addresses (+ cautious Solana base58 near CA context)
+  - fingerprint = sha256 of sorted addresses + key script URLs
+  - time-window match against onchain_scan_latest.json (+ previous) factory log addresses
+
+Alert-facing event types (also printed on digest):
+  NEW_JS_CA          — address in JS not seen in previous scan for that project
+  JS_FACTORY_MATCH   — JS address equals a recent factory-deployed address
+  SITE_JS_CHANGE     — fingerprint changed (esp. near a deploy window)
+
+Writes:
+  js_factory_scan_latest.json
+  js_factory_scan_previous.json
+Does NOT invent CAs. Does not push GitHub.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import subprocess
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urljoin, urlparse
+from zoneinfo import ZoneInfo
+
+BASE = Path("/workspace/project-monitor")
+WATCHLIST = BASE / "watchlist.json"
+ONCHAIN_LATEST = BASE / "onchain_scan_latest.json"
+ONCHAIN_PREV = BASE / "onchain_scan_previous.json"
+LATEST = BASE / "js_factory_scan_latest.json"
+PREV = BASE / "js_factory_scan_previous.json"
+EVENTS_OUT = BASE / "js_factory_events.jsonl"
+
+SH = ZoneInfo("Asia/Shanghai")
+UA = "Mozilla/5.0 (compatible; PadHunterJsFactoryScan/1.0)"
+
+# concurrency / politeness
+MAX_WORKERS = 6
+HTML_MAX_BYTES = 800_000
+JS_MAX_BYTES = 1_500_000
+JS_TOTAL_PER_PROJECT = 4_000_000
+MAX_SCRIPTS_PER_PROJECT = 12
+CURL_TIMEOUT = 25
+FETCH_TIMEOUT = 35
+
+# match window: site/JS change vs factory deploy block time unknown → use scan times ± hours
+WINDOW_HOURS = 24
+
+EVM_RE = re.compile(r"(?<![a-fA-F0-9])(0x[a-fA-F0-9]{40})(?![a-fA-F0-9])", re.I)
+SOL_RE = re.compile(r"\b([1-9A-HJ-NP-Za-km-z]{32,44})\b")
+SCRIPT_SRC_RE = re.compile(
+    r"""<script[^>]+src\s*=\s*["']([^"']+)["']""",
+    re.I,
+)
+# inline script bodies (capped)
+INLINE_SCRIPT_RE = re.compile(r"(?is)<script(?![^>]+src\s*=)[^>]*>(.*?)</script>")
+FACTORYISH_RE = re.compile(
+    r"(create2|CREATE2|factory\.create|createPair|createToken|deploy\(|"
+    r"getCreate2Address|cloneDeterministic|minimal.?proxy)",
+    re.I,
+)
+
+CA_CONTEXT = [
+    "ca", "contract", "合约", "地址", "mint", "token address", "contract address",
+    "合约地址", "token:", "ca:", "address",
+]
+# Stronger cues for minified JS (bare "address" floods SDK false positives)
+CA_CONTEXT_JS = [
+    "contractaddress", "tokenaddress", "合约地址", "ca:", "ca =", "ca=",
+    "mintaddress", "token_address", "contract_address",
+    '"ca"', "'ca'", "primaryca", "token.ca", "contract.ca",
+]
+
+# well-known junk / ambient tokens — never treat as project CA
+EVM_DENY = {
+    "0x0000000000000000000000000000000000000000",
+    "0x0000000000000000000000000000000000000001",
+    "0x000000000000000000000000000000000000dead",
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "0xeeeeeeee14d718c2b47d9923deab1335e144eeee",  # ParaSwap ETH sentinel
+    "0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e",  # ENS registry
+    # WETH / common stables / routers (mainnet + common)
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",  # WETH
+    "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",  # USDC
+    "0xdac17f958d2ee523a2206206994597c13d831ec7",  # USDT
+    "0x6b175474e89094c44da98b954eedeac495271d0f",  # DAI
+    "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",  # WBTC
+    "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",  # UniswapV2Router02
+    "0xe592427a0aece92de3edee1f18e0157c05861564",  # UniswapV3Router
+    "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",  # SwapRouter02
+    "0x1111111254eeb25477b68fb85ed929f73a960582",  # 1inch
+    "0x1111111254fb6c44bac0bed2854e76f90643097d",
+    "0xdef1c0ded9bec7b1dcb16571147d74891413f1aa",  # 0x
+    "0x5c69bee701ef814a2b6a3edd4b1652cb9cc5aa6f",  # UniV2 factory
+    "0x1f98431c8ad98523631ae4a59f267346ea31f984",  # UniV3 factory
+    "0x000000000004444c5dc75cb358380d2e3de08a90",  # UniV4 PoolManager (eth)
+    "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",  # USDC on Base
+}
+SOL_BLOCKLIST = {
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "11111111111111111111111111111111",
+    "So11111111111111111111111111111111111111112",  # wSOL
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",  # USDC
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",  # USDT
+    "BPFLoader2111111111111111111111111111111111",
+    "BPFLoader1111111111111111111111111111111111",
+    "BPFLoaderUpgradeab1e11111111111111111111111",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+    "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+}
+
+SKIP_HOST_PARTS = (
+    "x.com", "twitter.com", "t.co", "t.me", "telegram.me", "youtube.com",
+    "discord.com", "discord.gg", "medium.com", "linktr.ee", "linktree",
+    "voxels.com", "hyperliquid.xyz",  # shared platforms, not project JS CA sources
+)
+
+# allow fetching JS from these CDNs even if host != site host
+CDN_HOST_ALLOW = (
+    "unpkg.com", "cdn.jsdelivr.net", "cdnjs.cloudflare.com", "esm.sh",
+    "fastly.jsdelivr.net", "ga.jspm.io", "cdn.skypack.dev",
+)
+
+
+def now_iso() -> str:
+    return datetime.now(SH).isoformat(timespec="seconds")
+
+
+def now_label() -> str:
+    return datetime.now(SH).strftime("%Y-%m-%d %H:%M:%S Asia/Shanghai")
+
+
+def load_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def is_usable_site(url: str) -> bool:
+    if not url or not isinstance(url, str):
+        return False
+    u = url.strip()
+    if "..." in u or "…" in u:
+        return False
+    if u.endswith(":"):
+        return False
+    try:
+        p = urlparse(u)
+    except Exception:
+        return False
+    if p.scheme not in ("http", "https"):
+        return False
+    host = (p.hostname or "").lower()
+    if not host:
+        return False
+    for part in SKIP_HOST_PARTS:
+        if part in host:
+            return False
+    return True
+
+
+def curl_fetch(url: str, max_bytes: int) -> dict:
+    t0 = time.time()
+    try:
+        out = subprocess.run(
+            [
+                "curl", "-sS", "-L", "--max-time", str(CURL_TIMEOUT),
+                "-A", UA,
+                "--max-filesize", str(max_bytes),
+                "-w", "\n__CURLMETA__%{http_code}|%{time_total}|%{url_effective}",
+                url,
+            ],
+            capture_output=True, text=True, timeout=FETCH_TIMEOUT,
+        )
+        raw = out.stdout or ""
+        err = (out.stderr or "").strip()[:200]
+        body, meta = raw, ""
+        if "__CURLMETA__" in raw:
+            body, meta = raw.rsplit("__CURLMETA__", 1)
+        parts = meta.strip().split("|") if meta else []
+        code = parts[0] if parts else "000"
+        ttot = float(parts[1]) if len(parts) > 1 and parts[1] else round(time.time() - t0, 3)
+        final = parts[2] if len(parts) > 2 else url
+        ok = code.isdigit() and 200 <= int(code) < 400
+        return {
+            "url": url,
+            "final_url": final,
+            "ok": ok,
+            "http_code": code,
+            "time_s": round(ttot, 3),
+            "error": "" if ok else (err or f"http {code}"),
+            "body": body if ok else "",
+            "bytes": len(body.encode("utf-8", errors="ignore")) if ok else 0,
+        }
+    except Exception as e:
+        return {
+            "url": url,
+            "final_url": url,
+            "ok": False,
+            "http_code": "000",
+            "time_s": round(time.time() - t0, 3),
+            "error": str(e)[:200],
+            "body": "",
+            "bytes": 0,
+        }
+
+
+def near_ca_context(text: str, start: int, end: int, window: int = 80) -> bool:
+    left = text[max(0, start - window): start].lower()
+    right = text[end: min(len(text), end + window)].lower()
+    blob = left + " " + right
+    return any(c in blob for c in CA_CONTEXT)
+
+
+def snippet_around(text: str, idx: int, width: int = 60) -> str:
+    start = max(0, idx - width)
+    end = min(len(text), idx + width)
+    return text[start:end].replace("\n", " ").strip()[:160]
+
+
+def extract_evm(text: str, source: str) -> list[dict]:
+    out = []
+    # Large JS SDK bundles embed many unrelated addresses; require CA-ish context
+    # unless the hit is from HTML / inline config (higher signal).
+    require_ctx = source.startswith("js:")
+    for m in EVM_RE.finditer(text or ""):
+        addr = "0x" + m.group(1)[2:].lower()
+        if addr in EVM_DENY:
+            continue
+        # drop addresses with too many leading zeros (padding / sentinels)
+        if addr[2:10] == "00000000" and addr not in EVM_DENY:
+            # keep only if not almost-zero
+            if addr[2:].rstrip("0") == "" or addr[2:24] == "0" * 22:
+                continue
+        if require_ctx:
+            left = text[max(0, m.start() - 100): m.start()].lower()
+            right = text[m.end(): min(len(text), m.end() + 100)].lower()
+            blob = left + " " + right
+            # strip spaces/underscores for compact key match
+            compact = blob.replace(" ", "").replace("_", "")
+            if not any(k.replace(" ", "") in compact for k in CA_CONTEXT_JS):
+                continue
+        out.append({
+            "type": "evm",
+            "address": addr,
+            "source": source,
+            "snippet": snippet_around(text, m.start()),
+        })
+    seen = set()
+    uniq = []
+    for c in out:
+        if c["address"] not in seen:
+            seen.add(c["address"])
+            uniq.append(c)
+    # Cap per-source flood from a single JS file
+    if require_ctx and len(uniq) > 25:
+        uniq = uniq[:25]
+    return uniq
+
+
+def looks_like_js_identifier(addr: str) -> bool:
+    """CamelCase / PascalCase JS names share base58 charset — reject them."""
+    if re.search(r"[a-z][A-Z]", addr):
+        return True
+    # long all-letter tokens with no digit are almost never mints
+    if addr.isalpha():
+        return True
+    return False
+
+
+def extract_sol(text: str, source: str) -> list[dict]:
+    """Cautious Solana mint extraction — JS minbundles produce huge FPs otherwise."""
+    out = []
+    for m in SOL_RE.finditer(text or ""):
+        addr = m.group(1)
+        if addr in SOL_BLOCKLIST:
+            continue
+        if addr.startswith("http") or "://" in addr:
+            continue
+        if looks_like_js_identifier(addr):
+            continue
+        # must include a digit (real mints almost always do)
+        if not any(ch.isdigit() for ch in addr):
+            continue
+        # length: typical mint = 32–44; prefer 43–44 for pubkeys
+        if len(addr) < 32:
+            continue
+        if not near_ca_context(text, m.start(), m.end()):
+            continue
+        out.append({
+            "type": "solana",
+            "address": addr,
+            "source": source,
+            "snippet": snippet_around(text, m.start()),
+        })
+    seen = set()
+    uniq = []
+    for c in out:
+        if c["address"] not in seen:
+            seen.add(c["address"])
+            uniq.append(c)
+    return uniq
+
+
+def find_factoryish(text: str) -> list[str]:
+    found = sorted({m.group(0) for m in FACTORYISH_RE.finditer(text or "")})
+    return found[:12]
+
+
+def same_registrable_hint(host_a: str, host_b: str) -> bool:
+    """Loose same-site check: equal host or one is subdomain of the other."""
+    a = (host_a or "").lower().lstrip(".")
+    b = (host_b or "").lower().lstrip(".")
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    return a.endswith("." + b) or b.endswith("." + a)
+
+
+def discover_script_urls(html: str, page_url: str) -> list[str]:
+    page = urlparse(page_url)
+    page_host = (page.hostname or "").lower()
+    urls: list[str] = []
+    seen = set()
+    for m in SCRIPT_SRC_RE.finditer(html or ""):
+        src = (m.group(1) or "").strip()
+        if not src or src.startswith("data:"):
+            continue
+        abs_url = urljoin(page_url, src)
+        try:
+            pu = urlparse(abs_url)
+        except Exception:
+            continue
+        if pu.scheme not in ("http", "https"):
+            continue
+        host = (pu.hostname or "").lower()
+        path = (pu.path or "").lower()
+        # prefer JS-looking paths; still allow extensionless chunks on same origin
+        looks_js = path.endswith(".js") or path.endswith(".mjs") or ".js?" in (pu.path + "?" + (pu.query or ""))
+        same = same_registrable_hint(host, page_host)
+        cdn = any(host == c or host.endswith("." + c) for c in CDN_HOST_ALLOW)
+        if not (same or cdn):
+            continue
+        if not looks_js and not same:
+            continue
+        if abs_url in seen:
+            continue
+        seen.add(abs_url)
+        urls.append(abs_url)
+        if len(urls) >= MAX_SCRIPTS_PER_PROJECT:
+            break
+    return urls
+
+
+def fingerprint(addresses: list[str], script_urls: list[str]) -> dict:
+    addr_payload = json.dumps(sorted(a.lower() for a in addresses), separators=(",", ":"))
+    full_payload = json.dumps(
+        {"addrs": sorted(a.lower() for a in addresses), "scripts": sorted(script_urls)},
+        separators=(",", ":"),
+    )
+    return {
+        "address_fp": hashlib.sha256(addr_payload.encode()).hexdigest()[:32],
+        "full_fp": hashlib.sha256(full_payload.encode()).hexdigest()[:32],
+    }
+
+
+def collect_factory_deploys(onchain_docs: list[dict]) -> list[dict]:
+    """Flatten factory log addresses + new_deploy_hints from one or more onchain reports."""
+    deploys = []
+    seen = set()
+    for doc in onchain_docs:
+        if not doc:
+            continue
+        checked = doc.get("checked_at_iso") or doc.get("checked_at")
+        for h in doc.get("new_deploy_hints") or []:
+            for a in h.get("addresses") or []:
+                al = a.lower()
+                if al in EVM_DENY:
+                    continue
+                key = (h.get("chain"), al, (h.get("tx") or "").lower())
+                if key in seen:
+                    continue
+                seen.add(key)
+                deploys.append({
+                    "address": al if al.startswith("0x") else a,
+                    "chain": h.get("chain"),
+                    "factory_id": h.get("factory_id"),
+                    "factory": h.get("factory"),
+                    "tx": h.get("tx"),
+                    "block": h.get("block"),
+                    "ambient": bool(h.get("ambient")),
+                    "source": "new_deploy_hints",
+                    "onchain_checked_at": checked,
+                })
+        for f in doc.get("factories") or []:
+            for log in f.get("recent_logs") or []:
+                for a in log.get("addresses") or []:
+                    al = a.lower()
+                    if al in EVM_DENY:
+                        continue
+                    key = (f.get("chain"), al, (log.get("tx") or "").lower())
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    deploys.append({
+                        "address": al if al.startswith("0x") else a,
+                        "chain": f.get("chain"),
+                        "factory_id": f.get("id"),
+                        "factory": f.get("address"),
+                        "tx": log.get("tx"),
+                        "block": log.get("block"),
+                        "ambient": f.get("id") in {"univ2_eth", "univ4_pm_rh", "hyperswap_v3_factory"},
+                        "source": "factory_recent_logs",
+                        "onchain_checked_at": checked,
+                        "from_block": f.get("from_block"),
+                        "to_block": f.get("to_block"),
+                    })
+    return deploys
+
+
+def parse_iso_loose(s: str | None) -> datetime | None:
+    if not s:
+        return None
+    try:
+        # "2026-10-20T13:43:34+08:00"
+        return datetime.fromisoformat(s.replace("Z", "+00:00"))
+    except Exception:
+        pass
+    try:
+        # "2026-10-20 13:43:34 Asia/Shanghai"
+        if "Asia/Shanghai" in s:
+            core = s.replace(" Asia/Shanghai", "").strip()
+            return datetime.strptime(core, "%Y-%m-%d %H:%M:%S").replace(tzinfo=SH)
+    except Exception:
+        pass
+    return None
+
+
+def within_window(t_a: datetime | None, t_b: datetime | None, hours: float = WINDOW_HOURS) -> bool:
+    if not t_a or not t_b:
+        # if either missing, still allow address equality match but flag window unknown
+        return True
+    return abs((t_a - t_b).total_seconds()) <= hours * 3600
+
+
+def scan_one_project(proj: dict) -> dict:
+    name = proj["name"]
+    sites = [u for u in (proj.get("sites") or []) if is_usable_site(u)]
+    # dedupe http/https and trailing slash variants prefer https
+    preferred = []
+    seen_host_path = set()
+    for u in sorted(sites, key=lambda x: (0 if x.startswith("https") else 1, x)):
+        p = urlparse(u)
+        key = ((p.hostname or "").lower(), (p.path or "/").rstrip("/") or "/")
+        if key in seen_host_path:
+            continue
+        seen_host_path.add(key)
+        preferred.append(u)
+
+    result = {
+        "name": name,
+        "handle": proj.get("handle"),
+        "chain": proj.get("chain"),
+        "inferred_chains": proj.get("inferred_chains") or [],
+        "sites_considered": preferred,
+        "sites_fetched": [],
+        "scripts": [],
+        "addresses": [],
+        "factoryish_hits": [],
+        "fingerprint": None,
+        "errors": [],
+        "skipped_reason": None,
+    }
+    if not preferred:
+        result["skipped_reason"] = "no_usable_site"
+        return result
+
+    all_addrs: list[dict] = []
+    script_urls_ok: list[str] = []
+    factoryish: list[str] = []
+    total_js_bytes = 0
+
+    for site_url in preferred:
+        fr = curl_fetch(site_url, HTML_MAX_BYTES)
+        site_meta = {
+            "url": site_url,
+            "ok": fr["ok"],
+            "http_code": fr["http_code"],
+            "time_s": fr["time_s"],
+            "error": fr["error"],
+            "final_url": fr.get("final_url"),
+            "bytes": fr.get("bytes", 0),
+        }
+        result["sites_fetched"].append(site_meta)
+        if not fr["ok"]:
+            result["errors"].append(f"html:{site_url}:{fr['error']}")
+            continue
+
+        html = fr["body"]
+        # inline scripts
+        for im in INLINE_SCRIPT_RE.finditer(html):
+            body = im.group(1) or ""
+            if len(body) < 20:
+                continue
+            src_label = f"inline:{site_url}"
+            all_addrs.extend(extract_evm(body, src_label))
+            all_addrs.extend(extract_sol(body, src_label))
+            factoryish.extend(find_factoryish(body))
+            if len(body) > 200_000:
+                break
+
+        # also scan raw HTML for embedded 0x (config dumps)
+        all_addrs.extend(extract_evm(html, f"html:{site_url}"))
+
+        script_urls = discover_script_urls(html, fr.get("final_url") or site_url)
+        for su in script_urls:
+            if total_js_bytes >= JS_TOTAL_PER_PROJECT:
+                result["errors"].append("js_budget_exhausted")
+                break
+            jr = curl_fetch(su, JS_MAX_BYTES)
+            sm = {
+                "url": su,
+                "ok": jr["ok"],
+                "http_code": jr["http_code"],
+                "bytes": jr.get("bytes", 0),
+                "error": jr["error"],
+            }
+            result["scripts"].append(sm)
+            if not jr["ok"]:
+                continue
+            total_js_bytes += jr["bytes"]
+            script_urls_ok.append(su)
+            body = jr["body"]
+            all_addrs.extend(extract_evm(body, f"js:{su}"))
+            all_addrs.extend(extract_sol(body, f"js:{su}"))
+            factoryish.extend(find_factoryish(body))
+            time.sleep(0.05)  # polite between scripts
+
+        time.sleep(0.08)
+
+    # dedupe addresses
+    seen = set()
+    uniq = []
+    for c in all_addrs:
+        k = (c["type"], c["address"].lower())
+        if k not in seen:
+            seen.add(k)
+            uniq.append(c)
+    result["addresses"] = uniq
+    result["factoryish_hits"] = sorted(set(factoryish))[:12]
+    fps = fingerprint(
+        [c["address"] for c in uniq],
+        script_urls_ok,
+    )
+    result["fingerprint"] = fps["full_fp"]
+    result["address_fingerprint"] = fps["address_fp"]
+    result["js_bytes_total"] = total_js_bytes
+    result["checked_at"] = now_iso()
+    return result
+
+
+def main() -> int:
+    wl = load_json(WATCHLIST, None)
+    if not wl or not wl.get("projects"):
+        print("ERROR no watchlist at", WATCHLIST)
+        return 1
+
+    projects = wl["projects"]
+    prev_report = load_json(LATEST, {})
+    prev_by_name = {r["name"]: r for r in (prev_report.get("results") or [])}
+
+    onchain_latest = load_json(ONCHAIN_LATEST, {})
+    onchain_prev = load_json(ONCHAIN_PREV, {})
+    deploys = collect_factory_deploys([onchain_latest, onchain_prev])
+    deploy_by_addr = {}
+    for d in deploys:
+        al = d["address"].lower()
+        deploy_by_addr.setdefault(al, []).append(d)
+
+    # only scan projects with at least one usable site
+    to_scan = []
+    skipped = []
+    for p in projects:
+        sites = [u for u in (p.get("sites") or []) if is_usable_site(u)]
+        if sites:
+            to_scan.append(p)
+        else:
+            skipped.append({"name": p["name"], "reason": "no_usable_site"})
+
+    results: list[dict] = []
+    t0 = time.time()
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futs = {ex.submit(scan_one_project, p): p["name"] for p in to_scan}
+        for fut in as_completed(futs):
+            name = futs[fut]
+            try:
+                results.append(fut.result())
+            except Exception as e:
+                results.append({
+                    "name": name,
+                    "errors": [str(e)[:200]],
+                    "addresses": [],
+                    "fingerprint": None,
+                    "skipped_reason": "exception",
+                })
+            print(f"  scanned {name}", flush=True)
+
+    results.sort(key=lambda r: r.get("name") or "")
+
+    events: list[dict] = []
+    new_js_cas = []
+    matches = []
+    site_changes = []
+
+    scan_time = datetime.now(SH)
+
+    for r in results:
+        name = r["name"]
+        old = prev_by_name.get(name) or {}
+        old_addrs = {
+            (c.get("type"), (c.get("address") or "").lower())
+            for c in (old.get("addresses") or [])
+        }
+        old_fp = old.get("fingerprint")
+
+        for c in r.get("addresses") or []:
+            key = (c["type"], c["address"].lower())
+            if key not in old_addrs:
+                try:
+                    from ca_gate import verify_address
+                    _v = verify_address(c["address"], r.get("chain"), snippet=c.get("snippet"), source=c.get("source"))
+                except Exception as _e:
+                    _v = {"kind": "unknown", "is_token": False, "label_zh": "未确认地址", "note": str(_e)[:100]}
+                _etype = ("NEW_JS_CA" if _v.get("is_token") else "SCANNED_WALLET" if _v.get("kind") == "wallet"
+                          else "NFT_CONTRACT" if _v.get("kind") == "nft" else "UNVERIFIED_ADDR")
+                ev = {
+                    "kind": _v.get("kind"), "label_zh": _v.get("label_zh"), "gate_note": _v.get("note"),
+                    "type": _etype,
+                    "name": name,
+                    "handle": r.get("handle"),
+                    "address": c["address"],
+                    "addr_type": c["type"],
+                    "source": c.get("source"),
+                    "snippet": c.get("snippet"),
+                    "at": now_iso(),
+                }
+                events.append(ev)
+                if _etype == "NEW_JS_CA":
+                    new_js_cas.append(ev)
+
+            # factory match (EVM only for now)
+            if c["type"] == "evm":
+                for d in deploy_by_addr.get(c["address"].lower(), []):
+                    # prefer non-ambient; still record ambient with flag
+                    onchain_t = parse_iso_loose(d.get("onchain_checked_at"))
+                    in_win = within_window(scan_time, onchain_t)
+                    ev = {
+                        "type": "JS_FACTORY_MATCH",
+                        "name": name,
+                        "handle": r.get("handle"),
+                        "address": c["address"],
+                        "chain_hint": r.get("inferred_chains") or [r.get("chain")],
+                        "factory_id": d.get("factory_id"),
+                        "factory": d.get("factory"),
+                        "deploy_chain": d.get("chain"),
+                        "tx": d.get("tx"),
+                        "block": d.get("block"),
+                        "ambient": d.get("ambient"),
+                        "js_source": c.get("source"),
+                        "window_hours": WINDOW_HOURS,
+                        "window_ok": in_win,
+                        "evidence": {
+                            "snippet": c.get("snippet"),
+                            "onchain_checked_at": d.get("onchain_checked_at"),
+                            "deploy_source": d.get("source"),
+                        },
+                        "at": now_iso(),
+                    }
+                    events.append(ev)
+                    matches.append(ev)
+
+        fp = r.get("fingerprint")
+        addr_fp = r.get("address_fingerprint")
+        old_addr_fp = old.get("address_fingerprint")
+        addr_changed = bool(old_addr_fp and addr_fp and old_addr_fp != addr_fp)
+        # near-deploy: any non-ambient factory deploy on overlapping chain within window
+        near = []
+        chains = set((r.get("inferred_chains") or []) + ([r.get("chain")] if r.get("chain") else []))
+        chains_l = {str(c).lower() for c in chains if c}
+        for d in deploys:
+            if d.get("ambient"):
+                continue
+            dc = (d.get("chain") or "").lower()
+            if chains_l and dc and dc not in chains_l and "unknown" not in chains_l:
+                continue
+            onchain_t = parse_iso_loose(d.get("onchain_checked_at"))
+            if within_window(scan_time, onchain_t):
+                near.append({
+                    "factory_id": d.get("factory_id"),
+                    "address": d.get("address"),
+                    "tx": d.get("tx"),
+                    "chain": d.get("chain"),
+                })
+        # Alert when address set changed, or scripts changed *and* a nearby deploy exists
+        scripts_changed = bool(old_fp and fp and old_fp != fp)
+        if addr_changed or (scripts_changed and near):
+            ev = {
+                "type": "SITE_JS_CHANGE",
+                "name": name,
+                "handle": r.get("handle"),
+                "prev_fingerprint": old_fp,
+                "fingerprint": fp,
+                "prev_address_fingerprint": old_addr_fp,
+                "address_fingerprint": addr_fp,
+                "address_set_changed": addr_changed,
+                "address_count": len(r.get("addresses") or []),
+                "prev_address_count": len(old.get("addresses") or []),
+                "near_deploys": near[:8],
+                "at": now_iso(),
+            }
+            events.append(ev)
+            site_changes.append(ev)
+
+    # dedupe JS_FACTORY_MATCH by (name, address, tx)
+    seen_m = set()
+    uniq_matches = []
+    for m in matches:
+        k = (m["name"], m["address"].lower(), (m.get("tx") or "").lower(), m.get("factory_id"))
+        if k not in seen_m:
+            seen_m.add(k)
+            uniq_matches.append(m)
+    matches = uniq_matches
+    # rebuild events list with deduped matches
+    events = (
+        [e for e in events if e["type"] != "JS_FACTORY_MATCH"]
+        + matches
+    )
+
+    fetched_ok = sum(
+        1 for r in results
+        if any(s.get("ok") for s in (r.get("sites_fetched") or []))
+    )
+    with_addrs = sum(1 for r in results if r.get("addresses"))
+    total_addrs = sum(len(r.get("addresses") or []) for r in results)
+    js_ok = sum(1 for r in results for s in (r.get("scripts") or []) if s.get("ok"))
+    html_fail = sum(
+        1 for r in results
+        if r.get("sites_considered") and not any(s.get("ok") for s in (r.get("sites_fetched") or []))
+    )
+
+    report = {
+        "checked_at": now_label(),
+        "checked_at_iso": now_iso(),
+        "watchlist_count": len(projects),
+        "projects_with_usable_site": len(to_scan),
+        "projects_skipped_no_site": len(skipped),
+        "window_hours": WINDOW_HOURS,
+        "factory_deploys_indexed": len(deploys),
+        "summary": {
+            "sites_fetch_ok": fetched_ok,
+            "sites_fetch_all_failed": html_fail,
+            "projects_with_js_addresses": with_addrs,
+            "total_unique_addresses": total_addrs,
+            "js_files_ok": js_ok,
+            "new_js_ca": len(new_js_cas),
+            "js_factory_match": len(matches),
+            "site_js_change": len(site_changes),
+            "elapsed_s": round(time.time() - t0, 1),
+        },
+        "events": events,
+        "new_js_cas": new_js_cas,
+        "js_factory_matches": matches,
+        "site_js_changes": site_changes,
+        "skipped": skipped,
+        "results": results,
+        "gaps": [
+            "Many watchlist sites are X-only or truncated URLs (…); those are skipped.",
+            "Shared platforms (linktr.ee, t.me, hyperliquid app links) are skipped as non-project JS sources.",
+            "Cloudflare / bot walls return empty or challenge HTML — no JS extracted.",
+            "SPA bundles may hide addresses behind runtime config/API; static JS scan will miss those.",
+            "Factory match uses addresses from onchain_scan_latest/previous only (capped log window); not full chain history.",
+            "Ambient Uniswap V2 PairCreated matches are flagged ambient=true — correlate before alerting.",
+            "Non-EVM chains (Solana/Kaspa/Ordinals) have weak or no factory wiring; Solana extraction is context-gated.",
+            "Time window uses onchain scan timestamps, not exact block timestamps (RPC eth_getBlockByNumber not required each run).",
+        ],
+        "how_to_run": [
+            "python3 /workspace/project-monitor/scan_onchain.py",
+            "python3 /workspace/project-monitor/scan_js_factory_match.py",
+            "Alert on events[].type in {NEW_JS_CA, JS_FACTORY_MATCH, SITE_JS_CHANGE} vs previous.",
+        ],
+    }
+
+    if LATEST.exists():
+        PREV.write_text(LATEST.read_text(encoding="utf-8"), encoding="utf-8")
+    LATEST.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    # append events jsonl for parent/routine consumption
+    if events:
+        with EVENTS_OUT.open("a", encoding="utf-8") as f:
+            for e in events:
+                f.write(json.dumps(e, ensure_ascii=False) + "\n")
+
+    # digest
+    for e in new_js_cas:
+        print(f"NEW_JS_CA {e['name']} {e['addr_type']} {e['address']} via {e.get('source')}")
+    for e in matches:
+        amb = " ambient" if e.get("ambient") else ""
+        print(
+            f"JS_FACTORY_MATCH{amb} {e['name']} {e['address']} "
+            f"factory={e.get('factory_id')} chain={e.get('deploy_chain')} tx={e.get('tx')}"
+        )
+    for e in site_changes:
+        print(
+            f"SITE_JS_CHANGE {e['name']} fp {e['prev_fingerprint'][:8]}→{e['fingerprint'][:8]} "
+            f"addrs={e['prev_address_count']}→{e['address_count']} near_deploys={len(e.get('near_deploys') or [])}"
+        )
+    if not events:
+        print("none")
+
+    print(
+        f"SUMMARY usable_sites={len(to_scan)} fetch_ok={fetched_ok} "
+        f"with_addrs={with_addrs} total_addrs={total_addrs} js_ok={js_ok} "
+        f"new_js_ca={len(new_js_cas)} matches={len(matches)} "
+        f"site_changes={len(site_changes)} skipped={len(skipped)} "
+        f"elapsed_s={report['summary']['elapsed_s']}"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,145 @@
+{
+  "tag": "0707",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T07:38:31+08:00",
+  "fired_approx": "2026-10-28 07:00 Asia/Shanghai",
+  "pause_file": "absent",
+  "listing_daemon": {
+    "pid": 3446519,
+    "status": "running"
+  },
+  "onchain_lock_daemon": {
+    "pid": 889131,
+    "status": "running"
+  },
+  "pipeline": {
+    "command": "bash /workspace/project-monitor/run_listing_onchain_js.sh",
+    "exit": 0,
+    "started": "2026-10-28T07:08:00+08:00",
+    "elapsed_s": 1712,
+    "elapsed_min": 28.5,
+    "log": "/tmp/routine_0707_pipeline.log",
+    "summary": "extract_listing_times+scan_x_progress+extract_x_ca ok; scan_onchain NEW_DEPLOY ambient UniV2 only; scan_js new_js_ca=0 matches=0 site_js=8(addrs unchanged); trace TRACE_CA=4 Hashgentic NFT/non-token noise; prune newly_removed=0; mark newly=0; ca_finds=76; publish_monitor_events ok"
+  },
+  "watchlist_sync": {
+    "before": 311,
+    "after_sync": 311,
+    "after_pipeline": 311,
+    "locked_new_count": 0,
+    "locked_new": [],
+    "updated_fields": 3,
+    "bak": "/workspace/project-monitor/watchlist.json.bak.pre_routine_resync_0707"
+  },
+  "X_refresh": {
+    "at": "2026-10-28T07:08:00+08:00",
+    "status": "rate_limited",
+    "brief": "X daily read limit 1000 exhausted; resets 2026-10-28T00:00:00Z / 08:00 Asia/Shanghai",
+    "probe": "get_users_by_usernames PrivateKeyCoin_ blocked",
+    "resets": "2026-10-28T00:00:00Z / 08:00 Asia/Shanghai",
+    "cache_users": 540,
+    "cache_fetched_at": "2026-10-28T04:01:50+08:00"
+  },
+  "new_onchain_lock_hits": [],
+  "new_onchain_lock_count": 0,
+  "actionable_findings": [],
+  "actionable_suppressed": [
+    {
+      "kind": "LISTING_SIGNAL",
+      "name": "Ink Daddy",
+      "handle": "InkDaddynft",
+      "note": "same soon-tge text; only viewcount/age churn (478→503, 1h→2h) — not strong/new"
+    }
+  ],
+  "listing_at_published": [],
+  "within_next_3_days": [
+    {
+      "project": "PlayBlastOff",
+      "handle": "play_blastoff",
+      "listing_at": "2026-10-28T07:59:00+08:00",
+      "note": "race close not token listing; already known"
+    },
+    {
+      "project": "Fishesrh",
+      "handle": "Fishesrh",
+      "listing_at": "2026-10-29T01:00:00+08:00"
+    },
+    {
+      "project": "hoodora",
+      "handle": "hoodora_rh",
+      "listing_at": "2026-10-29T01:00:00+08:00"
+    },
+    {
+      "project": "zkArgos",
+      "handle": "zkArgoseth",
+      "listing_at": "2026-10-31T00:00:00+08:00"
+    }
+  ],
+  "pruned_launched": [],
+  "延期": [],
+  "trace_ca": {
+    "count": 4,
+    "note": "Hashgentic create_derive / 非代币·非CA repeat noise"
+  },
+  "pages_published": "yes",
+  "pages_detail": {
+    "at": "2026-10-28T07:38:11+08:00",
+    "results": [
+      {
+        "file": "listing_times.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      },
+      {
+        "file": "ca_finds.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      },
+      {
+        "file": "monitor_events.json",
+        "main_rc": 0,
+        "gh_pages_rc": 0
+      }
+    ]
+  },
+  "errors": [
+    {
+      "severity": "info",
+      "kind": "rpc_rate_limits",
+      "note": "onchain_lock_daemon continues with free-RPC rate limits/timeouts; pipeline exit 0; NOT recommending pause",
+      "chains": [
+        {
+          "chain": "bsc",
+          "rpc_errors": 1723,
+          "last_error": "{'code': -32603, 'message': 'Remote Error'}"
+        },
+        {
+          "chain": "ethereum",
+          "rpc_errors": 753,
+          "last_error": "{'code': -32603, 'message': 'Internal error'}"
+        },
+        {
+          "chain": "hyperevm",
+          "rpc_errors": 1384,
+          "last_error": "{'code': -32005, 'message': 'rate limited'}"
+        },
+        {
+          "chain": "ink",
+          "rpc_errors": 3385,
+          "last_error": "{'message': 'Temporary internal error. Please retry, trace-id: 55e1911e9760cf2d89aa4eb53ecd0da2', 'code': 19}"
+        },
+        {
+          "chain": "robinhood",
+          "rpc_errors": 4876,
+          "last_error": "Command '['curl', '-sS', '--max-time', '12', '-X', 'POST', 'https://rpc.mainnet.chain.robinhood.com', '-H', 'content-type: application/json', '-H', 'user-agent:"
+        }
+      ]
+    },
+    {
+      "severity": "info",
+      "kind": "x_daily_limit",
+      "note": "X daily read limit 1000 hit; resets 08:00 Asia/Shanghai; continued pipeline without pause"
+    }
+  ],
+  "wake_parent": false,
+  "wake_reason": "quiet — no actionable NEW_CA/ONCHAIN_LOCK/strong LISTING_SIGNAL/已开盘/JS_CA; X quota ambient; RPC limits ambient"
+}

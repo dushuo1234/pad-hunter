@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-22T23:40:13+08:00",
+  "fired_at": "2026-10-22T22:58:00+08:00",
+  "exit": 0,
+  "duration_s": 1855,
+  "watchlist": "187→191",
+  "locked_new": [
+    {
+      "name": "PennyStock",
+      "handle": "PennyStock_sol"
+    },
+    {
+      "name": "ShieldX",
+      "handle": "SX_Protocol"
+    },
+    {
+      "name": "mine.ai",
+      "handle": "mine_ai_agent"
+    },
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO"
+    }
+  ],
+  "candidates": "191→193",
+  "projects": "191→193",
+  "launched": 44,
+  "newly_launched": [],
+  "workbench": "3→4",
+  "workbench_names": [
+    "valut",
+    "GiwaMeme",
+    "PumpCity",
+    "Ptah.trade"
+  ],
+  "new_ca": [
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "handle": "ETHERIISPROTOCO",
+      "chain": "ethereum",
+      "address": "0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8",
+      "symbol": "ETHRS",
+      "source": "site/JS html:https://etheriis.netlify.app/",
+      "gate": "ERC20 verified ETHRS dec=18",
+      "confidence": "high"
+    }
+  ],
+  "new_js_ca": 1,
+  "js_factory_matches": 0,
+  "TRACE_CA": 0,
+  "onchain_lock": {
+    "offset_before": 32039,
+    "offset_after": 32855,
+    "eof": true,
+    "new": 1,
+    "hits": [
+      {
+        "project": "Grok Pot",
+        "chain": "base",
+        "address": "0x371065bd9eb76ca9f6ab2a79f5b90619511f96ea",
+        "symbol": "GROK",
+        "reason": "symbol:GROK",
+        "via": "factory:univ4_pm_base:Initialize",
+        "confidence": "medium",
+        "tx": "0xd8bcb52007b83a2efe617aea89992a845050919dedfbb2869c0f9bc0cfa896c9",
+        "note": "symbol-only match on UniV4 Initialize; possible ambient ticker noise"
+      }
+    ]
+  },
+  "NEW_DEPLOY_watchlist": null,
+  "NEW_DEPLOY_ambient_univ2_samples": 29,
+  "listing_at_changes_published": [
+    {
+      "name": "ShieldX",
+      "listing_at": "2026-10-22T21:31:00+08:00",
+      "within_3d": false,
+      "source": "x",
+      "evidence": "https://x.com/SX_Protocol/status/2113256615134834804"
+    },
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "listing_at": "2026-10-23T02:00:00+08:00",
+      "within_3d": true,
+      "source": "x",
+      "evidence": "https://x.com/ETHERIISPROTOCO/status/2113218486595973423"
+    }
+  ],
+  "within_3d": [
+    {
+      "name": "Authority",
+      "listing_at": "2026-10-23T10:00:00+08:00"
+    },
+    {
+      "name": "ETHERIIS PROTOCOL",
+      "listing_at": "2026-10-23T02:00:00+08:00"
+    }
+  ],
+  "SITE_JS": [
+    "E.T.A",
+    "EmberWorld",
+    "Fom",
+    "TapeFoundry",
+    "fizzpad"
+  ],
+  "LISTING_SIGNAL": [
+    "Ptah.trade Relics minting now open / officially live (X)",
+    "ShieldX Minted out; market tomorrow or few days (X); listing_at 21:31 published",
+    "SpacInk mint-in-4h sticky延期 Oct22; OpenSea eligibility live",
+    "Authority Keys LAUNCH TOMORROW / listing_at Oct23 10:00",
+    "ETHERIIS on-chain open 18:00 UTC (=02:00+08) listing_at published",
+    "$PKC Launching this week / CA in bio only (sticky)"
+  ],
+  "x_progress_upgrades": [
+    "QernApp 开发中→即将启动 (repeat vs prior run)",
+    "KaspaRocket 开发中→即将启动 (repeat vs prior run)"
+  ],
+  "pages": "published main+gh-pages launched/candidates/projects/ca_finds/listing_times/monitor_events",
+  "pages_shas": {
+    "main_tip": "499c8c9",
+    "gh_pages_tip": "86a9d54",
+    "main": {
+      "launched": "90ec367",
+      "candidates": "91f4f3b",
+      "projects": "359d7e2",
+      "ca_finds": "d38700f",
+      "listing_times": "41c3655",
+      "monitor_events": "499c8c9"
+    },
+    "gh_pages": {
+      "launched": "ebf2dd7",
+      "candidates": "28f7fd0",
+      "projects": "c675d7c",
+      "ca_finds": "54eaff0",
+      "listing_times": "dcc551a",
+      "monitor_events": "86a9d54"
+    }
+  },
+  "daemon": {
+    "onchain_lock_pid": 4515,
+    "fast_site_pid": 4916,
+    "updated_at": "2026-10-22T23:40:05+08:00",
+    "rpc_note": "intermittent public RPC rate limits (base/bsc/eth/hyperevm/ink); daemon alive, pipeline completed"
+  },
+  "actionable": true,
+  "user_bullets_zh": [
+    "【NEW_JS_CA】ETHERIIS PROTOCOL · ethereum · CA `0xa2399b22Abac114435ecCce8473B6eD4E2e0acC8` · 官网 HTML 扫出，ca_gate 已确认 ERC20 符号 ETHRS 精度18 · 来源 site/JS https://etheriis.netlify.app/",
+    "【listing_at】ETHERIIS PROTOCOL · 开盘时间写入 `2026-10-23T02:00:00+08:00`（X：18:00 UTC on-chain open）· 已发布站点 · 来源 X",
+    "【listing_at】ShieldX · 开盘时间写入 `2026-10-22T21:31:00+08:00`（X：13:31 UTC goes live）· 已发布站点 · 来源 X",
+    "【LISTING_SIGNAL】ShieldX · Minted out；称市场明天或几天内开 · 状态仍 mint进行中/未移入已开盘 · 来源 X",
+    "【LISTING_SIGNAL】Ptah.trade · Relics minting is now open / officially live · 来源 X",
+    "【ONCHAIN_LOCK】Grok Pot · base · `0x371065bd9eb76ca9f6ab2a79f5b90619511f96ea` · 理由 symbol:GROK · UniV4 Initialize · 置信 medium（仅 ticker，可能噪音）· 来源 onchain_lock"
+  ],
+  "blocker": null
+}

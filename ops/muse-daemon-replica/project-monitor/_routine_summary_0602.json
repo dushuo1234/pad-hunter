@@ -1,0 +1,119 @@
+{
+  "tag": "0602",
+  "routine": "开盘与CA预警",
+  "at": "2026-10-28T06:39:31+08:00",
+  "fired_approx": "2026-10-28 06:00 Asia/Shanghai",
+  "pause_file": "absent",
+  "listing_daemon": {
+    "pid": 3446519,
+    "status": "running"
+  },
+  "onchain_lock_daemon": {
+    "pid": 889131,
+    "status": "running"
+  },
+  "pipeline": {
+    "command": "bash /workspace/project-monitor/run_listing_onchain_js.sh",
+    "exit": 0,
+    "started": "2026-10-28T06:02:37+08:00",
+    "elapsed_s": 2214,
+    "elapsed_min": 36.9,
+    "log": "/tmp/routine_0602_pipeline.log",
+    "pid": 3259733,
+    "summary": "extract_listing_times+scan_x_progress+extract_x_ca ok; scan_onchain NEW_DEPLOY ambient UniV2 only; scan_js new_js_ca=0 matches=0 site_js=8(no addr change); trace TRACE_CA=4 Hashgentic NFT/non-token; prune newly_removed=0 (cleaned orphan userulopad 312→311); mark newly=0; ca_finds=76; publish_monitor_events ok"
+  },
+  "watchlist_sync": {
+    "before": 312,
+    "after_sync": 312,
+    "after_pipeline": 311,
+    "locked_new_count": 0,
+    "locked_new": [],
+    "bak": "/workspace/project-monitor/watchlist.json.bak.pre_routine_resync_0602"
+  },
+  "X_refresh": {
+    "status": "rate_limited",
+    "brief": "X daily read limit 1000 exhausted; resets 2026-10-28T00:00:00Z / 08:00 Asia/Shanghai",
+    "cache_users": 540,
+    "cache_fetched_at": "2026-10-28T04:01:50+08:00",
+    "resets": "2026-10-28T00:00:00Z / 08:00 Asia/Shanghai"
+  },
+  "new_onchain_lock_hits": [],
+  "actionable_findings": [],
+  "listing_at_published": [],
+  "pruned_launched": [
+    {
+      "name": "Rulo",
+      "handle": "userulopad",
+      "note": "orphan cleanup only — already in launched blocklist from prior 0505 已开盘; watchlist 312→311; not a new 已开盘 this run",
+      "kind": "blocklist_cleanup"
+    }
+  ],
+  "pages_published": "yes",
+  "pages_detail": "monitor_events.json published main+gh-pages; candidates/projects/launched/listing_times/ca_finds noop (hash unchanged)",
+  "errors": [
+    {
+      "severity": "info",
+      "kind": "rpc_rate_limits",
+      "note": "onchain_lock_daemon continues with free-RPC rate limits/timeouts on base/bsc/ethereum/hyperevm/ink/robinhood; pipeline completed exit 0; NOT recommending pause",
+      "chains": [
+        {
+          "chain": "base",
+          "rpc_errors": 4,
+          "last_error": "{'code': -32011, 'message': 'request limit reached'}"
+        },
+        {
+          "chain": "bsc",
+          "rpc_errors": 1693,
+          "last_error": "{'code': -32005, 'message': 'Rate limit exceeded on Nodies public endpoints. For higher limits, create a free account at https://nodies.app and use a private en"
+        },
+        {
+          "chain": "ethereum",
+          "rpc_errors": 750,
+          "last_error": "{'code': -32603, 'message': 'Internal error'}"
+        },
+        {
+          "chain": "hyperevm",
+          "rpc_errors": 1361,
+          "last_error": "{'code': -32005, 'message': 'rate limited'}"
+        },
+        {
+          "chain": "ink",
+          "rpc_errors": 3383,
+          "last_error": "{'message': 'Temporary internal error. Please retry, trace-id: 4d527d9aaae02ebae3df19f7cdeafce0', 'code': 19}"
+        },
+        {
+          "chain": "robinhood",
+          "rpc_errors": 4825,
+          "last_error": "Command '['curl', '-sS', '--max-time', '12', '-X', 'POST', 'https://rpc.mainnet.chain.robinhood.com', '-H', 'content-type: application/json', '-H', 'user-agent:"
+        }
+      ]
+    }
+  ],
+  "recommend_user_ping": false,
+  "counts": {
+    "watchlist": 311,
+    "workbench": 76,
+    "launched": 100,
+    "ca_finds": 76,
+    "new_js_ca": 0,
+    "JS_FACTORY_MATCH": 0,
+    "SITE_JS_CHANGE": 8,
+    "NEW_DEPLOY": "ambient UniV2 only",
+    "TRACE_CA": 4,
+    "NEW_CA": 0,
+    "within_3d": 4
+  },
+  "suppressed_non_actionable": [
+    "Ink Daddy LISTING_SIGNAL scrape noise (soon tge footer) — weak",
+    "SITE_JS_CHANGE×8 address_set_changed=false, no non-ambient deploy — skip",
+    "NEW_DEPLOY ambient UniV2 eth samples — skip",
+    "TRACE_CA Hashgentic CREATE×4 NFT/非代币 (repeat) — skip",
+    "ETHERIIS X CA re-verify already known since 2026-10-23 — not NEW_CA"
+  ],
+  "wallets_tokens": {
+    "wallets_after_build": 77,
+    "wallets_after_sol_harvest": 80,
+    "token_projects": 535,
+    "symbols": 920
+  }
+}

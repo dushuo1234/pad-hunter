@@ -1,0 +1,265 @@
+#!/usr/bin/env python3
+"""Merge projects.json rows missing from candidates.json (site board source)."""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from datetime import datetime, timezone
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+SH = ZoneInfo("Asia/Shanghai")
+DEFAULT_PROJECTS = Path("/workspace/push-radar/data/projects.json")
+DEFAULT_CANDIDATES = Path("/workspace/push-radar/data/candidates.json")
+DEFAULT_LAUNCHED = Path("/workspace/push-radar/data/launched.json")
+DEFAULT_LISTING = Path("/workspace/push-radar/data/listing_times.json")
+MIRROR = Path("/workspace/publish-pages-data/candidates.json")
+
+
+def _norm_handle(h: str | None) -> str:
+    return (h or "").strip().lstrip("@").lower()
+
+
+def _parse_fans(fans: str | None) -> tuple[int | None, int | None]:
+    if not fans:
+        return None, None
+    m = re.search(r"粉丝\s*(\d+)", str(fans))
+    k = re.search(r"圈子\s*(\d+)", str(fans))
+    return (int(m.group(1)) if m else None, int(k.group(1)) if k else None)
+
+
+def _site_from(p: dict) -> str | None:
+    for u in p.get("urls") or []:
+        if not u or "x.com" in u or "twitter.com" in u:
+            continue
+        if str(u).startswith("http"):
+            return u
+    return None
+
+
+def _lt_index(lt: dict | list) -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    if isinstance(lt, list):
+        items = lt
+    elif isinstance(lt, dict):
+        items = lt.get("items") if isinstance(lt.get("items"), list) else None
+        if items is None:
+            for k, v in lt.items():
+                if isinstance(v, dict) and ("listing_at" in v or "listing_at_display" in v):
+                    out[_norm_handle(k)] = v
+            return out
+    else:
+        return out
+    for it in items:
+        h = _norm_handle(it.get("handle") or it.get("twitter_handle"))
+        if h:
+            out[h] = it
+    return out
+
+
+
+_BLANK_CHAIN = {"", "未知", "unknown", "其他", "其他/未知", "other"}
+_BLANK_CAT = {"", "其他", "未知", "other", "unknown"}
+_BLANK_STATUS = {"", "不明", "unknown", "unconfirmed"}
+_BLANK_LISTING = {"", "未开盘", "unknown", "不明"}
+
+
+def _thin_bio(s: str | None) -> bool:
+    s = (s or "").strip()
+    return (not s) or s.startswith("推送等级") or len(s) < 12
+
+
+def _fill_blank_candidates(rows: list, projects: list) -> list[str]:
+    """Upgrade existing candidate rows when TG projects now carry richer fields."""
+    by_h: dict[str, dict] = {}
+    for p in projects:
+        h = _norm_handle(p.get("twitter_handle"))
+        if not h:
+            continue
+        prev = by_h.get(h)
+        if not prev or (p.get("date_iso") or "") >= (prev.get("date_iso") or ""):
+            by_h[h] = p
+    filled: list[str] = []
+    for c in rows:
+        h = _norm_handle(c.get("handle"))
+        p = by_h.get(h)
+        if not p:
+            continue
+        changed = False
+        mapping = (
+            ("chain", _BLANK_CHAIN),
+            ("category", _BLANK_CAT),
+            ("status", _BLANK_STATUS),
+            ("listing", _BLANK_LISTING),
+        )
+        for field, blank in mapping:
+            pv = p.get(field)
+            if pv is None or str(pv).strip() in blank:
+                continue
+            if str(c.get(field) or "").strip() in blank:
+                c[field] = pv
+                changed = True
+        if p.get("risk") and not str(c.get("risk") or "").strip():
+            c["risk"] = p["risk"]
+            changed = True
+        sum_ = p.get("summary_cn") or p.get("summary_en") or ""
+        if sum_ and (_thin_bio(c.get("bio")) or _thin_bio(c.get("why"))):
+            if _thin_bio(c.get("bio")):
+                c["bio"] = sum_
+            if _thin_bio(c.get("why")):
+                c["why"] = sum_
+            changed = True
+        site = _site_from(p)
+        if site and not c.get("site"):
+            c["site"] = site
+            changed = True
+        if changed:
+            filled.append(c.get("name") or h)
+    return filled
+
+
+try:
+    from push_date import apply_push_date as _apply_push_date
+except Exception:  # pragma: no cover
+    _apply_push_date = None
+
+
+def merge(
+    *,
+    projects_path: Path = DEFAULT_PROJECTS,
+    candidates_path: Path = DEFAULT_CANDIDATES,
+    launched_path: Path = DEFAULT_LAUNCHED,
+    listing_path: Path = DEFAULT_LISTING,
+) -> dict:
+    projects = json.loads(projects_path.read_text(encoding="utf-8"))
+    cand = json.loads(candidates_path.read_text(encoding="utf-8"))
+    launched = json.loads(launched_path.read_text(encoding="utf-8")) if launched_path.exists() else {"items": []}
+    lt = json.loads(listing_path.read_text(encoding="utf-8")) if listing_path.exists() else {}
+    lt_by = _lt_index(lt)
+
+    launched_handles = set()
+    launched_names = set()
+    for it in launched.get("items") or []:
+        h = _norm_handle(it.get("handle") or it.get("twitter_handle"))
+        n = (it.get("name") or "").strip().lower()
+        if h:
+            launched_handles.add(h)
+        if n:
+            launched_names.add(n)
+
+    rows = cand.get("candidates")
+    if not isinstance(rows, list):
+        rows = []
+        cand["candidates"] = rows
+
+    existing = {_norm_handle(c.get("handle")) for c in rows}
+    added: list[str] = []
+    skipped: list[str] = []
+
+    for p in projects:
+        h = _norm_handle(p.get("twitter_handle"))
+        if not h or h in existing:
+            continue
+        name = (p.get("name") or "").strip()
+        if h in launched_handles or name.lower() in launched_names:
+            skipped.append(name or h)
+            continue
+        followers, kol = _parse_fans(p.get("fans"))
+        lit = lt_by.get(h) or {}
+        listing_at = lit.get("listing_at")
+        listing_at_display = lit.get("listing_at_display") or ("未知" if not listing_at else listing_at)
+        within = bool(lit.get("within_next_3_days")) if "within_next_3_days" in lit else False
+        handle = (p.get("twitter_handle") or h).lstrip("@")
+        row = {
+            "name": name,
+            "handle": handle,
+            "chain": p.get("chain") or "未知",
+            "category": p.get("category") or "其他",
+            "status": p.get("status") or "不明",
+            "listing": p.get("listing") or "未开盘",
+            "listing_at": listing_at,
+            "listing_at_display": listing_at_display,
+            "already_listed": False,
+            "within_next_3_days": within,
+            "risk": p.get("risk") or "",
+            "site": _site_from(p),
+            "tweet_url": p.get("x_url") or (f"https://x.com/{handle}" if handle else None),
+            "followers": followers,
+            "kol_followers": kol,
+            "bio": p.get("summary_cn") or p.get("summary_en") or "",
+            "why": p.get("summary_cn") or p.get("summary_en") or "",
+            "notes": "",
+            "rank": None,
+            "score": None,
+            "source": (
+                f"telegram:{str(p.get('source_channel') or '').strip()}"
+                if str(p.get("source_channel") or "").strip()
+                else "telegram:项目推送"
+            ),
+            "message_id": p.get("message_id"),
+            "date_iso": p.get("date_iso"),
+        }
+        if _apply_push_date:
+            _apply_push_date(row, p)
+        rows.append(row)
+        existing.add(h)
+        added.append(name or handle)
+
+    filled = _fill_blank_candidates(rows, projects)
+
+    # Sticky 推送日期: keep existing push_date; fill missing from entry fields only.
+    if _apply_push_date:
+        for c in rows:
+            if not c.get("push_date"):
+                _apply_push_date(c)
+
+    rows.sort(key=lambda c: c.get("date_iso") or "", reverse=True)
+    for i, c in enumerate(rows, 1):
+        c["rank"] = i
+
+    cand["generated_at_utc"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    cand["merged_from_projects_at"] = datetime.now(SH).isoformat(timespec="seconds")
+    text = json.dumps(cand, ensure_ascii=False, indent=2) + "\n"
+    candidates_path.write_text(text, encoding="utf-8")
+    try:
+        MIRROR.parent.mkdir(parents=True, exist_ok=True)
+        MIRROR.write_text(text, encoding="utf-8")
+    except OSError:
+        pass
+    return {
+        "candidates": len(rows),
+        "added": added,
+        "filled": filled,
+        "skipped_launched": skipped,
+        "path": str(candidates_path),
+    }
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--projects", type=Path, default=DEFAULT_PROJECTS)
+    ap.add_argument("--candidates", type=Path, default=DEFAULT_CANDIDATES)
+    ap.add_argument("--launched", type=Path, default=DEFAULT_LAUNCHED)
+    ap.add_argument("--listing", type=Path, default=DEFAULT_LISTING)
+    args = ap.parse_args()
+    res = merge(
+        projects_path=args.projects,
+        candidates_path=args.candidates,
+        launched_path=args.launched,
+        listing_path=args.listing,
+    )
+    print(
+        f"merge_ok candidates={res['candidates']} added={len(res['added'])} "
+        f"filled={len(res.get('filled') or [])} "
+        f"skipped_launched={len(res['skipped_launched'])}"
+    )
+    if res["added"]:
+        print("added: " + ", ".join(res["added"][:30]))
+    if res.get("filled"):
+        print("filled: " + ", ".join(res["filled"][:30]))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
